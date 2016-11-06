@@ -1,4 +1,4 @@
-package insapp_material;
+package com.example.tomatrocho.insapp_material;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;

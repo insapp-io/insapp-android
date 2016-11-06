@@ -1,0 +1,83 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:civ_border_width="0dp"
+        />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#3e3e3e"
+        android:textSize="16sp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/avatar"
+        android:layout_alignTop="@+id/avatar"
+        android:textStyle="bold"
+        tools:text="Pseudo"
+        />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_below="@+id/name"
+        android:textColor="#7f7f7f"
+        android:lineSpacingExtra="3dp"
+        />
+
+    <ImageView
+        app:srcCompat="@android:color/darker_gray"
+        android:id="@+id/image"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginStart="10dp"
+        android:layout_below="@+id/text"
+        android:layout_alignParentEnd="true"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        />
+
+    <TextView
+        android:text="il y a 4m"
+        android:textColor="#7f7f7f"
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/name"
+        android:layout_alignParentEnd="true"
+        />
+
+    <com.like.LikeButton
+        app:icon_type="heart"
+        app:icon_size="20dp"
+        android:id="@+id/favorite_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image"
+        android:layout_alignStart="@+id/avatar"
+        android:layout_marginStart="35dp"
+        android:layout_marginBottom="-14dp"
+        />
+
+</RelativeLayout>

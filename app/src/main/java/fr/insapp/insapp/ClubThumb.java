@@ -1,4 +1,4 @@
-package com.example.tomatrocho.insapp_material;
+package fr.insapp.insapp;
 
 /**
  * Created by thoma on 31/10/2016.

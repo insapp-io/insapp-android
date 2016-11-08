@@ -1,4 +1,4 @@
-package com.example.tomatrocho.insapp_material.fragments;
+package fr.insapp.insapp.fragments;
 
 /**
  * Created by thoma on 27/10/2016.
@@ -13,9 +13,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.tomatrocho.insapp_material.ClubThumb;
-import com.example.tomatrocho.insapp_material.ClubThumbAdapter;
-import com.example.tomatrocho.insapp_material.R;
+import fr.insapp.insapp.ClubThumb;
+import fr.insapp.insapp.ClubThumbAdapter;
+import fr.insapp.insapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

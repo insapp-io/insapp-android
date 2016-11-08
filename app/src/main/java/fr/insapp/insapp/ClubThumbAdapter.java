@@ -1,4 +1,4 @@
-package com.example.tomatrocho.insapp_material;
+package fr.insapp.insapp;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,6 +1,5 @@
-package com.example.tomatrocho.insapp_material.fragments;
+package fr.insapp.insapp.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.tomatrocho.insapp_material.Post;
-import com.example.tomatrocho.insapp_material.PostAdapter;
-import com.example.tomatrocho.insapp_material.R;
+import fr.insapp.insapp.Post;
+import fr.insapp.insapp.PostAdapter;
+import fr.insapp.insapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

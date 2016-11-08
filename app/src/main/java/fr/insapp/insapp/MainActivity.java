@@ -1,4 +1,4 @@
-package com.example.tomatrocho.insapp_material;
+package fr.insapp.insapp;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,10 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
-import com.example.tomatrocho.insapp_material.fragments.ClubsFragment;
-import com.example.tomatrocho.insapp_material.fragments.EventsFragment;
-import com.example.tomatrocho.insapp_material.fragments.NewsFragment;
-import com.example.tomatrocho.insapp_material.fragments.NotificationsFragment;
+import fr.insapp.insapp.fragments.ClubsFragment;
+import fr.insapp.insapp.fragments.EventsFragment;
+import fr.insapp.insapp.fragments.NewsFragment;
+import fr.insapp.insapp.fragments.NotificationsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

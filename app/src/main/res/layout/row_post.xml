@@ -78,6 +78,7 @@
         android:layout_alignStart="@+id/avatar"
         android:layout_marginStart="35dp"
         android:layout_marginBottom="-14dp"
+        app:circle_start_color="@color/colorPrimary"
         />
 
 </RelativeLayout>

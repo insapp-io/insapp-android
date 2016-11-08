@@ -4,7 +4,6 @@ package com.example.tomatrocho.insapp_material.fragments;
  * Created by thoma on 27/10/2016.
  */
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,10 +13,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.thoma.material.ClubThumb;
-import com.example.thoma.material.ClubThumbAdapter;
-import com.example.thoma.material.Post;
-import com.example.thoma.material.R;
+import com.example.tomatrocho.insapp_material.ClubThumb;
+import com.example.tomatrocho.insapp_material.ClubThumbAdapter;
+import com.example.tomatrocho.insapp_material.R;
 
 import java.util.ArrayList;
 import java.util.List;

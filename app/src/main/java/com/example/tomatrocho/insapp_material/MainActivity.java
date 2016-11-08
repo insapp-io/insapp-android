@@ -9,10 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
-import com.example.thoma.material.R;import com.example.thoma.material.fragments.ClubsFragment;
-import com.example.thoma.material.fragments.EventsFragment;
-import com.example.thoma.material.fragments.NewsFragment;
-import com.example.thoma.material.fragments.NotificationsFragment;
+import com.example.tomatrocho.insapp_material.fragments.ClubsFragment;
+import com.example.tomatrocho.insapp_material.fragments.EventsFragment;
+import com.example.tomatrocho.insapp_material.fragments.NewsFragment;
+import com.example.tomatrocho.insapp_material.fragments.NotificationsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

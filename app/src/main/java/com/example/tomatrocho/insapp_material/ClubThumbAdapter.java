@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.thoma.material.R;import java.util.List;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

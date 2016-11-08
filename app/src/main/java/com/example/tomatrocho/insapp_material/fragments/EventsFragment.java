@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.thoma.material.R;
+import com.example.tomatrocho.insapp_material.R;
 
 /**
  * Created by thoma on 27/10/2016.

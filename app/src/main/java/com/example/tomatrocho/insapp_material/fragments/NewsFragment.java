@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.thoma.material.Post;
-import com.example.thoma.material.PostAdapter;
-import com.example.thoma.material.R;
+import com.example.tomatrocho.insapp_material.Post;
+import com.example.tomatrocho.insapp_material.PostAdapter;
+import com.example.tomatrocho.insapp_material.R;
 
 import java.util.ArrayList;
 import java.util.List;

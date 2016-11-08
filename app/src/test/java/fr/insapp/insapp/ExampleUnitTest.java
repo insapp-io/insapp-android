@@ -1,4 +1,4 @@
-package com.example.tomatrocho.insapp;
+package fr.insapp.insapp;
 
 import org.junit.Test;
 

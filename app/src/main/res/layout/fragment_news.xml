@@ -11,7 +11,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.tomatrocho.insapp_material.fragments.NewsFragment"
+        tools:context="com.example.tomatrocho.insapp.fragments.NewsFragment"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:fillViewport="true">
 

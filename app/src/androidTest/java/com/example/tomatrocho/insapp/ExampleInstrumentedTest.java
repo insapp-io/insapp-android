@@ -1,4 +1,4 @@
-package com.example.tomatrocho.insapp_material;
+package com.example.tomatrocho.insapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

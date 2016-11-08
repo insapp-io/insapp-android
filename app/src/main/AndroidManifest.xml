@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tomatrocho.insapp_material">
+    package="fr.insapp.insapp">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:theme="@style/InsappMaterialTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="fr.insapp.insapp.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

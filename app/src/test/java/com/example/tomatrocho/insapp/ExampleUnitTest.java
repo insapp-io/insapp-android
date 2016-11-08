@@ -1,4 +1,4 @@
-package com.example.tomatrocho.insapp_material;
+package com.example.tomatrocho.insapp;
 
 import org.junit.Test;
 

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    >
+    android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
@@ -24,8 +23,8 @@
         android:textColor="#3e3e3e"
         android:textSize="16sp"
         android:layout_marginBottom="3dp"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/avatar"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/avatar"
         android:layout_alignTop="@+id/avatar"
         android:textStyle="bold"
         tools:text="Pseudo"
@@ -48,7 +47,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/avatar"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="2dp"
         android:layout_marginStart="10dp"
         android:layout_below="@+id/text"
@@ -68,17 +67,14 @@
         android:layout_alignParentEnd="true"
         />
 
-    <com.like.LikeButton
-        app:icon_type="heart"
-        app:icon_size="20dp"
-        android:id="@+id/favorite_button"
+    <include
+        layout="@layout/reactions"
+        android:id="@+id/reactions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image"
-        android:layout_alignStart="@+id/avatar"
-        android:layout_marginStart="35dp"
-        android:layout_marginBottom="-14dp"
-        app:circle_start_color="@color/colorPrimary"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_marginStart="-10dp"
+        android:layout_marginBottom="-15dp"
         />
-
 </RelativeLayout>

@@ -8,7 +8,6 @@
     android:layout_height="match_parent">
 
     <android.support.v4.widget.NestedScrollView
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.tomatrocho.insapp.fragments.NewsFragment"
@@ -21,7 +20,8 @@
             android:layout_height="match_parent"
             android:nestedScrollingEnabled="true"
             android:divider="@drawable/list_divider"
-            android:dividerHeight="1dp" />
+            android:dividerHeight="1dp"
+            />
 
     </android.support.v4.widget.NestedScrollView>
 

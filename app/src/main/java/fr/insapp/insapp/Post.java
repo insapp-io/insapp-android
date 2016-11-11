@@ -10,12 +10,14 @@ public class Post {
     public String text;
     public int image_id;
     public int heart_counter;
+    public int comment_counter;
 
-    public Post(int avatar_id, String title, String text, int image_id, int heart_counter) {
+    public Post(int avatar_id, String title, String text, int image_id, int heart_counter, int comment_counter) {
         this.avatar_id = avatar_id;
         this.title = title;
         this.text = text;
         this.image_id = image_id;
         this.heart_counter = heart_counter;
+        this.comment_counter = comment_counter;
     }
 }

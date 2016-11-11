@@ -35,6 +35,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.text = (TextView) view.findViewById(R.id.text);
             holder.image = (ImageView) view.findViewById(R.id.image);
             holder.heart_counter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
+            holder.comment_counter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
             view.setTag(holder);
         }
 
@@ -45,6 +46,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         holder.text.setText(post.text);
         holder.image.setImageResource(post.image_id);
         holder.heart_counter.setText("" + post.heart_counter);
+        holder.comment_counter.setText("" + post.comment_counter);
 
         return view;
     }
@@ -55,5 +57,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         public TextView text;
         public ImageView image;
         public TextView heart_counter;
+        public TextView comment_counter;
     }
 }

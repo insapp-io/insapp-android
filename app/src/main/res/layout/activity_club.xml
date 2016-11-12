@@ -8,14 +8,17 @@
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary"
+            android:fitsSystemWindows="true">
 
             <RelativeLayout
                 android:fitsSystemWindows="true"
@@ -25,9 +28,10 @@
                 <ImageView
                     android:id="@+id/header_image"
                     android:background="#212121"
-                    android:fitsSystemWindows="true"
+                    android:src="@drawable/large_sample_0"
                     android:layout_width="match_parent"
-                    android:layout_height="145dp" />
+                    android:scaleType="centerCrop"
+                    android:layout_height="165dp" />
 
                 <RelativeLayout
                     android:id="@+id/club_profile"
@@ -136,53 +140,53 @@
                     android:layout_below="@id/header_image" />
             </RelativeLayout>
 
-            <!--
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:contentInsetStart="72dp"
-                android:popupTheme="0x7f0a00ab"
-                android:layout_collapseMode="1">
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetStart="72dp"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/toolbar_text"
                         android:textSize="20dp"
-                        android:ellipsize="3"
-                        android:id="0x7f0e0140"
                         android:paddingRight="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:layout_toLeftOf="0x7f0e0141"
                         android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:alpha="0.0"
-                        android:typeface="6" />
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="0x7f0e0141"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:visibility="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="0x7f070074"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:alpha="0.0" />
+                        android:layout_centerVertical="true" />
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
-            -->
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/club_viewpager"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_club_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_below="@id/app_bar">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false">
+
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="true"
+                android:divider="@drawable/list_divider"
+                android:dividerHeight="1dp"
+                />
+
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

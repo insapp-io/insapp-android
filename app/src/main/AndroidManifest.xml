@@ -22,7 +22,10 @@
         <activity
             android:name="fr.insapp.insapp.ClubActivity"
             android:parentActivityName=".MainActivity">
+        </activity>
 
+        <activity
+            android:name="fr.insapp.insapp.PostActivity">
         </activity>
     </application>
 

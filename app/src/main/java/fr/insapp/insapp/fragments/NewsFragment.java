@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.like.LikeButton;
+import com.like.OnLikeListener;
+
 import fr.insapp.insapp.Post;
 import fr.insapp.insapp.PostAdapter;
 import fr.insapp.insapp.R;
@@ -20,7 +23,7 @@ import java.util.List;
  * Created by thoma on 27/10/2016.
  */
 
-public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
 
@@ -37,7 +40,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new PostAdapter(getContext(), generatePosts());
+        this.adapter = new PostAdapter(getContext(), generatePosts(), R.layout.row_post);
     }
 
     @Override
@@ -45,10 +48,10 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         this.view = inflater.inflate(R.layout.fragment_news, container, false);
 
         this.listView = (ListView) view.findViewById(R.id.listview);
-        this.listView.setAdapter(this.adapter);
+        listView.setAdapter(this.adapter);
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-        this.swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         return view;
     }

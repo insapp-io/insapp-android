@@ -1,11 +1,13 @@
 package fr.insapp.insapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -17,12 +19,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ClubThumbAdapter extends ArrayAdapter<ClubThumb> {
 
+    public Context context;
+
     public ClubThumbAdapter(Context context, List<ClubThumb> thumbs) {
         super(context, 0, thumbs);
+        this.context = context;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         // not recycled
         if (view == null)
             view = LayoutInflater.from(getContext()).inflate(R.layout.club_thumb, viewGroup, false);
@@ -39,6 +44,15 @@ public class ClubThumbAdapter extends ArrayAdapter<ClubThumb> {
 
         holder.avatar.setImageResource(thumb.avatar_id);
         holder.name.setText(thumb.name);
+
+        holder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ClubActivity.class);
+                context.startActivity(intent);
+                Toast.makeText(context, "" + i, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

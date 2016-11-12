@@ -1,12 +1,14 @@
 package fr.insapp.insapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -18,11 +20,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends ArrayAdapter<Post> {
 
+    private Context context;
+
     public PostAdapter(Context context, List<Post> posts) {
         super(context, 0, posts);
+        this.context = context;
     }
 
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         // not recycled
         if (view == null)
             view = LayoutInflater.from(getContext()).inflate(R.layout.row_post, viewGroup, false);
@@ -47,6 +52,15 @@ public class PostAdapter extends ArrayAdapter<Post> {
         holder.image.setImageResource(post.image_id);
         holder.heart_counter.setText("" + post.heart_counter);
         holder.comment_counter.setText("" + post.comment_counter);
+
+        holder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ClubActivity.class);
+                context.startActivity(intent);
+                Toast.makeText(context, "" + i, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

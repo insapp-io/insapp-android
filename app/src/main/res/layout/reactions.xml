@@ -7,7 +7,7 @@
     <com.like.LikeButton
         android:id="@+id/favorite_button"
         app:icon_type="heart"
-        app:icon_size="20dp"
+        app:icon_size="18dp"
         app:circle_start_color="@color/colorPrimary"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_centerVertical="true"
         android:layout_alignStart="@+id/heart_counter"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="42dp"
         />
 
     <TextView

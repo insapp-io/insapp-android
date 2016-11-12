@@ -19,6 +19,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="fr.insapp.insapp.ClubActivity">
+
+        </activity>
     </application>
 
 </manifest>

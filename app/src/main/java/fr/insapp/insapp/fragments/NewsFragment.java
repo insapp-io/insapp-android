@@ -48,7 +48,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         this.view = inflater.inflate(R.layout.fragment_news, container, false);
 
         this.listView = (ListView) view.findViewById(R.id.listview);
-        listView.setAdapter(this.adapter);
+        listView.setAdapter(adapter);
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         swipeRefreshLayout.setOnRefreshListener(this);

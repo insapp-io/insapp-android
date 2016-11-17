@@ -41,8 +41,10 @@ public class PostAdapter extends ArrayAdapter<Post> {
         PostViewHolder holder = (PostViewHolder) view.getTag();
         if (holder == null) {
             holder = new PostViewHolder();
+
             if (layout == R.layout.row_post)
                 holder.avatar = (CircleImageView) view.findViewById(R.id.avatar);
+
             holder.title = (TextView) view.findViewById(R.id.name);
             holder.text = (TextView) view.findViewById(R.id.text);
             holder.image = (ImageView) view.findViewById(R.id.image);
@@ -56,6 +58,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
         if (layout == R.layout.row_post)
             holder.avatar.setImageResource(post.avatar_id);
+
         holder.title.setText(post.title);
         holder.text.setText(post.text);
         holder.image.setImageResource(post.image_id);

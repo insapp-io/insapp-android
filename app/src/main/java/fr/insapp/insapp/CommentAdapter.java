@@ -33,8 +33,8 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         if (holder == null) {
             holder = new CommentViewHolder();
 
-            holder.avatar = (CircleImageView) view.findViewById(R.id.avatar_post);
-            holder.text = (TextView) view.findViewById(R.id.name_post);
+            holder.avatar = (CircleImageView) view.findViewById(R.id.user_avatar_comment);
+            holder.text = (TextView) view.findViewById(R.id.username_comment);
 
             view.setTag(holder);
         }

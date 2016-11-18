@@ -2,11 +2,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatar_post"
+        android:id="@+id/user_avatar_comment"
         android:layout_marginTop="12dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="6dp"
@@ -15,16 +15,25 @@
         app:civ_border_width="0dp" />
 
     <TextView
-        android:id="@+id/name_post"
+        android:id="@+id/username_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#3e3e3e"
         android:textSize="16sp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/avatar"
-        android:layout_alignTop="@+id/avatar"
+        android:layout_toEndOf="@id/user_avatar_comment"
+        android:layout_alignTop="@id/user_avatar_comment"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/username_comment"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@id/user_avatar_comment" />
 
     <TextView
         android:text="il y a 4m"
@@ -34,6 +43,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:id="@+id/textView"
-        android:layout_alignBaseline="@+id/name"
+        android:layout_alignBaseline="@+id/username_comment"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>

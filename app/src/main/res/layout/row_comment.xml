@@ -6,7 +6,7 @@
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatar"
+        android:id="@+id/avatar_post"
         android:layout_marginTop="12dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="6dp"
@@ -15,7 +15,7 @@
         app:civ_border_width="0dp" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/name_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#3e3e3e"

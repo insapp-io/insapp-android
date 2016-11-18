@@ -51,6 +51,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.likeButton = (LikeButton) view.findViewById(R.id.favorite_button);
             holder.heart_counter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
             holder.comment_counter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
+
             view.setTag(holder);
         }
 

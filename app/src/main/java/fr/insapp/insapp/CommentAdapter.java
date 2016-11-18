@@ -29,6 +29,21 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         if (view == null)
             view = LayoutInflater.from(context).inflate(R.layout.row_comment, viewGroup, false);
 
+        CommentViewHolder holder = (CommentViewHolder) view.getTag();
+        if (holder == null) {
+            holder = new CommentViewHolder();
+
+            holder.avatar = (CircleImageView) view.findViewById(R.id.avatar_post);
+            holder.text = (TextView) view.findViewById(R.id.name_post);
+
+            view.setTag(holder);
+        }
+
+        Comment comment = getItem(i);
+
+        holder.avatar.setImageResource(comment.avatar_id);
+        holder.text.setText(comment.text);
+
         return view;
     }
 

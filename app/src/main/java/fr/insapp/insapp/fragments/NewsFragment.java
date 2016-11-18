@@ -58,6 +58,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private List<Post> generatePosts() {
         List<Post> posts = new ArrayList<>();
+
         posts.add(new Post(R.drawable.sample_0, "Paul Taylor au Gala", "Yes, except the Dave Matthews Band doesn't rock. That's right, baby. I ain't your loverboy Flexo, the guy you love so much.", R.drawable.large_sample_0, 54, 0));
         posts.add(new Post(R.drawable.sample_1, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 4, 54));
         posts.add(new Post(R.drawable.sample_2, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 87, 1));
@@ -66,6 +67,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         posts.add(new Post(R.drawable.sample_5, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 65, 12));
         posts.add(new Post(R.drawable.sample_6, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 13, 3));
         posts.add(new Post(R.drawable.sample_7, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 18, 2));
+
         return posts;
     }
 

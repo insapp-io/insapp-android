@@ -2,12 +2,10 @@ package fr.insapp.insapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
-import static java.security.AccessController.getContext;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thoma on 12/11/2016.
@@ -25,7 +23,23 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_post);
 
-        this.adapter = new CommentAdapter(getContext(), generateComments());
+        this.adapter = new CommentAdapter(this, generateComments());
+
+        this.listView = (ListView) findViewById(R.id.listview_post);
+        listView.setAdapter(adapter);
+    }
+
+    private List<Comment> generateComments() {
+        List<Comment> comments = new ArrayList<>();
+
+        comments.add(new Comment(R.drawable.sample_0, "Ceci est un commentaire"));
+        comments.add(new Comment(R.drawable.sample_0, "Ceci est un commentaire"));
+        comments.add(new Comment(R.drawable.sample_0, "Ceci est un commentaire"));
+        comments.add(new Comment(R.drawable.sample_0, "Ceci est un commentaire"));
+        comments.add(new Comment(R.drawable.sample_0, "Ceci est un commentaire"));
+
+        return comments;
     }
 }

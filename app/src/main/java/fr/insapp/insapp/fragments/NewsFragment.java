@@ -38,7 +38,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new PostRecyclerViewAdapter(generatePosts());
+        this.adapter = new PostRecyclerViewAdapter(getContext(), generatePosts());
     }
 
     @Override

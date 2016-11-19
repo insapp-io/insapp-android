@@ -6,7 +6,7 @@
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_avatar_comment"
+        android:id="@+id/club_avatar_post"
         android:layout_marginTop="12dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="6dp"
@@ -22,8 +22,8 @@
         android:textSize="16sp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/user_avatar_comment"
-        android:layout_alignTop="@id/user_avatar_comment"
+        android:layout_toEndOf="@id/club_avatar_post"
+        android:layout_alignTop="@id/club_avatar_post"
         android:textStyle="bold" />
 
     <TextView
@@ -33,7 +33,7 @@
         android:layout_below="@id/username_comment"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@id/user_avatar_comment" />
+        android:layout_toEndOf="@id/club_avatar_post" />
 
     <TextView
         android:text="il y a 4m"

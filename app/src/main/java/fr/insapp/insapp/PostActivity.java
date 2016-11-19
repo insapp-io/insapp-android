@@ -26,7 +26,7 @@ public class PostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_post);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_comments);
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);

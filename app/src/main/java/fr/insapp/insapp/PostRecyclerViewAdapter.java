@@ -1,13 +1,18 @@
 package fr.insapp.insapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.like.LikeButton;
+import com.like.OnLikeListener;
 
 import java.util.List;
 
@@ -23,7 +28,10 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
     private OnItemClickListener itemClickListener;
 
-    public PostRecyclerViewAdapter(List<Post> posts) {
+    private Context context;
+
+    public PostRecyclerViewAdapter(Context context, List<Post> posts) {
+        this.context = context;
         this.posts = posts;
     }
 
@@ -34,14 +42,41 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(PostViewHolder holder, final int position) {
         final Post post = posts.get(position);
+
         holder.avatar.setImageResource(post.avatar_id);
         holder.title.setText(post.title);
         holder.text.setText(post.text);
         holder.image.setImageResource(post.image_id);
-        holder.heart_counter.setText("" + post.heart_counter);
-        holder.comment_counter.setText("" + post.comment_counter);
+        holder.likeCounter.setText("" + post.heart_counter);
+        holder.commentCounter.setText("" + post.comment_counter);
+
+        holder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, ClubActivity.class));
+            }
+        });
+
+        holder.likeButton.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                Toast.makeText(context, "liked: " + position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                Toast.makeText(context, "unliked: " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, PostActivity.class));
+            }
+        });
     }
 
     @Override
@@ -55,8 +90,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public TextView text;
         public ImageView image;
         public LikeButton likeButton;
-        public TextView heart_counter;
-        public TextView comment_counter;
+        public TextView likeCounter;
+        public ImageButton commentButton;
+        public TextView commentCounter;
 
         public PostViewHolder(View view) {
             super(view);
@@ -66,8 +102,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             this.text = (TextView) view.findViewById(R.id.text);
             this.image = (ImageView) view.findViewById(R.id.image);
             this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
-            this.heart_counter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
-            this.comment_counter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
+            this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
+            this.commentButton = (ImageButton) view.findViewById(R.id.comment_button);
+            this.commentCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
 
             view.setOnClickListener(this);
         }

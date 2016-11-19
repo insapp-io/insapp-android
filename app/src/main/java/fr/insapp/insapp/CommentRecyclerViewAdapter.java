@@ -48,7 +48,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
         public CommentViewHolder(View view) {
             super(view);
-            this.avatar = (CircleImageView) view.findViewById(R.id.user_avatar_comment);
+            this.avatar = (CircleImageView) view.findViewById(R.id.club_avatar_post);
             this.username = (TextView) view.findViewById(R.id.username_comment);
             this.text = (TextView) view.findViewById(R.id.text_comment);
         }

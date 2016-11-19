@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +14,10 @@ import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
 
-    private ListView listView;
-    private CommentAdapter adapter;
-
-    public PostActivity() {
-
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-
-        /*
-        this.adapter = new CommentAdapter(this, generateComments());
-
-        this.listView = (ListView) findViewById(R.id.listview_post);
-        listView.setAdapter(adapter);
-        */
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_post);
         recyclerView.setHasFixedSize(true);
@@ -47,7 +32,7 @@ public class PostActivity extends AppCompatActivity {
     private List<Comment> generateComments() {
         List<Comment> comments = new ArrayList<>();
 
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
+        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire, un long commentaire pour voir si ça marche bien, et effectivement, ça marche !"));
         comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
         comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
         comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));

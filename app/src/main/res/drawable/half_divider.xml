@@ -4,8 +4,7 @@
     android:insetLeft="70dp">
 
     <shape>
-        <solid android:color="#eeeeee" />
+        <solid android:color="#eee" />
         <corners android:radius="2.0dip" />
     </shape>
-
 </inset>

@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.like.LikeButton;
-import com.like.OnLikeListener;
-
 import fr.insapp.insapp.Post;
 import fr.insapp.insapp.PostAdapter;
 import fr.insapp.insapp.R;
@@ -32,14 +29,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public NewsFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.adapter = new PostAdapter(getContext(), generatePosts(), R.layout.row_post);
     }
 
@@ -50,7 +42,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         this.listView = (ListView) view.findViewById(R.id.listview);
         listView.setAdapter(adapter);
 
-        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_news);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         return view;

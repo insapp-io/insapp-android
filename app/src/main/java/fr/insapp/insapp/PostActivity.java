@@ -39,19 +39,8 @@ public class PostActivity extends AppCompatActivity {
     private List<Comment> generateComments() {
         List<Comment> comments = new ArrayList<>();
 
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire, un long commentaire pour voir si ça marche bien, et effectivement, ça marche !"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
-        comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire"));
+        for (int i = 0; i < 8; i++)
+            comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire, un long commentaire pour voir si ça marche bien, et effectivement, ça marche !"));
 
         return comments;
     }

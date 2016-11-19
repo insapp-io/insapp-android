@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import fr.insapp.insapp.Event;
 import fr.insapp.insapp.EventRecyclerViewAdapter;
@@ -45,17 +44,20 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         this.view = inflater.inflate(R.layout.fragment_events, container, false);
 
         RecyclerView recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
-        RecyclerView recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
-        RecyclerView recyclerViewMonth = (RecyclerView) view.findViewById(R.id.recyclerview_events_month);
-
         recyclerViewToday.setHasFixedSize(true);
+
+        RecyclerView recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
         recyclerViewWeek.setHasFixedSize(true);
+
+        RecyclerView recyclerViewMonth = (RecyclerView) view.findViewById(R.id.recyclerview_events_month);
         recyclerViewMonth.setHasFixedSize(true);
 
         recyclerViewToday.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewToday.setAdapter(adapter);
+
         recyclerViewWeek.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewWeek.setAdapter(adapter);
+
         recyclerViewMonth.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewMonth.setAdapter(adapter);
 

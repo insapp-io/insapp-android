@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -12,8 +12,7 @@
         android:layout_marginEnd="6dp"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:civ_border_width="0dp"
-        />
+        app:civ_border_width="0dp" />
 
     <TextView
         android:id="@+id/name"
@@ -25,8 +24,7 @@
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/avatar"
         android:layout_alignTop="@+id/avatar"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <TextView
         android:text="il y a 4m"
@@ -37,8 +35,7 @@
         android:layout_marginEnd="4dp"
         android:id="@+id/textView"
         android:layout_alignBaseline="@+id/name"
-        android:layout_alignParentEnd="true"
-        />
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/text"
@@ -49,8 +46,7 @@
         android:layout_toEndOf="@+id/avatar"
         android:layout_below="@+id/name"
         android:textColor="#7f7f7f"
-        android:lineSpacingExtra="3dp"
-        />
+        android:lineSpacingExtra="3dp" />
 
     <ImageView
         app:srcCompat="@android:color/darker_gray"
@@ -65,8 +61,7 @@
         android:layout_below="@+id/text"
         android:layout_alignParentEnd="true"
         android:scaleType="fitStart"
-        android:adjustViewBounds="true"
-        />
+        android:adjustViewBounds="true" />
 
     <include
         layout="@layout/reactions"
@@ -76,6 +71,5 @@
         android:layout_below="@+id/image"
         android:layout_toEndOf="@+id/avatar"
         android:layout_marginStart="-8dp"
-        android:layout_marginBottom="-15dp"
-        />
+        android:layout_marginBottom="-15dp" />
 </RelativeLayout>

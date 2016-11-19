@@ -1,16 +1,22 @@
 package fr.insapp.insapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.like.LikeButton;
+import com.like.OnLikeListener;
+
 import fr.insapp.insapp.Post;
-import fr.insapp.insapp.PostAdapter;
+import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.PostRecyclerViewAdapter;
 import fr.insapp.insapp.R;
 
 import java.util.ArrayList;
@@ -24,26 +30,44 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private View view;
 
-    private ListView listView;
-    private PostAdapter adapter;
+    private PostRecyclerViewAdapter adapter;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.adapter = new PostAdapter(getContext(), generatePosts(), R.layout.row_post);
+
+        this.adapter = new PostRecyclerViewAdapter(generatePosts());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_news, container, false);
 
-        this.listView = (ListView) view.findViewById(R.id.listview);
-        listView.setAdapter(adapter);
+        // recycler view
 
-        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_news);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_posts);
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        // swipe refresh layout
+
+        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_posts);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        // onClick
+
+        adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                getContext().startActivity(new Intent(getContext(), PostActivity.class));
+                Toast.makeText(getContext(), "index: " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
@@ -51,14 +75,8 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private List<Post> generatePosts() {
         List<Post> posts = new ArrayList<>();
 
-        posts.add(new Post(R.drawable.sample_0, "Paul Taylor au Gala", "Yes, except the Dave Matthews Band doesn't rock. That's right, baby. I ain't your loverboy Flexo, the guy you love so much.", R.drawable.large_sample_0, 54, 0));
-        posts.add(new Post(R.drawable.sample_1, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 4, 54));
-        posts.add(new Post(R.drawable.sample_2, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 87, 1));
-        posts.add(new Post(R.drawable.sample_3, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 105, 6));
-        posts.add(new Post(R.drawable.sample_4, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 1, 8));
-        posts.add(new Post(R.drawable.sample_5, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 65, 12));
-        posts.add(new Post(R.drawable.sample_6, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 13, 3));
-        posts.add(new Post(R.drawable.sample_7, "Paul Taylor au Gala", "Nous c'est le mégaphone, n'hésite pas à nous rejoindre", R.drawable.large_sample_0, 18, 2));
+        for (int i = 0; i < 8; i++)
+            posts.add(new Post(R.drawable.sample_0, "Paul Taylor au Gala", "Yes, except the Dave Matthews Band doesn't rock. That's right, baby. I ain't your loverboy Flexo, the guy you love so much.", R.drawable.large_sample_0, 54, 0));
 
         return posts;
     }

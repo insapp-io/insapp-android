@@ -86,6 +86,14 @@
                             android:layout_centerVertical="true" />
                     </RelativeLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/events_club"
+                        android:layout_below="@id/club_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </RelativeLayout>
+
                     <LinearLayout
                         android:id="@+id/club_description"
                         android:orientation="vertical"
@@ -94,7 +102,7 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="24dp"
-                        android:layout_below="@id/club_info">
+                        android:layout_below="@id/events_club">
 
                         <TextView
                             android:id="@+id/club_description_text"

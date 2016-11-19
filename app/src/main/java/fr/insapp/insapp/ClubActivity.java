@@ -25,8 +25,6 @@ public class ClubActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ListView listView;
     private PostAdapter adapter;
 
-    public CollapsingToolbarLayout collapsingToolbarLayout;
-    public AppBarLayout appBarLayout;
     public SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -46,37 +44,6 @@ public class ClubActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_club_profile);
         this.swipeRefreshLayout.setOnRefreshListener(this);
-
-        this.collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        this.appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle("Title");
-                    isShow = true;
-                } else if(isShow) {
-                    collapsingToolbarLayout.setTitle(" ");
-                    isShow = false;
-                }
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private List<Post> generatePosts() {

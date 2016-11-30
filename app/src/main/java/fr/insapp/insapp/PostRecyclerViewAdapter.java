@@ -14,9 +14,20 @@ import android.widget.Toast;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpDelete;
+import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.HttpPost;
+import fr.insapp.insapp.modeles.Club;
+import fr.insapp.insapp.modeles.Post;
+import fr.insapp.insapp.utility.ImageLoader;
+import fr.insapp.insapp.utility.Operation;
 
 /**
  * Created by thoma on 19/11/2016.
@@ -25,14 +36,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.PostViewHolder> {
 
     private List<Post> posts;
+    private List<Club> clubs;
 
     private OnItemClickListener itemClickListener;
 
     private Context context;
 
+    private ImageLoader imageLoader;
+
     public PostRecyclerViewAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
+
+        imageLoader = new ImageLoader(this.context);
     }
 
     @Override
@@ -42,15 +58,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, final int position) {
+    public void onBindViewHolder(final PostViewHolder holder, final int position) {
         final Post post = posts.get(position);
 
-        holder.avatar.setImageResource(post.avatar_id);
-        holder.title.setText(post.title);
-        holder.text.setText(post.text);
-        holder.image.setImageResource(post.image_id);
-        holder.likeCounter.setText("" + post.heart_counter);
-        holder.commentCounter.setText("" + post.comment_counter);
+        imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.avatar);//holder.avatar.setImageResource(post.avatar_id);
+        holder.title.setText(post.getTitle());
+        holder.text.setText(post.getDescription());
+        imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.image);
+        holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
+        holder.commentCounter.setText(Integer.toString(post.getComments().size()));
+        holder.date.setText(new String("Il y a "+ Operation.displayedDate(post.getDate())));
 
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,24 +76,67 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             }
         });
 
+        holder.likeButton.setLiked(post.postLikedBy(HttpGet.credentials.getUserID()));
+
         holder.likeButton.setOnLikeListener(new OnLikeListener() {
             @Override
             public void liked(LikeButton likeButton) {
-                Toast.makeText(context, "liked: " + position, Toast.LENGTH_SHORT).show();
+                HttpPost hpp = new HttpPost(new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+                        if (!output.isEmpty()) {
+                            refreshPost(output, holder);
+                            Toast.makeText(context, "liked: " + position, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
             }
 
             @Override
             public void unLiked(LikeButton likeButton) {
-                Toast.makeText(context, "unliked: " + position, Toast.LENGTH_SHORT).show();
+                HttpDelete hpp = new HttpDelete(new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+                        if (!output.isEmpty()) {
+                            refreshPost(output, holder);
+                            Toast.makeText(context, "unliked: " + position, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+            }
+        });
+
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
             }
         });
 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, PostActivity.class));
+                context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
             }
         });
+    }
+
+    public void refreshPost(String output, final PostViewHolder holder){
+
+        try {
+
+            JSONObject json = new JSONObject(output);
+
+            Post postRefreshed = new Post(json.getJSONObject("post"));
+
+            holder.likeCounter.setText(Integer.toString(postRefreshed.getLikes().size()));
+            holder.commentCounter.setText(Integer.toString(postRefreshed.getComments().size()));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -93,6 +153,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public TextView likeCounter;
         public ImageButton commentButton;
         public TextView commentCounter;
+        public TextView date;
 
         public PostViewHolder(View view) {
             super(view);
@@ -105,6 +166,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
             this.commentButton = (ImageButton) view.findViewById(R.id.comment_button);
             this.commentCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
+            this.date = (TextView) view.findViewById(R.id.date_post) ;
 
             view.setOnClickListener(this);
         }

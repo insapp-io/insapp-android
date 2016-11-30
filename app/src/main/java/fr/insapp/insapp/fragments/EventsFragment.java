@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.insapp.insapp.Event;
+import fr.insapp.insapp.modeles.Event;
 import fr.insapp.insapp.EventRecyclerViewAdapter;
 import fr.insapp.insapp.R;
 

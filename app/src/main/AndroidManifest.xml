@@ -2,6 +2,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.insapp.insapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="fr.insapp.insapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="fr.insapp.insapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,12 +27,28 @@
         android:theme="@style/InsappMaterialTheme">
 
         <activity
-            android:name="fr.insapp.insapp.MainActivity"
-            android:label="@string/app_name" >
+            android:name="fr.insapp.insapp.TutoActivity">
+        </activity>
+
+        <activity
+            android:name="fr.insapp.insapp.LegalConditionActivity">
+        </activity>
+
+        <activity
+            android:name="fr.insapp.insapp.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name="fr.insapp.insapp.Signin">
+        </activity>
+
+        <activity
+            android:name="fr.insapp.insapp.MainActivity"
+            android:label="@string/app_name" >
         </activity>
 
 

@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fr.insapp.insapp.modeles.Event;
+
 /**
  * Created by thoma on 18/11/2016.
  */

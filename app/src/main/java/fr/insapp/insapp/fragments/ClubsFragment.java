@@ -13,9 +13,16 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import fr.insapp.insapp.ClubThumb;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.modeles.ClubThumb;
 import fr.insapp.insapp.ClubThumbAdapter;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.modeles.Post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,31 +62,29 @@ public class ClubsFragment extends Fragment {
     }
 
     private List<ClubThumb> generateClubThumbs() {
-        List<ClubThumb> thumbs = new ArrayList<>();
-        thumbs.add(new ClubThumb(R.drawable.sample_0, "Le Mégaphone"));
-        thumbs.add(new ClubThumb(R.drawable.sample_1, "EAI"));
-        thumbs.add(new ClubThumb(R.drawable.sample_2, "Gala"));
-        thumbs.add(new ClubThumb(R.drawable.sample_3, "Ouest INSA"));
-        thumbs.add(new ClubThumb(R.drawable.sample_4, "Bebop"));
-        thumbs.add(new ClubThumb(R.drawable.sample_5, "Rock'n Solex"));
-        thumbs.add(new ClubThumb(R.drawable.sample_6, "Ins'India"));
-        thumbs.add(new ClubThumb(R.drawable.sample_7, "Club robot"));
-        thumbs.add(new ClubThumb(R.drawable.sample_0, "Le Mégaphone"));
-        thumbs.add(new ClubThumb(R.drawable.sample_1, "EAI"));
-        thumbs.add(new ClubThumb(R.drawable.sample_2, "Gala"));
-        thumbs.add(new ClubThumb(R.drawable.sample_3, "Ouest INSA"));
-        thumbs.add(new ClubThumb(R.drawable.sample_4, "Bebop"));
-        thumbs.add(new ClubThumb(R.drawable.sample_5, "Rock'n Solex"));
-        thumbs.add(new ClubThumb(R.drawable.sample_6, "Ins'India"));
-        thumbs.add(new ClubThumb(R.drawable.sample_7, "Club robot"));
-        thumbs.add(new ClubThumb(R.drawable.sample_0, "Le Mégaphone"));
-        thumbs.add(new ClubThumb(R.drawable.sample_1, "EAI"));
-        thumbs.add(new ClubThumb(R.drawable.sample_2, "Gala"));
-        thumbs.add(new ClubThumb(R.drawable.sample_3, "Ouest INSA"));
-        thumbs.add(new ClubThumb(R.drawable.sample_4, "Bebop"));
-        thumbs.add(new ClubThumb(R.drawable.sample_5, "Rock'n Solex"));
-        thumbs.add(new ClubThumb(R.drawable.sample_6, "Ins'India"));
-        thumbs.add(new ClubThumb(R.drawable.sample_7, "Club robot"));
+        final List<ClubThumb> thumbs = new ArrayList<>();
+        HttpGet request = new HttpGet(new AsyncResponse() {
+
+            public void processFinish(String output) {
+                if (!output.isEmpty()) {
+                    try {
+                        JSONArray jsonarray = new JSONArray(output);
+
+                        for (int i = 0; i < jsonarray.length(); i++) {
+                            final JSONObject jsonobject = jsonarray.getJSONObject(i);
+                            ClubThumb club = new ClubThumb(jsonobject);
+
+                            if(!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty())
+                                thumbs.add(new ClubThumb(jsonobject));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.credentials.getSessionToken());
+
         return thumbs;
     }
 }

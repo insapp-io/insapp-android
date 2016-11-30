@@ -11,10 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.like.LikeButton;
-import com.like.OnLikeListener;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import fr.insapp.insapp.Post;
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.modeles.Post;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.PostRecyclerViewAdapter;
 import fr.insapp.insapp.R;
@@ -60,7 +63,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeRefreshLayout.setOnRefreshListener(this);
 
         // onClick
-
+/*
         adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -68,15 +71,34 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 Toast.makeText(getContext(), "index: " + position, Toast.LENGTH_SHORT).show();
             }
         });
-
+*/
         return view;
     }
 
     private List<Post> generatePosts() {
-        List<Post> posts = new ArrayList<>();
+        final List<Post> posts = new ArrayList<>();
 
-        for (int i = 0; i < 8; i++)
-            posts.add(new Post(R.drawable.sample_0, "Paul Taylor au Gala", "Yes, except the Dave Matthews Band doesn't rock. That's right, baby. I ain't your loverboy Flexo, the guy you love so much.", R.drawable.large_sample_0, 54, 0));
+        HttpGet request = new HttpGet(new AsyncResponse() {
+
+            public void processFinish(String output) {
+                if (!output.isEmpty()) {
+                    try {
+                        JSONArray jsonarray = new JSONArray(output);
+
+                        for (int i = 0; i < jsonarray.length(); i++) {
+                            final JSONObject jsonobject = jsonarray.getJSONObject(i);
+                            posts.add(new Post(jsonobject));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
+
+        //for (int i = 0; i < 8; i++)
+        //    posts.add(new Post(R.drawable.sample_0, "Paul Taylor au Gala", "Yes, except the Dave Matthews Band doesn't rock. That's right, baby. I ain't your loverboy Flexo, the guy you love so much.", R.drawable.large_sample_0, 54, 0));
 
         return posts;
     }

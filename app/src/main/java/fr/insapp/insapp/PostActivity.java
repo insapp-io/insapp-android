@@ -1,14 +1,11 @@
 package fr.insapp.insapp;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +18,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.insapp.insapp.modeles.Comment;
+import fr.insapp.insapp.modeles.Post;
+
 /**
  * Created by thoma on 12/11/2016.
  */
@@ -28,11 +28,17 @@ import java.util.List;
 public class PostActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private Post post = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        Intent intent = getIntent();
+
+        System.out.println("HAS EXTRA " +intent.hasExtra("post"));
+        post = intent.getParcelableExtra("post");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_post);
         setSupportActionBar(toolbar);
@@ -46,7 +52,7 @@ public class PostActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(generateComments());
+        CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(post.getComments());
         recyclerView.setAdapter(adapter);
 
         initSwipe(this);
@@ -88,13 +94,13 @@ public class PostActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-
+/*
     private List<Comment> generateComments() {
-        List<Comment> comments = new ArrayList<>();
+        List<Comment> comments = post.getComments();
 
-        for (int i = 0; i < 8; i++)
-            comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire, un long commentaire pour voir si ça marche bien, et effectivement, ça marche !"));
+        //for (Comment c : comments)
+        //   comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire, un long commentaire pour voir si ça marche bien, et effectivement, ça marche !"));
 
         return comments;
-    }
+    }*/
 }

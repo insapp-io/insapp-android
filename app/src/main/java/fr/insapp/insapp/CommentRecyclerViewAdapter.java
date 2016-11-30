@@ -9,6 +9,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.modeles.Comment;
+import fr.insapp.insapp.utility.Operation;
 
 /**
  * Created by thoma on 18/11/2016.
@@ -31,9 +33,10 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
         final Comment comment = comments.get(position);
-        holder.avatar.setImageResource(comment.avatar_id);
-        holder.username.setText(comment.username);
-        holder.text.setText(comment.text);
+        //holder.avatar.setImageResource(comment.avatar_id);
+        holder.username.setText(comment.getUser());
+        holder.text.setText(comment.getContent());
+        holder.date.setText("Il y a " + Operation.displayedDate(comment.getDate()));
     }
 
     @Override
@@ -45,12 +48,14 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
         public CircleImageView avatar;
         public TextView username;
         public TextView text;
+        public TextView date;
 
         public CommentViewHolder(View view) {
             super(view);
             this.avatar = (CircleImageView) view.findViewById(R.id.club_avatar_post);
             this.username = (TextView) view.findViewById(R.id.username_comment);
             this.text = (TextView) view.findViewById(R.id.text_comment);
+            this.date = (TextView) view.findViewById(R.id.date_comment);
         }
     }
 }

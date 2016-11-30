@@ -12,6 +12,9 @@ import android.widget.Toast;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.modeles.ClubThumb;
+import fr.insapp.insapp.utility.ImageLoader;
 
 /**
  * Created by thoma on 30/10/2016.
@@ -21,9 +24,12 @@ public class ClubThumbAdapter extends ArrayAdapter<ClubThumb> {
 
     public Context context;
 
+    private ImageLoader imageLoader;
+
     public ClubThumbAdapter(Context context, List<ClubThumb> thumbs) {
         super(context, 0, thumbs);
         this.context = context;
+        this.imageLoader = new ImageLoader(this.context);
     }
 
     @Override
@@ -42,8 +48,8 @@ public class ClubThumbAdapter extends ArrayAdapter<ClubThumb> {
 
         ClubThumb thumb = getItem(i);
 
-        holder.avatar.setImageResource(thumb.avatar_id);
-        holder.name.setText(thumb.name);
+        imageLoader.DisplayImage(HttpGet.IMAGEURL + thumb.getProfilPicture(), holder.avatar);
+        holder.name.setText(thumb.getName());
 
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override

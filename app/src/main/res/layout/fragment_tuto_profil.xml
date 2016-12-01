@@ -1,0 +1,57 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="fr.insa_rennes.insa.TutoProfil"
+    android:background="@color/theme_red">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:gravity="center_horizontal|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="33sp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="Profil"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:text="Porte haut les couleurs de ton départ' en éditant ton profil"/>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_weight="1"
+                android:id="@+id/img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/avatars"/>
+
+            <ImageView
+                android:layout_weight="0"
+                android:id="@+id/go"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:src="@drawable/go_button"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

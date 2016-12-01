@@ -1,0 +1,62 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="fr.insa_rennes.insa.TutoNotification"
+    android:background="@color/theme_red">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:gravity="center_horizontal|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="33sp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="Notifications"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:text="Reçois les notifications pour ne jamais rien louper"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:id="@+id/activer"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="200dp"
+                android:src="@drawable/popup_notif"/>
+
+
+            <ImageView
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="200dp"
+                android:src="@drawable/android_notification"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

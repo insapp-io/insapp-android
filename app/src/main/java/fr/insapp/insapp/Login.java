@@ -126,7 +126,7 @@ public class Login extends Activity {
             //if(HttpPost.responseCode != 0) {
             nb_try++;
             if (nb_try <= 5) {
-                Intent i = new Intent(Login.this, TutoActivity.class);
+                Intent i = new Intent(Login.this, IntroActivity.class);
                 startActivity(i);
                 finish();
             } else

@@ -27,8 +27,14 @@
         android:theme="@style/InsappMaterialTheme">
 
         <activity
+            android:name="fr.insapp.insapp.IntroActivity">
+        </activity>
+
+        <!--
+        <activity
             android:name="fr.insapp.insapp.TutoActivity">
         </activity>
+        -->
 
         <activity
             android:name="fr.insapp.insapp.LegalConditionActivity">

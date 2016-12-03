@@ -25,7 +25,6 @@ public class IntroNotificationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_intro_notification, container, false);
 
-        /*
         CheckBox checkbox = (CheckBox) rootView.findViewById(R.id.checkbox_enable_notifications);
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -35,7 +34,6 @@ public class IntroNotificationsFragment extends Fragment {
                 sharedPref.commit();
             }
         });
-        */
 
         return rootView;
     }

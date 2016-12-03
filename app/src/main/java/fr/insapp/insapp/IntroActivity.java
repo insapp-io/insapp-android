@@ -27,33 +27,8 @@ public class IntroActivity extends AppIntro2 {
         addSlide(new IntroNotificationsFragment());
         addSlide(new IntroProfileFragment());
 
-        /*
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_intro_notification, container, false);
-        ImageView activate = (ImageView) rootView.findViewById(R.id.activer);
-        activate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor sharedPref = getActivity().getSharedPreferences(
-                        Signin.class.getSimpleName(), getContext().MODE_PRIVATE).edit();
-
-                sharedPref.putBoolean("notifications", true);
-                sharedPref.commit();
-
-                Toast.makeText(getContext(), "Notifications activées", Toast.LENGTH_SHORT).show();
-            }
-        });
-        return rootView;
-    }
-         */
-
-        // Hide Skip/Done button.
         showSkipButton(false);
         setProgressButtonEnabled(true);
-
-        // Turn vibration on and set intensity.
         setVibrate(false);
     }
 

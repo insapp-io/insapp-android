@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/theme_red"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:paddingBottom="80dp" >
 
@@ -35,21 +35,38 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:gravity="center_horizontal"
+        android:weightSum="1" >
 
-        <TextView
-            android:text="Reçois les notifications pour ne jamais rien louper"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="0.9"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:layout_weight="0.9"
+            android:orientation="vertical" >
+
+            <TextView
+                android:text="Reçois les notifications pour ne jamais rien louper"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center|bottom"
+                android:layout_weight="0.6"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <CheckBox
+                android:text="Activer les notifications"
+                android:id="@+id/checkbox_enable_notifications"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:buttonTint="@android:color/white"
+                android:layout_weight="0.4" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

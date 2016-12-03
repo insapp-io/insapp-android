@@ -5,31 +5,33 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.github.paolorotolo.appintro.AppIntro2;
-import com.github.paolorotolo.appintro.AppIntroFragment;
+
+import fr.insapp.insapp.fragments_intro.IntroClubsFragment;
+import fr.insapp.insapp.fragments_intro.IntroEventsFragment;
+import fr.insapp.insapp.fragments_intro.IntroNewsFragment;
+import fr.insapp.insapp.fragments_intro.IntroNotificationsFragment;
+import fr.insapp.insapp.fragments_intro.IntroProfileFragment;
 
 /**
  * Created by thoma on 02/12/2016.
  */
-
 public class IntroActivity extends AppIntro2 {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final int primaryColor = getResources().getColor(R.color.colorPrimary);
-
-        addSlide(AppIntroFragment.newInstance("Associations", "Retrouve toutes les associations de l'INSA de Rennes", R.drawable.tutorial_association_android1, primaryColor));
-        addSlide(AppIntroFragment.newInstance("Évènements", "Reste au courant des derniers évènements des associations", R.drawable.tutorial_event_android3, primaryColor));
-        addSlide(AppIntroFragment.newInstance("News", "Suis l'actualité de tes associations préférées grâce à la page des news", R.drawable.tutorial_news_android2, primaryColor));
-        addSlide(AppIntroFragment.newInstance("Notifications", "Reçois les notifications pour ne jamais rien louper", R.drawable.android_notification, primaryColor));
-        addSlide(AppIntroFragment.newInstance("Profil", "Porte haut les couleurs de ton départ' en éditant ton profil", R.drawable.avatars, primaryColor));
+        addSlide(new IntroClubsFragment());
+        addSlide(new IntroEventsFragment());
+        addSlide(new IntroNewsFragment());
+        addSlide(new IntroNotificationsFragment());
+        addSlide(new IntroProfileFragment());
 
         /*
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_tuto_notification, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_intro_notification, container, false);
         ImageView activate = (ImageView) rootView.findViewById(R.id.activer);
         activate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +50,7 @@ public class IntroActivity extends AppIntro2 {
          */
 
         // Hide Skip/Done button.
-        showSkipButton(true);
+        showSkipButton(false);
         setProgressButtonEnabled(true);
 
         // Turn vibration on and set intensity.

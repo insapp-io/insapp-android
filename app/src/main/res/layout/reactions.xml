@@ -1,41 +1,40 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <com.like.LikeButton
         android:id="@+id/like_button"
         app:icon_type="heart"
         app:icon_size="18dp"
+        android:layout_gravity="center_vertical"
         app:circle_start_color="@color/colorPrimary"
-        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"/>
 
     <TextView
         android:id="@+id/heart_counter"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/like_button"
+        android:layout_gravity="center_vertical"
         android:layout_marginStart="-10dp" />
 
     <ImageButton
         android:id="@+id/comment_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:src="@drawable/ic_question_answer_black_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/heart_counter"
-        android:layout_marginStart="42dp" />
+        android:layout_marginStart="28dp" />
 
     <TextView
         android:id="@+id/comment_counter"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/comment_button"
+        android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp" />
-</RelativeLayout>
+</LinearLayout>

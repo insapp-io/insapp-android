@@ -19,12 +19,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#3e3e3e"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/avatar"
-        android:layout_alignTop="@+id/avatar"
-        android:textStyle="bold" />
+        android:layout_alignTop="@+id/avatar" />
 
     <TextView
         android:textColor="#7f7f7f"

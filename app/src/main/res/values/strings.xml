@@ -1,9 +1,5 @@
 <resources>
-    <string name="app_name">Insapp (Material)</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_search">Search</string>
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
+    <string name="app_name">Insapp</string>
 
     <string name="nav_item_home">Home</string>
     <string name="nav_item_friends">Friends</string>

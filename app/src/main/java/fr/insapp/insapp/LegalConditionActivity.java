@@ -1,31 +1,28 @@
 package fr.insapp.insapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ImageView;
 
-public class LegalConditionActivity extends Activity {
+public class LegalConditionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_legal_condition);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_conditions);
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        ImageView cross = (ImageView) findViewById(R.id.cross);
-        cross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LegalConditionActivity.this.finish();
-            }
-        });
-
-        Button accepter = (Button) findViewById(R.id.accepter);
+        Button accepter = (Button) findViewById(R.id.accept_conditions);
         accepter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

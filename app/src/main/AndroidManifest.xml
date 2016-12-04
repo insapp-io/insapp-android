@@ -30,14 +30,13 @@
             android:name="fr.insapp.insapp.IntroActivity">
         </activity>
 
-        <!--
         <activity
-            android:name="fr.insapp.insapp.TutoActivity">
-        </activity>
-        -->
-
-        <activity
-            android:name="fr.insapp.insapp.LegalConditionActivity">
+            android:name="fr.insapp.insapp.LegalConditionActivity"
+            android:label="Conditions légales"
+            android:parentActivityName=".IntroActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IntroActivity" />
         </activity>
 
         <activity
@@ -61,12 +60,18 @@
         <activity
             android:name="fr.insapp.insapp.ClubActivity"
             android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
 
         <activity
             android:name="fr.insapp.insapp.PostActivity"
             android:label="Post"
             android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
     </application>
 </manifest>

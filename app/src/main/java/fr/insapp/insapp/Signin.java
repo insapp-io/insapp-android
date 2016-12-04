@@ -126,15 +126,14 @@ public class Signin extends Activity {
 
         // set dialog message
         alertDialogBuilder
-                .setMessage("Si ton compte existe déjà sur un autre téléphone, tu seras deconnecté(e) de ce dernier. Tu ne perdras aucune donnée. Souhaites-tu continuer ?")
+                .setMessage("Si ton compte existe déjà sur un autre téléphone, tu seras déconnecté(e) de ce dernier. Tu ne perdras aucune donnée. Souhaites-tu continuer ?")
                 .setCancelable(false)
-                .setPositiveButton("OUI",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogAlert,int id) {
+                .setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogAlert, int id) {
 
                         JSONObject json = new JSONObject();
                         try {
                             json.put("Device", android_id);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

@@ -3,6 +3,7 @@ package fr.insapp.insapp;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import fr.insapp.insapp.modeles.Club;
 import fr.insapp.insapp.modeles.Post;
 import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 19/11/2016.
@@ -75,6 +77,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 context.startActivity(new Intent(context, ClubActivity.class));
             }
         });
+
+        Utils.stripUnderlines(holder.text);
+        Linkify.addLinks(holder.text, Linkify.ALL);
 
         holder.likeButton.setLiked(post.postLikedBy(HttpGet.credentials.getUserID()));
 

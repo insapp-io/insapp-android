@@ -3,15 +3,9 @@ package fr.insapp.insapp.utility;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.URLSpan;
-import android.widget.TextView;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import fr.insapp.insapp.view.URLSpanNoUnderline;
 
 public class Utils {
     public static void CopyStream(InputStream is, OutputStream os) {
@@ -33,20 +27,5 @@ public class Utils {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public static void stripUnderlines(TextView tv) {
-        Spannable s = new SpannableString(tv.getText());
-        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
-
-        for (URLSpan span: spans) {
-            int start = s.getSpanStart(span);
-            int end = s.getSpanEnd(span);
-            s.removeSpan(span);
-            span = new URLSpanNoUnderline(span.getURL());
-            s.setSpan(span, start, end, 0);
-        }
-
-        tv.setText(s);
     }
 }

@@ -69,7 +69,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.image);
         holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
         holder.commentCounter.setText(Integer.toString(post.getComments().size()));
-        holder.date.setText(new String("Il y a "+ Operation.displayedDate(post.getDate())));
+        holder.date.setText(new String("Il y a " + Operation.displayedDate(post.getDate())));
 
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +78,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             }
         });
 
-        Utils.stripUnderlines(holder.text);
         Linkify.addLinks(holder.text, Linkify.ALL);
+
+        // like button
 
         holder.likeButton.setLiked(post.postLikedBy(HttpGet.credentials.getUserID()));
 

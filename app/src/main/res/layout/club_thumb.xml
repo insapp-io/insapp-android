@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:orientation="vertical"
-    >
+    android:padding="10dp"
+    android:orientation="vertical">
 
-    <fr.insapp.insapp.view.SquareImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/club_thumb"
         android:layout_marginTop="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         app:civ_border_width="0dp"
         />
 

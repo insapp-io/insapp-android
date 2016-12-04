@@ -1,10 +1,9 @@
 package fr.insapp.insapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -18,7 +17,7 @@ import fr.insapp.insapp.utility.File;
 import fr.insapp.insapp.utility.Utils;
 
 
-public class Login extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
     private static int nb_try = 0;
 
@@ -63,9 +62,9 @@ public class Login extends Activity {
                                 nb_try = 0; // we can login
 
                                 SharedPreferences prefs = getSharedPreferences(
-                                        Signin.class.getSimpleName(), getApplicationContext().MODE_PRIVATE);
+                                        SigninActivity.class.getSimpleName(), getApplicationContext().MODE_PRIVATE);
 
-                                String token = prefs.getString(Signin.REG_ID, "");
+                                String token = prefs.getString(SigninActivity.REG_ID, "");
 
                                 JSONObject notuser = new JSONObject();
                                 notuser.put("userid", HttpGet.credentials.getUserID());
@@ -77,7 +76,7 @@ public class Login extends Activity {
                                         @Override
                                         public void processFinish(String output) {
                                             if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
-                                                Intent i = new Intent(Login.this, MainActivity.class);
+                                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
                                                 startActivity(i);
                                                 //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                                                 finish();
@@ -91,7 +90,7 @@ public class Login extends Activity {
                                 }
                                 else{
                                     if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
-                                        Intent i = new Intent(Login.this, MainActivity.class);
+                                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(i);
                                         //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                                         finish();
@@ -112,21 +111,21 @@ public class Login extends Activity {
                         cantLogin();
                 }
             });
-            login.execute(HttpGet.ROOTLOGIN, json.toString());
 
+            login.execute(HttpGet.ROOTLOGIN, json.toString());
         }
-        else{
+        else {
             cantLogin();
         }
     }
 
     public void cantLogin(){
 
-        if(Utils.isNetworkAvailable(Login.this)) {
+        if(Utils.isNetworkAvailable(LoginActivity.this)) {
             //if(HttpPost.responseCode != 0) {
             nb_try++;
             if (nb_try <= 5) {
-                Intent i = new Intent(Login.this, IntroActivity.class);
+                Intent i = new Intent(LoginActivity.this, IntroActivity.class);
                 startActivity(i);
                 finish();
             } else
@@ -134,7 +133,7 @@ public class Login extends Activity {
         } else {
             Toast.makeText(this, "Internet indisponible", Toast.LENGTH_LONG).show();
             //Thread.sleep(1000);
-            //Intent i = new Intent(Login.this, TutoActivity.class);
+            //Intent i = new Intent(LoginActivity.this, TutoActivity.class);
             //startActivity(i);
             //finish();
         }

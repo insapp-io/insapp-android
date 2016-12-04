@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.Signin;
+import fr.insapp.insapp.SigninActivity;
 
 /**
  * Created by thoma on 03/12/2016.
@@ -29,7 +29,7 @@ public class IntroNotificationsFragment extends Fragment {
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                SharedPreferences.Editor sharedPref = getActivity().getSharedPreferences(Signin.class.getSimpleName(), Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor sharedPref = getActivity().getSharedPreferences(SigninActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit();
                 sharedPref.putBoolean("notifications", b);
                 sharedPref.commit();
             }

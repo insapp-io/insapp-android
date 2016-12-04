@@ -36,7 +36,7 @@ public class IntroActivity extends AppIntro2 {
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
 
-        Intent i = new Intent(this, LegalConditionActivity.class);
+        Intent i = new Intent(this, LegalConditionsActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(i);
 
@@ -47,7 +47,7 @@ public class IntroActivity extends AppIntro2 {
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
 
-        Intent i = new Intent(this, LegalConditionActivity.class);
+        Intent i = new Intent(this, LegalConditionsActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(i);
 

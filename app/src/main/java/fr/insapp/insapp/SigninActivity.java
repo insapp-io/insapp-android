@@ -1,39 +1,30 @@
 package fr.insapp.insapp;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.CookieManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.Date;
 
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.utility.File;
 
-public class Signin extends Activity {
+public class SigninActivity extends AppCompatActivity {
 
     public static final int REQUEST_READ_PHONE_STATE = 10;
     final String url_site = "https://cas.insa-rennes.fr/cas/login?service=https://insapp.fr/";
@@ -50,50 +41,42 @@ public class Signin extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin);
+        setContentView(R.layout.activity_sign_in);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sign_in);
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         refreshing = false;
 
-        SharedPreferences.Editor prefs = getSharedPreferences(Signin.class.getSimpleName(), Signin.MODE_PRIVATE).edit();
+        SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
         prefs.putBoolean("notifications", true);
         prefs.commit();
 
-        /*ImageView credits = (ImageView) findViewById(R.id.credits);
-        credits.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent activity = new Intent(Signin.this, Credits.class);
-                startActivity(activity);
-            }
-        });
-*/
-        ImageView cross = (ImageView) findViewById(R.id.cross);
-        cross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Signin.this, IntroActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(i);
-            }
-        });
-
-        TextView title = (TextView) findViewById(R.id.heading_text);
-        title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent activity = new Intent(Signin.this, Signin.class);
-                startActivity(activity);
-            }
-        });
+        /*
+            ImageView credits = (ImageView) findViewById(R.id.credits);
+            credits.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent activity = new Intent(SigninActivity.this, Credits.class);
+                    startActivity(activity);
+                }
+            });
+        */
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeSessionCookie();
 
-        final WebView webView = (WebView) findViewById(R.id.webview);
+        final WebView webView = (WebView) findViewById(R.id.webview_conditions);
 
         webView.loadUrl(url_site);
         webView.getSettings().setJavaScriptEnabled(true);
+
         //webView.addJavascriptInterface(new MyJavaScriptInterface(), "INTERFACE");
+
         webView.setWebViewClient(new WebViewClient() {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 //view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementById('username').value);");
@@ -108,18 +91,20 @@ public class Signin extends Activity {
         });
 
         context = getApplicationContext();
-/*
-        if (TextUtils.isEmpty(regId)) {
-            // Récupération du registerId du terminal ou enregistrement de ce dernier
-            regId = registerGCM();
-        }*/
+
+        /*
+            if (TextUtils.isEmpty(regId)) {
+                // Récupération du registerId du terminal ou enregistrement de ce dernier
+                regId = registerGCM();
+            }
+        */
     }
 
     public void signin(final String ticket){
 
         final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Signin.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SigninActivity.this);
 
         // set title
         alertDialogBuilder.setTitle("Connexion");
@@ -150,30 +135,30 @@ public class Signin extends Activity {
                                             if (!json.has("error")) {
                                                 String text = json.getString("username") + " " + json.getString("authtoken");
 
-                                                File.writeSettings(Signin.this, text);
+                                                File.writeSettings(SigninActivity.this, text);
 
-                                                Intent i = new Intent(Signin.this, Login.class);
+                                                Intent i = new Intent(SigninActivity.this, LoginActivity.class);
                                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 i.putExtra("signin", true);
                                                 startActivity(i);
                                                 finish();
 
                                             } else
-                                                Toast.makeText(Signin.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
                                         }
                                         else if(HttpPost.responseCode >= 400 && HttpPost.responseCode < 500){
                                             //if(!output.isEmpty())
-                                            Toast.makeText(Signin.this, "Erreur : " + output, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(SigninActivity.this, "Erreur : " + output, Toast.LENGTH_LONG).show();
                                         }
 
                                     } catch (Exception e){
                                         System.out.println(e.getMessage());
-                                        Toast.makeText(Signin.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
                                     }// catch (Throwable throwable) {
                                      //   throwable.printStackTrace();
                                     //}
                                 } else
-                                    Toast.makeText(Signin.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
 
                             }
                         });
@@ -213,7 +198,7 @@ public class Signin extends Activity {
 
     private String getRegistrationId(Context context) {
         final SharedPreferences prefs = getSharedPreferences(
-                Signin.class.getSimpleName(), Signin.MODE_PRIVATE);
+                SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
         String registrationId = prefs.getString(REG_ID, "");
         if (registrationId.isEmpty()) {
             //Log.i(TAG, "registrationId non trouvé.");
@@ -243,7 +228,7 @@ public class Signin extends Activity {
                     msg = "Terminal enregistré, register ID=" + regId;
                     // On enregistre le registerId dans les SharedPreferences
                     SharedPreferences.Editor prefs = getSharedPreferences(
-                            Signin.class.getSimpleName(), Signin.MODE_PRIVATE).edit();
+                            SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
                     prefs.putString(REG_ID, regId);
                     prefs.commit();
                 } catch (IOException ex) {

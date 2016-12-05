@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/header_image"
+                    android:id="@+id/header_image_club"
                     android:background="#212121"
                     android:src="@drawable/large_sample_0"
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:clipChildren="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/header_image">
+                    android:layout_below="@id/header_image_club">
 
                     <RelativeLayout
                         android:id="@+id/club_info"
@@ -153,7 +153,7 @@
                     android:layout_height="100dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="-45dp"
-                    android:layout_below="@id/header_image"
+                    android:layout_below="@id/header_image_club"
                     app:civ_border_width="2dp"
                     app:civ_border_color="#fff"/>
             </RelativeLayout>

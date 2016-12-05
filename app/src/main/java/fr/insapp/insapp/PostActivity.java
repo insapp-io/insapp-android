@@ -15,10 +15,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.insapp.insapp.modeles.Comment;
 import fr.insapp.insapp.modeles.Post;
 
 /**
@@ -37,7 +33,7 @@ public class PostActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        System.out.println("HAS EXTRA " +intent.hasExtra("post"));
+        System.out.println("HAS EXTRA " + intent.hasExtra("post"));
         post = intent.getParcelableExtra("post");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_post);

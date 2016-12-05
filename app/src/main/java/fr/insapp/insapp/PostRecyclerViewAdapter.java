@@ -71,12 +71,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         holder.commentCounter.setText(Integer.toString(post.getComments().size()));
         holder.date.setText(new String("Il y a " + Operation.displayedDate(post.getDate())));
 
+        // club avatar
+
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 context.startActivity(new Intent(context, ClubActivity.class));
             }
         });
+
+        // description links
 
         Linkify.addLinks(holder.text, Linkify.ALL);
 
@@ -92,10 +96,11 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     public void processFinish(String output) {
                         if (!output.isEmpty()) {
                             refreshPost(output, holder);
-                            Toast.makeText(context, "liked: " + position, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "liked: " + position, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
                 hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
             }
 
@@ -106,10 +111,11 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     public void processFinish(String output) {
                         if (!output.isEmpty()) {
                             refreshPost(output, holder);
-                            Toast.makeText(context, "unliked: " + position, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "unliked: " + position, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
                 hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
             }
         });

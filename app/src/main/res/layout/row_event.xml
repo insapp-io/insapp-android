@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -6,71 +6,40 @@
     android:orientation="horizontal"
     android:padding="10dp">
 
-    <RelativeLayout
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar_club_event"
+        android:src="@drawable/sample_0"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        app:civ_border_width="0dp" />
+
+    <TextView
+        android:id="@+id/name_event"
+        android:text="Le nom de l'event"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:textColor="#3e3e3e"
+        android:textSize="15sp"
+        android:layout_toEndOf="@id/avatar_club_event"
+        android:layout_marginStart="10dp" />
 
-        <ImageView
-            android:id="@+id/thumbnail_event"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:src="@drawable/sample_0" />
+    <TextView
+        android:id="@+id/going_event"
+        android:text="4 participants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/avatar_club_event"
+        android:layout_below="@id/name_event"
+        android:layout_marginStart="10dp" />
 
-        <TextView
-            android:id="@+id/name_event"
-            android:text="Le nom de l'event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#3e3e3e"
-            android:textSize="15sp"
-            android:layout_toEndOf="@id/thumbnail_event"
-            android:layout_marginStart="10dp" />
-
-        <TextView
-            android:id="@+id/going_event"
-            android:text="4 participants"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/thumbnail_event"
-            android:layout_below="@id/name_event"
-            android:layout_marginStart="10dp" />
-
-        <TextView
-            android:id="@+id/date_event"
-            android:text="18h30"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/thumbnail_event"
-            android:layout_below="@id/going_event"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="10dp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/avatar_club_event"
-                android:src="@drawable/sample_0"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                app:civ_border_width="0dp" />
-
-            <TextView
-                android:id="@+id/club_event"
-                android:text="OuestINSA"
-                android:layout_below="@id/avatar_club_event"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+    <TextView
+        android:id="@+id/date_event"
+        android:text="18h30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/avatar_club_event"
+        android:layout_below="@id/going_event"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp" />
+</RelativeLayout>

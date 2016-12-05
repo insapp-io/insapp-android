@@ -1,5 +1,6 @@
 package fr.insapp.insapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.insapp.insapp.ClubActivity;
+import fr.insapp.insapp.EventActivity;
 import fr.insapp.insapp.modeles.Event;
 import fr.insapp.insapp.EventRecyclerViewAdapter;
 import fr.insapp.insapp.R;
@@ -36,7 +39,14 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         this.adapter = new EventRecyclerViewAdapter(generateEvents());
+        adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Event event) {
+                getContext().startActivity(new Intent(getContext(), EventActivity.class));
+            }
+        });
     }
 
     @Override

@@ -95,10 +95,8 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
             }
         });
-        request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
 
-        //for (int i = 0; i < 8; i++)
-        //    posts.add(new Post(R.drawable.sample_0, "Paul Taylor au Gala", "Yes, except the Dave Matthews Band doesn't rock. That's right, baby. I ain't your loverboy Flexo, the guy you love so much.", R.drawable.large_sample_0, 54, 0));
+        request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
 
         return posts;
     }

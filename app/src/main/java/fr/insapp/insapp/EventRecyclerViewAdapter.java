@@ -18,6 +18,11 @@ import fr.insapp.insapp.modeles.Event;
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.EventViewHolder> {
 
     protected List<Event> events;
+    protected OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Event event);
+    }
 
     public EventRecyclerViewAdapter(List<Event> events) {
         this.events = events;
@@ -30,11 +35,17 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         return holder;
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void onBindViewHolder(EventRecyclerViewAdapter.EventViewHolder holder, int position) {
         final Event event = events.get(position);
-        holder.thumbnail.setImageResource(event.thumbnail_id);
+        //holder.thumbnail.setImageResource(event.thumbnail_id);
         holder.name.setText(event.name);
+
+        holder.bind(event, listener);
     }
 
     @Override
@@ -43,13 +54,22 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        public ImageView thumbnail;
+        //public ImageView thumbnail;
         public TextView name;
 
         public EventViewHolder(View view) {
             super(view);
-            this.thumbnail = (ImageView) view.findViewById(R.id.thumbnail_event);
+            //this.thumbnail = (ImageView) view.findViewById(R.id.thumbnail_event);
             this.name = (TextView) view.findViewById(R.id.name_event);
+        }
+
+        public void bind(final Event event, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(event);
+                }
+            });
         }
     }
 }

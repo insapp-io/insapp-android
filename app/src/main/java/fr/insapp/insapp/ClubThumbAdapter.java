@@ -54,9 +54,7 @@ public class ClubThumbAdapter extends ArrayAdapter<ClubThumb> {
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ClubActivity.class);
-                context.startActivity(intent);
-                Toast.makeText(context, "" + i, Toast.LENGTH_SHORT).show();
+                context.startActivity(new Intent(context, ClubActivity.class));
             }
         });
 

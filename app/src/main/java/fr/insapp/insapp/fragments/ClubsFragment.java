@@ -6,6 +6,9 @@ package fr.insapp.insapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +20,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.insapp.insapp.ClubThumbRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.modeles.ClubThumb;
-import fr.insapp.insapp.ClubThumbAdapter;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.modeles.Post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,7 @@ import java.util.List;
 public class ClubsFragment extends Fragment {
 
     private View view;
-
-    private GridView gridView;
-    private ClubThumbAdapter adapter;
+    private ClubThumbRecyclerViewAdapter adapter;
 
     public ClubsFragment() {
         // Required empty public constructor
@@ -42,21 +42,29 @@ public class ClubsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new ClubThumbAdapter(getContext(), generateClubThumbs());
+        this.adapter = new ClubThumbRecyclerViewAdapter(getContext(), generateClubThumbs());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_clubs, container, false);
 
-        this.gridView = (GridView) view.findViewById(R.id.gridview);
-        this.gridView.setAdapter(this.adapter);
+        // recycler view
 
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_clubs);
+        recyclerView.setHasFixedSize(true);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        /*
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+        */
 
         return view;
     }

@@ -1,6 +1,5 @@
 package fr.insapp.insapp.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,7 +17,6 @@ import org.json.JSONObject;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.modeles.Post;
-import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.PostRecyclerViewAdapter;
 import fr.insapp.insapp.R;
 
@@ -32,9 +30,7 @@ import java.util.List;
 public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
-
     private PostRecyclerViewAdapter adapter;
-
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -46,7 +42,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_news, container, false);
+        this.view = inflater.inflate(R.layout.fragment_posts, container, false);
 
         // recycler view
 

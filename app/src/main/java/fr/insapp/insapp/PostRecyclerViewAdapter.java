@@ -37,20 +37,17 @@ import fr.insapp.insapp.utility.Utils;
 
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.PostViewHolder> {
 
-    private List<Post> posts;
-    private List<Club> clubs;
-
-    private OnItemClickListener itemClickListener;
-
     private Context context;
 
+    private List<Post> posts;
     private ImageLoader imageLoader;
+
+    private OnItemClickListener itemClickListener;
 
     public PostRecyclerViewAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
-
-        imageLoader = new ImageLoader(this.context);
+        this.imageLoader = new ImageLoader(context);
     }
 
     @Override
@@ -136,7 +133,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     }
 
     public void refreshPost(String output, final PostViewHolder holder){
-
         try {
 
             JSONObject json = new JSONObject(output);

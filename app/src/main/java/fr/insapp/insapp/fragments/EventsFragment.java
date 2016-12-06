@@ -55,12 +55,15 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         RecyclerView recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
         recyclerViewToday.setHasFixedSize(true);
+        recyclerViewToday.setNestedScrollingEnabled(false);
 
         RecyclerView recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
         recyclerViewWeek.setHasFixedSize(true);
+        recyclerViewWeek.setNestedScrollingEnabled(false);
 
         RecyclerView recyclerViewMonth = (RecyclerView) view.findViewById(R.id.recyclerview_events_month);
         recyclerViewMonth.setHasFixedSize(true);
+        recyclerViewMonth.setNestedScrollingEnabled(false);
 
         recyclerViewToday.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewToday.setAdapter(adapter);

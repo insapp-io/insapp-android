@@ -48,6 +48,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_posts);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);

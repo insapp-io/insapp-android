@@ -41,24 +41,23 @@
                     app:civ_border_width="0dp" />
 
                 <TextView
-                    android:id="@+id/title_post"
+                    android:id="@+id/post_title"
                     android:text="Ceci est le titre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:textColor="#3e3e3e"
                     android:textSize="16sp"
-                    android:textStyle="bold"
                     android:layout_alignTop="@+id/club_avatar_post"
                     android:layout_toEndOf="@+id/club_avatar_post" />
 
                 <TextView
-                    android:id="@+id/club_post"
-                    android:text="Bebop"
+                    android:id="@+id/post_date"
+                    android:text="il y a 4w"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_below="@id/title_post"
+                    android:layout_below="@id/post_title"
                     android:layout_toEndOf="@+id/club_avatar_post" />
 
                 <TextView
@@ -68,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="14dp"
                     android:id="@+id/date_post"
-                    android:layout_alignBaseline="@+id/title_post"
+                    android:layout_alignBaseline="@+id/post_title"
                     android:layout_alignParentEnd="true" />
 
                 <TextView

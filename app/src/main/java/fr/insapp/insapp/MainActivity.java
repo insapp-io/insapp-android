@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 
 import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
-import fr.insapp.insapp.fragments.NewsFragment;
+import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 
 import java.util.ArrayList;
@@ -28,9 +28,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -42,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new NewsFragment(), "News");
+
+        adapter.addFragment(new PostsFragment(), "News");
         adapter.addFragment(new EventsFragment(), "Events");
         adapter.addFragment(new ClubsFragment(), "Associations");
         adapter.addFragment(new NotificationsFragment(), "Activité");
+
         viewPager.setAdapter(adapter);
     }
 

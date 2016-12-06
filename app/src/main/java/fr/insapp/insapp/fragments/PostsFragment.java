@@ -1,5 +1,6 @@
 package fr.insapp.insapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.modeles.Post;
@@ -27,7 +29,7 @@ import java.util.List;
  * Created by thoma on 27/10/2016.
  */
 
-public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
     private PostRecyclerViewAdapter adapter;
@@ -38,6 +40,12 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onCreate(savedInstanceState);
 
         this.adapter = new PostRecyclerViewAdapter(getContext(), generatePosts());
+        adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
+            @Override
+            public void onPostItemClick(Post post) {
+                getContext().startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", post));
+            }
+        });
     }
 
     @Override
@@ -59,16 +67,6 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_posts);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        // onClick
-/*
-        adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnEventItemClickListener() {
-            @Override
-            public void onEventItemClick(View view, int position) {
-                getContext().startActivity(new Intent(getContext(), PostActivity.class));
-                Toast.makeText(getContext(), "index: " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-*/
         return view;
     }
 

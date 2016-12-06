@@ -1,9 +1,8 @@
 <resources>
 
-    <style name="InsappMaterialTheme" parent="InsappMaterialTheme.Base">
-    </style>
+    <style name="InsappMaterialTheme" parent="InsappMaterialTheme.Base"></style>
 
-    <style name="InsappMaterialTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="InsappMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>

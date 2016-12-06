@@ -26,14 +26,8 @@ import fr.insapp.insapp.R;
 public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
-
     private EventRecyclerViewAdapter adapter;
-
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    public EventsFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

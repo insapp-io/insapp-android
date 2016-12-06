@@ -40,12 +40,20 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     private List<Post> posts;
     private ImageLoader imageLoader;
 
-    private OnItemClickListener itemClickListener;
+    private OnPostItemClickListener listener;
+
+    public interface OnPostItemClickListener {
+        void onPostItemClick(Post post);
+    }
 
     public PostRecyclerViewAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
         this.imageLoader = new ImageLoader(context);
+    }
+
+    public void setOnItemClickListener(OnPostItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -116,19 +124,14 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             }
         });
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
-            }
-        });
-
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
             }
         });
+
+        holder.bind(post, listener);
     }
 
     public void refreshPost(String output, final PostViewHolder holder){
@@ -151,7 +154,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         return posts.size();
     }
 
-    public class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class PostViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView avatar;
         public TextView title;
         public TextView text;
@@ -173,23 +176,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
             this.commentButton = (ImageButton) view.findViewById(R.id.comment_button);
             this.commentCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
-            this.date = (TextView) view.findViewById(R.id.date_post) ;
-
-            view.setOnClickListener(this);
+            this.date = (TextView) view.findViewById(R.id.date_post);
         }
 
-        @Override
-        public void onClick(View view) {
-            if (itemClickListener != null)
-                itemClickListener.onItemClick(view, getPosition());
+        public void bind(final Post post, final OnPostItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPostItemClick(post);
+                }
+            });
         }
-    }
-
-    public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
     }
 }

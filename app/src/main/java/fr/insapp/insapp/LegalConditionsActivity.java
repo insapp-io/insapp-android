@@ -16,7 +16,7 @@ public class LegalConditionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_legal_conditions);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_conditions);
-        if(toolbar != null) {
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

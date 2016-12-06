@@ -82,7 +82,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private List<Event> generateEvents() {
         List<Event> events = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 3; i++)
             events.add(new Event(R.drawable.sample_0, "Un événement trop cool"));
 
         return events;

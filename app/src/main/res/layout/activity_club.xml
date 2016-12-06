@@ -7,17 +7,18 @@
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/app_bar_club"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/collapsing_toolbar_club"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:contentScrim="?attr/colorPrimary"
+            app:collapsedTitleTextAppearance="@style/CollapsingToolbar"
             android:fitsSystemWindows="true">
 
             <RelativeLayout
@@ -124,6 +125,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp">
 
+                            <!--
                             <ImageView
                                 android:id="@+id/club_website_icon"
                                 android:src="@drawable/ic_insert_link_black_24dp"
@@ -141,6 +143,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6sp"
                                 android:maxLines="1" />
+                            -->
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -159,55 +162,11 @@
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbar_club"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/toolbar_text"
-                        android:textSize="20dp"
-                        android:paddingEnd="16dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true" />
-                </RelativeLayout>
-            </android.support.v7.widget.Toolbar>
+                app:layout_collapseMode="pin" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
-    <!--
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_club_profile"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_below="@id/app_bar">
-
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:layout_gravity="fill_vertical"
-            android:fillViewport="true">
-
-            <ListView
-                android:id="@+id/listview_club_profile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:nestedScrollingEnabled="true"
-                android:divider="@drawable/half_divider"
-                android:dividerHeight="1dp"
-                />
-
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-    -->
 </android.support.design.widget.CoordinatorLayout>

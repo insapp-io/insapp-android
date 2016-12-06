@@ -8,4 +8,7 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     </style>
 
+    <style name="CollapsingToolbar" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>

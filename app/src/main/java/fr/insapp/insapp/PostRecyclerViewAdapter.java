@@ -27,6 +27,7 @@ import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.modeles.Post;
 import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 19/11/2016.
@@ -77,6 +78,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         // description links
 
         Linkify.addLinks(holder.text, Linkify.ALL);
+        Utils.stripUnderlines(holder.text);
 
         // like button
 

@@ -26,7 +26,7 @@
             app:tabMode="scrollable"
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"
-            app:tabTextColor="@android:color/white"
+            app:tabTextColor="#f2f2f2"
             app:tabSelectedTextColor="@android:color/white" />
     </android.support.design.widget.AppBarLayout>
 

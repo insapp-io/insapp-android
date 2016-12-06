@@ -66,7 +66,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.image);
         holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
         holder.commentCounter.setText(Integer.toString(post.getComments().size()));
-        holder.date.setText(new String("Il y a " + Operation.displayedDate(post.getDate())));
+        holder.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
 
         // club avatar
 

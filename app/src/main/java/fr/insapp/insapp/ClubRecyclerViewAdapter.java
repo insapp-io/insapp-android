@@ -12,49 +12,48 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.ClubThumb;
-import fr.insapp.insapp.modeles.Event;
+import fr.insapp.insapp.modeles.Club;
 import fr.insapp.insapp.utility.ImageLoader;
 
 /**
  * Created by thoma on 30/10/2016.
  */
 
-public class ClubThumbRecyclerViewAdapter extends RecyclerView.Adapter<ClubThumbRecyclerViewAdapter.ClubThumbViewHolder> {
+public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerViewAdapter.ClubViewHolder> {
 
     protected Context context;
 
-    protected List<ClubThumb> thumbs;
+    protected List<Club> clubs;
     protected ImageLoader imageLoader;
 
-    protected OnClubThumbItemClickListener listener;
+    protected OnClubItemClickListener listener;
 
-    public interface OnClubThumbItemClickListener {
-        void onClubThumbItemClick(ClubThumb clubThumb);
+    public interface OnClubItemClickListener {
+        void onClubItemClick(Club club);
     }
 
-    public ClubThumbRecyclerViewAdapter(Context context, List<ClubThumb> thumbs) {
+    public ClubRecyclerViewAdapter(Context context, List<Club> clubs) {
         this.context = context;
-        this.thumbs = thumbs;
+        this.clubs = clubs;
         this.imageLoader = new ImageLoader(context);
     }
 
-    public void setOnItemClickListener(OnClubThumbItemClickListener listener) {
+    public void setOnItemClickListener(OnClubItemClickListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public ClubThumbViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ClubViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.club_thumb, parent, false);
-        return new ClubThumbViewHolder(view);
+        return new ClubViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ClubThumbViewHolder holder, int position) {
-        final ClubThumb thumb = thumbs.get(position);
+    public void onBindViewHolder(ClubViewHolder holder, int position) {
+        final Club club = clubs.get(position);
 
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + thumb.getProfilPicture(), holder.avatar);
-        holder.name.setText(thumb.getName());
+        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getProfilPicture(), holder.avatar);
+        holder.name.setText(club.getName());
 
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,29 +61,29 @@ public class ClubThumbRecyclerViewAdapter extends RecyclerView.Adapter<ClubThumb
                 context.startActivity(new Intent(context, ClubActivity.class));
             }
         });
-        holder.bind(thumb, listener);
+        holder.bind(club, listener);
     }
 
     @Override
     public int getItemCount() {
-        return thumbs.size();
+        return clubs.size();
     }
 
-    public static class ClubThumbViewHolder extends RecyclerView.ViewHolder {
+    public static class ClubViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView avatar;
         public TextView name;
 
-        public ClubThumbViewHolder(View view) {
+        public ClubViewHolder(View view) {
             super(view);
             this.avatar = (CircleImageView) view.findViewById(R.id.club_thumb);
             this.name = (TextView) view.findViewById(R.id.clubname);
         }
 
-        public void bind(final ClubThumb clubThumb, final OnClubThumbItemClickListener listener) {
+        public void bind(final Club club, final OnClubItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onClubThumbItemClick(clubThumb);
+                    listener.onClubItemClick(club);
                 }
             });
         }

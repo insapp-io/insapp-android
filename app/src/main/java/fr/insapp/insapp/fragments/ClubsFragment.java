@@ -18,11 +18,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.ClubActivity;
-import fr.insapp.insapp.ClubThumbRecyclerViewAdapter;
+import fr.insapp.insapp.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.ClubThumb;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.modeles.Club;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,20 +30,16 @@ import java.util.List;
 public class ClubsFragment extends Fragment {
 
     private View view;
-    private ClubThumbRecyclerViewAdapter adapter;
-
-    public ClubsFragment() {
-        // Required empty public constructor
-    }
-
+    private ClubRecyclerViewAdapter adapter;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new ClubThumbRecyclerViewAdapter(getContext(), generateClubThumbs());
-        adapter.setOnItemClickListener(new ClubThumbRecyclerViewAdapter.OnClubThumbItemClickListener() {
+        this.adapter = new ClubRecyclerViewAdapter(getContext(), generateClubs());
+        adapter.setOnItemClickListener(new ClubRecyclerViewAdapter.OnClubItemClickListener() {
             @Override
-            public void onClubThumbItemClick(ClubThumb clubThumb) {
+            public void onClubItemClick(Club club) {
                 getContext().startActivity(new Intent(getContext(), ClubActivity.class));
             }
         });
@@ -65,8 +61,8 @@ public class ClubsFragment extends Fragment {
         return view;
     }
 
-    private List<ClubThumb> generateClubThumbs() {
-        final List<ClubThumb> thumbs = new ArrayList<>();
+    private List<Club> generateClubs() {
+        final List<Club> clubs = new ArrayList<>();
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
@@ -76,10 +72,10 @@ public class ClubsFragment extends Fragment {
 
                         for (int i = 0; i < jsonarray.length(); i++) {
                             final JSONObject jsonobject = jsonarray.getJSONObject(i);
-                            ClubThumb club = new ClubThumb(jsonobject);
+                            Club club = new Club(jsonobject);
 
-                            if(!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty())
-                                thumbs.add(new ClubThumb(jsonobject));
+                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty())
+                                clubs.add(new Club(jsonobject));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -89,6 +85,6 @@ public class ClubsFragment extends Fragment {
         });
         request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.credentials.getSessionToken());
 
-        return thumbs;
+        return clubs;
     }
 }

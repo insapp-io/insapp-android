@@ -14,7 +14,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.insapp.insapp.ClubActivity;
 import fr.insapp.insapp.EventActivity;
 import fr.insapp.insapp.modeles.Event;
 import fr.insapp.insapp.EventRecyclerViewAdapter;
@@ -41,9 +40,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         super.onCreate(savedInstanceState);
 
         this.adapter = new EventRecyclerViewAdapter(generateEvents());
-        adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
-            public void onItemClick(Event event) {
+            public void onEventItemClick(Event event) {
                 getContext().startActivity(new Intent(getContext(), EventActivity.class));
             }
         });

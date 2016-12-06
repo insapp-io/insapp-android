@@ -61,9 +61,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         // onClick
 /*
-        adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onEventItemClick(View view, int position) {
                 getContext().startActivity(new Intent(getContext(), PostActivity.class));
                 Toast.makeText(getContext(), "index: " + position, Toast.LENGTH_SHORT).show();
             }

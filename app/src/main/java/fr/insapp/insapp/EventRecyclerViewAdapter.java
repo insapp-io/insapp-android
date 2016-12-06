@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,25 +17,25 @@ import fr.insapp.insapp.modeles.Event;
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.EventViewHolder> {
 
     protected List<Event> events;
-    protected OnItemClickListener listener;
 
-    public interface OnItemClickListener {
-        void onItemClick(Event event);
+    protected OnEventItemClickListener listener;
+
+    public interface OnEventItemClickListener {
+        void onEventItemClick(Event event);
     }
 
     public EventRecyclerViewAdapter(List<Event> events) {
         this.events = events;
     }
 
-    @Override
-    public EventRecyclerViewAdapter.EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_event, parent, false);
-        EventRecyclerViewAdapter.EventViewHolder holder = new EventRecyclerViewAdapter.EventViewHolder(view);
-        return holder;
+    public void setOnItemClickListener(OnEventItemClickListener listener) {
+        this.listener = listener;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    @Override
+    public EventRecyclerViewAdapter.EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_event, parent, false);
+        return new EventRecyclerViewAdapter.EventViewHolder(view);
     }
 
     @Override
@@ -63,11 +62,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             this.name = (TextView) view.findViewById(R.id.name_event);
         }
 
-        public void bind(final Event event, final OnItemClickListener listener) {
+        public void bind(final Event event, final OnEventItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClick(event);
+                    listener.onEventItemClick(event);
                 }
             });
         }

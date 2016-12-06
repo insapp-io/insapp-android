@@ -4,22 +4,20 @@ package fr.insapp.insapp.fragments;
  * Created by thoma on 27/10/2016.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.insapp.insapp.ClubActivity;
 import fr.insapp.insapp.ClubThumbRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
@@ -43,6 +41,12 @@ public class ClubsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         this.adapter = new ClubThumbRecyclerViewAdapter(getContext(), generateClubThumbs());
+        adapter.setOnItemClickListener(new ClubThumbRecyclerViewAdapter.OnClubThumbItemClickListener() {
+            @Override
+            public void onClubThumbItemClick(ClubThumb clubThumb) {
+                getContext().startActivity(new Intent(getContext(), ClubActivity.class));
+            }
+        });
     }
 
     @Override
@@ -57,14 +61,6 @@ public class ClubsFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-        /*
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
 
         return view;
     }

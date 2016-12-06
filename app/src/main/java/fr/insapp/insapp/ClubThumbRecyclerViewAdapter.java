@@ -13,6 +13,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.modeles.ClubThumb;
+import fr.insapp.insapp.modeles.Event;
 import fr.insapp.insapp.utility.ImageLoader;
 
 /**
@@ -26,15 +27,25 @@ public class ClubThumbRecyclerViewAdapter extends RecyclerView.Adapter<ClubThumb
     protected List<ClubThumb> thumbs;
     protected ImageLoader imageLoader;
 
+    protected OnClubThumbItemClickListener listener;
+
+    public interface OnClubThumbItemClickListener {
+        void onClubThumbItemClick(ClubThumb clubThumb);
+    }
+
     public ClubThumbRecyclerViewAdapter(Context context, List<ClubThumb> thumbs) {
         this.context = context;
         this.thumbs = thumbs;
         this.imageLoader = new ImageLoader(context);
     }
 
+    public void setOnItemClickListener(OnClubThumbItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public ClubThumbViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.club_thumb, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.club_thumb, parent, false);
         return new ClubThumbViewHolder(view);
     }
 
@@ -51,6 +62,7 @@ public class ClubThumbRecyclerViewAdapter extends RecyclerView.Adapter<ClubThumb
                 context.startActivity(new Intent(context, ClubActivity.class));
             }
         });
+        holder.bind(thumb, listener);
     }
 
     @Override
@@ -66,6 +78,15 @@ public class ClubThumbRecyclerViewAdapter extends RecyclerView.Adapter<ClubThumb
             super(view);
             this.avatar = (CircleImageView) view.findViewById(R.id.club_thumb);
             this.name = (TextView) view.findViewById(R.id.clubname);
+        }
+
+        public void bind(final ClubThumb clubThumb, final OnClubThumbItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onClubThumbItemClick(clubThumb);
+                }
+            });
         }
     }
 }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -25,11 +24,9 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
-import fr.insapp.insapp.modeles.Club;
 import fr.insapp.insapp.modeles.Post;
 import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Operation;
-import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 19/11/2016.
@@ -166,8 +163,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public PostViewHolder(View view) {
             super(view);
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.avatar);
-            this.title = (TextView) view.findViewById(R.id.name);
+            this.avatar = (CircleImageView) view.findViewById(R.id.avatar_club_post);
+            this.title = (TextView) view.findViewById(R.id.name_post);
             this.text = (TextView) view.findViewById(R.id.text);
             this.image = (ImageView) view.findViewById(R.id.image);
             this.likeButton = (LikeButton) view.findViewById(R.id.like_button);

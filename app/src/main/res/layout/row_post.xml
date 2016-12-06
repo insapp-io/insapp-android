@@ -6,7 +6,7 @@
     android:padding="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatar"
+        android:id="@+id/avatar_club_post"
         android:layout_marginTop="12dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="6dp"
@@ -15,15 +15,15 @@
         app:civ_border_width="0dp" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/name_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#3e3e3e"
         android:textSize="15sp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/avatar"
-        android:layout_alignTop="@+id/avatar" />
+        android:layout_toEndOf="@+id/avatar_club_post"
+        android:layout_alignTop="@+id/avatar_club_post" />
 
     <TextView
         android:textColor="#7f7f7f"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:id="@+id/date_post"
-        android:layout_alignBaseline="@+id/name"
+        android:layout_alignBaseline="@+id/name_post"
         android:layout_alignParentEnd="true" />
 
     <TextView
@@ -41,10 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="4dp"
-        android:layout_toEndOf="@+id/avatar"
+        android:layout_toEndOf="@+id/avatar_club_post"
         android:textColorLink="@color/colorPrimary"
-
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/name_post"
         android:textColor="#7f7f7f"
         android:lineSpacingExtra="3dp" />
 
@@ -53,7 +52,7 @@
         android:id="@+id/image"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/avatar"
+        android:layout_toEndOf="@+id/avatar_club_post"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="2dp"
         android:layout_marginStart="10dp"
@@ -69,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image"
-        android:layout_toEndOf="@+id/avatar"
+        android:layout_toEndOf="@+id/avatar_club_post"
         android:layout_marginStart="-8dp"
         android:layout_marginBottom="-15dp" />
 </RelativeLayout>

@@ -136,7 +136,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
     public void refreshPost(String output, final PostViewHolder holder){
         try {
-
             JSONObject json = new JSONObject(output);
 
             Post postRefreshed = new Post(json.getJSONObject("post"));

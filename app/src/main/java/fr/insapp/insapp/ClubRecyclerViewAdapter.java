@@ -61,6 +61,7 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
                 context.startActivity(new Intent(context, ClubActivity.class));
             }
         });
+
         holder.bind(club, listener);
     }
 
@@ -75,6 +76,7 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
 
         public ClubViewHolder(View view) {
             super(view);
+
             this.avatar = (CircleImageView) view.findViewById(R.id.club_thumb);
             this.name = (TextView) view.findViewById(R.id.clubname);
         }

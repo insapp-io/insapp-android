@@ -31,7 +31,7 @@ public class ClubsFragment extends Fragment {
 
     private View view;
     private ClubRecyclerViewAdapter adapter;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

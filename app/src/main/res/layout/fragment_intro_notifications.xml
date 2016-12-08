@@ -7,7 +7,7 @@
     android:paddingBottom="80dp" >
 
     <TextView
-        android:text="Évènements"
+        android:text="Notifications"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/tutorial_event_android3"/>
+            android:src="@drawable/intro_notifications"/>
     </LinearLayout>
 
     <LinearLayout
@@ -45,19 +45,28 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center|top"
+            android:gravity="center"
             android:layout_weight="0.9"
-            android:orientation="vertical"
-            android:weightSum="1">
+            android:orientation="vertical" >
 
             <TextView
-                android:text="Reste au courant des derniers évènements des associations"
+                android:text="Reçois les notifications pour ne jamais rien louper"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="center|bottom"
                 android:layout_weight="0.6"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
+
+            <CheckBox
+                android:text="Activer les notifications"
+                android:id="@+id/checkbox_enable_notifications"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:buttonTint="@android:color/white"
+                android:layout_weight="0.4" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

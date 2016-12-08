@@ -20,7 +20,7 @@ public class IntroClubsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_intro_association, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_intro_clubs, container, false);
         return rootView;
     }
 }

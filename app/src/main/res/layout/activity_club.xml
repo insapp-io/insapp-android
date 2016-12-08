@@ -36,7 +36,7 @@
 
                 <RelativeLayout
                     android:id="@+id/club_profile"
-                    android:background="#00ff00"
+                    android:background="@android:color/holo_orange_dark"
                     android:paddingBottom="6dp"
                     android:clipChildren="false"
                     android:layout_width="match_parent"
@@ -116,6 +116,7 @@
                             android:lineSpacingExtra="3dp"
                             android:textIsSelectable="true" />
 
+                        <!--
                         <LinearLayout
                             android:id="@+id/club_extra_info"
                             android:orientation="horizontal"
@@ -125,7 +126,6 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp">
 
-                            <!--
                             <ImageView
                                 android:id="@+id/club_website_icon"
                                 android:src="@drawable/ic_insert_link_black_24dp"
@@ -143,8 +143,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6sp"
                                 android:maxLines="1" />
-                            -->
                         </LinearLayout>
+                        -->
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -173,7 +173,7 @@
             android:id="@+id/tabs_club"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#00ff00"
+            android:background="@android:color/holo_orange_dark"
             app:tabMode="fixed"
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"

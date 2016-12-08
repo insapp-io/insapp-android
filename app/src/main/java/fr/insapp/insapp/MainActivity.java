@@ -1,6 +1,7 @@
 package fr.insapp.insapp;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,7 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new PostsFragment(), "News");
+        Fragment postsFragment = new PostsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("layout", R.layout.row_post_with_avatars);
+        postsFragment.setArguments(bundle);
+        adapter.addFragment(postsFragment, "News");
+
         adapter.addFragment(new EventsFragment(), "Events");
         adapter.addFragment(new ClubsFragment(), "Associations");
         adapter.addFragment(new NotificationsFragment(), "Activité");

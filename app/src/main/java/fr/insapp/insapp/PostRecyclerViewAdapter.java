@@ -40,15 +40,18 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     private List<Post> posts;
     private ImageLoader imageLoader;
 
+    private int layout;
+
     private OnPostItemClickListener listener;
 
     public interface OnPostItemClickListener {
         void onPostItemClick(Post post);
     }
 
-    public PostRecyclerViewAdapter(Context context, List<Post> posts) {
+    public PostRecyclerViewAdapter(Context context, List<Post> posts, int layout) {
         this.context = context;
         this.posts = posts;
+        this.layout = layout;
         this.imageLoader = new ImageLoader(context);
     }
 
@@ -58,7 +61,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_post, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new PostViewHolder(view);
     }
 
@@ -66,7 +69,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     public void onBindViewHolder(final PostViewHolder holder, final int position) {
         final Post post = posts.get(position);
 
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.avatar);//holder.avatar.setImageResource(post.avatar_id);
+        if (layout == R.layout.row_post_with_avatars)
+            imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.avatar);
+
         holder.title.setText(post.getTitle());
         holder.text.setText(post.getDescription());
         imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.image);
@@ -76,12 +81,14 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
         // club avatar
 
-        holder.avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                context.startActivity(new Intent(context, ClubActivity.class));
-            }
-        });
+        if (layout == R.layout.row_post_with_avatars) {
+            holder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, ClubActivity.class));
+                }
+            });
+        }
 
         // description links
 
@@ -100,7 +107,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     public void processFinish(String output) {
                         if (!output.isEmpty()) {
                             refreshPost(output, holder);
-                            //Toast.makeText(context, "liked: " + position, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -115,7 +121,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     public void processFinish(String output) {
                         if (!output.isEmpty()) {
                             refreshPost(output, holder);
-                            //Toast.makeText(context, "unliked: " + position, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -167,7 +172,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public PostViewHolder(View view) {
             super(view);
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.avatar_club_post);
+            if (layout == R.layout.row_post_with_avatars)
+                this.avatar = (CircleImageView) view.findViewById(R.id.avatar_club_post);
+
             this.title = (TextView) view.findViewById(R.id.name_post);
             this.text = (TextView) view.findViewById(R.id.text);
             this.image = (ImageView) view.findViewById(R.id.image);

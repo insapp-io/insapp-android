@@ -31,15 +31,27 @@ import java.util.List;
 
 public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private int layout;
+
     private View view;
     private PostRecyclerViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new PostRecyclerViewAdapter(getContext(), generatePosts());
+        // arguments
+
+        final Bundle bundle = getArguments();
+        if (bundle != null) {
+            this.layout = bundle.getInt("layout", R.layout.row_post_with_avatars);
+        }
+
+        // adapter
+
+        this.adapter = new PostRecyclerViewAdapter(getContext(), generatePosts(), layout);
         adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
             @Override
             public void onPostItemClick(Post post) {

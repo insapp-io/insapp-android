@@ -38,12 +38,18 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         Fragment postsFragment = new PostsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("layout", R.layout.row_post_with_avatars);
-        postsFragment.setArguments(bundle);
+        Bundle bundle1 = new Bundle();
+        bundle1.putInt("layout", R.layout.row_post_with_avatars);
+        postsFragment.setArguments(bundle1);
         adapter.addFragment(postsFragment, "News");
 
-        adapter.addFragment(new EventsFragment(), "Events");
+        Fragment eventsFragment = new EventsFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putInt("layout", R.layout.row_event_with_avatars);
+        eventsFragment.setArguments(bundle2);
+        adapter.addFragment(eventsFragment, "Events");
+
+
         adapter.addFragment(new ClubsFragment(), "Associations");
         adapter.addFragment(new NotificationsFragment(), "Activité");
 

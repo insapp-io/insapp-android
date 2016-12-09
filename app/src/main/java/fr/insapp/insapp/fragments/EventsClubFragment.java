@@ -15,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.modeles.Event;
 import fr.insapp.insapp.EventRecyclerViewAdapter;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.modeles.Event;
 
 /**
- * Created by thoma on 27/10/2016.
+ * Created by thoma on 09/12/2016.
  */
 
-public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int layout;
 
@@ -39,7 +39,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         final Bundle bundle = getArguments();
         if (bundle != null) {
-            this.layout = bundle.getInt("layout", R.layout.row_event_with_avatars);
+            this.layout = bundle.getInt("layout", R.layout.row_event);
         }
 
         // adapter
@@ -55,30 +55,23 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_events, container, false);
+        this.view = inflater.inflate(R.layout.fragment_events_club, container, false);
 
-        RecyclerView recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
-        recyclerViewToday.setHasFixedSize(true);
-        recyclerViewToday.setNestedScrollingEnabled(false);
+        RecyclerView recyclerViewFuture = (RecyclerView) view.findViewById(R.id.recyclerview_events_future);
+        recyclerViewFuture.setHasFixedSize(true);
+        recyclerViewFuture.setNestedScrollingEnabled(false);
 
-        RecyclerView recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
-        recyclerViewWeek.setHasFixedSize(true);
-        recyclerViewWeek.setNestedScrollingEnabled(false);
+        RecyclerView recyclerViewPast = (RecyclerView) view.findViewById(R.id.recyclerview_events_past);
+        recyclerViewPast.setHasFixedSize(true);
+        recyclerViewPast.setNestedScrollingEnabled(false);
 
-        RecyclerView recyclerViewMonth = (RecyclerView) view.findViewById(R.id.recyclerview_events_month);
-        recyclerViewMonth.setHasFixedSize(true);
-        recyclerViewMonth.setNestedScrollingEnabled(false);
+        recyclerViewFuture.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewFuture.setAdapter(adapter);
 
-        recyclerViewToday.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewToday.setAdapter(adapter);
+        recyclerViewPast.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewPast.setAdapter(adapter);
 
-        recyclerViewWeek.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewWeek.setAdapter(adapter);
-
-        recyclerViewMonth.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewMonth.setAdapter(adapter);
-
-        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events);
+        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events_club);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         return view;

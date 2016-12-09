@@ -18,14 +18,17 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     protected List<Event> events;
 
+    private int layout;
+
     protected OnEventItemClickListener listener;
 
     public interface OnEventItemClickListener {
         void onEventItemClick(Event event);
     }
 
-    public EventRecyclerViewAdapter(List<Event> events) {
+    public EventRecyclerViewAdapter(List<Event> events, int layout) {
         this.events = events;
+        this.layout = layout;
     }
 
     public void setOnItemClickListener(OnEventItemClickListener listener) {
@@ -34,7 +37,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     @Override
     public EventRecyclerViewAdapter.EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_event, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new EventRecyclerViewAdapter.EventViewHolder(view);
     }
 

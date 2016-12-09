@@ -14,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import fr.insapp.insapp.fragments.EventsFragment;
+import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 
 /**
@@ -87,12 +87,16 @@ public class ClubActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         Fragment postsFragment = new PostsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("layout", R.layout.row_post);
-        postsFragment.setArguments(bundle);
+        Bundle bundle1 = new Bundle();
+        bundle1.putInt("layout", R.layout.row_post);
+        postsFragment.setArguments(bundle1);
         adapter.addFragment(postsFragment, "News");
 
-        adapter.addFragment(new EventsFragment(), "Events");
+        Fragment eventsClubFragment = new EventsClubFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putInt("layout", R.layout.row_event);
+        eventsClubFragment.setArguments(bundle2);
+        adapter.addFragment(eventsClubFragment, "Events");
 
         viewPager.setAdapter(adapter);
     }

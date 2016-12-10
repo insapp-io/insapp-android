@@ -48,7 +48,7 @@ public class ClubActivity extends AppCompatActivity {
         // collapsing toolbar
 
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_club);
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_club);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_club);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
             int scrollRange = -1;
@@ -59,7 +59,7 @@ public class ClubActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle("Title");
+                    collapsingToolbar.setTitle("Club");
                     isShow = true;
                 } else if(isShow) {
                     collapsingToolbar.setTitle(" ");

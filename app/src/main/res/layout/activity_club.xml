@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_club"
+        android:id="@+id/appbar_club"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@android:color/holo_orange_dark"
             app:collapsedTitleTextAppearance="@style/CollapsingToolbar"
             android:fitsSystemWindows="true">
 

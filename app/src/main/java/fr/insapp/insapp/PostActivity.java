@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -90,13 +91,16 @@ public class PostActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-/*
-    private List<Comment> generateComments() {
-        List<Comment> comments = post.getComments();
 
-        //for (Comment c : comments)
-        //   comments.add(new Comment(R.drawable.sample_0, "tbouvier", "Ceci est un commentaire, un long commentaire pour voir si ça marche bien, et effectivement, ça marche !"));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
 
-        return comments;
-    }*/
+        return super.onOptionsItemSelected(item);
+    }
 }

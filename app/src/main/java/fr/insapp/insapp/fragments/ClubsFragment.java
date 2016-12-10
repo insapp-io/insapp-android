@@ -63,6 +63,7 @@ public class ClubsFragment extends Fragment {
 
     private List<Club> generateClubs() {
         final List<Club> clubs = new ArrayList<>();
+
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
@@ -83,8 +84,8 @@ public class ClubsFragment extends Fragment {
                 }
             }
         });
-        request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.credentials.getSessionToken());
 
+        request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.credentials.getSessionToken());
         return clubs;
     }
 }

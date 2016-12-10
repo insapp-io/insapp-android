@@ -86,5 +86,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <activity
+            android:name="fr.insapp.insapp.UsersActivity"
+            android:label="Participants"
+            android:parentActivityName=".EventActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EventActivity" />
+        </activity>
     </application>
 </manifest>

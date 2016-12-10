@@ -33,6 +33,7 @@ public class ClubActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private RelativeLayout relativeLayout;
+    private TextView nameTextView;
     private TextView descriptionTextView;
     private ViewPager viewPager;
 
@@ -42,6 +43,7 @@ public class ClubActivity extends AppCompatActivity {
         setContentView(R.layout.activity_club);
 
         this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
+        this.nameTextView = (TextView) findViewById(R.id.club_name);
         this.descriptionTextView = (TextView) findViewById(R.id.club_description_text);
 
         // toolbar
@@ -97,11 +99,14 @@ public class ClubActivity extends AppCompatActivity {
                 Palette.Swatch vibrant = palette.getVibrantSwatch();
                 Palette.Swatch darkVibrant = palette.getDarkVibrantSwatch();
                 if (vibrant != null) {
-                    relativeLayout.setBackgroundColor(vibrant.getRgb());
-                    tabLayout.setBackgroundColor(vibrant.getRgb());
                     collapsingToolbar.setContentScrimColor(vibrant.getRgb());
                     collapsingToolbar.setStatusBarScrimColor(darkVibrant.getRgb());
+                    collapsingToolbar.setCollapsedTitleTextColor(vibrant.getTitleTextColor());
 
+                    relativeLayout.setBackgroundColor(vibrant.getRgb());
+                    tabLayout.setBackgroundColor(vibrant.getRgb());
+
+                    nameTextView.setTextColor(vibrant.getBodyTextColor());
                     descriptionTextView.setTextColor(vibrant.getBodyTextColor());
                     tabLayout.setTabTextColors(vibrant.getTitleTextColor(), vibrant.getBodyTextColor());
                     tabLayout.setSelectedTabIndicatorColor(darkVibrant.getBodyTextColor());

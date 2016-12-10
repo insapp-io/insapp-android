@@ -34,7 +34,6 @@
 
                 <RelativeLayout
                     android:id="@+id/club_profile"
-                    android:background="@android:color/holo_orange_dark"
                     android:paddingBottom="6dp"
                     android:clipChildren="false"
                     android:layout_width="match_parent"
@@ -50,26 +49,14 @@
                         android:minHeight="50dp">
 
                         <TextView
-                            android:id="@+id/club_at"
-                            android:text="club_at"
-                            android:textSize="13sp"
-                            android:paddingEnd="12dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="1dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_alignParentStart="true" />
-
-                        <TextView
                             android:id="@+id/club_name"
                             android:text="club_name"
                             android:textSize="18sp"
-                            android:paddingEnd="12dp"
+                            android:paddingEnd="14dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:maxLines="1"
-                            android:layout_below="@id/club_at" />
+                            android:layout_marginTop="12dp"
+                            android:maxLines="1" />
 
                         <Button
                             android:id="@+id/club_contact"
@@ -133,10 +120,10 @@
             android:id="@+id/tabs_club"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_orange_dark"
             app:tabMode="fixed"
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorHeight="0dp"
             app:tabTextColor="#f2f2f2"
             app:tabSelectedTextColor="@android:color/white" />
     </android.support.design.widget.AppBarLayout>

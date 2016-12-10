@@ -77,8 +77,8 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
         public ClubViewHolder(View view) {
             super(view);
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.club_thumb);
-            this.name = (TextView) view.findViewById(R.id.clubname);
+            this.avatar = (CircleImageView) view.findViewById(R.id.club_avatar);
+            this.name = (TextView) view.findViewById(R.id.club_name);
         }
 
         public void bind(final Club club, final OnClubItemClickListener listener) {

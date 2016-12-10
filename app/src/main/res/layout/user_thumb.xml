@@ -8,14 +8,22 @@
     android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/club_avatar"
+        android:id="@+id/user_avatar"
         android:layout_marginTop="12dp"
         android:layout_width="65dp"
         android:layout_height="65dp"
         app:civ_border_width="0dp" />
 
     <TextView
-        android:id="@+id/club_name"
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#3e3e3e"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/user_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

@@ -37,14 +37,20 @@ public class PostActivity extends AppCompatActivity {
         System.out.println("HAS EXTRA " + intent.hasExtra("post"));
         post = intent.getParcelableExtra("post");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_post);
-        setSupportActionBar(toolbar);
+        // toolbar
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_post);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        // recycler view
 
         this.recyclerView = (RecyclerView) findViewById(R.id.recyclerview_comments);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);

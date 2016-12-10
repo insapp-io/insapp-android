@@ -1,5 +1,6 @@
 package fr.insapp.insapp;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
@@ -9,13 +10,13 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,6 +45,14 @@ public class EventActivity extends AppCompatActivity {
         this.dateImageView = (ImageView) findViewById(R.id.event_date_icon);
         this.dateTextView = (TextView) findViewById(R.id.event_date_text);
         this.descriptionTextView = (TextView) findViewById(R.id.event_desc);
+
+        final LinearLayout participantsLayout = (LinearLayout) findViewById(R.id.event_participants_layout);
+        participantsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getBaseContext(), UsersActivity.class));
+            }
+        });
 
         // toolbar
 
@@ -87,14 +96,14 @@ public class EventActivity extends AppCompatActivity {
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                Palette.Swatch lightVibrant = palette.getLightVibrantSwatch();
                 Palette.Swatch vibrant = palette.getVibrantSwatch();
                 Palette.Swatch darkVibrant = palette.getDarkVibrantSwatch();
                 if (vibrant != null) {
-                    relativeLayout.setBackgroundColor(vibrant.getRgb());
                     collapsingToolbar.setContentScrimColor(darkVibrant.getRgb());
                     collapsingToolbar.setStatusBarScrimColor(darkVibrant.getRgb());
                     collapsingToolbar.setCollapsedTitleTextColor(darkVibrant.getTitleTextColor());
+
+                    relativeLayout.setBackgroundColor(vibrant.getRgb());
 
                     participantsImageView.setColorFilter(vibrant.getBodyTextColor());
                     participantsTextView.setTextColor(vibrant.getBodyTextColor());

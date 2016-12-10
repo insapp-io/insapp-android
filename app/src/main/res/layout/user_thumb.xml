@@ -19,14 +19,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="#3e3e3e"
+        android:textColor="#7f7f7f"
         android:textSize="13sp" />
 
     <TextView
         android:id="@+id/user_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:textColor="#3e3e3e"
         android:textSize="13sp" />
 </LinearLayout>

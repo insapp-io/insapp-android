@@ -1,5 +1,7 @@
 package fr.insapp.insapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -11,9 +13,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
@@ -25,12 +32,17 @@ public class ClubActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
+    private RelativeLayout relativeLayout;
+    private TextView descriptionTextView;
     private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
+
+        this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
+        this.descriptionTextView = (TextView) findViewById(R.id.club_description_text);
 
         // toolbar
 
@@ -75,6 +87,27 @@ public class ClubActivity extends AppCompatActivity {
 
         this.tabLayout = (TabLayout) findViewById(R.id.tabs_club);
         tabLayout.setupWithViewPager(viewPager);
+
+        // dynamic color
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.large_sample_0);
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                Palette.Swatch vibrant = palette.getVibrantSwatch();
+                Palette.Swatch darkVibrant = palette.getDarkVibrantSwatch();
+                if (vibrant != null) {
+                    relativeLayout.setBackgroundColor(vibrant.getRgb());
+                    tabLayout.setBackgroundColor(vibrant.getRgb());
+                    collapsingToolbar.setContentScrimColor(vibrant.getRgb());
+                    collapsingToolbar.setStatusBarScrimColor(darkVibrant.getRgb());
+
+                    descriptionTextView.setTextColor(vibrant.getBodyTextColor());
+                    tabLayout.setTabTextColors(vibrant.getTitleTextColor(), vibrant.getBodyTextColor());
+                    tabLayout.setSelectedTabIndicatorColor(darkVibrant.getBodyTextColor());
+                }
+            }
+        });
 
         // transparent status bar
 

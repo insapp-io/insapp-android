@@ -17,8 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:contentScrim="@android:color/holo_orange_dark"
-            app:collapsedTitleTextAppearance="@style/CollapsingToolbar"
             android:fitsSystemWindows="true">
 
             <RelativeLayout

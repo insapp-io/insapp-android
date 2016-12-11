@@ -28,6 +28,8 @@ public class EventActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private RelativeLayout relativeLayout;
+    private ImageView clubImageView;
+    private TextView clubTextView;
     private ImageView participantsImageView;
     private TextView participantsTextView;
     private ImageView dateImageView;
@@ -40,6 +42,8 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
 
         this.relativeLayout = (RelativeLayout) findViewById(R.id.event_info);
+        this.clubImageView = (ImageView) findViewById(R.id.event_club_icon);
+        this.clubTextView = (TextView) findViewById(R.id.event_club_text);
         this.participantsImageView = (ImageView) findViewById(R.id.event_participants_icon);
         this.participantsTextView = (TextView) findViewById(R.id.event_participants_text);
         this.dateImageView = (ImageView) findViewById(R.id.event_date_icon);
@@ -105,6 +109,8 @@ public class EventActivity extends AppCompatActivity {
 
                     relativeLayout.setBackgroundColor(vibrant.getRgb());
 
+                    clubImageView.setColorFilter(vibrant.getBodyTextColor());
+                    clubTextView.setTextColor(vibrant.getBodyTextColor());
                     participantsImageView.setColorFilter(vibrant.getBodyTextColor());
                     participantsTextView.setTextColor(vibrant.getBodyTextColor());
                     dateImageView.setColorFilter(vibrant.getBodyTextColor());

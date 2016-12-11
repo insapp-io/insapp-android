@@ -58,10 +58,35 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/event_participants_layout"
+                    android:id="@+id/event_club_layout"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/event_club_icon"
+                        android:src="@drawable/ic_adjust_black_24dp"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="6dp" />
+
+                    <TextView
+                        android:id="@+id/event_club_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:text="Bebop" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/event_participants_layout"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_below="@id/event_club_layout">
 
                     <ImageView
                         android:id="@+id/event_participants_icon"

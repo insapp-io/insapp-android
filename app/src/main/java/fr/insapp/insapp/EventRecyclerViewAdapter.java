@@ -44,6 +44,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     @Override
     public void onBindViewHolder(EventRecyclerViewAdapter.EventViewHolder holder, int position) {
         final Event event = events.get(position);
+
         //holder.thumbnail.setImageResource(event.thumbnail_id);
         holder.name.setText(event.name);
 
@@ -61,6 +62,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
         public EventViewHolder(View view) {
             super(view);
+
             //this.thumbnail = (ImageView) view.findViewById(R.id.thumbnail_event);
             this.name = (TextView) view.findViewById(R.id.name_event);
         }

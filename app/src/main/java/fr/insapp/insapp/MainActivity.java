@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         adapter.addFragment(new ClubsFragment(), "Associations");
-        adapter.addFragment(new NotificationsFragment(), "Activité");
+        adapter.addFragment(new NotificationsFragment(), "Notifications");
 
         viewPager.setAdapter(adapter);
     }

@@ -61,6 +61,12 @@
             android:label="@string/app_name">
         </activity>
 
+        <activity
+            android:name="fr.insapp.insapp.SearchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="fr.insapp.insapp.ClubActivity"

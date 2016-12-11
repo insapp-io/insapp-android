@@ -35,7 +35,7 @@ public class NotificationsFragment extends Fragment {
         adapter.setOnItemClickListener(new NotificationRecyclerViewAdapter.OnNotificationItemClickListener() {
             @Override
             public void onNotificationItemClick(Notification notification) {
-                
+
             }
         });
     }

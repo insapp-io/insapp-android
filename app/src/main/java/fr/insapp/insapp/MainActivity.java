@@ -1,13 +1,38 @@
 package fr.insapp.insapp;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.lang.reflect.Field;
 
 import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
@@ -17,7 +42,11 @@ import fr.insapp.insapp.fragments.NotificationsFragment;
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private LinearLayout searchContainer;
+    private Menu menu;
+    private MenuItem menuItem;
     private SearchView searchView;
+    private EditText toolbarSearchView;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -32,23 +61,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        // search view
-
-        this.searchView = (SearchView) findViewById(R.id.search);
-        /*
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        */
-
         // view pager
 
         this.viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -58,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
         this.tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        // search
+
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -83,8 +99,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.search_menu, menu);
 
-        return true;
+        this.menuItem = menu.findItem(R.id.search);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        this.searchView = searchView;
+
+        try {
+            Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
+            mCursorDrawableRes.setAccessible(true);
+            mCursorDrawableRes.set(searchView, R.drawable.cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
+        } catch (Exception e) {}
+
+        return super.onCreateOptionsMenu(menu);
     }
 }

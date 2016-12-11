@@ -1,9 +1,12 @@
 package fr.insapp.insapp;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -17,13 +20,19 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
+import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.modeles.Club;
+import fr.insapp.insapp.utility.ImageLoader;
 
 /**
  * Created by thoma on 11/11/2016.
@@ -35,16 +44,27 @@ public class ClubActivity extends AppCompatActivity {
     private RelativeLayout relativeLayout;
     private TextView nameTextView;
     private TextView descriptionTextView;
+    private CircleImageView iconImageView;
+    private ImageView headerImageView;
     private ViewPager viewPager;
+
+    private Club club;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
 
+        ImageLoader imageLoader = new ImageLoader(this);
+
         this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
         this.nameTextView = (TextView) findViewById(R.id.club_name);
         this.descriptionTextView = (TextView) findViewById(R.id.club_description_text);
+        this.iconImageView = (CircleImageView) findViewById(R.id.club_avatar);
+        this.headerImageView = (ImageView) findViewById(R.id.header_image_club);
+
+        Intent intent = getIntent();
+        club = intent.getParcelableExtra("club");
 
         // toolbar
 
@@ -92,7 +112,18 @@ public class ClubActivity extends AppCompatActivity {
 
         // dynamic color
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.large_sample_0);
+        int bgColor = Color.parseColor("#" + club.getBgColor());
+        int fgColor = Color.parseColor("#" + club.getFgColor());
+
+        relativeLayout.setBackgroundColor(bgColor);
+        nameTextView.setText(club.getName());
+        nameTextView.setTextColor(fgColor);
+        descriptionTextView.setText(club.getDescription());
+        descriptionTextView.setTextColor(fgColor);
+        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getProfilPicture(), iconImageView);
+        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getCover(), headerImageView);
+
+        /*Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.large_sample_0);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
@@ -111,6 +142,16 @@ public class ClubActivity extends AppCompatActivity {
                     tabLayout.setTabTextColors(vibrant.getTitleTextColor(), vibrant.getBodyTextColor());
                     tabLayout.setSelectedTabIndicatorColor(darkVibrant.getBodyTextColor());
                 }
+            }
+        });
+*/
+
+        // Send a mail
+        Button club_contact = (Button) findViewById(R.id.club_contact);
+        club_contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendEmail();
             }
         });
 
@@ -150,5 +191,15 @@ public class ClubActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void sendEmail(){
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{ club.getEmail() });
+        intent.putExtra(Intent.EXTRA_SUBJECT, "");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

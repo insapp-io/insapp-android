@@ -64,7 +64,7 @@ public class ClubActivity extends AppCompatActivity {
         this.headerImageView = (ImageView) findViewById(R.id.header_image_club);
 
         Intent intent = getIntent();
-        club = intent.getParcelableExtra("club");
+        this.club = intent.getParcelableExtra("club");
 
         // toolbar
 
@@ -116,6 +116,8 @@ public class ClubActivity extends AppCompatActivity {
         int fgColor = Color.parseColor("#" + club.getFgColor());
 
         relativeLayout.setBackgroundColor(bgColor);
+        tabLayout.setBackgroundColor(bgColor);
+
         nameTextView.setText(club.getName());
         nameTextView.setTextColor(fgColor);
         descriptionTextView.setText(club.getDescription());

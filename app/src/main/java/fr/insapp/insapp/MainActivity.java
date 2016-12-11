@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // search view
 
         this.searchView = (SearchView) findViewById(R.id.search);
+        /*
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        */
 
         // view pager
 

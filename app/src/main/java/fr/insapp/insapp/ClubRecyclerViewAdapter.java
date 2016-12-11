@@ -58,7 +58,7 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, ClubActivity.class));
+                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
             }
         });
 

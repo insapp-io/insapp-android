@@ -1,16 +1,36 @@
 package fr.insapp.insapp.modeles;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by thoma on 12/11/2016.
- */
 
-public class Club {
+/**
+ * Created by Antoine on 25/02/2016.
+ *
+
+ type Club struct {
+ ID          bson.ObjectId   `bson:"_id,omitempty"`
+ Name        string          `json:"name"`
+ Email       string          `json:"email"`
+ Description string          `json:"description"`
+ Events      []bson.ObjectId `json:"events"`
+ Posts       []bson.ObjectId `json:"posts"`
+ Palette			[][]int					`json:"palette"`
+ SelectedColor int						`json:"selectedcolor"`
+ Profile    	string          `json:"profile"`
+ Cover	    	string          `json:"cover"`
+ BgColor     string          `json:"bgcolor"`
+ FgColor string `json:"fgcolor"`
+ }
+
+ */
+public class Club implements Parcelable {
 
     private String id;
     private String name, email, description;
@@ -21,6 +41,44 @@ public class Club {
     private String bgColor;
     private String fgColor;
 
+    public static final Parcelable.Creator<Club> CREATOR = new Parcelable.Creator<Club>() {
+
+        @Override
+        public Club createFromParcel(Parcel source) {
+            return new Club(source);
+        }
+
+        @Override
+        public Club[] newArray(int size) {
+            return new Club[size];
+        }
+
+    };
+
+    public Club(Parcel in){
+        this.id = in.readString();
+        this.name = in.readString();
+        this.email = in.readString();
+        this.description = in.readString();
+
+        this.events = new ArrayList<String>();
+        int nb_events = in.readInt();
+        if(nb_events > 0) {
+            in.readStringList(this.events);
+        }
+
+        this.posts = new ArrayList<String>();
+        int nb_posts = in.readInt();
+        if(nb_posts > 0) {
+            in.readStringList(this.posts);
+        }
+
+        this.profilPicture = in.readString();
+        this.cover = in.readString();
+        this.bgColor = in.readString();
+        this.fgColor = in.readString();
+    }
+
     public Club(String id, String name, String email, String description, ArrayList<String> events, ArrayList<String> posts, String profilPicture, String cover, String bgColor, String fgColor) {
         this.id = id;
         this.name = name;
@@ -28,7 +86,6 @@ public class Club {
         this.description = description;
         this.events = events;
         this.posts = posts;
-
         this.profilPicture = profilPicture;
         this.cover = cover;
         this.bgColor = bgColor;
@@ -102,5 +159,27 @@ public class Club {
 
     public String getFgColor() {
         return fgColor;
+    }
+
+    public int describeContents() {
+        return 0; //On renvoie 0, car notre classe ne contient pas de FileDescriptor
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(description);
+        dest.writeInt(events.size());
+        if(events.size() > 0)
+            dest.writeStringList(events);
+        dest.writeInt(posts.size());
+        if(posts.size() > 0)
+            dest.writeStringList(posts);
+
+        dest.writeString(profilPicture);
+        dest.writeString(cover);
+        dest.writeString(bgColor);
+        dest.writeString(fgColor);
     }
 }

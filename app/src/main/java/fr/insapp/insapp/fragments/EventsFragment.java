@@ -11,10 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.modeles.Event;
 import fr.insapp.insapp.EventRecyclerViewAdapter;
 import fr.insapp.insapp.R;
@@ -44,11 +52,11 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // adapter
 
-        this.adapter = new EventRecyclerViewAdapter(generateEvents(), layout);
+        this.adapter = new EventRecyclerViewAdapter(getContext(), generateEvents(), layout);
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                getContext().startActivity(new Intent(getContext(), EventActivity.class));
+                getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });
     }
@@ -85,10 +93,32 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private List<Event> generateEvents() {
-        List<Event> events = new ArrayList<>();
+        final List<Event> events = new ArrayList<>();
 
-        for (int i = 0; i < 3; i++)
-            events.add(new Event(R.drawable.sample_0, "Un événement trop cool"));
+        HttpGet request = new HttpGet(new AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                if (!output.isEmpty()) {
+
+                    Date atm = Calendar.getInstance().getTime();
+
+                    try {
+                        JSONArray jsonarray = new JSONArray(output);
+                        for (int i = 0; i < jsonarray.length(); i++) {
+                            JSONObject jsonObject = jsonarray.getJSONObject(i);
+
+                            Event event = new Event(jsonObject);
+                            if (event.getDateEnd().getTime() > atm.getTime())
+                                events.add(event);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
 
         return events;
     }

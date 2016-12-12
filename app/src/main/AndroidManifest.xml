@@ -63,6 +63,7 @@
 
         <activity
             android:name="fr.insapp.insapp.SearchActivity"
+            android:label="Résultats"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

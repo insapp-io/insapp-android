@@ -75,10 +75,6 @@ public class ClubActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
-            upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
 
         // collapsing toolbar
@@ -117,11 +113,20 @@ public class ClubActivity extends AppCompatActivity {
         int bgColor = Color.parseColor("#" + club.getBgColor());
         int fgColor = Color.parseColor("#" + club.getFgColor());
 
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
         collapsingToolbar.setContentScrimColor(bgColor);
         collapsingToolbar.setStatusBarScrimColor(bgColor);
 
         relativeLayout.setBackgroundColor(bgColor);
         tabLayout.setBackgroundColor(bgColor);
+
+        if (Color.luminance(fgColor) <= 0.5)
+            tabLayout.setTabTextColors(Utils.lighten(fgColor, 0.9), fgColor);
+        else
+            tabLayout.setTabTextColors(Utils.darken(fgColor, 0.3), fgColor);
 
         nameTextView.setText(club.getName());
         nameTextView.setTextColor(fgColor);

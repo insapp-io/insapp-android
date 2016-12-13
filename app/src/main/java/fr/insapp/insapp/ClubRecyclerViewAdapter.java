@@ -55,13 +55,6 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
         imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getProfilPicture(), holder.avatar);
         holder.name.setText(club.getName());
 
-        holder.avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-            }
-        });
-
         holder.bind(club, listener);
     }
 

@@ -40,7 +40,7 @@ public class ClubsFragment extends Fragment {
         adapter.setOnItemClickListener(new ClubRecyclerViewAdapter.OnClubItemClickListener() {
             @Override
             public void onClubItemClick(Club club) {
-                getContext().startActivity(new Intent(getContext(), ClubActivity.class));
+                getContext().startActivity(new Intent(getContext(), ClubActivity.class).putExtra("club", club));
             }
         });
     }

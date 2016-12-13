@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,7 @@ import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.modeles.Club;
 import fr.insapp.insapp.utility.ImageLoader;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 11/11/2016.
@@ -64,7 +66,7 @@ public class ClubActivity extends AppCompatActivity {
         this.headerImageView = (ImageView) findViewById(R.id.header_image_club);
 
         Intent intent = getIntent();
-        club = intent.getParcelableExtra("club");
+        this.club = intent.getParcelableExtra("club");
 
         // toolbar
 
@@ -73,10 +75,6 @@ public class ClubActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
-            upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
 
         // collapsing toolbar
@@ -93,7 +91,7 @@ public class ClubActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle("Club");
+                    collapsingToolbar.setTitle(club.getName());
                     isShow = true;
                 } else if(isShow) {
                     collapsingToolbar.setTitle(" ");
@@ -115,38 +113,39 @@ public class ClubActivity extends AppCompatActivity {
         int bgColor = Color.parseColor("#" + club.getBgColor());
         int fgColor = Color.parseColor("#" + club.getFgColor());
 
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        collapsingToolbar.setContentScrimColor(bgColor);
+        collapsingToolbar.setStatusBarScrimColor(bgColor);
+
         relativeLayout.setBackgroundColor(bgColor);
+        tabLayout.setBackgroundColor(bgColor);
+
+        if (Color.luminance(fgColor) <= 0.5)
+            tabLayout.setTabTextColors(Utils.lighten(fgColor, 0.9), fgColor);
+        else
+            tabLayout.setTabTextColors(Utils.darken(fgColor, 0.3), fgColor);
+
         nameTextView.setText(club.getName());
         nameTextView.setTextColor(fgColor);
+
         descriptionTextView.setText(club.getDescription());
         descriptionTextView.setTextColor(fgColor);
+
+        collapsingToolbar.setCollapsedTitleTextColor(fgColor);
+
         imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getProfilPicture(), iconImageView);
         imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getCover(), headerImageView);
 
-        /*Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.large_sample_0);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                Palette.Swatch vibrant = palette.getVibrantSwatch();
-                Palette.Swatch darkVibrant = palette.getDarkVibrantSwatch();
-                if (vibrant != null) {
-                    collapsingToolbar.setContentScrimColor(vibrant.getRgb());
-                    collapsingToolbar.setStatusBarScrimColor(darkVibrant.getRgb());
-                    collapsingToolbar.setCollapsedTitleTextColor(vibrant.getTitleTextColor());
+        // links
 
-                    relativeLayout.setBackgroundColor(vibrant.getRgb());
-                    tabLayout.setBackgroundColor(vibrant.getRgb());
+        Linkify.addLinks(descriptionTextView, Linkify.ALL);
+        Utils.stripUnderlines(descriptionTextView);
 
-                    nameTextView.setTextColor(vibrant.getBodyTextColor());
-                    descriptionTextView.setTextColor(vibrant.getBodyTextColor());
-                    tabLayout.setTabTextColors(vibrant.getTitleTextColor(), vibrant.getBodyTextColor());
-                    tabLayout.setSelectedTabIndicatorColor(darkVibrant.getBodyTextColor());
-                }
-            }
-        });
-*/
+        // send a mail
 
-        // Send a mail
         Button club_contact = (Button) findViewById(R.id.club_contact);
         club_contact.setOnClickListener(new View.OnClickListener() {
             @Override

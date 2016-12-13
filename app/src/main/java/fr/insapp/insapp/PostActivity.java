@@ -58,6 +58,8 @@ public class PostActivity extends AppCompatActivity {
         CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(post.getComments());
         recyclerView.setAdapter(adapter);
 
+        // swipe
+
         initSwipe(this);
     }
 

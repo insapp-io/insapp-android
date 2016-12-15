@@ -1,8 +1,6 @@
 package fr.insapp.insapp;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -16,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.view.MenuItem;
@@ -26,13 +23,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Club;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Utils;
 

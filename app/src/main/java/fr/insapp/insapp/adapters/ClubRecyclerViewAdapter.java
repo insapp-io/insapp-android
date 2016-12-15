@@ -1,7 +1,6 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Club;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.utility.ImageLoader;
 
 /**

@@ -18,8 +18,8 @@ import org.json.JSONObject;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Post;
-import fr.insapp.insapp.PostRecyclerViewAdapter;
+import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.R;
 
 import java.util.ArrayList;

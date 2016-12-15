@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -14,7 +12,7 @@ import org.json.JSONObject;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
-import fr.insapp.insapp.modeles.Credentials;
+import fr.insapp.insapp.models.Credentials;
 import fr.insapp.insapp.utility.File;
 import fr.insapp.insapp.utility.Utils;
 

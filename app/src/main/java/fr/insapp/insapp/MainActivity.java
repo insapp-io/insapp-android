@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -17,10 +18,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
+import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
@@ -104,8 +105,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_profile:
+                startActivity(new Intent(this, ProfileActivity.class));
+                break;
+
             case R.id.action_credits:
                 startActivity(new Intent(this, CreditsActivity.class));
+                break;
+
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
 
             default:

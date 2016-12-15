@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +8,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fr.insapp.insapp.modeles.Notification;
+import fr.insapp.insapp.R;
+import fr.insapp.insapp.models.Notification;
 
 /**
  * Created by thoma on 11/12/2016.

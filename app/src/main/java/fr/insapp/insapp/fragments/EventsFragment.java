@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.modeles.Event;
-import fr.insapp.insapp.EventRecyclerViewAdapter;
+import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.R;
 
 /**

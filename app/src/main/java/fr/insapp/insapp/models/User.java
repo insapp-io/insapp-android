@@ -1,4 +1,4 @@
-package fr.insapp.insapp.modeles;
+package fr.insapp.insapp.models;
 
 /**
  * Created by thoma on 10/12/2016.

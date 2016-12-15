@@ -10,7 +10,8 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.insapp.insapp.modeles.User;
+import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
+import fr.insapp.insapp.models.User;
 
 /**
  * Created by thoma on 10/12/2016.

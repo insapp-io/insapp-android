@@ -1,4 +1,4 @@
-package fr.insapp.insapp.modeles;
+package fr.insapp.insapp.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

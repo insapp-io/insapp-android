@@ -18,11 +18,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.ClubActivity;
-import fr.insapp.insapp.ClubRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.modeles.Club;
+import fr.insapp.insapp.models.Club;
 
 import java.util.ArrayList;
 import java.util.List;

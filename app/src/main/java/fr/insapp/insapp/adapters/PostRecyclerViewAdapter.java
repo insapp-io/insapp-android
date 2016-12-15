@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +20,14 @@ import org.json.JSONObject;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.ClubActivity;
+import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
-import fr.insapp.insapp.modeles.Post;
+import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;

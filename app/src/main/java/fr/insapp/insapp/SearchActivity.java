@@ -18,12 +18,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Club;
-import fr.insapp.insapp.modeles.Event;
-import fr.insapp.insapp.modeles.Post;
-import fr.insapp.insapp.modeles.User;
+import fr.insapp.insapp.models.Club;
+import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.User;
 
 /**
  * Created by thoma on 11/12/2016.

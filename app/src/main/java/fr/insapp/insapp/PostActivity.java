@@ -16,7 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import fr.insapp.insapp.modeles.Post;
+import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
+import fr.insapp.insapp.models.Post;
 
 /**
  * Created by thoma on 12/11/2016.

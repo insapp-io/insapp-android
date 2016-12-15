@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="À venir" />
+                android:text="@string/events_future" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardview_events_future"
@@ -48,7 +48,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_below="@id/cardview_events_future"
-                android:text="Passés" />
+                android:text="@string/events_past" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardview_events_past"

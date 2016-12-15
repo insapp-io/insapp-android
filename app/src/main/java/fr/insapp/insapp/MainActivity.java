@@ -67,16 +67,16 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle1 = new Bundle();
         bundle1.putInt("layout", R.layout.row_post_with_avatars);
         postsFragment.setArguments(bundle1);
-        adapter.addFragment(postsFragment, "News");
+        adapter.addFragment(postsFragment, getResources().getString(R.string.posts));
 
         Fragment eventsFragment = new EventsFragment();
         Bundle bundle2 = new Bundle();
         bundle2.putInt("layout", R.layout.row_event_with_avatars);
         eventsFragment.setArguments(bundle2);
-        adapter.addFragment(eventsFragment, "Events");
+        adapter.addFragment(eventsFragment, getResources().getString(R.string.events));
 
-        adapter.addFragment(new ClubsFragment(), "Associations");
-        adapter.addFragment(new NotificationsFragment(), "Notifications");
+        adapter.addFragment(new ClubsFragment(), getResources().getString(R.string.clubs));
+        adapter.addFragment(new NotificationsFragment(), getResources().getString(R.string.notifications));
 
         viewPager.setAdapter(adapter);
     }

@@ -50,7 +50,7 @@
 
                         <TextView
                             android:id="@+id/club_name"
-                            android:text="club_name"
+                            android:text="@string/club_name"
                             android:textSize="18sp"
                             android:paddingEnd="14dp"
                             android:layout_width="match_parent"
@@ -84,7 +84,7 @@
 
                         <TextView
                             android:id="@+id/club_description_text"
-                            android:text="Robot 1-X, save my friends! And Zoidberg! It's okay, Bender. I like cooking too. Enough about your promiscuous mother, Hermes! We have bigger problems. No. We're on the top. You mean while I'm sleeping in it?"
+                            android:text="@string/club_desc"
                             android:textSize="14sp"
                             android:linksClickable="true"
                             android:layout_width="match_parent"

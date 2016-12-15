@@ -179,7 +179,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 this.avatar = (CircleImageView) view.findViewById(R.id.avatar_club_post);
 
             this.title = (TextView) view.findViewById(R.id.name_post);
-            this.text = (TextView) view.findViewById(R.id.text);
+            this.text = (TextView) view.findViewById(R.id.post_text);
             this.image = (ImageView) view.findViewById(R.id.image);
             this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
             this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);

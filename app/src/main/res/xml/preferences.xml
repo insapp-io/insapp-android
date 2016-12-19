@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/settings_profile">
+
+        <EditTextPreference
+            android:title="@string/settings_name"
+            android:key="username"
+            android:summary="@string/settings_name_summary" />
+
+        <ListPreference
+            android:title="@string/settings_sex"
+            android:key="sex"
+            android:summary="@string/settings_sex_summary"
+            android:defaultValue="unknown"
+            android:entries="@array/listArraySex"
+            android:entryValues="@array/listValuesSex" />
+
+        <ListPreference
+            android:title="@string/settings_class"
+            android:summary="@string/settings_class_summary"
+            android:key="class"
+            android:defaultValue="unknown"
+            android:entries="@array/listArrayClass"
+            android:entryValues="@array/listValuesClass" />
+
+        <EditTextPreference
+            android:title="@string/settings_mail"
+            android:key="email"
+            android:summary="@string/settings_mail_summary" />
+
+        <EditTextPreference
+            android:title="@string/settings_description"
+            android:key="description"
+            android:summary="@string/settings_description_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_options">
+
+        <CheckBoxPreference
+            android:title="@string/settings_notifications"
+            android:defaultValue="true"
+            android:summary="@string/settings_notifications_summary"
+            android:key="notifications" />
+
+        <CheckBoxPreference
+            android:title="@string/settings_calendar"
+            android:defaultValue="false"
+            android:summary="@string/settings_calendar_summary"
+            android:key="calendar" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

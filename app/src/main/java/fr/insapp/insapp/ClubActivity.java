@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.EventsClubFragment;
@@ -132,8 +134,8 @@ public class ClubActivity extends AppCompatActivity {
 
         collapsingToolbar.setCollapsedTitleTextColor(fgColor);
 
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getProfilPicture(), iconImageView);
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getCover(), headerImageView);
+        Glide.with(this).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(iconImageView);
+        Glide.with(this).load(HttpGet.IMAGEURL + club.getCover()).into(headerImageView);
 
         // links
 

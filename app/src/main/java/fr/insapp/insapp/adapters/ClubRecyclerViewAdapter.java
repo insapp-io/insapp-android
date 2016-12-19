@@ -7,13 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.utility.ImageLoader;
 
 /**
  * Created by thoma on 30/10/2016.
@@ -24,7 +25,6 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
     protected Context context;
 
     protected List<Club> clubs;
-    protected ImageLoader imageLoader;
 
     protected OnClubItemClickListener listener;
 
@@ -35,7 +35,6 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
     public ClubRecyclerViewAdapter(Context context, List<Club> clubs) {
         this.context = context;
         this.clubs = clubs;
-        this.imageLoader = new ImageLoader(context);
     }
 
     public void setOnItemClickListener(OnClubItemClickListener listener) {
@@ -52,8 +51,11 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
     public void onBindViewHolder(ClubViewHolder holder, int position) {
         final Club club = clubs.get(position);
 
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getProfilPicture(), holder.avatar);
         holder.name.setText(club.getName());
+
+        // glide
+
+        Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
 
         holder.bind(club, listener);
     }

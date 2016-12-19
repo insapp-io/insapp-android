@@ -12,7 +12,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Event;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.utility.ImageLoader;
 
 /**
@@ -114,7 +115,7 @@ public class EventActivity extends AppCompatActivity {
         int fgColor = Color.parseColor("#" + event.getFgColor());
 
         System.out.println(HttpGet.IMAGEURL + event.getImage());
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + event.getImage(), header_image_event);
+        Glide.with(this).load(HttpGet.IMAGEURL + event.getImage()).into(header_image_event);
 
         int nb_participants = event.getParticipants().size();
         if (nb_participants <= 1)
@@ -127,30 +128,7 @@ public class EventActivity extends AppCompatActivity {
         this.dateTextView.setTextColor(fgColor);
         this.participantsTextView.setTextColor(fgColor);
         this.descriptionTextView.setText(event.getDescription());
-/*
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bebop2);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                Palette.Swatch vibrant = palette.getVibrantSwatch();
-                Palette.Swatch darkVibrant = palette.getDarkVibrantSwatch();
-                if (vibrant != null) {
-                    collapsingToolbar.setContentScrimColor(darkVibrant.getRgb());
-                    collapsingToolbar.setStatusBarScrimColor(darkVibrant.getRgb());
-                    collapsingToolbar.setCollapsedTitleTextColor(darkVibrant.getTitleTextColor());
 
-                    relativeLayout.setBackgroundColor(vibrant.getRgb());
-
-                    clubImageView.setColorFilter(vibrant.getBodyTextColor());
-                    clubTextView.setTextColor(vibrant.getBodyTextColor());
-                    participantsImageView.setColorFilter(vibrant.getBodyTextColor());
-                    participantsTextView.setTextColor(vibrant.getBodyTextColor());
-                    dateImageView.setColorFilter(vibrant.getBodyTextColor());
-                    dateTextView.setTextColor(vibrant.getBodyTextColor());
-                }
-            }
-        });
-*/
         // transparent status bar
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

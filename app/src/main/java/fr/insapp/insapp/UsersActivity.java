@@ -59,10 +59,6 @@ public class UsersActivity extends AppCompatActivity {
     private List<User> generateUsers() {
         final List<User> users = new ArrayList<>();
 
-        for (int i = 0; i < 56; i++) {
-            users.add(new User("tbouvier", "tomatrocho"));
-        }
-
         return users;
     }
 

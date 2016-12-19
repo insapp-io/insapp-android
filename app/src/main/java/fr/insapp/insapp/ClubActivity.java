@@ -119,8 +119,6 @@ public class ClubActivity extends AppCompatActivity {
         relativeLayout.setBackgroundColor(bgColor);
         tabLayout.setBackgroundColor(bgColor);
 
-        Toast.makeText(this, Integer.toHexString(fgColor), Toast.LENGTH_SHORT).show();
-
         if (fgColor == 0xffffffff)
             tabLayout.setTabTextColors(0xffe8e8e8, fgColor);
         else

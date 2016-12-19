@@ -49,8 +49,8 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         final User user = users.get(position);
 
         holder.avatar.setImageResource(R.drawable.sample_6);
-        holder.name.setText(user.name);
-        holder.username.setText(user.username);
+        holder.name.setText(user.getName());
+        holder.username.setText(user.getUsername());
 
         holder.bind(user, listener);
     }

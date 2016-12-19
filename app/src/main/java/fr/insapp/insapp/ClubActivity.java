@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -31,7 +32,6 @@ import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Utils;
 
 /**
@@ -54,8 +54,6 @@ public class ClubActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
-
-        ImageLoader imageLoader = new ImageLoader(this);
 
         this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
         this.nameTextView = (TextView) findViewById(R.id.club_name);
@@ -121,10 +119,12 @@ public class ClubActivity extends AppCompatActivity {
         relativeLayout.setBackgroundColor(bgColor);
         tabLayout.setBackgroundColor(bgColor);
 
-        if (Color.luminance(fgColor) <= 0.5)
-            tabLayout.setTabTextColors(Utils.lighten(fgColor, 0.9), fgColor);
+        Toast.makeText(this, Integer.toHexString(fgColor), Toast.LENGTH_SHORT).show();
+
+        if (fgColor == 0xffffffff)
+            tabLayout.setTabTextColors(0xffe8e8e8, fgColor);
         else
-            tabLayout.setTabTextColors(Utils.darken(fgColor, 0.3), fgColor);
+            tabLayout.setTabTextColors(0xff595959, fgColor);
 
         nameTextView.setText(club.getName());
         nameTextView.setTextColor(fgColor);

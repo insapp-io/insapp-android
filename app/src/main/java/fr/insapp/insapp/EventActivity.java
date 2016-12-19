@@ -1,8 +1,6 @@
 package fr.insapp.insapp;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -24,7 +22,6 @@ import com.bumptech.glide.Glide;
 
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Event;
-import fr.insapp.insapp.utility.ImageLoader;
 
 /**
  * Created by thomas on 05/12/2016.
@@ -49,8 +46,6 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-
-        ImageLoader imageLoader = new ImageLoader(getApplicationContext());
 
         Intent intent = getIntent();
         event = intent.getParcelableExtra("event");

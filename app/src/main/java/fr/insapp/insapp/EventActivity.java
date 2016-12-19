@@ -3,6 +3,7 @@ package fr.insapp.insapp;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -20,6 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.modeles.Event;
+import fr.insapp.insapp.utility.ImageLoader;
+
 /**
  * Created by thomas on 05/12/2016.
  */
@@ -28,6 +33,7 @@ public class EventActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private RelativeLayout relativeLayout;
+    private ImageView header_image_event;
     private ImageView clubImageView;
     private TextView clubTextView;
     private ImageView participantsImageView;
@@ -36,12 +42,20 @@ public class EventActivity extends AppCompatActivity {
     private TextView dateTextView;
     private TextView descriptionTextView;
 
+    private Event event;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
+        ImageLoader imageLoader = new ImageLoader(getApplicationContext());
+
+        Intent intent = getIntent();
+        event = intent.getParcelableExtra("event");
+
         this.relativeLayout = (RelativeLayout) findViewById(R.id.event_info);
+        this.header_image_event = (ImageView) findViewById(R.id.header_image_event);
         this.clubImageView = (ImageView) findViewById(R.id.event_club_icon);
         this.clubTextView = (TextView) findViewById(R.id.event_club_text);
         this.participantsImageView = (ImageView) findViewById(R.id.event_participants_icon);
@@ -96,6 +110,24 @@ public class EventActivity extends AppCompatActivity {
 
         // dynamic color
 
+        int bgColor = Color.parseColor("#" + event.getBgColor());
+        int fgColor = Color.parseColor("#" + event.getFgColor());
+
+        System.out.println(HttpGet.IMAGEURL + event.getImage());
+        imageLoader.DisplayImage(HttpGet.IMAGEURL + event.getImage(), header_image_event);
+
+        int nb_participants = event.getParticipants().size();
+        if (nb_participants <= 1)
+            this.participantsTextView.setText(Integer.toString(nb_participants) + " participant");
+        else
+            this.participantsTextView.setText(Integer.toString(nb_participants) + " participants");
+
+        this.relativeLayout.setBackgroundColor(bgColor);
+        this.clubTextView.setTextColor(fgColor);
+        this.dateTextView.setTextColor(fgColor);
+        this.participantsTextView.setTextColor(fgColor);
+        this.descriptionTextView.setText(event.getDescription());
+/*
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bebop2);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
@@ -118,7 +150,7 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
         });
-
+*/
         // transparent status bar
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -44,7 +44,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
         // adapter
 
-        this.adapter = new EventRecyclerViewAdapter(generateEvents(), layout);
+        this.adapter = new EventRecyclerViewAdapter(getContext(), generateEvents(), layout);
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -80,8 +80,8 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
     private List<Event> generateEvents() {
         List<Event> events = new ArrayList<>();
 
-        for (int i = 0; i < 1; i++)
-            events.add(new Event(R.drawable.sample_0, "Un événement trop cool"));
+        //for (int i = 0; i < 1; i++)
+        //    events.add(new Event(R.drawable.sample_0, "Un événement trop cool"));
 
         return events;
     }

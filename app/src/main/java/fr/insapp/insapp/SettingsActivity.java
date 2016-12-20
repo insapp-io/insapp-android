@@ -36,35 +36,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     private User user;
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (HttpGet.credentials != null) {
-            outState.putString("id", HttpGet.credentials.getId());
-            outState.putString("userID", HttpGet.credentials.getUserID());
-            outState.putString("username", HttpGet.credentials.getUsername());
-            outState.putString("sessionToken", HttpGet.credentials.getSessionToken());
-            outState.putString("info_user", HttpGet.info_user);
-
-            super.onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // saved instance state
-
-        if (savedInstanceState != null){
-            String id = savedInstanceState.getString("id");
-            String userID = savedInstanceState.getString("userID");
-            String username = savedInstanceState.getString("username");
-            String sessionToken = savedInstanceState.getString("sessionToken");
-            HttpGet.credentials = new Credentials(id, userID, username, sessionToken);
-
-            String info_user = savedInstanceState.getString("info_user");
-            if (!info_user.isEmpty())
-                HttpGet.info_user = info_user;
-        }
 
         // toolbar
 
@@ -74,7 +47,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         ((Toolbar) toolbar.getChildAt(0)).setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                finish();
+                updateProfile();
+                onBackPressed();
             }
         });
 
@@ -151,19 +125,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         super.onPause();
 
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                updateProfile();
-                onBackPressed();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -105,7 +105,8 @@
                     android:layout_marginTop="-50dp"
                     android:layout_below="@id/header_image_club"
                     app:civ_border_width="2dp"
-                    app:civ_border_color="#fff"/>
+                    app:civ_border_color="@color/white"
+                    app:civ_fill_color="@color/white" />
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar

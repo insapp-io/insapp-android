@@ -98,7 +98,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                if (!output.isEmpty()) {
+                if (output != null) {
 
                     Date atm = Calendar.getInstance().getTime();
 

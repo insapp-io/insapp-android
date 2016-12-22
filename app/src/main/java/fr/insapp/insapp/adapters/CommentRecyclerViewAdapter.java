@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,10 +66,10 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
                     // Get the drawable of avatar
                     Resources resources = context.getResources();
+                    Log.d("DEBUG", Operation.drawableProfilName(user));
                     int id = resources.getIdentifier(Operation.drawableProfilName(user), "drawable", context.getPackageName());
 
-
-                    Drawable dr = context.getResources().getDrawable(id);
+                    Drawable dr = ContextCompat.getDrawable(context, id);
                     Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
 
                     // Resize the bitmap

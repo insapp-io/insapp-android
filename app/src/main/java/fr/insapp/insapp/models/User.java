@@ -138,7 +138,7 @@ public class User implements Parcelable{
     }
 
     public String getPromotion() {
-        return promotion.toLowerCase();
+        return promotion;
     }
 
     public String getGender() {

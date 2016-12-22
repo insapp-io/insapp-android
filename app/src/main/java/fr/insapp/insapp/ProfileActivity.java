@@ -41,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // adapter
 
-        this.adapter = new EventRecyclerViewAdapter(this, generateEvents(), R.layout.row_event_with_avatars);
+        this.adapter = new EventRecyclerViewAdapter(this, R.layout.row_event_with_avatars);
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -69,14 +69,5 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private List<Event> generateEvents() {
-        List<Event> events = new ArrayList<>();
-
-        //for (int i = 0; i < 1; i++)
-        //    events.add(new Event(R.drawable.sample_0, "Un événement trop cool"));
-
-        return events;
     }
 }

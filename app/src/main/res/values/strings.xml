@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Insapp</string>
 
+    <string name="positive_button">OUI</string>
+    <string name="negative_button">NON</string>
+
     <string name="intro_profile">Porte haut les couleurs de ton départ\' en éditant ton profil</string>
     <string name="intro_posts">Suis l\'actualité de tes associations préférées grâce à la page des News</string>
     <string name="intro_notifications">Reçois les notifications pour ne jamais rien louper</string>
@@ -24,6 +27,10 @@
     <string name="settings_notifications_summary">Une notification est envoyée lorsqu\'une association ajoute une news ou un évènement</string>
     <string name="settings_calendar">Ajout des évènements au calendrier</string>
     <string name="settings_calendar_summary">Les évènements auxquels tu participes sont ajoutés à ton calendrier</string>
+
+    <string name="report_action">Signaler un commentaire</string>
+    <string name="report_are_you_sure">Voulez-vous signaler ce commentaire ?</string>
+    <string name="report_success">Commentaire signalé avec succès</string>
 
     <string name="posts">News</string>
     <string name="clubs">Associations</string>

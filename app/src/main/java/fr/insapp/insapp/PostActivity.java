@@ -1,6 +1,7 @@
 package fr.insapp.insapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,8 +25,11 @@ import com.bumptech.glide.Glide;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
+import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Club;
+import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
@@ -103,8 +108,45 @@ public class PostActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+        // adapter
+
         this.adapter = new CommentRecyclerViewAdapter(PostActivity.this, post.getComments());
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemLongClickListener(new CommentRecyclerViewAdapter.OnCommentItemLongClickListener() {
+            @Override
+            public void onCommentItemLongClick(final Comment comment) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
+
+                // set title
+                alertDialogBuilder.setTitle(getString(R.string.report_action));
+
+                // set dialog message
+                alertDialogBuilder
+                        .setMessage(R.string.report_are_you_sure)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogAlert, int id) {
+                                HttpPut signaler = new HttpPut(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        Toast.makeText(PostActivity.this, getString(R.string.report_success), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                signaler.execute(HttpGet.ROOTURL + "/report/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogAlert, int id) {
+                                dialogAlert.cancel();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show it
+                alertDialog.show();
+            }
+        });
     }
 
     @Override

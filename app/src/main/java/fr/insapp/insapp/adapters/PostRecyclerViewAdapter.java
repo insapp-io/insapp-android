@@ -43,7 +43,6 @@ import fr.insapp.insapp.utility.Utils;
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.PostViewHolder> {
 
     private Context context;
-
     private List<Post> posts;
 
     private int layout;

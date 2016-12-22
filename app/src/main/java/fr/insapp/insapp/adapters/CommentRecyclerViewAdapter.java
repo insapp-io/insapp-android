@@ -1,18 +1,21 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +27,7 @@ import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
@@ -37,9 +41,19 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     private Context context;
     protected List<Comment> comments;
 
+    private OnCommentItemLongClickListener listener;
+
+    public interface OnCommentItemLongClickListener {
+        void onCommentItemLongClick(Comment comment);
+    }
+
     public CommentRecyclerViewAdapter(Context context, List<Comment> comments) {
         this.context = context;
         this.comments = comments;
+    }
+
+    public void setOnItemLongClickListener(OnCommentItemLongClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -84,13 +98,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
         });
         get.execute(HttpGet.ROOTUSER + "/" + comment.getUser() + "?token=" + HttpGet.credentials.getSessionToken());
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Log.d("DEBUG", "test");
-                return true;
-            }
-        });
+        holder.bind(comment, listener);
     }
 
     @Override
@@ -111,6 +119,16 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
             this.username = (TextView) view.findViewById(R.id.username_comment);
             this.text = (TextView) view.findViewById(R.id.text_comment);
             this.date = (TextView) view.findViewById(R.id.date_comment);
+        }
+
+        public void bind(final Comment comment, final OnCommentItemLongClickListener listener) {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    listener.onCommentItemLongClick(comment);
+                    return true;
+                }
+            });
         }
     }
 }

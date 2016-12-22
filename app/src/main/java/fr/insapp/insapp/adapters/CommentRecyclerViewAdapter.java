@@ -66,7 +66,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
                     // Get the drawable of avatar
                     Resources resources = context.getResources();
-                    Log.d("DEBUG", Operation.drawableProfilName(user));
                     int id = resources.getIdentifier(Operation.drawableProfilName(user), "drawable", context.getPackageName());
 
                     Drawable dr = ContextCompat.getDrawable(context, id);

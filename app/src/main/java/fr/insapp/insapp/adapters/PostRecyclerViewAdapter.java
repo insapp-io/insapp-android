@@ -56,7 +56,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
     public PostRecyclerViewAdapter(Context context, int layout) {
         this.context = context;
-        this.posts = new ArrayList<Post>();
+        this.posts = new ArrayList<>();
         this.layout = layout;
     }
 

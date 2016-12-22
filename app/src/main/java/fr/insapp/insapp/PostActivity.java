@@ -7,11 +7,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 12/11/2016.
@@ -34,12 +37,15 @@ public class PostActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private CommentRecyclerViewAdapter adapter;
+
     private Post post = null;
 
     private CircleImageView avatar_club;
     private TextView title;
     private TextView description;
     private TextView date;
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,7 @@ public class PostActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        // Fill post elements
+        // fill post elements
 
         final Club club = HttpGet.clubs.get(post.getAssociation());
 
@@ -73,6 +79,13 @@ public class PostActivity extends AppCompatActivity {
         this.title.setText(post.getTitle());
         this.description.setText(post.getDescription());
         this.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
+
+        // description links
+
+        Linkify.addLinks(description, Linkify.ALL);
+        Utils.stripUnderlines(description);
+
+        // listener
 
         this.avatar_club.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,50 +105,6 @@ public class PostActivity extends AppCompatActivity {
 
         this.adapter = new CommentRecyclerViewAdapter(PostActivity.this, post.getComments());
         recyclerView.setAdapter(adapter);
-
-        // swipe
-
-        initSwipe(this);
-    }
-
-    private void initSwipe(final Context context) {
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                final int fromPos = viewHolder.getAdapterPosition();
-                final int toPos = target.getAdapterPosition();
-                adapter.notifyItemMoved(fromPos, toPos);
-                return true;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                Toast.makeText(context, "" + direction, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    View itemView = viewHolder.itemView;
-
-                    float h = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float w = h / 2;
-
-                    if (dX < 0) {
-                        Paint paint = new Paint();
-                        paint.setColor(Color.parseColor("#ec5d57"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(),(float) itemView.getBottom());
-                        canvas.drawRect(background, paint);
-                    }
-                }
-
-                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override

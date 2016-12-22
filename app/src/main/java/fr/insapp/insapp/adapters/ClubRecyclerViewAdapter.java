@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,13 +33,18 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
         void onClubItemClick(Club club);
     }
 
-    public ClubRecyclerViewAdapter(Context context, List<Club> clubs) {
+    public ClubRecyclerViewAdapter(Context context) {
         this.context = context;
-        this.clubs = clubs;
+        this.clubs = new ArrayList<Club>();
     }
 
     public void setOnItemClickListener(OnClubItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void addItem(Club club) {
+        this.clubs.add(club);
+        this.notifyDataSetChanged();
     }
 
     @Override

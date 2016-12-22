@@ -46,7 +46,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
         // adapter
 
-        this.adapter = new EventRecyclerViewAdapter(getContext(), generateEvents(), layout);
+        this.adapter = new EventRecyclerViewAdapter(getContext(), layout);
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

@@ -135,7 +135,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     public void updateProfile(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         JSONObject json = new JSONObject();
-        boolean deleteFirstChar = false;
 
         try {
             json.put("name", preferences.getString("name", ""));
@@ -143,11 +142,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             json.put("description", preferences.getString("description", ""));
             json.put("email", preferences.getString("email", ""));
             json.put("emailpublic", user.isEmailPublic());
-            if (deleteFirstChar) {
-                json.put("promotion", preferences.getString("class", "").substring(1));
-            } else {
-                json.put("promotion", preferences.getString("class", ""));
-            }
+            json.put("promotion", preferences.getString("class", ""));
             json.put("gender", preferences.getString("sex", ""));
 
             JSONArray events = new JSONArray();

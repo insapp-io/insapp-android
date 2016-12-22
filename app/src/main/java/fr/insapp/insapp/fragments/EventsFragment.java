@@ -52,13 +52,15 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // adapter
 
-        this.adapter = new EventRecyclerViewAdapter(getContext(), generateEvents(), layout);
+        this.adapter = new EventRecyclerViewAdapter(getContext(), layout);
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
                 getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });
+
+        generateEvents();
     }
 
     @Override
@@ -92,9 +94,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return view;
     }
 
-    private List<Event> generateEvents() {
-        final List<Event> events = new ArrayList<>();
-
+    private void generateEvents() {
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
@@ -109,7 +109,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                             Event event = new Event(jsonObject);
                             if (event.getDateEnd().getTime() > atm.getTime())
-                                events.add(event);
+                                adapter.addItem(event);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -117,9 +117,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 }
             }
         });
-
         request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
-        return events;
     }
 
     @Override

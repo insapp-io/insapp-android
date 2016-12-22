@@ -70,7 +70,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerClubs = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewClubs.setLayoutManager(layoutManagerClubs);
 
-        ClubRecyclerViewAdapter adapterClubs = new ClubRecyclerViewAdapter(this, generateClubs());
+        ClubRecyclerViewAdapter adapterClubs = new ClubRecyclerViewAdapter(this);
         recyclerViewClubs.setAdapter(adapterClubs);
 
         // posts recycler view
@@ -82,7 +82,7 @@ public class SearchActivity extends AppCompatActivity {
         GridLayoutManager layoutManagerPosts = new GridLayoutManager(this, 3);
         recyclerViewPosts.setLayoutManager(layoutManagerPosts);
 
-        PostRecyclerViewAdapter adapterPosts = new PostRecyclerViewAdapter(this, generatePosts(), R.layout.row_post_thumb);
+        PostRecyclerViewAdapter adapterPosts = new PostRecyclerViewAdapter(this, R.layout.row_post_thumb);
         recyclerViewPosts.setAdapter(adapterPosts);
 
         // events recycler view
@@ -94,7 +94,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerEvents = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewEvents.setLayoutManager(layoutManagerEvents);
 
-        EventRecyclerViewAdapter adapterEvents = new EventRecyclerViewAdapter(this, generateEvents(), R.layout.row_event_with_avatars);
+        EventRecyclerViewAdapter adapterEvents = new EventRecyclerViewAdapter(this, R.layout.row_event_with_avatars);
         recyclerViewEvents.setAdapter(adapterEvents);
 
         // users recycler view

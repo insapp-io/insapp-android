@@ -36,13 +36,15 @@ public class ClubsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new ClubRecyclerViewAdapter(getContext(), generateClubs());
+        this.adapter = new ClubRecyclerViewAdapter(getContext());
         adapter.setOnItemClickListener(new ClubRecyclerViewAdapter.OnClubItemClickListener() {
             @Override
             public void onClubItemClick(Club club) {
                 getContext().startActivity(new Intent(getContext(), ClubActivity.class).putExtra("club", club));
             }
         });
+
+        generateClubs();
     }
 
     @Override
@@ -61,8 +63,7 @@ public class ClubsFragment extends Fragment {
         return view;
     }
 
-    private List<Club> generateClubs() {
-        final List<Club> clubs = new ArrayList<>();
+    private void generateClubs() {
 
         HttpGet request = new HttpGet(new AsyncResponse() {
 
@@ -76,7 +77,7 @@ public class ClubsFragment extends Fragment {
                             Club club = new Club(jsonobject);
 
                             if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty())
-                                clubs.add(new Club(jsonobject));
+                                adapter.addItem(new Club(jsonobject));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -84,8 +85,6 @@ public class ClubsFragment extends Fragment {
                 }
             }
         });
-
         request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.credentials.getSessionToken());
-        return clubs;
     }
 }

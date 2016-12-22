@@ -18,6 +18,7 @@ import com.like.OnLikeListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -51,14 +52,19 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         void onPostItemClick(Post post);
     }
 
-    public PostRecyclerViewAdapter(Context context, List<Post> posts, int layout) {
+    public PostRecyclerViewAdapter(Context context, int layout) {
         this.context = context;
-        this.posts = posts;
+        this.posts = new ArrayList<Post>();
         this.layout = layout;
     }
 
     public void setOnItemClickListener(OnPostItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void addItem(Post post) {
+        this.posts.add(post);
+        this.notifyDataSetChanged();
     }
 
     @Override

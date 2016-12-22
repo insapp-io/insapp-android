@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.insapp.insapp.R;
@@ -35,14 +36,19 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         void onEventItemClick(Event event);
     }
 
-    public EventRecyclerViewAdapter(Context context, List<Event> events, int layout) {
-        this.events = events;
+    public EventRecyclerViewAdapter(Context context, int layout) {
+        this.events = new ArrayList<Event>();
         this.layout = layout;
         this.imageLoader = new ImageLoader(context);
     }
 
     public void setOnItemClickListener(OnEventItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void addItem(Event event) {
+        this.events.add(event);
+        this.notifyDataSetChanged();
     }
 
     @Override

@@ -50,14 +50,15 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
 
         // adapter
-
-        this.adapter = new PostRecyclerViewAdapter(getContext(), generatePosts(), layout);
+        this.adapter = new PostRecyclerViewAdapter(getContext(), layout);
         adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
             @Override
             public void onPostItemClick(Post post) {
                 getContext().startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", post));
             }
         });
+
+        generatePosts();
     }
 
     @Override
@@ -82,9 +83,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return view;
     }
 
-    private List<Post> generatePosts() {
-        final List<Post> posts = new ArrayList<>();
-
+    private void generatePosts() {
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
@@ -94,18 +93,17 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                         for (int i = 0; i < jsonarray.length(); i++) {
                             final JSONObject jsonobject = jsonarray.getJSONObject(i);
-                            posts.add(new Post(jsonobject));
+                            adapter.addItem(new Post(jsonobject));
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
-
         request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
 
-        return posts;
     }
 
     @Override

@@ -76,8 +76,14 @@ public class ClubsFragment extends Fragment {
                             final JSONObject jsonobject = jsonarray.getJSONObject(i);
                             Club club = new Club(jsonobject);
 
-                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty())
-                                adapter.addItem(new Club(jsonobject));
+                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                                adapter.addItem(club);
+
+                                // Add club to the list if it is new
+                                Club c = HttpGet.clubs.get(club.getId());
+                                if(c == null)
+                                    HttpGet.clubs.put(club.getId(), club);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

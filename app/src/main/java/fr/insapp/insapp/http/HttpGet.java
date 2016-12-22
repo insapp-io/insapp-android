@@ -6,7 +6,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Credentials;
 
 /**
@@ -34,6 +37,8 @@ public class HttpGet extends AsyncTask<String, Void, String> {
     public static final String IMAGEURL = "https://insapp.fr/cdn/";
 
     public static Credentials credentials;
+
+    public static Map<String, Club> clubs = new HashMap<>();
 
     /**
      * Constructeur de la classe

@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Operation;
@@ -83,22 +85,61 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         holder.commentCounter.setText(Integer.toString(post.getComments().size()));
         holder.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
 
-        // glide
-
-        if (layout == R.layout.row_post_with_avatars)
-            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.avatar);
-
         Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image);
 
         // club avatar
 
         if (layout == R.layout.row_post_with_avatars) {
-            holder.avatar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", post.getAssociation()));
-                }
-            });
+
+            final Club club = HttpGet.clubs.get(post.getAssociation());
+
+            if(club == null){
+
+                HttpGet request = new HttpGet(new AsyncResponse() {
+
+                    public void processFinish(String output) {
+                        if (!output.isEmpty()) {
+                            try {
+                                JSONObject jsonobject = new JSONObject(output);
+
+                                final Club club = new Club(jsonobject);
+                                HttpGet.clubs.put(club.getId(), club);
+
+                                // glide
+
+                                if (layout == R.layout.row_post_with_avatars)
+                                    Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
+
+                                holder.avatar.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                                    }
+                                });
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                request.execute(HttpGet.ROOTASSOCIATION + "/"+ post.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
+
+            }
+            else{
+                // glide
+
+                if (layout == R.layout.row_post_with_avatars)
+                    Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
+
+                holder.avatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                    }
+                });
+            }
+
         }
 
         // description links

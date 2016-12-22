@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_profile"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:theme="@style/ToolbarStyle" />
+
+    <LinearLayout
+        android:id="@+id/toolbar_extension"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_profile"
+        android:background="?attr/colorPrimary"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="14dp"
+            android:src="@drawable/avatar_eii_male"
+            app:civ_fill_color="@color/white" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="tbouvier" />
+
+            <TextView
+                android:id="@+id/profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_below="@id/profile_name"
+                android:text="Thomas Bouvier" />
+
+            <TextView
+                android:id="@+id/profile_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:text="3EII"
+                android:layout_below="@id/profile_username" />
+
+            <TextView
+                android:id="@+id/profile_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="Ceci est une description sur plusieurs lignes, ça rend pas trop mal c'est cool"
+                android:layout_below="@id/profile_class" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

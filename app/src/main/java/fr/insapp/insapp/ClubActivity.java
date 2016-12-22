@@ -1,8 +1,6 @@
 package fr.insapp.insapp;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -16,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.view.MenuItem;
@@ -25,15 +22,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.bumptech.glide.Glide;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Club;
-import fr.insapp.insapp.utility.ImageLoader;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.utility.Utils;
 
 /**
@@ -56,8 +54,6 @@ public class ClubActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
-
-        ImageLoader imageLoader = new ImageLoader(this);
 
         this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
         this.nameTextView = (TextView) findViewById(R.id.club_name);
@@ -123,10 +119,10 @@ public class ClubActivity extends AppCompatActivity {
         relativeLayout.setBackgroundColor(bgColor);
         tabLayout.setBackgroundColor(bgColor);
 
-        if (Color.luminance(fgColor) <= 0.5)
-            tabLayout.setTabTextColors(Utils.lighten(fgColor, 0.9), fgColor);
+        if (fgColor == 0xffffffff)
+            tabLayout.setTabTextColors(0xffe8e8e8, fgColor);
         else
-            tabLayout.setTabTextColors(Utils.darken(fgColor, 0.3), fgColor);
+            tabLayout.setTabTextColors(0xff595959, fgColor);
 
         nameTextView.setText(club.getName());
         nameTextView.setTextColor(fgColor);
@@ -136,8 +132,8 @@ public class ClubActivity extends AppCompatActivity {
 
         collapsingToolbar.setCollapsedTitleTextColor(fgColor);
 
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getProfilPicture(), iconImageView);
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + club.getCover(), headerImageView);
+        Glide.with(this).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(iconImageView);
+        Glide.with(this).load(HttpGet.IMAGEURL + club.getCover()).into(headerImageView);
 
         // links
 

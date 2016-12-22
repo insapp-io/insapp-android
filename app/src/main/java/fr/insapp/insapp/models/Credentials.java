@@ -1,4 +1,4 @@
-package fr.insapp.insapp.modeles;
+package fr.insapp.insapp.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;

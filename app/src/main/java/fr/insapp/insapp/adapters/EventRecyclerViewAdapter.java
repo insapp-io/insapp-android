@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +11,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import fr.insapp.insapp.R;
+import fr.insapp.insapp.models.Event;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Event;
 import fr.insapp.insapp.utility.ImageLoader;
 
 /**

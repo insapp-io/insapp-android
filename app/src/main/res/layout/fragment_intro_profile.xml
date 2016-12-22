@@ -7,7 +7,7 @@
     android:paddingBottom="80dp" >
 
     <TextView
-        android:text="Profil"
+        android:text="@string/profile"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
@@ -51,7 +51,7 @@
             android:weightSum="1">
 
             <TextView
-                android:text="Porte haut les couleurs de ton départ' en éditant ton profil"
+                android:text="@string/intro_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="center|bottom"

@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import fr.insapp.insapp.modeles.Credentials;
+import fr.insapp.insapp.models.Credentials;
 
 /**
  * Created by Antoine on 19/09/2016.

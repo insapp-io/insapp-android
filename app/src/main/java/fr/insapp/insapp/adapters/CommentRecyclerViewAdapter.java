@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +9,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.insapp.insapp.modeles.Comment;
+import fr.insapp.insapp.R;
+import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.utility.Operation;
 
 /**

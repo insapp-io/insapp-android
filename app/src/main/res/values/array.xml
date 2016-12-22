@@ -1,0 +1,69 @@
+<resources>
+    <string-array name="listArrayClass">
+        <item>Inconnu</item>
+        <item>1STPI</item>
+        <item>2STPI</item>
+        <item>3EII</item>
+        <item>4EII</item>
+        <item>5EII</item>
+        <item>3GCU</item>
+        <item>4GCU</item>
+        <item>5GCU</item>
+        <item>3GM</item>
+        <item>4GM</item>
+        <item>5GM</item>
+        <item>3GMA</item>
+        <item>4GMA</item>
+        <item>5GMA</item>
+        <item>3INFO</item>
+        <item>4INFO</item>
+        <item>5INFO</item>
+        <item>3SGM</item>
+        <item>4SGM</item>
+        <item>5SGM</item>
+        <item>3SRC</item>
+        <item>4SRC</item>
+        <item>5SRC</item>
+        <item>Personnel/Enseignant</item>
+    </string-array>
+
+    <string-array name="listValuesClass">
+        <item>unknown</item>
+        <item>1stpi</item>
+        <item>2stpi</item>
+        <item>3eii</item>
+        <item>4eii</item>
+        <item>5eii</item>
+        <item>3gcu</item>
+        <item>4gcu</item>
+        <item>5gcu</item>
+        <item>3gm</item>
+        <item>4gm</item>
+        <item>5gm</item>
+        <item>3gma</item>
+        <item>4gma</item>
+        <item>5gma</item>
+        <item>3info</item>
+        <item>4info</item>
+        <item>5info</item>
+        <item>3sgm</item>
+        <item>4sgm</item>
+        <item>5sgm</item>
+        <item>3src</item>
+        <item>4src</item>
+        <item>5src</item>
+        <item>worker</item>
+    </string-array>
+
+    <string-array name="listArraySex">
+        <item>Inconnu</item>
+        <item>Féminin</item>
+        <item>Masculin</item>
+    </string-array>
+
+    <string-array name="listValuesSex">
+        <item>unknown</item>
+        <item>female</item>
+        <item>male</item>
+    </string-array>
+</resources>

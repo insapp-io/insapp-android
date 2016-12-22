@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.insapp.insapp.NotificationRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.modeles.Notification;
+import fr.insapp.insapp.models.Notification;
 
 /**
  * Created by thoma on 27/10/2016.

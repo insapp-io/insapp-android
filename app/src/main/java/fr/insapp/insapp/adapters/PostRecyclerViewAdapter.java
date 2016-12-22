@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -20,11 +21,14 @@ import org.json.JSONObject;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.ClubActivity;
+import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
-import fr.insapp.insapp.modeles.Post;
+import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
@@ -38,7 +42,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     private Context context;
 
     private List<Post> posts;
-    private ImageLoader imageLoader;
 
     private int layout;
 
@@ -52,7 +55,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         this.context = context;
         this.posts = posts;
         this.layout = layout;
-        this.imageLoader = new ImageLoader(context);
     }
 
     public void setOnItemClickListener(OnPostItemClickListener listener) {
@@ -69,15 +71,18 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     public void onBindViewHolder(final PostViewHolder holder, final int position) {
         final Post post = posts.get(position);
 
-        if (layout == R.layout.row_post_with_avatars)
-            imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.avatar);
-
         holder.title.setText(post.getTitle());
         holder.text.setText(post.getDescription());
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + post.getImage(), holder.image);
         holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
         holder.commentCounter.setText(Integer.toString(post.getComments().size()));
         holder.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
+
+        // glide
+
+        if (layout == R.layout.row_post_with_avatars)
+            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.avatar);
+
+        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image);
 
         // club avatar
 
@@ -176,7 +181,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 this.avatar = (CircleImageView) view.findViewById(R.id.avatar_club_post);
 
             this.title = (TextView) view.findViewById(R.id.name_post);
-            this.text = (TextView) view.findViewById(R.id.text);
+            this.text = (TextView) view.findViewById(R.id.post_text);
             this.image = (ImageView) view.findViewById(R.id.image);
             this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
             this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);

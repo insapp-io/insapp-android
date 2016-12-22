@@ -11,7 +11,6 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_post"
-            android:title="Conditions légales"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:minHeight="?attr/actionBarSize"
@@ -41,7 +40,7 @@
 
                 <TextView
                     android:id="@+id/post_title"
-                    android:text="Ceci est le titre"
+                    android:text="@string/post_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -52,7 +51,7 @@
 
                 <TextView
                     android:id="@+id/post_date"
-                    android:text="il y a 4w"
+                    android:text="@string/post_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -70,8 +69,8 @@
                     android:layout_alignParentEnd="true" />
 
                 <TextView
-                    android:id="@+id/text"
-                    android:text="Ceci est un texte un peu long qui veut rien dire (ça s'appelle un placeholder). Ceci est un texte un peu long qui veut rien dire (ça s'appelle un placeholder)"
+                    android:id="@+id/post_text"
+                    android:text="@string/post_text"
                     android:textSize="16sp"
                     android:layout_marginTop="14dp"
                     android:layout_marginBottom="14dp"

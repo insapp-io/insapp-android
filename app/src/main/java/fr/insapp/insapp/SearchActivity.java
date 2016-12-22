@@ -16,14 +16,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Club;
-import fr.insapp.insapp.modeles.Event;
-import fr.insapp.insapp.modeles.Post;
-import fr.insapp.insapp.modeles.User;
+import fr.insapp.insapp.models.Club;
+import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.User;
 
 /**
  * Created by thoma on 11/12/2016.
@@ -88,7 +94,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerEvents = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewEvents.setLayoutManager(layoutManagerEvents);
 
-        EventRecyclerViewAdapter adapterEvents = new EventRecyclerViewAdapter(generateEvents(), R.layout.row_event_with_avatars);
+        EventRecyclerViewAdapter adapterEvents = new EventRecyclerViewAdapter(this, generateEvents(), R.layout.row_event_with_avatars);
         recyclerViewEvents.setAdapter(adapterEvents);
 
         // users recycler view
@@ -159,19 +165,37 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private List<Event> generateEvents() {
-        List<Event> events = new ArrayList<>();
+        final List<Event> events = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++)
-            events.add(new Event(R.drawable.sample_2, "L'événement génial"));
+        HttpGet request = new HttpGet(new AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                if (!output.isEmpty()) {
 
+                    Date atm = Calendar.getInstance().getTime();
+
+                    try {
+                        JSONArray jsonarray = new JSONArray(output);
+                        for (int i = 0; i < jsonarray.length(); i++) {
+                            JSONObject jsonObject = jsonarray.getJSONObject(i);
+
+                            Event event = new Event(jsonObject);
+                            if (event.getDateEnd().getTime() > atm.getTime())
+                                events.add(event);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
         return events;
     }
 
     private List<User> generateUsers() {
         List<User> users = new ArrayList<>();
-
-        for (int i = 0; i < 17; i++)
-            users.add(new User("tbouvier", "tomatrocho"));
 
         return users;
     }

@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:background="@color/white"
             android:textColor="@color/theme_red"
-            android:text="J'accepte"
+            android:text="@string/legal_conditions_accept"
             android:layout_height="48dp" />
     </LinearLayout>
 </RelativeLayout>

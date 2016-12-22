@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -17,10 +18,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
+import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
@@ -66,16 +67,16 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle1 = new Bundle();
         bundle1.putInt("layout", R.layout.row_post_with_avatars);
         postsFragment.setArguments(bundle1);
-        adapter.addFragment(postsFragment, "News");
+        adapter.addFragment(postsFragment, getResources().getString(R.string.posts));
 
         Fragment eventsFragment = new EventsFragment();
         Bundle bundle2 = new Bundle();
         bundle2.putInt("layout", R.layout.row_event_with_avatars);
         eventsFragment.setArguments(bundle2);
-        adapter.addFragment(eventsFragment, "Events");
+        adapter.addFragment(eventsFragment, getResources().getString(R.string.events));
 
-        adapter.addFragment(new ClubsFragment(), "Associations");
-        adapter.addFragment(new NotificationsFragment(), "Notifications");
+        adapter.addFragment(new ClubsFragment(), getResources().getString(R.string.clubs));
+        adapter.addFragment(new NotificationsFragment(), getResources().getString(R.string.notifications));
 
         viewPager.setAdapter(adapter);
     }
@@ -104,8 +105,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_profile:
+                startActivity(new Intent(this, ProfileActivity.class));
+                break;
+
             case R.id.action_credits:
                 startActivity(new Intent(this, CreditsActivity.class));
+                break;
+
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
 
             default:

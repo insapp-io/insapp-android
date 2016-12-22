@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.modeles.Event;
-import fr.insapp.insapp.EventRecyclerViewAdapter;
 import fr.insapp.insapp.R;
 
 /**
@@ -98,7 +98,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                if (!output.isEmpty()) {
+                if (output != null) {
 
                     Date atm = Calendar.getInstance().getTime();
 
@@ -119,7 +119,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
 
         request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
-
         return events;
     }
 

@@ -14,10 +14,17 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
+import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.utility.Operation;
 
 /**
  * Created by thoma on 12/11/2016.
@@ -28,14 +35,23 @@ public class PostActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Post post = null;
 
+    private CircleImageView avatar_club;
+    private TextView title;
+    private TextView description;
+    private TextView date;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        this.avatar_club = (CircleImageView) findViewById(R.id.club_avatar_post);
+        this.title = (TextView) findViewById(R.id.post_title);
+        this.description = (TextView) findViewById(R.id.post_text);
+        this.date = (TextView) findViewById(R.id.post_date);
+
         Intent intent = getIntent();
 
-        System.out.println("HAS EXTRA " + intent.hasExtra("post"));
         post = intent.getParcelableExtra("post");
 
         // toolbar
@@ -46,6 +62,23 @@ public class PostActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        // Fill post elements
+
+        final Club club = HttpGet.clubs.get(post.getAssociation());
+
+        Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.avatar_club);
+
+        this.title.setText(post.getTitle());
+        this.description.setText(post.getDescription());
+        this.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
+
+        this.avatar_club.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), ClubActivity.class).putExtra("club", club));
+            }
+        });
 
         // recycler view
 

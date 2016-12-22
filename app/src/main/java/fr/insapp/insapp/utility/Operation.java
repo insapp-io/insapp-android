@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import fr.insapp.insapp.models.User;
+
 /**
  * Created by Antoine on 24/09/2016.
  */
@@ -41,17 +43,17 @@ public class Operation {
 
         // At least 1 week
         if(diffInDays >= 7)
-            return Integer.toString(diffInDays/7) + "w";
+            return Integer.toString(diffInDays/7) + "s";
         // At least 1 day
         if(diffInDays >= 1)
-            return Long.toString(diffInDays) + "d";
+            return Long.toString(diffInDays) + "j";
         // At least 1 hour
         if (diffHours >= 1)
             return Long.toString(diffHours) + "h";
 
         return Long.toString(diffMinutes) + "m";
     }
-/*
+
     public static String drawableProfilName(User user){
 
         // Initializing a String Array (PROMO)
@@ -117,10 +119,12 @@ public class Operation {
                 "male"
         };
 
+        System.out.println(user.getPromotion() + " et " + user.getGender());
+
         String drawable_string = "avatar_";
-        if(!user.getPromotion().isEmpty() && !user.getPromotion().equals("")  && !user.getGender().equals("")) {
+        if(!user.getPromotion().equals("") && !user.getGender().equals("")) {
             for (int i = 0; i < all_promos.length; i++) {
-                if (all_promos[i].equals(user.getPromotion()))
+                if (promo_drawable_name[i].equals(user.getPromotion()))
                     drawable_string += promo_drawable_name[i];
             }
 
@@ -133,5 +137,5 @@ public class Operation {
             drawable_string = "avatar_default";
 
         return drawable_string;
-    }*/
+    }
 }

@@ -89,7 +89,7 @@ public class PostActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(post.getComments());
+        CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(PostActivity.this, post.getComments());
         recyclerView.setAdapter(adapter);
 
         // swipe

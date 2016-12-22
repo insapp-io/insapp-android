@@ -1,16 +1,29 @@
 package fr.insapp.insapp.adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Comment;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
 
 /**
@@ -19,9 +32,11 @@ import fr.insapp.insapp.utility.Operation;
 
 public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecyclerViewAdapter.CommentViewHolder> {
 
+    private Context context;
     protected List<Comment> comments;
 
-    public CommentRecyclerViewAdapter(List<Comment> comments) {
+    public CommentRecyclerViewAdapter(Context context, List<Comment> comments) {
+        this.context = context;
         this.comments = comments;
     }
 
@@ -32,12 +47,42 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     }
 
     @Override
-    public void onBindViewHolder(CommentViewHolder holder, int position) {
+    public void onBindViewHolder(final CommentViewHolder holder, int position) {
         final Comment comment = comments.get(position);
-        //holder.avatar.setImageResource(comment.avatar_id);
-        holder.username.setText(comment.getUser());
+
         holder.text.setText(comment.getContent());
         holder.date.setText("Il y a " + Operation.displayedDate(comment.getDate()));
+
+        // Get the user
+        HttpGet get = new HttpGet(new AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(output);
+                    final User user = new User(json);
+
+                    // Get the drawable of avatar
+                    Resources resources = context.getResources();
+                    int id = resources.getIdentifier(Operation.drawableProfilName(user), "drawable", context.getPackageName());
+
+
+                    Drawable dr = context.getResources().getDrawable(id);
+                    Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+
+                    // Resize the bitmap
+                    Drawable d = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, 100, 100, true));
+
+                    holder.avatar.setImageDrawable(d);
+                    holder.username.setText("@" + user.getUsername());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        get.execute(HttpGet.ROOTUSER + "/" + comment.getUser() + "?token=" + HttpGet.credentials.getSessionToken());
+
     }
 
     @Override

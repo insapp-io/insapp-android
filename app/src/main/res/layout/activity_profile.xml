@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 android:text="tbouvier" />
 
             <TextView
@@ -53,13 +54,22 @@
                 android:text="Thomas Bouvier" />
 
             <TextView
+                android:id="@+id/profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:layout_below="@id/profile_username"
+                android:text="tomatrocho@gmail.com" />
+
+            <TextView
                 android:id="@+id/profile_class"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:text="3EII"
-                android:layout_below="@id/profile_username" />
+                android:layout_below="@id/profile_email" />
 
             <TextView
                 android:id="@+id/profile_description"
@@ -73,4 +83,15 @@
                 android:layout_below="@id/profile_class" />
         </RelativeLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_extension">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_events_participate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 </RelativeLayout>

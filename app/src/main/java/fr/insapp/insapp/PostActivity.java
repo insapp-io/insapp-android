@@ -26,6 +26,7 @@ import fr.insapp.insapp.models.Post;
 public class PostActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private CommentRecyclerViewAdapter adapter;
     private Post post = null;
 
     @Override
@@ -56,7 +57,7 @@ public class PostActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        CommentRecyclerViewAdapter adapter = new CommentRecyclerViewAdapter(post.getComments());
+        this.adapter = new CommentRecyclerViewAdapter(post.getComments());
         recyclerView.setAdapter(adapter);
 
         // swipe
@@ -69,7 +70,10 @@ public class PostActivity extends AppCompatActivity {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
+                final int fromPos = viewHolder.getAdapterPosition();
+                final int toPos = target.getAdapterPosition();
+                adapter.notifyItemMoved(fromPos, toPos);
+                return true;
             }
 
             @Override

@@ -1,106 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_post"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:minHeight="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:theme="@style/ToolbarStyle" />
+            android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardview_post_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar_post">
-
-            <RelativeLayout
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_post"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp">
+                android:layout_height="?attr/actionBarSize"
+                android:minHeight="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:theme="@style/ToolbarStyle" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/club_avatar_post"
-                    android:src="@drawable/sample_6"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginEnd="6dp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:civ_border_width="0dp" />
-
-                <TextView
-                    android:id="@+id/post_title"
-                    android:text="@string/post_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="#3e3e3e"
-                    android:textSize="16sp"
-                    android:layout_alignTop="@+id/club_avatar_post"
-                    android:layout_toEndOf="@+id/club_avatar_post" />
-
-                <TextView
-                    android:id="@+id/post_date"
-                    android:text="@string/post_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_below="@id/post_title"
-                    android:layout_toEndOf="@+id/club_avatar_post" />
-
-                <TextView
-                    android:textColor="#7f7f7f"
-                    android:textSize="13sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="14dp"
-                    android:id="@+id/date_post"
-                    android:layout_alignBaseline="@+id/post_title"
-                    android:layout_alignParentEnd="true" />
-
-                <TextView
-                    android:id="@+id/post_text"
-                    android:text="@string/post_text"
-                    android:textSize="16sp"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginEnd="14dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#7f7f7f"
-                    android:lineSpacingExtra="3dp"
-                    android:layout_below="@+id/club_avatar_post"
-                    android:layout_alignParentStart="true" />
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardview_post_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_below="@id/cardview_post_1">
-
-            <RelativeLayout
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardview_post_1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar_post">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerview_comments"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-    </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/club_avatar_post"
+                        android:src="@drawable/sample_6"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:civ_border_width="0dp" />
+
+                    <TextView
+                        android:id="@+id/post_title"
+                        android:text="@string/post_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textColor="#3e3e3e"
+                        android:textSize="16sp"
+                        android:layout_alignTop="@+id/club_avatar_post"
+                        android:layout_toEndOf="@+id/club_avatar_post" />
+
+                    <TextView
+                        android:id="@+id/post_date"
+                        android:text="@string/post_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_below="@id/post_title"
+                        android:layout_toEndOf="@+id/club_avatar_post" />
+
+                    <TextView
+                        android:textColor="#7f7f7f"
+                        android:textSize="13sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="14dp"
+                        android:id="@+id/date_post"
+                        android:layout_alignBaseline="@+id/post_title"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:id="@+id/post_text"
+                        android:text="@string/post_text"
+                        android:textSize="16sp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="14dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="14dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#7f7f7f"
+                        android:lineSpacingExtra="3dp"
+                        android:layout_below="@+id/club_avatar_post"
+                        android:layout_alignParentStart="true" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardview_post_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_below="@id/cardview_post_1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerview_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_chat_bubble_black_24dp" />
+</android.support.design.widget.CoordinatorLayout>

@@ -31,6 +31,8 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
     private EventRecyclerViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private RecyclerView recyclerViewFuture, recyclerViewPast;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +59,11 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_events_club, container, false);
 
-        RecyclerView recyclerViewFuture = (RecyclerView) view.findViewById(R.id.recyclerview_events_future);
+        this.recyclerViewFuture = (RecyclerView) view.findViewById(R.id.recyclerview_events_future);
         recyclerViewFuture.setHasFixedSize(true);
         recyclerViewFuture.setNestedScrollingEnabled(false);
 
-        RecyclerView recyclerViewPast = (RecyclerView) view.findViewById(R.id.recyclerview_events_past);
+        this.recyclerViewPast = (RecyclerView) view.findViewById(R.id.recyclerview_events_past);
         recyclerViewPast.setHasFixedSize(true);
         recyclerViewPast.setNestedScrollingEnabled(false);
 

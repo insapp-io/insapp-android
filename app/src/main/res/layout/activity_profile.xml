@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:layout_below="@id/profile_username"
                 android:text="tomatrocho@gmail.com" />
 
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:text="3EII"
                 android:layout_below="@id/profile_email" />
 
@@ -76,7 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="13sp"
+                android:textSize="14sp"
+                android:lineSpacingExtra="3sp"
                 android:layout_marginTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="Ceci est une description sur plusieurs lignes, ça rend pas trop mal c'est cool"

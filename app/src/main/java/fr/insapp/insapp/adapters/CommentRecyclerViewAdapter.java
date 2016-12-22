@@ -84,6 +84,13 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
         });
         get.execute(HttpGet.ROOTUSER + "/" + comment.getUser() + "?token=" + HttpGet.credentials.getSessionToken());
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d("DEBUG", "test");
+                return true;
+            }
+        });
     }
 
     @Override
@@ -99,6 +106,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
         public CommentViewHolder(View view) {
             super(view);
+
             this.avatar = (CircleImageView) view.findViewById(R.id.club_avatar_post);
             this.username = (TextView) view.findViewById(R.id.username_comment);
             this.text = (TextView) view.findViewById(R.id.text_comment);

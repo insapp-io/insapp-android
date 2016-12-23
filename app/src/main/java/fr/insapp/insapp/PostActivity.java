@@ -1,12 +1,7 @@
 package fr.insapp.insapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -14,23 +9,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
 
@@ -63,7 +71,6 @@ public class PostActivity extends AppCompatActivity {
         this.date = (TextView) findViewById(R.id.post_date);
 
         Intent intent = getIntent();
-
         post = intent.getParcelableExtra("post");
 
         // toolbar
@@ -117,33 +124,134 @@ public class PostActivity extends AppCompatActivity {
             public void onCommentItemLongClick(final Comment comment) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
 
-                // set title
-                alertDialogBuilder.setTitle(getString(R.string.report_action));
+                // delete comment
+                if (HttpGet.credentials.getId().equalsIgnoreCase(comment.getUserId())) {
+                    alertDialogBuilder.setTitle(getString(R.string.delete_comment_action));
+                    alertDialogBuilder
+                            .setMessage(R.string.delete_comment_are_you_sure)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    HttpDelete delete = new HttpDelete(new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output) {
+                                            Toast.makeText(PostActivity.this, getString(R.string.delete_comment_success), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    dialogAlert.cancel();
+                                }
+                            });
 
-                // set dialog message
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+                // report comment
+                else {
+                    alertDialogBuilder.setTitle(getString(R.string.report_comment_action));
+                    alertDialogBuilder
+                            .setMessage(R.string.report_comment_are_you_sure)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    HttpPut report = new HttpPut(new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output) {
+                                            Toast.makeText(PostActivity.this, getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    report.execute(HttpGet.ROOTURL + "/report/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    dialogAlert.cancel();
+                                }
+                            });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+            }
+        });
+
+        // floating action button
+
+        this.fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
+                EditText editText = new EditText(PostActivity.this);
+                final FrameLayout container = new FrameLayout(PostActivity.this);
+                FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.leftMargin = 60; // should be scaled correctly : convertDpToPx
+                params.rightMargin = 60;
+                editText.setLayoutParams(params);
+                container.addView(editText);
+
+                // write comment
+                alertDialogBuilder.setTitle(getString(R.string.write_comment));
                 alertDialogBuilder
-                        .setMessage(R.string.report_are_you_sure)
+                        .setView(container)
                         .setCancelable(true)
-                        .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.publish_button), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogAlert, int id) {
-                                HttpPut signaler = new HttpPut(new AsyncResponse() {
-                                    @Override
-                                    public void processFinish(String output) {
-                                        Toast.makeText(PostActivity.this, getString(R.string.report_success), Toast.LENGTH_SHORT).show();
+                                final String text = ((EditText) container.getChildAt(0)).getText().toString();
+                                if (!text.isEmpty()) {
+                                    final JSONObject json = new JSONObject();
+
+                                    try {
+                                        json.put("user", HttpGet.credentials.getUserID());
+                                        json.put("content", text);
+
+                                        JSONArray jsonArray = new JSONArray();
+                                        List<String> already_tagged = new ArrayList<>();
+                                        /*
+                                        for (Tag tag : tags) {
+                                            // if the user didn't delete it
+                                            if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
+                                                JSONObject jsonTag = new JSONObject();
+                                                jsonTag.put("user", tag.getUser());
+                                                jsonTag.put("name", tag.getName());
+
+                                                jsonArray.put(jsonTag);
+                                                already_tagged.add(tag.getName());
+                                            }
+                                        }
+                                        */
+                                        json.put("tags", jsonArray);
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                });
-                                signaler.execute(HttpGet.ROOTURL + "/report/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+
+                                    HttpPost request = new HttpPost(new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output) {
+                                            try {
+                                                adapter.addComment(new Comment(json));
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                                        }
+                                    });
+                                    request.execute(HttpGet.ROOTPOST + "/" + id + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
+                                }
                             }
                         })
-                        .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogAlert, int id) {
                                 dialogAlert.cancel();
                             }
                         });
 
-                // create alert dialog
                 AlertDialog alertDialog = alertDialogBuilder.create();
-                // show it
                 alertDialog.show();
             }
         });

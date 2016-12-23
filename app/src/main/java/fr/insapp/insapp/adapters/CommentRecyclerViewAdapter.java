@@ -1,21 +1,16 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,11 +18,9 @@ import org.json.JSONObject;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
@@ -96,9 +89,13 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
                 }
             }
         });
-        get.execute(HttpGet.ROOTUSER + "/" + comment.getUser() + "?token=" + HttpGet.credentials.getSessionToken());
+        get.execute(HttpGet.ROOTUSER + "/" + comment.getUserId() + "?token=" + HttpGet.credentials.getSessionToken());
 
         holder.bind(comment, listener);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     @Override

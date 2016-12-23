@@ -87,7 +87,7 @@ public class Comment implements Parcelable {
         return id;
     }
 
-    public String getUser() {
+    public String getUserId() {
         return user;
     }
 

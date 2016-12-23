@@ -24,6 +24,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.ProfileActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
@@ -80,7 +81,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
                     // Get the drawable of avatar
                     Resources resources = context.getResources();
-                    int id = resources.getIdentifier(Operation.drawableProfilName(user), "drawable", context.getPackageName());
+                    int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
 
                     Drawable dr = ContextCompat.getDrawable(context, id);
                     Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
@@ -90,6 +91,13 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
                     holder.avatar.setImageDrawable(d);
                     holder.username.setText("@" + user.getUsername());
+
+                    holder.avatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", user));
+                        }
+                    });
 
                 } catch (JSONException e) {
                     e.printStackTrace();

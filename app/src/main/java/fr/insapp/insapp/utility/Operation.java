@@ -56,16 +56,16 @@ public class Operation {
         return Long.toString(diffMinutes) + "m";
     }
 
-    public static String drawableProfilName(User user){
+    public static String drawableProfilName(String promo, String gender){
 
         String drawable_string = "avatar";
-        if (!user.getPromotion().equals("") && !user.getGender().equals("")) {
-            String userPromotion = user.getPromotion().toLowerCase();
+        if (!promo.equals("") && !gender.equals("")) {
+            String userPromotion = promo.toLowerCase();
             if (!userPromotion.contains("stpi") && Character.isDigit(userPromotion.charAt(0)))
                 userPromotion = userPromotion.substring(1);
 
             drawable_string += "_" + userPromotion;
-            drawable_string += "_" + user.getGender();
+            drawable_string += "_" + gender;
         }
         else
             drawable_string = "avatar_default";

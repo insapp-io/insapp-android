@@ -1,5 +1,9 @@
 package fr.insapp.insapp;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -7,17 +11,27 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.lang.reflect.Field;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
@@ -130,12 +144,47 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
+        switch (item.getItemId()) {
+            case R.id.home:
                 onBackPressed();
-                return true;
+                break;
+
+            case R.id.action_report:
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
+                alertDialogBuilder.setTitle(getString(R.string.report_user_action));
+                alertDialogBuilder
+                        .setMessage(R.string.report_user_are_you_sure)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogAlert, int id) {
+                                HttpPut report = new HttpPut(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        Toast.makeText(ProfileActivity.this, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                report.execute(HttpGet.ROOTURL + "/report/user/" + user.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogAlert, int id) {
+                                dialogAlert.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                break;
+
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

@@ -32,6 +32,12 @@
 
     <string name="write_comment">Écrire un commentaire</string>
 
+    <string name="report">Signaler</string>
+
+    <string name="report_user_action">Signaler un utilisateur</string>
+    <string name="report_user_are_you_sure">Voulez-vous vraiment signaler cet utilisateur ?</string>
+    <string name="report_user_success">Utilisateur signalé avec succès</string>
+
     <string name="report_comment_action">Signaler un commentaire</string>
     <string name="report_comment_are_you_sure">Voulez-vous signaler ce commentaire ?</string>
     <string name="report_comment_success">Commentaire signalé avec succès</string>

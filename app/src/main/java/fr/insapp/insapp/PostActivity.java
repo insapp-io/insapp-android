@@ -7,9 +7,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.util.Linkify;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +44,7 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
 
@@ -59,6 +65,18 @@ public class PostActivity extends AppCompatActivity {
     private TextView date;
 
     private FloatingActionButton fab;
+
+    // tags
+
+    private boolean userWrittingTag = false;
+    private int tagStartsAt = 0;
+    private String tagWritting = "";
+    private boolean autochange = false;
+    private boolean deleteTag = false;
+    private int lastCount = 0;
+
+    private EditText editText;
+    private PopupMenu popup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,13 +204,91 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
-                EditText editText = new EditText(PostActivity.this);
+
                 final FrameLayout container = new FrameLayout(PostActivity.this);
                 FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.leftMargin = 60; // should be scaled correctly : convertDpToPx
                 params.rightMargin = 60;
+
                 editText.setLayoutParams(params);
                 container.addView(editText);
+
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        // skip execution if triggered by code
+                        if (autochange) {
+                            //last_count = s.length();
+                            autochange = false; // next change is not triggered by code
+                            return;
+                        }
+
+                        if (charSequence.length() == 0) {
+                            lastCount = 0;
+                            userWrittingTag = false;
+                            tagWritting = "";
+                            tagStartsAt = 0;
+                        }
+
+                        // deletion
+                        if (charSequence.length() - lastCount < 0) {
+                            if (userWrittingTag) {
+                                String currentStr = editText.getText().toString();
+                                String strWithoutTag = currentStr.substring(0, tagStartsAt) + currentStr.substring(tagStartsAt + tagWritting.length(), currentStr.length());
+
+                                autochange = true;
+                                editText.setText(strWithoutTag);
+                                editText.setSelection(tagStartsAt);
+
+                                lastCount = strWithoutTag.length();
+                                userWrittingTag = false;
+                                tagWritting = "";
+                                tagStartsAt = 0;
+
+                                deleteTag = true;
+                            }
+                        }
+                        // writing
+                        else {
+                            deleteTag = false;
+
+                            int pos = editText.getSelectionStart() - 1;
+                            if (pos >= 0) {
+                                char c = charSequence.charAt(pos);
+
+                                if (userWrittingTag) {
+                                    if (c == ' ' || pos <= tagStartsAt || pos - 1 > tagStartsAt + tagWritting.length()) {
+                                        userWrittingTag = false;
+                                    }
+                                    else {
+                                        tagWritting += charSequence.toString().charAt(pos);
+                                        showUsersToTag(tagWritting);
+                                    }
+                                }
+                                else {
+                                    if (c == '@') {
+                                        userWrittingTag = true;
+                                        tagStartsAt = pos;
+                                        tagWritting = "";
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!deleteTag)
+                            lastCount = charSequence.length();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
 
                 // write comment
                 alertDialogBuilder.setTitle(getString(R.string.write_comment));
@@ -255,6 +351,73 @@ public class PostActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+
+        // edit text
+
+        this.editText = new EditText(PostActivity.this);
+
+        // popup menu
+
+        this.popup = new PopupMenu(PostActivity.this, editText);
+        popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
+        popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+
+            }
+        });
+    }
+
+    private void showUsersToTag(String username) {
+        HttpGet request = new HttpGet(new AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                try {
+                    JSONObject json = new JSONObject(output);
+                    JSONArray jsonArray = json.getJSONArray("users");
+
+                    if (jsonArray != null) {
+                        popup.getMenu().clear();
+
+                        for (int i = jsonArray.length() - 1; i >= jsonArray.length() - Math.min(jsonArray.length(), 3); i--) {
+                            final User user = new User(jsonArray.getJSONObject(i));
+
+                            popup.getMenu().add(Menu.NONE, Menu.NONE, i + 1, "@" + user.getUsername());
+
+                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    String currentStr = editText.getText().toString();
+                                    String strWithTag = currentStr.substring(0, tagStartsAt) + "@" + user.getUsername() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
+
+                                    autochange = true;
+                                    editText.setText(strWithTag);
+                                    editText.setSelection(tagStartsAt + user.getUsername().length() + 1);
+
+                                    userWrittingTag = false;
+                                    tagWritting = "";
+                                    tagStartsAt = 0;
+
+                                    return true;
+                                }
+                            });
+                        }
+                    }
+                }
+                catch (JSONException e) {
+                    userWrittingTag = false;
+                    tagWritting = "";
+                    tagStartsAt = 0;
+
+                    popup.dismiss();
+
+                    e.printStackTrace();
+                }
+
+                popup.show();
+            }
+        });
+        request.execute(HttpGet.ROOTSEARCHUSER + "/" + username + "?token=" + HttpGet.credentials.getSessionToken());
     }
 
     @Override

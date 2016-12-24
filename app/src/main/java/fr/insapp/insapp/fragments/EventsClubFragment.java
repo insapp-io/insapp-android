@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.insapp.insapp.EventActivity;
@@ -77,15 +79,6 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         swipeRefreshLayout.setOnRefreshListener(this);
 
         return view;
-    }
-
-    private List<Event> generateEvents() {
-        List<Event> events = new ArrayList<>();
-
-        //for (int i = 0; i < 1; i++)
-        //    events.add(new Event(R.drawable.sample_0, "Un événement trop cool"));
-
-        return events;
     }
 
     @Override

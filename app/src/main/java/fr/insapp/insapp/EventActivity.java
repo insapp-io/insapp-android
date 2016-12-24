@@ -11,6 +11,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,8 +21,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thomas on 05/12/2016.
@@ -48,7 +53,7 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
 
         Intent intent = getIntent();
-        event = intent.getParcelableExtra("event");
+        this.event = intent.getParcelableExtra("event");
 
         this.relativeLayout = (RelativeLayout) findViewById(R.id.event_info);
         this.header_image_event = (ImageView) findViewById(R.id.header_image_event);
@@ -75,10 +80,6 @@ public class EventActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
-            upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
 
         // collapsing toolbar
@@ -95,7 +96,7 @@ public class EventActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle("Event");
+                    collapsingToolbar.setTitle(event.getName());
                     isShow = true;
                 } else if(isShow) {
                     collapsingToolbar.setTitle(" ");
@@ -109,20 +110,60 @@ public class EventActivity extends AppCompatActivity {
         int bgColor = Color.parseColor("#" + event.getBgColor());
         int fgColor = Color.parseColor("#" + event.getFgColor());
 
-        System.out.println(HttpGet.IMAGEURL + event.getImage());
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        collapsingToolbar.setContentScrimColor(bgColor);
+        collapsingToolbar.setStatusBarScrimColor(bgColor);
+
         Glide.with(this).load(HttpGet.IMAGEURL + event.getImage()).into(header_image_event);
+
+        relativeLayout.setBackgroundColor(bgColor);
+
+        // club
+
+        clubImageView.setColorFilter(fgColor);
+
+        clubTextView.setText(event.getAssociation());
+        clubTextView.setTextColor(fgColor);
+
+        // participants
+
+        participantsImageView.setColorFilter(fgColor);
 
         int nb_participants = event.getParticipants().size();
         if (nb_participants <= 1)
-            this.participantsTextView.setText(Integer.toString(nb_participants) + " participant");
+            participantsTextView.setText("Pas encore de participants");
         else
-            this.participantsTextView.setText(Integer.toString(nb_participants) + " participants");
+            participantsTextView.setText(Integer.toString(nb_participants) + " participants");
+        participantsTextView.setTextColor(fgColor);
 
-        this.relativeLayout.setBackgroundColor(bgColor);
-        this.clubTextView.setTextColor(fgColor);
-        this.dateTextView.setTextColor(fgColor);
-        this.participantsTextView.setTextColor(fgColor);
+        // date
+
+        dateImageView.setColorFilter(fgColor);
+
+        SimpleDateFormat format = new SimpleDateFormat("EEEE dd/MM", Locale.FRANCE);
+        SimpleDateFormat format_hours_minutes = new SimpleDateFormat("HH:mm", Locale.FRANCE);
+
+        if (event.getDateStart().getDay() == event.getDateEnd().getDay() && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
+            String day = format.format(event.getDateStart());
+            dateTextView.setText(day.replaceFirst(".", (day.charAt(0) + "").toUpperCase()) + " de " + format_hours_minutes.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateEnd()));
+        } else {
+            String start = format.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateStart());
+            String end = format.format(event.getDateEnd()) + " à " + format_hours_minutes.format(event.getDateEnd());
+            dateTextView.setText("Du " + start.replaceFirst(".", (start.charAt(0) + "").toUpperCase()) + " au " + end.replaceFirst(".", (end.charAt(0) + "").toUpperCase()));
+        }
+
+        dateTextView.setText("" + event.getDateStart() + " au " + event.getDateEnd());
+        dateTextView.setTextColor(fgColor);
+
+        // description
+
         this.descriptionTextView.setText(event.getDescription());
+
+        Linkify.addLinks(descriptionTextView, Linkify.ALL);
+        Utils.stripUnderlines(descriptionTextView);
 
         // transparent status bar
 

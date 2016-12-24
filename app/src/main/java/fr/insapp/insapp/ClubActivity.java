@@ -55,14 +55,14 @@ public class ClubActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
 
+        Intent intent = getIntent();
+        this.club = intent.getParcelableExtra("club");
+
         this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
         this.nameTextView = (TextView) findViewById(R.id.club_name);
         this.descriptionTextView = (TextView) findViewById(R.id.club_description_text);
         this.iconImageView = (CircleImageView) findViewById(R.id.club_avatar);
         this.headerImageView = (ImageView) findViewById(R.id.header_image_club);
-
-        Intent intent = getIntent();
-        this.club = intent.getParcelableExtra("club");
 
         // toolbar
 

@@ -77,6 +77,7 @@ public class PostActivity extends AppCompatActivity {
     private boolean deleteTag = false;
     private int lastCount = 0;
 
+    private AlertDialog alertDialog;
     private EditText editText;
     private PopupMenu popup;
 
@@ -199,162 +200,162 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        // edit text
+
+        FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = params.rightMargin = 60;
+
+        this.editText = new EditText(PostActivity.this);
+        editText.setLayoutParams(params);
+
+        final FrameLayout container = new FrameLayout(PostActivity.this);
+        container.addView(editText);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // skip execution if triggered by code
+                if (autochange) {
+                    //last_count = s.length();
+                    autochange = false; // next change is not triggered by code
+                    return;
+                }
+
+                if (charSequence.length() == 0) {
+                    lastCount = 0;
+                    userWrittingTag = false;
+                    tagWritting = "";
+                    tagStartsAt = 0;
+                }
+
+                // deletion
+                if (charSequence.length() - lastCount < 0) {
+                    if (userWrittingTag) {
+                        String currentStr = editText.getText().toString();
+                        String strWithoutTag = currentStr.substring(0, tagStartsAt) + currentStr.substring(tagStartsAt + tagWritting.length(), currentStr.length());
+
+                        autochange = true;
+                        editText.setText(strWithoutTag);
+                        editText.setSelection(tagStartsAt);
+
+                        lastCount = strWithoutTag.length();
+                        userWrittingTag = false;
+                        tagWritting = "";
+                        tagStartsAt = 0;
+
+                        deleteTag = true;
+                    }
+                }
+                // writing
+                else {
+                    deleteTag = false;
+
+                    int pos = editText.getSelectionStart() - 1;
+                    if (pos >= 0) {
+                        char c = charSequence.charAt(pos);
+
+                        if (userWrittingTag) {
+                            if (c == ' ' || pos <= tagStartsAt || pos - 1 > tagStartsAt + tagWritting.length()) {
+                                userWrittingTag = false;
+                            }
+                            else {
+                                tagWritting += charSequence.toString().charAt(pos);
+                                showUsersToTag(tagWritting);
+                            }
+                        }
+                        else {
+                            if (c == '@') {
+                                userWrittingTag = true;
+                                tagStartsAt = pos;
+                                tagWritting = "";
+                            }
+                        }
+                    }
+                }
+
+                if (!deleteTag)
+                    lastCount = charSequence.length();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        // alert dialog
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
+        alertDialogBuilder.setTitle(getString(R.string.write_comment));
+        alertDialogBuilder
+                .setView(container)
+                .setCancelable(true)
+                .setPositiveButton(getString(R.string.publish_button), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogAlert, int id) {
+                        final String text = ((EditText) container.getChildAt(0)).getText().toString();
+                        if (!text.isEmpty()) {
+                            final JSONObject json = new JSONObject();
+
+                            try {
+                                json.put("user", HttpGet.credentials.getUserID());
+                                json.put("content", text);
+
+                                JSONArray jsonArray = new JSONArray();
+                                List<String> already_tagged = new ArrayList<>();
+                                for (Tag tag : tags) {
+                                    // if the user didn't delete it
+                                    if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
+                                        JSONObject jsonTag = new JSONObject();
+                                        jsonTag.put("user", tag.getUser());
+                                        jsonTag.put("name", tag.getName());
+
+                                        jsonArray.put(jsonTag);
+                                        already_tagged.add(tag.getName());
+                                    }
+                                }
+                                json.put("tags", jsonArray);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            HttpPost request = new HttpPost(new AsyncResponse() {
+                                @Override
+                                public void processFinish(String output) {
+                                    try {
+                                        adapter.addComment(new Comment(json));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                                }
+                            });
+                            request.execute(HttpGet.ROOTPOST + "/" + id + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
+                        }
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogAlert, int id) {
+                        dialogAlert.cancel();
+                    }
+                });
+
+        this.alertDialog = alertDialogBuilder.create();
+
         // floating action button
 
         this.fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
-
-                final FrameLayout container = new FrameLayout(PostActivity.this);
-                FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.leftMargin = 60; // should be scaled correctly : convertDpToPx
-                params.rightMargin = 60;
-
-                editText.setLayoutParams(params);
-                container.addView(editText);
-
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        // skip execution if triggered by code
-                        if (autochange) {
-                            //last_count = s.length();
-                            autochange = false; // next change is not triggered by code
-                            return;
-                        }
-
-                        if (charSequence.length() == 0) {
-                            lastCount = 0;
-                            userWrittingTag = false;
-                            tagWritting = "";
-                            tagStartsAt = 0;
-                        }
-
-                        // deletion
-                        if (charSequence.length() - lastCount < 0) {
-                            if (userWrittingTag) {
-                                String currentStr = editText.getText().toString();
-                                String strWithoutTag = currentStr.substring(0, tagStartsAt) + currentStr.substring(tagStartsAt + tagWritting.length(), currentStr.length());
-
-                                autochange = true;
-                                editText.setText(strWithoutTag);
-                                editText.setSelection(tagStartsAt);
-
-                                lastCount = strWithoutTag.length();
-                                userWrittingTag = false;
-                                tagWritting = "";
-                                tagStartsAt = 0;
-
-                                deleteTag = true;
-                            }
-                        }
-                        // writing
-                        else {
-                            deleteTag = false;
-
-                            int pos = editText.getSelectionStart() - 1;
-                            if (pos >= 0) {
-                                char c = charSequence.charAt(pos);
-
-                                if (userWrittingTag) {
-                                    if (c == ' ' || pos <= tagStartsAt || pos - 1 > tagStartsAt + tagWritting.length()) {
-                                        userWrittingTag = false;
-                                    }
-                                    else {
-                                        tagWritting += charSequence.toString().charAt(pos);
-                                        showUsersToTag(tagWritting);
-                                    }
-                                }
-                                else {
-                                    if (c == '@') {
-                                        userWrittingTag = true;
-                                        tagStartsAt = pos;
-                                        tagWritting = "";
-                                    }
-                                }
-                            }
-                        }
-
-                        if (!deleteTag)
-                            lastCount = charSequence.length();
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-
-                // write comment
-                alertDialogBuilder.setTitle(getString(R.string.write_comment));
-                alertDialogBuilder
-                        .setView(container)
-                        .setCancelable(true)
-                        .setPositiveButton(getString(R.string.publish_button), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogAlert, int id) {
-                                final String text = ((EditText) container.getChildAt(0)).getText().toString();
-                                if (!text.isEmpty()) {
-                                    final JSONObject json = new JSONObject();
-
-                                    try {
-                                        json.put("user", HttpGet.credentials.getUserID());
-                                        json.put("content", text);
-
-                                        JSONArray jsonArray = new JSONArray();
-                                        List<String> already_tagged = new ArrayList<>();
-                                        for (Tag tag : tags) {
-                                            // if the user didn't delete it
-                                            if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
-                                                JSONObject jsonTag = new JSONObject();
-                                                jsonTag.put("user", tag.getUser());
-                                                jsonTag.put("name", tag.getName());
-
-                                                jsonArray.put(jsonTag);
-                                                already_tagged.add(tag.getName());
-                                            }
-                                        }
-                                        json.put("tags", jsonArray);
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    HttpPost request = new HttpPost(new AsyncResponse() {
-                                        @Override
-                                        public void processFinish(String output) {
-                                            try {
-                                                adapter.addComment(new Comment(json));
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                            adapter.notifyItemInserted(adapter.getItemCount() - 1);
-                                        }
-                                    });
-                                    request.execute(HttpGet.ROOTPOST + "/" + id + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
-                                }
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogAlert, int id) {
-                                dialogAlert.cancel();
-                            }
-                        });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             }
         });
-
-        // edit text
-
-        this.editText = new EditText(PostActivity.this);
 
         // popup menu
 

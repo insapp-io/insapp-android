@@ -94,6 +94,12 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
                     });
                     request.execute(HttpGet.ROOTUSER + "/" + tag.getUser() + "?token=" + HttpGet.credentials.getSessionToken());
                 }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
             };
 
             spannableString.setSpan(span, posStart, posEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

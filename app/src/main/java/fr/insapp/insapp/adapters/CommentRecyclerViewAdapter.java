@@ -8,6 +8,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +30,10 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Comment;
+import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 18/11/2016.
@@ -62,11 +69,45 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     public void onBindViewHolder(final CommentViewHolder holder, int position) {
         final Comment comment = comments.get(position);
 
-        holder.text.setText(comment.getContent());
-        holder.date.setText("Il y a " + Operation.displayedDate(comment.getDate()));
+        // tagging
 
-        // Get the user
-        HttpGet get = new HttpGet(new AsyncResponse() {
+        String str = comment.getContent();
+        SpannableString spannableString = new SpannableString(str);
+
+        for (final Tag tag : comment.getTags()) {
+            int posStart = str.indexOf(tag.getName());
+            int posEnd = posStart + tag.getName().length();
+
+            ClickableSpan span = new ClickableSpan() {
+
+                @Override
+                public void onClick(View view) {
+                    HttpGet request = new HttpGet(new AsyncResponse() {
+                        @Override
+                        public void processFinish(String output) {
+                            try {
+                                context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", new User(new JSONObject(output))));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    request.execute(HttpGet.ROOTUSER + "/" + tag.getUser() + "?token=" + HttpGet.credentials.getSessionToken());
+                }
+            };
+
+            spannableString.setSpan(span, posStart, posEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        holder.text.setText(spannableString);
+        holder.text.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.text.setEnabled(true);
+
+        holder.date.setText("il y a " + Operation.displayedDate(comment.getDate()));
+
+        // user
+
+        HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 JSONObject json = null;
@@ -87,19 +128,22 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
                     holder.avatar.setImageDrawable(d);
                     holder.username.setText("@" + user.getUsername());
 
-                    holder.avatar.setOnClickListener(new View.OnClickListener() {
+                    View.OnClickListener listener = new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", user));
                         }
-                    });
+                    };
+
+                    holder.avatar.setOnClickListener(listener);
+                    holder.username.setOnClickListener(listener);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-        get.execute(HttpGet.ROOTUSER + "/" + comment.getUserId() + "?token=" + HttpGet.credentials.getSessionToken());
+        request.execute(HttpGet.ROOTUSER + "/" + comment.getUserId() + "?token=" + HttpGet.credentials.getSessionToken());
 
         holder.bind(comment, listener);
     }

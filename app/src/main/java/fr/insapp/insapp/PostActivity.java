@@ -68,6 +68,8 @@ public class PostActivity extends AppCompatActivity {
 
     // tags
 
+    private ArrayList<Tag> tags = new ArrayList<>();
+
     private boolean userWrittingTag = false;
     private int tagStartsAt = 0;
     private String tagWritting = "";
@@ -307,7 +309,6 @@ public class PostActivity extends AppCompatActivity {
 
                                         JSONArray jsonArray = new JSONArray();
                                         List<String> already_tagged = new ArrayList<>();
-                                        /*
                                         for (Tag tag : tags) {
                                             // if the user didn't delete it
                                             if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
@@ -319,7 +320,6 @@ public class PostActivity extends AppCompatActivity {
                                                 already_tagged.add(tag.getName());
                                             }
                                         }
-                                        */
                                         json.put("tags", jsonArray);
 
                                     } catch (JSONException e) {
@@ -360,12 +360,6 @@ public class PostActivity extends AppCompatActivity {
 
         this.popup = new PopupMenu(PostActivity.this, editText);
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
-        popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-
-            }
-        });
     }
 
     private void showUsersToTag(String username) {
@@ -389,6 +383,8 @@ public class PostActivity extends AppCompatActivity {
                                 public boolean onMenuItemClick(MenuItem item) {
                                     String currentStr = editText.getText().toString();
                                     String strWithTag = currentStr.substring(0, tagStartsAt) + "@" + user.getUsername() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
+
+                                    tags.add(new Tag("", user.getId(), "@" + user.getUsername()));
 
                                     autochange = true;
                                     editText.setText(strWithTag);

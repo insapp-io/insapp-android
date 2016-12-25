@@ -383,7 +383,7 @@ public class PostActivity extends AppCompatActivity {
                                 @Override
                                 public boolean onMenuItemClick(MenuItem item) {
                                     String currentStr = editText.getText().toString();
-                                    String strWithTag = currentStr.substring(0, tagStartsAt) + "@" + user.getUsername() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
+                                    String strWithTag = currentStr.substring(0, tagStartsAt) + item.getTitle() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
 
                                     tags.add(new Tag("", user.getId(), "@" + user.getUsername()));
 

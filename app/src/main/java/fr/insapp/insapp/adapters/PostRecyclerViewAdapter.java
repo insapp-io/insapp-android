@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +31,6 @@ import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
-import fr.insapp.insapp.utility.ImageLoader;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
 

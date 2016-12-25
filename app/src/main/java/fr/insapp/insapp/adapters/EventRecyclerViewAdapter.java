@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +18,6 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.Event;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.utility.ImageLoader;
 
 /**
  * Created by thoma on 18/11/2016.
@@ -24,11 +25,10 @@ import fr.insapp.insapp.utility.ImageLoader;
 
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.EventViewHolder> {
 
+    private Context context;
     protected List<Event> events;
 
     private int layout;
-
-    private ImageLoader imageLoader;
 
     protected OnEventItemClickListener listener;
 
@@ -37,9 +37,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     }
 
     public EventRecyclerViewAdapter(Context context, int layout) {
-        this.events = new ArrayList<Event>();
+        this.context = context;
+        this.events = new ArrayList<>();
         this.layout = layout;
-        this.imageLoader = new ImageLoader(context);
     }
 
     public void setOnItemClickListener(OnEventItemClickListener listener) {
@@ -61,7 +61,8 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     public void onBindViewHolder(EventRecyclerViewAdapter.EventViewHolder holder, int position) {
         final Event event = events.get(position);
 
-        imageLoader.DisplayImage(HttpGet.IMAGEURL + event.getImage(), holder.image);
+        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).into(holder.image);
+
         holder.name.setText(event.getName());
 
         int nb_participants = event.getParticipants().size();

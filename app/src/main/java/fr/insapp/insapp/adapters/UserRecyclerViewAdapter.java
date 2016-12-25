@@ -48,7 +48,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public void onBindViewHolder(UserRecyclerViewAdapter.UserViewHolder holder, int position) {
         final User user = users.get(position);
 
-        holder.avatar.setImageResource(R.drawable.sample_6);
+        //holder.avatar.setImageResource(R.drawable.sample_6);
         holder.name.setText(user.getName());
         holder.username.setText(user.getUsername());
 

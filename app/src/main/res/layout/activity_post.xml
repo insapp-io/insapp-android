@@ -35,7 +35,6 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/club_avatar_post"
-                        android:src="@drawable/sample_6"
                         android:layout_marginTop="12dp"
                         android:layout_marginStart="14dp"
                         android:layout_marginEnd="6dp"

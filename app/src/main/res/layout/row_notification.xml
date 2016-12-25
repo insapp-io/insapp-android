@@ -12,8 +12,7 @@
         android:layout_marginStart="14dp"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:civ_border_width="0dp"
-        android:src="@drawable/sample_1" />
+        app:civ_border_width="0dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +21,6 @@
 
         <TextView
             android:id="@+id/notification_text"
-            android:text="Le nom de l'event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#3e3e3e"

@@ -27,7 +27,6 @@
                 <ImageView
                     android:id="@+id/header_image_club"
                     android:background="#212121"
-                    android:src="@drawable/large_sample_0"
                     android:layout_width="match_parent"
                     android:scaleType="centerCrop"
                     android:layout_height="192dp" />
@@ -98,7 +97,6 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/club_avatar"
                     android:padding="3dp"
-                    android:src="@drawable/sample_4"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="16dp"

@@ -154,7 +154,7 @@ public class ProfileActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.home:
                 onBackPressed();
-                break;
+                return true;
 
             case R.id.action_report:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);

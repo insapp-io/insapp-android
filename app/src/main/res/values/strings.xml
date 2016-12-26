@@ -11,7 +11,6 @@
     <string name="intro_notifications">Reçois les notifications pour ne jamais rien louper</string>
     <string name="intro_events">Reste au courant des derniers évènements des associations</string>
     <string name="intro_clubs">Retrouve toutes les associations de l\'INSA de Rennes</string>
-    <string name="intro_notifications_enable">Activer les notifications</string>
 
     <string name="settings_profile">Profil</string>
     <string name="settings_options">Options</string>
@@ -25,9 +24,9 @@
     <string name="settings_mail_summary">Non renseigné</string>
     <string name="settings_description">Description</string>
     <string name="settings_description_summary">Non renseignée</string>
-    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications">Activer les notifications</string>
     <string name="settings_notifications_summary">Une notification est envoyée lorsqu\'une association ajoute une news ou un évènement</string>
-    <string name="settings_calendar">Ajout des évènements au calendrier</string>
+    <string name="settings_calendar">Activer l\'ajout des évènements au calendrier</string>
     <string name="settings_calendar_summary">Les évènements auxquels tu participes sont ajoutés à ton calendrier</string>
 
     <string name="write_comment">Écrire un commentaire</string>

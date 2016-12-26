@@ -59,7 +59,7 @@
                 android:textSize="16sp" />
 
             <CheckBox
-                android:text="@string/intro_notifications_enable"
+                android:text="@string/settings_notifications"
                 android:id="@+id/checkbox_enable_notifications"
                 android:gravity="center"
                 android:textColor="@android:color/white"

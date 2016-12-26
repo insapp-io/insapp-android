@@ -144,7 +144,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/menu"
+        android:id="@+id/fab_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
@@ -157,7 +157,6 @@
         fab:menu_shadowXOffset="1dp"
         fab:menu_shadowYOffset="3dp"
         fab:menu_colorNormal="#ffffff"
-        fab:menu_colorPressed="#E75043"
         fab:menu_colorRipple="#99FFFFFF"
         fab:menu_animationDelayPerItem="50"
         fab:menu_icon="@drawable/ic_person_add_black_24dp"
@@ -184,22 +183,23 @@
         fab:menu_openDirection="up">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_item_1"
+            android:id="@+id/fab_item_1_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check_black_24dp"
             fab:fab_colorNormal="@color/white"
+            fab:fab_colorPressed="@color/white"
             fab:fab_size="mini"
             fab:fab_label="J'y vais" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_item_2"
+            android:id="@+id/fab_item_2_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close_black_24dp"
             fab:fab_colorNormal="@color/white"
+            fab:fab_colorPressed="@color/white"
             fab:fab_size="mini"
             fab:fab_label="J'y vais pas" />
-
     </com.github.clans.fab.FloatingActionMenu>
 </android.support.design.widget.CoordinatorLayout>

@@ -114,6 +114,10 @@
         android:layout_height="wrap_content"
         app:layout_behavior="fr.insapp.insapp.behaviors.ScrollingFABBehavior"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="23dp"
+        android:clickable="true"
+        app:borderWidth="0dp"
+        app:elevation="12dp"
+        app:fab_colorRipple="#99FFFFFF"
         android:src="@drawable/ic_chat_bubble_black_24dp" />
 </android.support.design.widget.CoordinatorLayout>

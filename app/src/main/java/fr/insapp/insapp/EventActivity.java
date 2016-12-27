@@ -182,11 +182,26 @@ public class EventActivity extends AppCompatActivity {
 
         // floating action menu
 
+        for (String id : event.getParticipants()) {
+            if (HttpGet.credentials.getUserID().equals(id)) {
+                this.userParticipates = true;
+                break;
+            }
+        }
+
         this.floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_event);
-        floatingActionMenu.setMenuButtonColorNormal(bgColor);
-        floatingActionMenu.setMenuButtonColorPressed(bgColor);
         floatingActionMenu.setIconAnimated(false);
-        floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
+
+        if (!userParticipates) {
+            floatingActionMenu.setMenuButtonColorNormal(bgColor);
+            floatingActionMenu.setMenuButtonColorPressed(bgColor);
+            floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
+        } else {
+            floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+            floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+            floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+            floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+        }
 
         this.floatingActionButton1 = (FloatingActionButton) findViewById(R.id.fab_item_1_event);
         floatingActionButton1.setLabelColors(bgColor, bgColor, 0x99ffffff);
@@ -283,13 +298,6 @@ public class EventActivity extends AppCompatActivity {
                     floatingActionMenu.close(true);
             }
         });
-
-        for (String id : event.getParticipants()) {
-            if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = true;
-                break;
-            }
-        }
 
         // transparent status bar
 

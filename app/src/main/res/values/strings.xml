@@ -26,7 +26,7 @@
     <string name="settings_description_summary">Non renseignée</string>
     <string name="settings_notifications">Activer les notifications</string>
     <string name="settings_notifications_summary">Une notification est envoyée lorsqu\'une association ajoute une news ou un évènement</string>
-    <string name="settings_calendar">Activer l\'ajout des évènements au calendrier</string>
+    <string name="settings_calendar">Ajouter les évènements au calendrier</string>
     <string name="settings_calendar_summary">Les évènements auxquels tu participes sont ajoutés à ton calendrier</string>
 
     <string name="write_comment">Écrire un commentaire</string>

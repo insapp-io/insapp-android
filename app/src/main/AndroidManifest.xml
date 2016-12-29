@@ -77,10 +77,10 @@
         <activity
             android:name="fr.insapp.insapp.ProfileActivity"
             android:label="@string/profile"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".PostActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".PostActivity" />
         </activity>
 
         <activity

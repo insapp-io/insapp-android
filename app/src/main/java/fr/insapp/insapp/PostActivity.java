@@ -336,8 +336,9 @@ public class PostActivity extends AppCompatActivity {
                                 public void processFinish(String output) {
                                     try {
                                         post = new Post(new JSONObject(output));
-                                        
                                         adapter.setComments(post.getComments());
+
+                                        ((EditText) container.getChildAt(0)).getText().clear();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }

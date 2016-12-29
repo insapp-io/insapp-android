@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.models.Notification;
 
 /**
@@ -55,9 +55,6 @@ public class NotificationsFragment extends Fragment {
 
     private List<Notification> generateNotifications() {
         List<Notification> notifications = new ArrayList<>();
-
-        for (int i = 0; i < 22; i++)
-            notifications.add(new Notification("Bebop t'invite à Concert rap", "il y a 3j"));
 
         return notifications;
     }

@@ -76,11 +76,7 @@
 
         <activity
             android:name="fr.insapp.insapp.ProfileActivity"
-            android:label="@string/profile"
-            android:parentActivityName=".PostActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PostActivity" />
+            android:label="@string/profile">
         </activity>
 
         <activity

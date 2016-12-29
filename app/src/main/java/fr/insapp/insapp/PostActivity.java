@@ -56,6 +56,7 @@ public class PostActivity extends AppCompatActivity {
     private CommentRecyclerViewAdapter adapter;
 
     private Post post = null;
+    private Club club = null;
 
     private CircleImageView avatar_club;
     private TextView title;
@@ -90,7 +91,7 @@ public class PostActivity extends AppCompatActivity {
         this.date = (TextView) findViewById(R.id.post_date);
 
         Intent intent = getIntent();
-        post = intent.getParcelableExtra("post");
+        this.post = intent.getParcelableExtra("post");
 
         // toolbar
 
@@ -103,7 +104,7 @@ public class PostActivity extends AppCompatActivity {
 
         // fill post elements
 
-        final Club club = HttpGet.clubs.get(post.getAssociation());
+        this.club = HttpGet.clubs.get(post.getAssociation());
 
         Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.avatar_club);
 
@@ -121,7 +122,7 @@ public class PostActivity extends AppCompatActivity {
         this.avatar_club.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ClubActivity.class).putExtra("club", club));
+                startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
             }
         });
 
@@ -420,7 +421,7 @@ public class PostActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                onBackPressed();
+                finish();
                 return true;
         }
 

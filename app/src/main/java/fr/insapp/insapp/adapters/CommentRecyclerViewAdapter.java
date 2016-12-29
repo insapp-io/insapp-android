@@ -154,8 +154,8 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
         holder.bind(comment, listener);
     }
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

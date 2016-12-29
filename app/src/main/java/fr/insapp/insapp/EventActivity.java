@@ -27,6 +27,9 @@ import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -35,6 +38,7 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.utility.Utils;
 
@@ -140,7 +144,31 @@ public class EventActivity extends AppCompatActivity {
 
         clubImageView.setColorFilter(fgColor);
 
-        clubTextView.setText(event.getAssociation());
+        final Club club = HttpGet.clubs.get(event.getAssociation());
+        if(club == null){
+            HttpGet request = new HttpGet(new AsyncResponse() {
+
+                public void processFinish(String output) {
+                    if (!output.isEmpty()) {
+                        try {
+                            JSONObject jsonobject = new JSONObject(output);
+
+                            final Club club = new Club(jsonobject);
+                            HttpGet.clubs.put(club.getId(), club);
+
+                            clubTextView.setText(club.getName());
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            request.execute(HttpGet.ROOTASSOCIATION + "/"+ event.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
+        }
+        else
+            clubTextView.setText(club.getName());
+
         clubTextView.setTextColor(fgColor);
 
         // participants
@@ -170,7 +198,7 @@ public class EventActivity extends AppCompatActivity {
             dateTextView.setText("Du " + start.replaceFirst(".", (start.charAt(0) + "").toUpperCase()) + " au " + end.replaceFirst(".", (end.charAt(0) + "").toUpperCase()));
         }
 
-        dateTextView.setText("" + event.getDateStart() + " au " + event.getDateEnd());
+        //dateTextView.setText("" + event.getDateStart() + " au " + event.getDateEnd());
         dateTextView.setTextColor(fgColor);
 
         // description

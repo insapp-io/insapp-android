@@ -155,7 +155,15 @@ public class PostActivity extends AppCompatActivity {
                                     HttpDelete delete = new HttpDelete(new AsyncResponse() {
                                         @Override
                                         public void processFinish(String output) {
-                                            Toast.makeText(PostActivity.this, getString(R.string.delete_comment_success), Toast.LENGTH_SHORT).show();
+                                            try {
+                                                post = new Post(new JSONObject(output));
+                                                adapter.setComments(post.getComments());
+
+                                                Toast.makeText(PostActivity.this, getString(R.string.delete_comment_success), Toast.LENGTH_SHORT).show();
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            adapter.notifyDataSetChanged();
                                         }
                                     });
                                     delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
@@ -327,14 +335,16 @@ public class PostActivity extends AppCompatActivity {
                                 @Override
                                 public void processFinish(String output) {
                                     try {
-                                        adapter.addComment(new Comment(json));
+                                        post = new Post(new JSONObject(output));
+                                        
+                                        adapter.setComments(post.getComments());
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                                    adapter.notifyDataSetChanged();
                                 }
                             });
-                            request.execute(HttpGet.ROOTPOST + "/" + id + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
+                            request.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
                         }
                     }
                 })

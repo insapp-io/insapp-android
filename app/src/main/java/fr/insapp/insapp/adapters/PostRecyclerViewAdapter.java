@@ -90,7 +90,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
             final Club club = HttpGet.clubs.get(post.getAssociation());
 
-            if(club == null){
+            if (club == null){
 
                 HttpGet request = new HttpGet(new AsyncResponse() {
 
@@ -205,6 +205,10 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+
+    public List<Post> getPosts() {
+        return posts;
     }
 
     public class PostViewHolder extends RecyclerView.ViewHolder {

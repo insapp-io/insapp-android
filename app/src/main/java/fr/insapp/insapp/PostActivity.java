@@ -152,6 +152,8 @@ public class PostActivity extends AppCompatActivity {
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogAlert, int id) {
+                                    setResult(RESULT_OK);
+
                                     HttpDelete delete = new HttpDelete(new AsyncResponse() {
                                         @Override
                                         public void processFinish(String output) {
@@ -159,7 +161,7 @@ public class PostActivity extends AppCompatActivity {
                                                 post = new Post(new JSONObject(output));
                                                 adapter.setComments(post.getComments());
 
-                                                Toast.makeText(PostActivity.this, getString(R.string.delete_comment_success), Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(PostActivity.this, getString(R.string.delete_comment_success), Toast.LENGTH_SHORT).show();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
@@ -346,6 +348,8 @@ public class PostActivity extends AppCompatActivity {
                                 }
                             });
                             request.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
+
+                            setResult(RESULT_OK);
                         }
                     }
                 })
@@ -371,6 +375,10 @@ public class PostActivity extends AppCompatActivity {
 
         this.popup = new PopupMenu(PostActivity.this, editText);
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
+
+        // result request
+
+        setResult(RESULT_CANCELED);
     }
 
     private void showUsersToTag(String username) {

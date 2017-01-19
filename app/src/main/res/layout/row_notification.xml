@@ -39,6 +39,7 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/image_notification"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/avatar_1stpi_female" />

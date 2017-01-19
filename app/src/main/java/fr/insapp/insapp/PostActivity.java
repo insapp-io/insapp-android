@@ -318,7 +318,10 @@ public class PostActivity extends AppCompatActivity {
                                 List<String> already_tagged = new ArrayList<>();
                                 for (Tag tag : tags) {
                                     // if the user didn't delete it
+                                    System.out.println("1 TAG" + tag.getName());
                                     if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
+
+                                        System.out.println("VALIDE " + tag.getName());
                                         JSONObject jsonTag = new JSONObject();
                                         jsonTag.put("user", tag.getUser());
                                         jsonTag.put("name", tag.getName());

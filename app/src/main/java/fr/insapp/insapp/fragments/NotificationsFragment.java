@@ -8,12 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.Post;
 
 /**
  * Created by thoma on 27/10/2016.
@@ -31,13 +38,15 @@ public class NotificationsFragment extends Fragment {
 
         // adapter
 
-        this.adapter = new NotificationRecyclerViewAdapter(generateNotifications());
+        this.adapter = new NotificationRecyclerViewAdapter(getContext());
         adapter.setOnItemClickListener(new NotificationRecyclerViewAdapter.OnNotificationItemClickListener() {
             @Override
             public void onNotificationItemClick(Notification notification) {
 
             }
         });
+
+        generateNotifications();
     }
 
     @Override
@@ -53,9 +62,31 @@ public class NotificationsFragment extends Fragment {
         return view;
     }
 
-    private List<Notification> generateNotifications() {
-        List<Notification> notifications = new ArrayList<>();
+    private void generateNotifications() {
 
-        return notifications;
+        HttpGet request = new HttpGet(new AsyncResponse() {
+
+            public void processFinish(String output) {
+                if (!output.equals("{\"notifications\":null}")) {
+                    try {
+                        JSONObject json = new JSONObject(output);
+                        JSONArray jsonarray = json.optJSONArray("notifications");
+
+                        if(jsonarray != null) {
+                            for (int i = 0; i < jsonarray.length(); i++) {
+
+                                final JSONObject jsonobject = jsonarray.getJSONObject(i);
+                                adapter.addItem(new Notification(jsonobject));
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        request.execute(HttpGet.ROOTNOTIFICATION + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
     }
 }

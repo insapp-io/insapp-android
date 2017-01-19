@@ -38,9 +38,11 @@ public class LoginActivity extends AppCompatActivity {
     public void login(){
         HttpGet.info_user = File.readSettings(this);
 
-        if(!HttpGet.info_user.equals("")) {
+        String[] params = HttpGet.info_user.split(" ");
 
-            String[] params = HttpGet.info_user.split(" ");
+        System.out.println("SIZE : " + params.length);
+
+        if(params.length >= 2) {
 
             JSONObject json = new JSONObject();
             try {

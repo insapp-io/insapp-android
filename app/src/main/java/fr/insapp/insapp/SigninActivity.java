@@ -6,18 +6,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
@@ -29,7 +35,7 @@ public class SigninActivity extends AppCompatActivity {
     public static final int REQUEST_READ_PHONE_STATE = 10;
     final String url_site = "https://cas.insa-rennes.fr/cas/login?service=https://insapp.fr/";
 
-    //GoogleCloudMessaging gcm;
+    GoogleCloudMessaging gcm;
     Context context;
     String regId;
     public static final String REG_ID = "regId";
@@ -92,12 +98,12 @@ public class SigninActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-        /*
-            if (TextUtils.isEmpty(regId)) {
-                // Récupération du registerId du terminal ou enregistrement de ce dernier
-                regId = registerGCM();
-            }
-        */
+
+        if (TextUtils.isEmpty(regId)) {
+            // Récupération du registerId du terminal ou enregistrement de ce dernier
+            regId = registerGCM();
+        }
+
     }
 
     public void signin(final String ticket){
@@ -134,6 +140,8 @@ public class SigninActivity extends AppCompatActivity {
                                             json = new JSONObject(output);
                                             if (!json.has("error")) {
                                                 String text = json.getString("username") + " " + json.getString("authtoken");
+
+                                                System.out.println("TEXT !!!! " + text);
 
                                                 File.writeSettings(SigninActivity.this, text);
 
@@ -182,7 +190,7 @@ public class SigninActivity extends AppCompatActivity {
      * S'il n'existe pas alors on enregistre le terminal via
      * la méthode registerInBackground()
      **/
-    /*public String registerGCM() {
+    public String registerGCM() {
         gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(context);
 
@@ -212,9 +220,9 @@ public class SigninActivity extends AppCompatActivity {
 
         return registrationId;
     }
-*/
+
     /** * Cette méthode permet l'enregistrement du terminal */
-    /*private void registerInBackground() {
+    private void registerInBackground() {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -238,5 +246,5 @@ public class SigninActivity extends AppCompatActivity {
                 return msg;
             }
         }.execute(null, null, null);
-    }*/
+    }
 }

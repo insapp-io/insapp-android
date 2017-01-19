@@ -176,8 +176,10 @@ public class EventActivity extends AppCompatActivity {
         participantsImageView.setColorFilter(fgColor);
 
         int nb_participants = event.getParticipants().size();
-        if (nb_participants <= 1)
+        if (nb_participants == 0)
             participantsTextView.setText("Pas encore de participants");
+        else if (nb_participants == 1)
+            participantsTextView.setText("1 participant");
         else
             participantsTextView.setText(Integer.toString(nb_participants) + " participants");
         participantsTextView.setTextColor(fgColor);
@@ -291,6 +293,8 @@ public class EventActivity extends AppCompatActivity {
                             else if(prefs.getString("addEventToCalender", "true").equals("true")){
                                 addEventToCalendar();
                             }
+
+                            refreshEvent(output);
                         }
                     });
                     request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
@@ -318,6 +322,8 @@ public class EventActivity extends AppCompatActivity {
                             floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
                             floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
                             floatingActionMenu.getMenuIconView().setColorFilter(R.color.colorAccent);
+
+                            refreshEvent(output);
                         }
                     });
                     delete.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
@@ -406,5 +412,27 @@ public class EventActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshEvent(String output) {
+
+        try {
+            JSONObject json = new JSONObject(output);
+
+            if(event != null) {
+
+                event = new Event(json.getJSONObject("event"));
+                int nb_participants = event.getParticipants().size();
+
+                if (nb_participants == 0)
+                    participantsTextView.setText("Pas encore de participants");
+                else if (nb_participants == 1)
+                    participantsTextView.setText("1 participant");
+                else
+                    participantsTextView.setText(Integer.toString(nb_participants) + " participants");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

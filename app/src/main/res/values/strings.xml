@@ -32,6 +32,7 @@
     <string name="write_comment">Écrire un commentaire</string>
 
     <string name="report">Signaler</string>
+    <string name="delete_account">Supprimer mon compte</string>
 
     <string name="report_user_action">Signaler un utilisateur</string>
     <string name="report_user_are_you_sure">Voulez-vous vraiment signaler cet utilisateur ?</string>
@@ -44,6 +45,10 @@
     <string name="delete_comment_action">Supprimer un commentaire</string>
     <string name="delete_comment_are_you_sure">Voulez-vous supprimer ce commentaire ?</string>
     <string name="delete_comment_success">Commentaire supprimé avec succès</string>
+
+    <string name="delete_account_action">Supprimer mon compte</string>
+    <string name="delete_account_are_you_sure">Voulez-vous vraiment supprimer votre compte ?</string>
+    <string name="delete_account_success">Compte supprimé avec succès</string>
 
     <string name="posts">News</string>
     <string name="clubs">Associations</string>

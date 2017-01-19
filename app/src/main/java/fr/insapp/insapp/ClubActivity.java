@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -120,9 +119,9 @@ public class ClubActivity extends AppCompatActivity {
         tabLayout.setBackgroundColor(bgColor);
 
         if (fgColor == 0xffffffff)
-            tabLayout.setTabTextColors(0xffe8e8e8, fgColor);
+            tabLayout.setTabTextColors(0xffdbdbdb, fgColor);
         else
-            tabLayout.setTabTextColors(0xff595959, fgColor);
+            tabLayout.setTabTextColors(0xff5e5e5e, fgColor);
 
         nameTextView.setText(club.getName());
         nameTextView.setTextColor(fgColor);

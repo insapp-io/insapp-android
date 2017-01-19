@@ -16,14 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.R;
+import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Post;
-import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
-import fr.insapp.insapp.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by thoma on 27/10/2016.
@@ -37,6 +34,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private PostRecyclerViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private static final int WRITE_COMMENT_REQUEST = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +52,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
             @Override
             public void onPostItemClick(Post post) {
-                getContext().startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", post));
+                startActivityForResult(new Intent(getActivity(), PostActivity.class).putExtra("post", post), WRITE_COMMENT_REQUEST);
             }
         });
 
@@ -83,14 +81,23 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Add your code here
+        Toast.makeText(getActivity(), "Fragment Got it: " + requestCode + ", " + resultCode, Toast.LENGTH_SHORT).show();
+    }
+
     private void generatePosts() {
+        adapter.getPosts().clear();
+        adapter.notifyDataSetChanged();
+
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
                 if (!output.isEmpty()) {
                     try {
                         JSONArray jsonarray = new JSONArray(output);
-
                         for (int i = 0; i < jsonarray.length(); i++) {
                             final JSONObject jsonobject = jsonarray.getJSONObject(i);
                             adapter.addItem(new Post(jsonobject));
@@ -108,7 +115,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-        Toast.makeText(getContext(), "onRefresh", Toast.LENGTH_SHORT).show();
+        generatePosts();
         swipeRefreshLayout.setRefreshing(false);
     }
 }

@@ -1,8 +1,5 @@
 package fr.insapp.insapp;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,20 +8,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.lang.reflect.Field;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
@@ -34,6 +27,7 @@ import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.File;
 import fr.insapp.insapp.utility.Operation;
 
 /**
@@ -100,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
         Resources resources = ProfileActivity.this.getResources();
 
         Intent intent = getIntent();
-        if(intent.hasExtra("user")){
+        if (intent.hasExtra("user")){
             this.user = intent.getParcelableExtra("user");
 
             int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", ProfileActivity.this.getPackageName());
@@ -114,14 +108,14 @@ public class ProfileActivity extends AppCompatActivity {
             this.description.setText(user.getDescription());
 
             //
-            if(user.getName().isEmpty())
+            if (user.getName().isEmpty())
                 this.name.setVisibility(View.GONE);
-            if(user.getEmail().isEmpty())
+            if (user.getEmail().isEmpty())
                 this.email.setVisibility(View.GONE);
-            if(user.getPromotion().isEmpty())
+            if (user.getPromotion().isEmpty())
                 this.promo.setVisibility(View.GONE);
         }
-        else{
+        else {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
             int id = resources.getIdentifier(Operation.drawableProfilName(preferences.getString("class", ""), preferences.getString("sex", "")), "drawable", ProfileActivity.this.getPackageName());
@@ -134,11 +128,11 @@ public class ProfileActivity extends AppCompatActivity {
             this.promo.setText(preferences.getString("class", ""));
             this.description.setText(preferences.getString("description", ""));
 
-            if(user.getName().isEmpty())
+            if (user.getName().isEmpty())
                 this.name.setVisibility(View.GONE);
-            if(user.getEmail().isEmpty())
+            if (user.getEmail().isEmpty())
                 this.email.setVisibility(View.GONE);
-            if(user.getPromotion().isEmpty())
+            if (user.getPromotion().isEmpty())
                 this.promo.setVisibility(View.GONE);
         }
     }
@@ -146,38 +140,75 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
+
+        if (user.getId().equals(MainActivity.getUser().getId()))
+            menu.getItem(0).setTitle(R.string.delete_account);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.home:
+            case android.R.id.home:
                 onBackPressed();
                 return true;
 
             case R.id.action_report:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
-                alertDialogBuilder.setTitle(getString(R.string.report_user_action));
-                alertDialogBuilder
-                        .setMessage(R.string.report_user_are_you_sure)
-                        .setCancelable(true)
-                        .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogAlert, int id) {
-                                HttpPut report = new HttpPut(new AsyncResponse() {
-                                    @Override
-                                    public void processFinish(String output) {
-                                        Toast.makeText(ProfileActivity.this, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                report.execute(HttpGet.ROOTURL + "/report/user/" + user.getId() + "?token=" + HttpGet.credentials.getSessionToken());
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogAlert, int id) {
-                                dialogAlert.cancel();
-                            }
-                        });
+
+                if (!user.getId().equals(MainActivity.getUser().getId())) {
+                    alertDialogBuilder.setTitle(getString(R.string.report_user_action));
+                    alertDialogBuilder
+                            .setMessage(R.string.report_user_are_you_sure)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    HttpPut report = new HttpPut(new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output) {
+                                            Toast.makeText(ProfileActivity.this, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    report.execute(HttpGet.ROOTURL + "/report/user/" + user.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    dialogAlert.cancel();
+                                }
+                            });
+                } else {
+                    alertDialogBuilder.setTitle(getString(R.string.delete_account_action));
+                    alertDialogBuilder
+                            .setMessage(R.string.delete_account_are_you_sure)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    HttpDelete delete = new HttpDelete(new AsyncResponse() {
+                                        @Override
+                                        public void processFinish(String output) {
+                                            HttpGet.credentials = null;
+                                            File.writeSettings(ProfileActivity.this, "");
+
+                                            Intent activity = new Intent(ProfileActivity.this, IntroActivity.class);
+                                            activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(activity);
+
+                                            Toast.makeText(ProfileActivity.this, R.string.delete_account_success, Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                    });
+                                    delete.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogAlert, int id) {
+                                    dialogAlert.cancel();
+                                }
+                            });
+                }
 
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();

@@ -26,6 +26,7 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginStart="14dp"
+            android:layout_marginBottom="14dp"
             app:civ_fill_color="@color/white" />
 
         <RelativeLayout

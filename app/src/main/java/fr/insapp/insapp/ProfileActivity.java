@@ -19,6 +19,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
@@ -76,7 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                startActivity(new Intent(getBaseContext(), EventActivity.class));
+                startActivity(new Intent(getBaseContext(), EventActivity.class).putExtra("event", event));
             }
         });
 
@@ -135,6 +144,8 @@ public class ProfileActivity extends AppCompatActivity {
             if (user.getPromotion().isEmpty())
                 this.promo.setVisibility(View.GONE);
         }
+
+        generateEvents();
     }
 
     @Override
@@ -219,5 +230,44 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void generateEvents(){
+
+        final List<Event> events = new ArrayList<Event>();
+
+        for (String idEvent : user.getEvents()) {
+
+
+                HttpGet request = new HttpGet(new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+
+                        try {
+                            Event event = new Event(new JSONObject(output));
+                            events.add(event);
+                        } catch (JSONException e) {
+
+                        }
+
+                        if(events.size() == user.getEvents().size())
+                            showEvents(events);
+                    }
+                });
+                request.execute(HttpGet.ROOTEVENT + "/" + idEvent + "?token=" + HttpGet.credentials.getSessionToken());
+
+        }
+    }
+
+    private void showEvents(List<Event> events){
+
+        Date atm = Calendar.getInstance().getTime();
+
+        Collections.sort(events);
+        for (final Event event : events) {
+
+            if (event.getDateEnd().getTime() > atm.getTime())
+                adapter.addItem(event);
+        }
     }
 }

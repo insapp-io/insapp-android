@@ -1,5 +1,6 @@
 package fr.insapp.insapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,10 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
+import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.User;
 
 /**
@@ -28,13 +34,18 @@ public class UsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
 
-        this.adapter = new UserRecyclerViewAdapter(this, generateUsers());
+        Intent intent = getIntent();
+        List<String> users = intent.getStringArrayListExtra("users");
+
+        this.adapter = new UserRecyclerViewAdapter(this);
         adapter.setOnItemClickListener(new UserRecyclerViewAdapter.OnUserItemClickListener() {
             @Override
             public void onUserItemClick(User user) {
-
+                startActivity(new Intent(getBaseContext(), ProfileActivity.class).putExtra("user", user));
             }
         });
+
+        generateUsers(users);
 
         // toolbar
 
@@ -56,10 +67,28 @@ public class UsersActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private List<User> generateUsers() {
-        final List<User> users = new ArrayList<>();
+    private void generateUsers(List<String> users) {
 
-        return users;
+        for(int i=0; i<users.size(); i++) {
+
+            final int id = i;
+            HttpGet request = new HttpGet(new AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(output);
+                        final User user = new User(json);
+
+                        adapter.addItem(user);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            request.execute(HttpGet.ROOTUSER + "/" + users.get(i) + "?token=" + HttpGet.credentials.getSessionToken());
+        }
     }
 
     @Override

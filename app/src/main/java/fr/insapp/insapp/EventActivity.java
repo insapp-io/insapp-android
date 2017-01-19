@@ -88,7 +88,7 @@ public class EventActivity extends AppCompatActivity {
         participantsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getBaseContext(), UsersActivity.class));
+                startActivity(new Intent(getBaseContext(), UsersActivity.class).putExtra("users", event.getParticipants()));
             }
         });
 

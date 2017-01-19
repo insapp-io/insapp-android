@@ -106,7 +106,7 @@ public class SearchActivity extends AppCompatActivity {
         GridLayoutManager layoutManagerUsers = new GridLayoutManager(this, 3);
         recyclerViewUsers.setLayoutManager(layoutManagerUsers);
 
-        UserRecyclerViewAdapter adapterUsers = new UserRecyclerViewAdapter(this, generateUsers());
+        UserRecyclerViewAdapter adapterUsers = new UserRecyclerViewAdapter(this);
         recyclerViewUsers.setAdapter(adapterUsers);
     }
 

@@ -99,6 +99,17 @@ public class Post implements Parcelable {
         }
     };
 
+    public boolean equals(Object other){
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Post))return false;
+        Post otherMyClass = (Post)other;
+
+        if(otherMyClass.getId().equals(this.id)) return true;
+
+        return false;
+    }
+
     public boolean postLikedBy(String user){
         for(String idUser : likes){
             if(idUser.equals(user))

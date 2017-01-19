@@ -435,7 +435,7 @@ public class PostActivity extends AppCompatActivity {
                 popup.show();
             }
         });
-        request.execute(HttpGet.ROOTSEARCHUSER + "/" + username + "?token=" + HttpGet.credentials.getSessionToken());
+        request.execute(HttpGet.ROOTSEARCHUSERS + "/" + username + "?token=" + HttpGet.credentials.getSessionToken());
     }
 
     @Override
@@ -443,6 +443,12 @@ public class PostActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
+
+                Intent sendIntent = new Intent();
+                sendIntent.putExtra("post", post);
+
+                setResult(RESULT_OK, sendIntent);
+
                 finish();
                 return true;
         }

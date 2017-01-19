@@ -22,6 +22,8 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Post;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by thoma on 27/10/2016.
  */
@@ -85,7 +87,17 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Add your code here
-        Toast.makeText(getActivity(), "Fragment Got it: " + requestCode + ", " + resultCode, Toast.LENGTH_SHORT).show();
+
+        if(requestCode == WRITE_COMMENT_REQUEST){
+            if (resultCode == RESULT_OK){
+                Post post = data.getParcelableExtra("post");
+
+                int id = adapter.getPosts().indexOf(post);
+                adapter.updatePost(id, post);
+
+                Toast.makeText(getActivity(), "Fragment Got it: " + requestCode + ", " + resultCode + " " + id, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void generatePosts() {

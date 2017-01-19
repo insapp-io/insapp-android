@@ -66,6 +66,11 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         this.notifyDataSetChanged();
     }
 
+    public void updatePost(int id, Post post){
+        this.posts.set(id, post);
+        notifyItemChanged(id);
+    }
+
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);

@@ -33,6 +33,11 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         this.listener = listener;
     }
 
+    public void addItem(Notification notification) {
+        this.notifications.add(notification);
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public NotificationRecyclerViewAdapter.NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_notification, parent, false);
@@ -43,8 +48,8 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     public void onBindViewHolder(NotificationRecyclerViewAdapter.NotificationViewHolder holder, int position) {
         final Notification notification = notifications.get(position);
 
-        holder.text.setText(notification.text);
-        holder.date.setText(notification.date);
+        //holder.text.setText(notification.text);
+        //holder.date.setText(notification.date);
 
         holder.bind(notification, listener);
     }

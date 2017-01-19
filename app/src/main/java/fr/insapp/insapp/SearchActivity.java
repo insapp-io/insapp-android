@@ -39,6 +39,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewClubs, recyclerViewPosts, recyclerViewEvents, recyclerViewUsers;
 
+    private String query;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +50,16 @@ public class SearchActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+            query = intent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(this, "Recherche: " + query, Toast.LENGTH_SHORT).show();
+
+            HttpGet request = new HttpGet(new AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+                    System.out.println(output);
+                }
+            });
+            request.execute(HttpGet.ROOTSEACHUNIVERSAL + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
         }
 
         // toolbar
@@ -108,24 +118,37 @@ public class SearchActivity extends AppCompatActivity {
 
         UserRecyclerViewAdapter adapterUsers = new UserRecyclerViewAdapter(this);
         recyclerViewUsers.setAdapter(adapterUsers);
+
+        generateClubs(adapterClubs, query);
+        generatePosts(adapterPosts, query);
+        generateEvents(adapterEvents, query);
+        generateUsers(adapterUsers, query);
     }
 
-    private List<Club> generateClubs() {
-        final List<Club> clubs = new ArrayList<>();
+    private void generateClubs(final ClubRecyclerViewAdapter adapter, String query) {
 
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-                if (!output.isEmpty()) {
+
+                if (!output.equals("{\"associations\":null}")) {
                     try {
-                        JSONArray jsonarray = new JSONArray(output);
+
+                        JSONObject json = new JSONObject(output);
+                        JSONArray jsonarray = json.optJSONArray("associations");
 
                         for (int i = 0; i < jsonarray.length(); i++) {
                             final JSONObject jsonobject = jsonarray.getJSONObject(i);
                             Club club = new Club(jsonobject);
 
-                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty())
-                                clubs.add(new Club(jsonobject));
+                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                                adapter.addItem(club);
+
+                                // Add club to the list if it is new
+                                Club c = HttpGet.clubs.get(club.getId());
+                                if(c == null)
+                                    HttpGet.clubs.put(club.getId(), club);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -134,24 +157,27 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.credentials.getSessionToken());
-        return clubs;
+        request.execute(HttpGet.ROOTSEARCHASSOCIAITIONS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
     }
 
-    private List<Post> generatePosts() {
-        final List<Post> posts = new ArrayList<>();
+    private void generatePosts(final PostRecyclerViewAdapter adapter, String query) {
 
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-                if (!output.isEmpty()) {
+
+                if (!output.equals("{\"posts\":null}")) {
                     try {
-                        JSONArray jsonarray = new JSONArray(output);
+
+                        JSONObject json = new JSONObject(output);
+                        JSONArray jsonarray = json.optJSONArray("posts");
 
                         for (int i = 0; i < jsonarray.length(); i++) {
-                            final JSONObject jsonobject = jsonarray.getJSONObject(i);
-                            posts.add(new Post(jsonobject));
+                            JSONObject jsonobject = jsonarray.getJSONObject(i);
+
+                            adapter.addItem(new Post(jsonobject));
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -159,29 +185,29 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
-
-        return posts;
+        request.execute(HttpGet.ROOTSEARCHPOSTS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
     }
 
-    private List<Event> generateEvents() {
-        final List<Event> events = new ArrayList<>();
+    private void generateEvents(final EventRecyclerViewAdapter adapter, String query) {
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                if (!output.isEmpty()) {
+
+                if (!output.equals("{\"events\":null}")) {
 
                     Date atm = Calendar.getInstance().getTime();
-
                     try {
-                        JSONArray jsonarray = new JSONArray(output);
+
+                        JSONObject json = new JSONObject(output);
+                        JSONArray jsonarray = json.optJSONArray("events");
+
                         for (int i = 0; i < jsonarray.length(); i++) {
                             JSONObject jsonObject = jsonarray.getJSONObject(i);
 
                             Event event = new Event(jsonObject);
                             if (event.getDateEnd().getTime() > atm.getTime())
-                                events.add(event);
+                                adapter.addItem(event);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -190,14 +216,34 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
-        return events;
+        request.execute(HttpGet.ROOTSEARCHEVENTS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
     }
 
-    private List<User> generateUsers() {
-        List<User> users = new ArrayList<>();
+    private void  generateUsers(final UserRecyclerViewAdapter adapter, String query) {
 
-        return users;
+        HttpGet request = new HttpGet(new AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+
+                if (!output.equals("{\"users\":null}")) {
+                    try {
+
+                        JSONObject json = new JSONObject(output);
+                        JSONArray jsonarray = json.optJSONArray("users");
+
+                        for (int i = 0; i < jsonarray.length(); i++) {
+                            JSONObject jsonObject = jsonarray.getJSONObject(i);
+
+                            adapter.addItem(new User(jsonObject));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        request.execute(HttpGet.ROOTSEARCHUSERS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
     }
 
     @Override

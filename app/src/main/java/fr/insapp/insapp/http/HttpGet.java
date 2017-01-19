@@ -24,7 +24,7 @@ public class HttpGet extends AsyncTask<String, Void, String> {
 
     public static String info_user;
 
-    public static final String ROOTURL = "https://insapp.fr/api/v1";
+    public static final String ROOTURL = "https://dev.insapp.fr/api/v1";
     public static final String ROOTSIGNIN = HttpGet.ROOTURL + "/signin/user";
     public static final String ROOTLOGIN = HttpGet.ROOTURL + "/login/user";
     public static final String ROOTPOST = HttpGet.ROOTURL + "/post";
@@ -32,7 +32,13 @@ public class HttpGet extends AsyncTask<String, Void, String> {
     public static final String ROOTASSOCIATION = HttpGet.ROOTURL + "/association";
     public static final String ROOTUSER = HttpGet.ROOTURL + "/user";
     public static final String ROOTNOTIFICATION = HttpGet.ROOTURL + "/notification";
-    public static final String ROOTSEARCHUSER = HttpGet.ROOTURL + "/search/users";
+
+    public static final String ROOTSEARCHUSERS = HttpGet.ROOTURL + "/search/users";
+    public static final String ROOTSEARCHPOSTS = HttpGet.ROOTURL + "/search/posts";
+    public static final String ROOTSEARCHASSOCIAITIONS = HttpGet.ROOTURL + "/search/associations";
+    public static final String ROOTSEARCHEVENTS = HttpGet.ROOTURL + "/search/events";
+
+    public static final String ROOTSEACHUNIVERSAL = HttpGet.ROOTURL + "/search";
 
     public static final String IMAGEURL = "https://insapp.fr/cdn/";
 

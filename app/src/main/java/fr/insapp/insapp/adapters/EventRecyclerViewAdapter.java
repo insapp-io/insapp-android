@@ -91,6 +91,10 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         return events.size();
     }
 
+    public List<Event> getEvents() {
+        return events;
+    }
+
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         //public ImageView thumbnail;
         public TextView name;

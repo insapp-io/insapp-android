@@ -95,6 +95,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void generateEvents() {
+        adapter.getEvents().clear();
+        adapter.notifyDataSetChanged();
+
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
@@ -127,7 +130,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onRefresh() {
-        Toast.makeText(getContext(), "onRefresh", Toast.LENGTH_SHORT).show();
+        generateEvents();
         swipeRefreshLayout.setRefreshing(false);
     }
 }

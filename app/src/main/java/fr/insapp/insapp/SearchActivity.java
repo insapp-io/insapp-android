@@ -38,6 +38,10 @@ import fr.insapp.insapp.models.User;
 public class SearchActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewClubs, recyclerViewPosts, recyclerViewEvents, recyclerViewUsers;
+    private ClubRecyclerViewAdapter adapterClubs;
+    private PostRecyclerViewAdapter adapterPosts;
+    private EventRecyclerViewAdapter adapterEvents;
+    private UserRecyclerViewAdapter adapterUsers;
 
     private String query;
 
@@ -65,7 +69,7 @@ public class SearchActivity extends AppCompatActivity {
         // toolbar
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_search);
-        if(toolbar != null) {
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,7 +84,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerClubs = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewClubs.setLayoutManager(layoutManagerClubs);
 
-        ClubRecyclerViewAdapter adapterClubs = new ClubRecyclerViewAdapter(this);
+        this.adapterClubs = new ClubRecyclerViewAdapter(this);
         recyclerViewClubs.setAdapter(adapterClubs);
 
         // posts recycler view
@@ -92,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
         GridLayoutManager layoutManagerPosts = new GridLayoutManager(this, 3);
         recyclerViewPosts.setLayoutManager(layoutManagerPosts);
 
-        PostRecyclerViewAdapter adapterPosts = new PostRecyclerViewAdapter(this, R.layout.row_post_thumb);
+        this.adapterPosts = new PostRecyclerViewAdapter(this, R.layout.row_post_thumb);
         recyclerViewPosts.setAdapter(adapterPosts);
 
         // events recycler view
@@ -104,7 +108,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerEvents = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewEvents.setLayoutManager(layoutManagerEvents);
 
-        EventRecyclerViewAdapter adapterEvents = new EventRecyclerViewAdapter(this, R.layout.row_event_with_avatars);
+        this.adapterEvents = new EventRecyclerViewAdapter(this, R.layout.row_event_with_avatars);
         recyclerViewEvents.setAdapter(adapterEvents);
 
         // users recycler view
@@ -113,24 +117,24 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewUsers.setHasFixedSize(true);
         recyclerViewUsers.setNestedScrollingEnabled(false);
 
-        GridLayoutManager layoutManagerUsers = new GridLayoutManager(this, 3);
+        LinearLayoutManager layoutManagerUsers = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewUsers.setLayoutManager(layoutManagerUsers);
 
-        UserRecyclerViewAdapter adapterUsers = new UserRecyclerViewAdapter(this);
+        this.adapterUsers = new UserRecyclerViewAdapter(this, false);
         recyclerViewUsers.setAdapter(adapterUsers);
 
         generateClubs(adapterClubs, query);
-        generatePosts(adapterPosts, query);
+        //generatePosts(adapterPosts, query);
         generateEvents(adapterEvents, query);
         generateUsers(adapterUsers, query);
     }
 
     private void generateClubs(final ClubRecyclerViewAdapter adapter, String query) {
+        adapterClubs.getClubs().clear();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-
                 if (!output.equals("{\"associations\":null}")) {
                     try {
 
@@ -146,7 +150,7 @@ public class SearchActivity extends AppCompatActivity {
 
                                 // Add club to the list if it is new
                                 Club c = HttpGet.clubs.get(club.getId());
-                                if(c == null)
+                                if (c == null)
                                     HttpGet.clubs.put(club.getId(), club);
                             }
                         }
@@ -156,16 +160,17 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
         request.execute(HttpGet.ROOTSEARCHASSOCIAITIONS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
+
+        adapterClubs.notifyDataSetChanged();
     }
 
     private void generatePosts(final PostRecyclerViewAdapter adapter, String query) {
+        adapterPosts.getPosts().clear();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-
                 if (!output.equals("{\"posts\":null}")) {
                     try {
 
@@ -184,16 +189,17 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
         request.execute(HttpGet.ROOTSEARCHPOSTS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
+
+        adapterPosts.notifyDataSetChanged();
     }
 
     private void generateEvents(final EventRecyclerViewAdapter adapter, String query) {
+        adapterEvents.getEvents().clear();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-
                 if (!output.equals("{\"events\":null}")) {
 
                     Date atm = Calendar.getInstance().getTime();
@@ -215,16 +221,17 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
         request.execute(HttpGet.ROOTSEARCHEVENTS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
+
+        adapterEvents.notifyDataSetChanged();
     }
 
-    private void  generateUsers(final UserRecyclerViewAdapter adapter, String query) {
+    private void generateUsers(final UserRecyclerViewAdapter adapter, String query) {
+        adapterUsers.getUsers().clear();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-
                 if (!output.equals("{\"users\":null}")) {
                     try {
 
@@ -242,8 +249,9 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
         request.execute(HttpGet.ROOTSEARCHUSERS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
+
+        adapterUsers.notifyDataSetChanged();
     }
 
     @Override

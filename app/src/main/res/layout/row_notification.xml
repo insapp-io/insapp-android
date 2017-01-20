@@ -30,17 +30,10 @@
 
         <TextView
             android:id="@+id/notification_date"
-            android:text="18h30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/notification_text"
             android:layout_marginBottom="5dp"
             android:layout_marginStart="10dp" />
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/image_notification"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/avatar_1stpi_female" />
 </LinearLayout>

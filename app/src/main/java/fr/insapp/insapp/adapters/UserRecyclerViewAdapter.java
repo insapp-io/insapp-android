@@ -6,10 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
 
@@ -27,6 +30,7 @@ import fr.insapp.insapp.utility.Operation;
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.UserViewHolder> {
 
     protected Context context;
+    protected boolean matchParent;
 
     protected List<User> users;
 
@@ -36,8 +40,9 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         void onUserItemClick(User user);
     }
 
-    public UserRecyclerViewAdapter(Context context) {
+    public UserRecyclerViewAdapter(Context context, boolean matchParent) {
         this.context = context;
+        this.matchParent = matchParent;
         this.users = new ArrayList<>();
     }
 
@@ -53,7 +58,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public UserRecyclerViewAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_thumb, parent, false);
-        return new UserViewHolder(view);
+        return new UserViewHolder(view, matchParent);
     }
 
     @Override
@@ -83,13 +88,18 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         return users.size();
     }
 
+    public List<User> getUsers() { return users; }
+
     public static class UserViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView avatar;
         public TextView name;
         public TextView username;
 
-        public UserViewHolder(View view) {
+        public UserViewHolder(View view, boolean matchParent) {
             super(view);
+
+            if (matchParent)
+                (view.findViewById(R.id.user_thumb_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
             this.avatar = (CircleImageView) view.findViewById(R.id.user_avatar);
             this.name = (TextView) view.findViewById(R.id.user_name);

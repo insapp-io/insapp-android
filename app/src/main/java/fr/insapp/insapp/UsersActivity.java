@@ -37,7 +37,7 @@ public class UsersActivity extends AppCompatActivity {
         Intent intent = getIntent();
         List<String> users = intent.getStringArrayListExtra("users");
 
-        this.adapter = new UserRecyclerViewAdapter(this);
+        this.adapter = new UserRecyclerViewAdapter(this, true);
         adapter.setOnItemClickListener(new UserRecyclerViewAdapter.OnUserItemClickListener() {
             @Override
             public void onUserItemClick(User user) {

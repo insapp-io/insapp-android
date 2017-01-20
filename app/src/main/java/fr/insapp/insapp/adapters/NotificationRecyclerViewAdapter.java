@@ -98,7 +98,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                     try {
                         final Post post = new Post(new JSONObject(output));
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image_notification);
+                        //Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image_notification);
 
                         if (notification.getType().equals("tag")) {
 
@@ -213,7 +213,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                     try {
                         Post post = new Post(new JSONObject(output));
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image_notification);
+                        //Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image_notification);
 /*
                         childLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -241,7 +241,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                     try {
                         final Event event = new Event(new JSONObject(output));
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).into(holder.image_notification);
+                        //Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).into(holder.image_notification);
 /*
                         childLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -283,7 +283,6 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             this.text = (TextView) view.findViewById(R.id.notification_text);
             this.date = (TextView) view.findViewById(R.id.notification_date);
             this.avatar_notification = (CircleImageView) view.findViewById(R.id.avatar_notification);
-            this.image_notification = (ImageView) view.findViewById(R.id.image_notification);
         }
 
         public void bind(final Notification notification, final OnNotificationItemClickListener listener) {

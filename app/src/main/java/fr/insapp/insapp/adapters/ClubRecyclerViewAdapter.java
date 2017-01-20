@@ -71,6 +71,8 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
         return clubs.size();
     }
 
+    public List<Club> getClubs() { return clubs; }
+
     public static class ClubViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView avatar;
         public TextView name;

@@ -116,19 +116,13 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void generateEvents() {
         adapterToday.getEvents().clear();
-        adapterToday.notifyDataSetChanged();
         adapterWeek.getEvents().clear();
-        adapterWeek.notifyDataSetChanged();
         adapterMonth.getEvents().clear();
-        adapterMonth.notifyDataSetChanged();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 if (!output.equals("{\"events\":null}")) {
-
-
-
                     try {
                         JSONArray jsonarray = new JSONArray(output);
                         for (int i = 0; i < jsonarray.length(); i++) {
@@ -154,6 +148,10 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
         request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
+
+        adapterToday.notifyDataSetChanged();
+        adapterWeek.notifyDataSetChanged();
+        adapterMonth.notifyDataSetChanged();
     }
 
     private void addEventToAdapter(Event event) {

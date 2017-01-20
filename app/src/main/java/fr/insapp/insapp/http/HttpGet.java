@@ -40,7 +40,7 @@ public class HttpGet extends AsyncTask<String, Void, String> {
 
     public static final String ROOTSEACHUNIVERSAL = HttpGet.ROOTURL + "/search";
 
-    public static final String IMAGEURL = "https://insapp.fr/cdn/";
+    public static final String IMAGEURL = "https:/dev.insapp.fr/cdn/";
 
     public static Credentials credentials;
 

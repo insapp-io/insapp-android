@@ -37,7 +37,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private String filter_club_id = null;
 
     private View view;
-    private EventRecyclerViewAdapter adapter;
+    private EventRecyclerViewAdapter adapterToday;
+    private EventRecyclerViewAdapter adapterWeek;
+    private EventRecyclerViewAdapter adapterMonth;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -52,10 +54,26 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             this.filter_club_id = bundle.getString("filter_club_id");
         }
 
-        // adapter
+        // adapters
 
-        this.adapter = new EventRecyclerViewAdapter(getContext(), layout);
-        adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
+        this.adapterToday = new EventRecyclerViewAdapter(getContext(), layout);
+        adapterToday.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
+            @Override
+            public void onEventItemClick(Event event) {
+                getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
+            }
+        });
+
+        this.adapterWeek = new EventRecyclerViewAdapter(getContext(), layout);
+        adapterWeek.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
+            @Override
+            public void onEventItemClick(Event event) {
+                getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
+            }
+        });
+
+        this.adapterMonth = new EventRecyclerViewAdapter(getContext(), layout);
+        adapterMonth.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
                 getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
@@ -82,13 +100,13 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerViewMonth.setNestedScrollingEnabled(false);
 
         recyclerViewToday.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewToday.setAdapter(adapter);
+        recyclerViewToday.setAdapter(adapterToday);
 
         recyclerViewWeek.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewWeek.setAdapter(adapter);
+        recyclerViewWeek.setAdapter(adapterWeek);
 
         recyclerViewMonth.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewMonth.setAdapter(adapter);
+        recyclerViewMonth.setAdapter(adapterMonth);
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -97,15 +115,19 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void generateEvents() {
-        adapter.getEvents().clear();
-        adapter.notifyDataSetChanged();
+        adapterToday.getEvents().clear();
+        adapterToday.notifyDataSetChanged();
+        adapterWeek.getEvents().clear();
+        adapterWeek.notifyDataSetChanged();
+        adapterMonth.getEvents().clear();
+        adapterMonth.notifyDataSetChanged();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 if (!output.equals("{\"events\":null}")) {
 
-                    Date atm = Calendar.getInstance().getTime();
+
 
                     try {
                         JSONArray jsonarray = new JSONArray(output);
@@ -113,14 +135,16 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                             JSONObject jsonObject = jsonarray.getJSONObject(i);
 
                             Event event = new Event(jsonObject);
+                            Date atm = Calendar.getInstance().getTime();
 
-                            if (event.getDateEnd().getTime() > atm.getTime()){
-                                if(filter_club_id != null) {
+                            if (event.getDateEnd().getTime() > atm.getTime()) {
+                                if (filter_club_id != null) {
                                     if (filter_club_id.equals(event.getAssociation()))
-                                        adapter.addItem(event);
+                                        addEventToAdapter(event);
                                 }
                                 else
-                                    adapter.addItem(event);
+                                    addEventToAdapter(event);
+
                             }
                         }
                     } catch (JSONException e) {
@@ -130,11 +154,21 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
         request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
+    }
 
-        Date d = new Date();
-        d.setTime((long)(d.getTime()*1.2));
-        Event event = new Event("id", "Test Event Insapp", "5803b463923c84b95c000001", "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.", new ArrayList<String>(), "", new Date(), d, "8t58m00hwwkvvflon8p1fo0imwt5awhcacnyypag.png", "161215", "ffffff");
-        adapter.addItem(event);
+    private void addEventToAdapter(Event event) {
+        Date atm = Calendar.getInstance().getTime();
+
+        final long diff = event.getDateStart().getTime() - atm.getTime();
+        final float diffInDays = ((float)(diff) / (float)(1000 * 60 * 60 * 24));
+
+        if (diffInDays > 7) {
+            adapterMonth.addItem(event);
+        } else if (diffInDays > 1) {
+            adapterWeek.addItem(event);
+        } else {
+            adapterToday.addItem(event);
+        }
     }
 
     @Override

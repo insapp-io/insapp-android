@@ -34,6 +34,7 @@ import fr.insapp.insapp.R;
 public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int layout;
+    private String filter_club_id = null;
 
     private View view;
     private EventRecyclerViewAdapter adapter;
@@ -48,6 +49,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         final Bundle bundle = getArguments();
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.row_event_with_avatars);
+            this.filter_club_id = bundle.getString("filter_club_id");
         }
 
         // adapter
@@ -101,7 +103,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                if (output != null) {
+                if (!output.equals("{\"events\":null}")) {
 
                     Date atm = Calendar.getInstance().getTime();
 
@@ -111,8 +113,15 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                             JSONObject jsonObject = jsonarray.getJSONObject(i);
 
                             Event event = new Event(jsonObject);
-                            if (event.getDateEnd().getTime() > atm.getTime())
-                                adapter.addItem(event);
+
+                            if (event.getDateEnd().getTime() > atm.getTime()){
+                                if(filter_club_id != null) {
+                                    if (filter_club_id.equals(event.getAssociation()))
+                                        adapter.addItem(event);
+                                }
+                                else
+                                    adapter.addItem(event);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

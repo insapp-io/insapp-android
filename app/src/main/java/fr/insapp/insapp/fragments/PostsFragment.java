@@ -31,6 +31,7 @@ import static android.app.Activity.RESULT_OK;
 public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int layout;
+    private String filter_club_id = null;
 
     private View view;
     private PostRecyclerViewAdapter adapter;
@@ -47,6 +48,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         final Bundle bundle = getArguments();
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.row_post_with_avatars);
+            this.filter_club_id = bundle.getString("filter_club_id");
         }
 
         // adapter
@@ -107,12 +109,20 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-                if (!output.isEmpty()) {
+                if (!output.equals("{\"posts\":null}")) {
                     try {
                         JSONArray jsonarray = new JSONArray(output);
                         for (int i = 0; i < jsonarray.length(); i++) {
                             final JSONObject jsonobject = jsonarray.getJSONObject(i);
-                            adapter.addItem(new Post(jsonobject));
+
+                            Post post = new Post(jsonobject);
+
+                            if(filter_club_id != null){
+                                if(filter_club_id.equals(post.getAssociation()))
+                                    adapter.addItem(post);
+                            }
+                            else
+                                adapter.addItem(post);
                         }
 
                     } catch (JSONException e) {

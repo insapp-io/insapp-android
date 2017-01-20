@@ -27,7 +27,7 @@ import com.bumptech.glide.Glide;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
-import fr.insapp.insapp.fragments.EventsClubFragment;
+import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
@@ -163,14 +163,16 @@ public class ClubActivity extends AppCompatActivity {
         Fragment postsFragment = new PostsFragment();
         Bundle bundle1 = new Bundle();
         bundle1.putInt("layout", R.layout.row_post);
+        bundle1.putString("filter_club_id", club.getId());
         postsFragment.setArguments(bundle1);
         adapter.addFragment(postsFragment, "News");
 
-        Fragment eventsClubFragment = new EventsClubFragment();
+        Fragment EventsFragment = new EventsFragment();
         Bundle bundle2 = new Bundle();
-        bundle2.putInt("layout", R.layout.row_event);
-        eventsClubFragment.setArguments(bundle2);
-        adapter.addFragment(eventsClubFragment, "Events");
+        bundle2.putInt("layout", R.layout.row_event_with_avatars);
+        bundle2.putString("filter_club_id", club.getId());
+        EventsFragment.setArguments(bundle2);
+        adapter.addFragment(EventsFragment, "Events");
 
         viewPager.setAdapter(adapter);
     }

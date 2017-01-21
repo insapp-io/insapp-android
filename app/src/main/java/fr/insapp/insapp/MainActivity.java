@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    private static User user;
+    public static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         HttpGet get = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                JSONObject json = null;
                 try {
                     user = new User(new JSONObject(output));
                     toolbar.setTitle(user.getUsername());

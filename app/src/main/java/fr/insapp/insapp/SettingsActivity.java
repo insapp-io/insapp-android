@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ import org.json.JSONObject;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPut;
-import fr.insapp.insapp.models.Credentials;
 import fr.insapp.insapp.models.User;
 
 /**
@@ -165,6 +163,19 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             public void processFinish(String output) {
                 if (output == null)
                     Toast.makeText(SettingsActivity.this, "Erreur lors de la modification de profil", Toast.LENGTH_LONG).show();
+                else {
+                    HttpGet get = new HttpGet(new AsyncResponse() {
+                        @Override
+                        public void processFinish(String output) {
+                            try {
+                                MainActivity.user = new User(new JSONObject(output));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                }
             }
         });
         put.execute(HttpGet.ROOTUSER + "/" + user.getId() + "?token=" + HttpGet.credentials.getSessionToken(), json.toString());

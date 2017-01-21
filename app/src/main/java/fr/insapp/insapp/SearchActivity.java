@@ -80,6 +80,13 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewClubs.setLayoutManager(layoutManagerClubs);
 
         this.adapterClubs = new ClubRecyclerViewAdapter(this, false);
+        adapterClubs.setOnItemClickListener(new ClubRecyclerViewAdapter.OnClubItemClickListener() {
+            @Override
+            public void onClubItemClick(Club club) {
+                startActivity(new Intent(getBaseContext(), ClubActivity.class).putExtra("club", club));
+            }
+        });
+
         recyclerViewClubs.setAdapter(adapterClubs);
 
         // posts recycler view
@@ -92,6 +99,13 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewPosts.setLayoutManager(layoutManagerPosts);
 
         this.adapterPosts = new PostRecyclerViewAdapter(this, R.layout.row_post);
+        adapterPosts.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
+            @Override
+            public void onPostItemClick(Post post) {
+                startActivity(new Intent(getBaseContext(), PostActivity.class).putExtra("post", post));
+            }
+        });
+
         recyclerViewPosts.setAdapter(adapterPosts);
 
         // events recycler view
@@ -104,6 +118,12 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewEvents.setLayoutManager(layoutManagerEvents);
 
         this.adapterEvents = new EventRecyclerViewAdapter(this, R.layout.row_event_with_avatars);
+        adapterEvents.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
+            @Override
+            public void onEventItemClick(Event event) {
+                startActivity(new Intent(getBaseContext(), EventActivity.class).putExtra("event", event));
+            }
+        });
         recyclerViewEvents.setAdapter(adapterEvents);
 
         // users recycler view
@@ -116,6 +136,13 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewUsers.setLayoutManager(layoutManagerUsers);
 
         this.adapterUsers = new UserRecyclerViewAdapter(this, false);
+        adapterUsers.setOnItemClickListener(new UserRecyclerViewAdapter.OnUserItemClickListener() {
+            @Override
+            public void onUserItemClick(User user) {
+                startActivity(new Intent(getBaseContext(), ProfileActivity.class).putExtra("user", user));
+            }
+        });
+
         recyclerViewUsers.setAdapter(adapterUsers);
 
         // hide layouts

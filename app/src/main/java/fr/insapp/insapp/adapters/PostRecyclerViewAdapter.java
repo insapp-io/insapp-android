@@ -192,9 +192,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
                 }
             });
-
-            holder.bind(post, listener);
         }
+
+        holder.bind(post, listener);
     }
 
     public void refreshPost(String output, final PostViewHolder holder){

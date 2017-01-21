@@ -31,10 +31,10 @@ public class HttpGet extends AsyncTask<String, Void, String> {
     static {
         if (MainActivity.dev) {
             ROOTURL = "https://dev.insapp.fr/api/v1";
-            IMAGEURL = "https:/dev.insapp.fr/cdn/";
+            IMAGEURL = "https://dev.insapp.fr/cdn/";
         } else {
             ROOTURL = "https://insapp.fr/api/v1";
-            IMAGEURL = "https:/insapp.fr/cdn/";
+            IMAGEURL = "https://insapp.fr/cdn/";
         }
     }
 

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +25,7 @@ import fr.insapp.insapp.models.Club;
 public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerViewAdapter.ClubViewHolder> {
 
     protected Context context;
+    protected boolean matchParent;
 
     protected List<Club> clubs;
 
@@ -33,9 +35,10 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
         void onClubItemClick(Club club);
     }
 
-    public ClubRecyclerViewAdapter(Context context) {
+    public ClubRecyclerViewAdapter(Context context, boolean matchParent) {
         this.context = context;
-        this.clubs = new ArrayList<Club>();
+        this.matchParent = matchParent;
+        this.clubs = new ArrayList<>();
     }
 
     public void setOnItemClickListener(OnClubItemClickListener listener) {
@@ -50,7 +53,7 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
     @Override
     public ClubViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.club_thumb, parent, false);
-        return new ClubViewHolder(view);
+        return new ClubViewHolder(view, matchParent);
     }
 
     @Override
@@ -77,8 +80,11 @@ public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerVi
         public CircleImageView avatar;
         public TextView name;
 
-        public ClubViewHolder(View view) {
+        public ClubViewHolder(View view, boolean matchParent) {
             super(view);
+
+            if (matchParent)
+                (view.findViewById(R.id.club_thumb_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
             this.avatar = (CircleImageView) view.findViewById(R.id.club_avatar);
             this.name = (TextView) view.findViewById(R.id.club_name);

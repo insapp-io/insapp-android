@@ -18,14 +18,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.ClubActivity;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.Club;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClubsFragment extends Fragment {
 
@@ -36,7 +33,7 @@ public class ClubsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new ClubRecyclerViewAdapter(getContext());
+        this.adapter = new ClubRecyclerViewAdapter(getContext(), true);
         adapter.setOnItemClickListener(new ClubRecyclerViewAdapter.OnClubItemClickListener() {
             @Override
             public void onClubItemClick(Club club) {

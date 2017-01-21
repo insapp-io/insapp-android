@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,7 +79,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerClubs = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewClubs.setLayoutManager(layoutManagerClubs);
 
-        this.adapterClubs = new ClubRecyclerViewAdapter(this);
+        this.adapterClubs = new ClubRecyclerViewAdapter(this, false);
         recyclerViewClubs.setAdapter(adapterClubs);
 
         // posts recycler view
@@ -117,6 +118,15 @@ public class SearchActivity extends AppCompatActivity {
         this.adapterUsers = new UserRecyclerViewAdapter(this, false);
         recyclerViewUsers.setAdapter(adapterUsers);
 
+        // hide layouts
+
+        findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.GONE);
+        findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.GONE);
+        findViewById(R.id.search_events_layout).setVisibility(LinearLayout.GONE);
+        findViewById(R.id.search_users_layout).setVisibility(LinearLayout.GONE);
+
+        // search
+
         generateClubs(adapterClubs, query);
         generatePosts(adapterPosts, query);
         generateEvents(adapterEvents, query);
@@ -127,7 +137,7 @@ public class SearchActivity extends AppCompatActivity {
         adapterClubs.getClubs().clear();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
-
+            @Override
             public void processFinish(String output) {
                 if (!output.equals("{\"associations\":null}")) {
                     try {
@@ -141,6 +151,7 @@ public class SearchActivity extends AppCompatActivity {
 
                             if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
                                 adapter.addItem(club);
+                                findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
 
                                 // Add club to the list if it is new
                                 Club c = HttpGet.clubs.get(club.getId());
@@ -163,7 +174,7 @@ public class SearchActivity extends AppCompatActivity {
         adapterPosts.getPosts().clear();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
-
+            @Override
             public void processFinish(String output) {
                 if (!output.equals("{\"posts\":null}")) {
                     try {
@@ -175,6 +186,7 @@ public class SearchActivity extends AppCompatActivity {
                             JSONObject jsonobject = jsonarray.getJSONObject(i);
 
                             adapter.addItem(new Post(jsonobject));
+                            findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.VISIBLE);
                         }
 
                     } catch (JSONException e) {
@@ -206,8 +218,10 @@ public class SearchActivity extends AppCompatActivity {
                             JSONObject jsonObject = jsonarray.getJSONObject(i);
 
                             Event event = new Event(jsonObject);
-                            if (event.getDateEnd().getTime() > atm.getTime())
+                            if (event.getDateEnd().getTime() > atm.getTime()) {
                                 adapter.addItem(event);
+                                findViewById(R.id.search_events_layout).setVisibility(LinearLayout.VISIBLE);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -236,6 +250,7 @@ public class SearchActivity extends AppCompatActivity {
                             JSONObject jsonObject = jsonarray.getJSONObject(i);
 
                             adapter.addItem(new User(jsonObject));
+                            findViewById(R.id.search_users_layout).setVisibility(LinearLayout.VISIBLE);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

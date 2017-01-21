@@ -77,10 +77,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });
-
-        // events
-
-        generateEvents();
     }
 
     @Override
@@ -116,6 +112,8 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.GONE);
         view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.GONE);
         view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.GONE);
+
+        generateEvents();
 
         return view;
     }

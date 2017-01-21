@@ -14,7 +14,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -33,11 +32,10 @@ import fr.insapp.insapp.models.User;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final boolean dev = false;
+
     private Toolbar toolbar;
-    private LinearLayout searchContainer;
-    private Menu menu;
     private MenuItem menuItem;
-    private SearchView searchView;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -106,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         this.menuItem = menu.findItem(R.id.search);
@@ -114,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
-        this.searchView = searchView;
 
         try {
             Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");

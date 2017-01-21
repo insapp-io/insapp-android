@@ -20,7 +20,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:minHeight="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
-                app:theme="@style/ToolbarStyle" />
+                android:theme="@style/ToolbarStyle" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardview_post_1"

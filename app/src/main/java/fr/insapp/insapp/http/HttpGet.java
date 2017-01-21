@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Credentials;
 
@@ -24,7 +25,19 @@ public class HttpGet extends AsyncTask<String, Void, String> {
 
     public static String info_user;
 
-    public static final String ROOTURL = "https://dev.insapp.fr/api/v1";
+    public static final String ROOTURL;
+    public static final String IMAGEURL;
+
+    static {
+        if (MainActivity.dev) {
+            ROOTURL = "https://dev.insapp.fr/api/v1";
+            IMAGEURL = "https:/dev.insapp.fr/cdn/";
+        } else {
+            ROOTURL = "https://insapp.fr/api/v1";
+            IMAGEURL = "https:/insapp.fr/cdn/";
+        }
+    }
+
     public static final String ROOTSIGNIN = HttpGet.ROOTURL + "/signin/user";
     public static final String ROOTLOGIN = HttpGet.ROOTURL + "/login/user";
     public static final String ROOTPOST = HttpGet.ROOTURL + "/post";
@@ -39,8 +52,6 @@ public class HttpGet extends AsyncTask<String, Void, String> {
     public static final String ROOTSEARCHEVENTS = HttpGet.ROOTURL + "/search/events";
 
     public static final String ROOTSEACHUNIVERSAL = HttpGet.ROOTURL + "/search";
-
-    public static final String IMAGEURL = "https:/dev.insapp.fr/cdn/";
 
     public static Credentials credentials;
 

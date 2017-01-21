@@ -25,13 +25,19 @@ public class IntroNotificationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_intro_notifications, container, false);
 
+        final SharedPreferences.Editor preferences = getActivity().getSharedPreferences(SigninActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit();
+
         CheckBox checkbox = (CheckBox) rootView.findViewById(R.id.checkbox_enable_notifications);
+        checkbox.setChecked(true);
+
+        preferences.putBoolean("notifications", true);
+        preferences.apply();
+
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                SharedPreferences.Editor sharedPref = getActivity().getSharedPreferences(SigninActivity.class.getSimpleName(), Context.MODE_PRIVATE).edit();
-                sharedPref.putBoolean("notifications", b);
-                sharedPref.commit();
+                preferences.putBoolean("notifications", b);
+                preferences.apply();
             }
         });
 

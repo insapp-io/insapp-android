@@ -2,6 +2,7 @@ package fr.insapp.insapp;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
@@ -90,6 +91,36 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         } else {
             updatePreferenceSummary(preference);
         }
+
+        // checkboxes
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
+
+        CheckBoxPreference checkboxNotifications = (CheckBoxPreference) getPreferenceManager().findPreference("notifications");
+        checkboxNotifications.setChecked(sharedPreferences.getBoolean("notifications", false));
+
+        checkboxNotifications.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences.Editor preferences = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                preferences.putBoolean("notifications", (boolean) newValue);
+                preferences.apply();
+
+                return true;
+            }
+        });
+
+        CheckBoxPreference checkboxCalendar = (CheckBoxPreference) getPreferenceManager().findPreference("calendar");
+        checkboxCalendar.setChecked(sharedPreferences.getBoolean("calendar", false));
+
+        checkboxCalendar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences.Editor preferences = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                preferences.putBoolean("calendar", (boolean) newValue);
+                preferences.apply();
+
+                return true;
+            }
+        });
     }
 
     private void updatePreferenceSummary(Preference preference) {

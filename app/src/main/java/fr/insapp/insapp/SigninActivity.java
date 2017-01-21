@@ -58,10 +58,6 @@ public class SigninActivity extends AppCompatActivity {
 
         refreshing = false;
 
-        SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-        prefs.putBoolean("notifications", true);
-        prefs.commit();
-
         /*
             ImageView credits = (ImageView) findViewById(R.id.credits);
             credits.setOnClickListener(new View.OnClickListener() {

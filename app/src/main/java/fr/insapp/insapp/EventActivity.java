@@ -40,6 +40,7 @@ import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
 
 /**
@@ -246,6 +247,19 @@ public class EventActivity extends AppCompatActivity {
                         public void processFinish(String output) {
                             userParticipates = true;
 
+                            HttpGet get = new HttpGet(new AsyncResponse() {
+                                @Override
+                                public void processFinish(String output) {
+                                    try {
+                                        MainActivity.user = new User(new JSONObject(output));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
+
                             floatingActionMenu.close(true);
                             floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
                             floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
@@ -316,6 +330,19 @@ public class EventActivity extends AppCompatActivity {
                         @Override
                         public void processFinish(String output) {
                             userParticipates = false;
+
+                            HttpGet get = new HttpGet(new AsyncResponse() {
+                                @Override
+                                public void processFinish(String output) {
+                                    try {
+                                        MainActivity.user = new User(new JSONObject(output));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
 
                             floatingActionMenu.close(true);
                             floatingActionMenu.setMenuButtonColorNormal(0xffffffff);

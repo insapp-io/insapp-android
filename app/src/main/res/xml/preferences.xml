@@ -48,7 +48,7 @@
 
         <CheckBoxPreference
             android:title="@string/settings_calendar"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:summary="@string/settings_calendar_summary"
             android:key="calendar" />
     </PreferenceCategory>

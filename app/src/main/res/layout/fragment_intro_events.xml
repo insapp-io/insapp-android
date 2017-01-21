@@ -19,7 +19,7 @@
         android:textSize="28sp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="6"
         android:gravity="center"
@@ -58,6 +58,16 @@
                 android:layout_weight="0.6"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
+
+            <CheckBox
+                android:text="@string/settings_calendar"
+                android:id="@+id/checkbox_enable_calendar"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:buttonTint="@android:color/white"
+                android:layout_weight="0.4" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

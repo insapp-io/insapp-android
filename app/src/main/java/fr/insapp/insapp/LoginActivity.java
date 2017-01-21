@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String[] params = HttpGet.info_user.split(" ");
 
-        System.out.println("SIZE : " + params.length);
+        System.out.println("Size: " + params.length);
 
         if(params.length >= 2) {
 

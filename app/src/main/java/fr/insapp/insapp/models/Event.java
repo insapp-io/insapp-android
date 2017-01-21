@@ -103,7 +103,6 @@ public class Event implements Parcelable, Comparable<Event> {
         }
 
         this.status = json.getString("status");
-        System.out.println(json.getString("dateStart") + " et " + json.getString("dateEnd"));
         this.dateStart = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateStart"), true);
         this.dateEnd = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateEnd"), true);
         this.image = json.getString("image");

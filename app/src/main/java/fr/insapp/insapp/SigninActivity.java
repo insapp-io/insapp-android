@@ -89,7 +89,10 @@ public class SigninActivity extends AppCompatActivity {
                 int id = url.lastIndexOf("?ticket=");
                 if (url.contains("?ticket=")) {
                     String ticket = url.substring(id + "?ticket=".length(), url.length());
-                    System.out.println(url + " et ticket=" + ticket);
+
+                    System.out.println("URL: " + url);
+                    System.out.println("Ticket: " + ticket);
+
                     signin(ticket);
                     webView.setVisibility(View.INVISIBLE);
                 }
@@ -141,7 +144,7 @@ public class SigninActivity extends AppCompatActivity {
                                             if (!json.has("error")) {
                                                 String text = json.getString("username") + " " + json.getString("authtoken");
 
-                                                System.out.println("TEXT !!!! " + text);
+                                                System.out.println("Text: " + text);
 
                                                 File.writeSettings(SigninActivity.this, text);
 

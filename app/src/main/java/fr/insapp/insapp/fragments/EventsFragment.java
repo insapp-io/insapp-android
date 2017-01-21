@@ -9,23 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.R;
+import fr.insapp.insapp.models.Event;
 
 /**
  * Created by thoma on 27/10/2016.
@@ -80,6 +78,8 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
+        // events
+
         generateEvents();
     }
 
@@ -110,6 +110,12 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        // hide layouts
+
+        view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.GONE);
+        view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.GONE);
+        view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.GONE);
 
         return view;
     }
@@ -162,10 +168,13 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (diffInDays > 7) {
             adapterMonth.addItem(event);
+            view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.VISIBLE);
         } else if (diffInDays > 1) {
             adapterWeek.addItem(event);
+            view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.VISIBLE);
         } else {
             adapterToday.addItem(event);
+            view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.VISIBLE);
         }
     }
 

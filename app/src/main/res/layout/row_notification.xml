@@ -17,7 +17,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="14dp">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/notification_text"
@@ -25,15 +25,13 @@
             android:layout_height="wrap_content"
             android:textColor="#3e3e3e"
             android:textSize="15sp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="10dp" />
+            android:layout_marginBottom="5dp" />
 
         <TextView
             android:id="@+id/notification_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/notification_text"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="10dp" />
+            android:layout_marginBottom="5dp" />
     </RelativeLayout>
 </LinearLayout>

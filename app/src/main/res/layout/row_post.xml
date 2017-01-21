@@ -1,52 +1,40 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:orientation="horizontal"
+    android:background="?android:selectableItemBackground">
 
-    <TextView
-        android:id="@+id/name_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#3e3e3e"
-        android:textSize="15sp"
-        android:layout_marginBottom="5dp" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar_club_post"
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="14dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:civ_border_width="0dp" />
 
-    <TextView
-        android:textColor="#7f7f7f"
-        android:textSize="13sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/date_post"
-        android:layout_alignBaseline="@+id/name_post"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:id="@+id/post_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColorLink="@color/colorPrimary"
-        android:layout_below="@+id/name_post"
-        android:textColor="#7f7f7f"
-        android:lineSpacingExtra="3dp" />
-
-    <ImageView
-        android:id="@+id/image"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="2dp"
-        android:layout_below="@+id/post_text"
-        android:layout_alignParentEnd="true"
-        android:scaleType="fitStart"
-        android:adjustViewBounds="true" />
+        android:padding="14dp">
 
-    <include
-        layout="@layout/reactions"
-        android:id="@+id/reactions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/image"
-        android:layout_marginStart="-17dp"
-        android:layout_marginBottom="-15dp" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/name_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#3e3e3e"
+            android:textSize="15sp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp" />
+
+        <TextView
+            android:id="@+id/date_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_post"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp" />
+    </RelativeLayout>
+</LinearLayout>

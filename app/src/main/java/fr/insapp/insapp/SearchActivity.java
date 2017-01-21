@@ -4,21 +4,17 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
@@ -55,8 +51,6 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this, "Recherche: " + query, Toast.LENGTH_SHORT).show();
-
             HttpGet request = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
@@ -93,10 +87,10 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewPosts.setHasFixedSize(true);
         recyclerViewPosts.setNestedScrollingEnabled(false);
 
-        GridLayoutManager layoutManagerPosts = new GridLayoutManager(this, 3);
+        LinearLayoutManager layoutManagerPosts = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewPosts.setLayoutManager(layoutManagerPosts);
 
-        this.adapterPosts = new PostRecyclerViewAdapter(this, R.layout.row_post_thumb);
+        this.adapterPosts = new PostRecyclerViewAdapter(this, R.layout.row_post);
         recyclerViewPosts.setAdapter(adapterPosts);
 
         // events recycler view
@@ -124,7 +118,7 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewUsers.setAdapter(adapterUsers);
 
         generateClubs(adapterClubs, query);
-        //generatePosts(adapterPosts, query);
+        generatePosts(adapterPosts, query);
         generateEvents(adapterEvents, query);
         generateUsers(adapterUsers, query);
     }

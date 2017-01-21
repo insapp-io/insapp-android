@@ -162,7 +162,7 @@ public class ClubActivity extends AppCompatActivity {
 
         Fragment postsFragment = new PostsFragment();
         Bundle bundle1 = new Bundle();
-        bundle1.putInt("layout", R.layout.row_post);
+        bundle1.putInt("layout", R.layout.post);
         bundle1.putString("filter_club_id", club.getId());
         postsFragment.setArguments(bundle1);
         adapter.addFragment(postsFragment, "News");

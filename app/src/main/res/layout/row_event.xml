@@ -6,7 +6,6 @@
 
     <TextView
         android:id="@+id/name_event"
-        android:text="Le nom de l'event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#3e3e3e"
@@ -16,7 +15,6 @@
 
     <TextView
         android:id="@+id/going_event"
-        android:text="4 participants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/name_event"
@@ -25,7 +23,6 @@
 
     <TextView
         android:id="@+id/date_event"
-        android:text="18h30"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/going_event"

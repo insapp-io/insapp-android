@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment postsFragment = new PostsFragment();
         Bundle bundle1 = new Bundle();
-        bundle1.putInt("layout", R.layout.row_post_with_avatars);
+        bundle1.putInt("layout", R.layout.post_with_avatars);
         postsFragment.setArguments(bundle1);
         adapter.addFragment(postsFragment, getResources().getString(R.string.posts));
 

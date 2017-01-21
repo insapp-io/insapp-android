@@ -82,20 +82,21 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         final Post post = posts.get(position);
 
         holder.title.setText(post.getTitle());
-        holder.text.setText(post.getDescription());
-        holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
-        holder.commentCounter.setText(Integer.toString(post.getComments().size()));
         holder.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
 
-        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image);
+        if (layout != R.layout.row_post) {
+            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image);
+            holder.text.setText(post.getDescription());
+            holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
+            holder.commentCounter.setText(Integer.toString(post.getComments().size()));
+        }
 
         // club avatar
 
-        if (layout == R.layout.row_post_with_avatars) {
-
+        if (layout != R.layout.post) {
             final Club club = HttpGet.clubs.get(post.getAssociation());
 
-            if (club == null){
+            if (club == null) {
 
                 HttpGet request = new HttpGet(new AsyncResponse() {
 
@@ -109,7 +110,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
                                 // glide
 
-                                if (layout == R.layout.row_post_with_avatars)
+                                if (layout != R.layout.post)
                                     Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
 
                                 holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -128,10 +129,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 request.execute(HttpGet.ROOTASSOCIATION + "/"+ post.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
 
             }
-            else{
+            else {
                 // glide
-
-                if (layout == R.layout.row_post_with_avatars)
+                if (layout != R.layout.post)
                     Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
 
                 holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -146,51 +146,55 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
         // description links
 
-        Linkify.addLinks(holder.text, Linkify.ALL);
-        Utils.stripUnderlines(holder.text);
+        if (layout != R.layout.row_post) {
+            Linkify.addLinks(holder.text, Linkify.ALL);
+            Utils.stripUnderlines(holder.text);
+        }
 
         // like button
 
-        holder.likeButton.setLiked(post.postLikedBy(HttpGet.credentials.getUserID()));
+        if (layout != R.layout.row_post) {
+            holder.likeButton.setLiked(post.postLikedBy(HttpGet.credentials.getUserID()));
 
-        holder.likeButton.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
-                HttpPost hpp = new HttpPost(new AsyncResponse() {
-                    @Override
-                    public void processFinish(String output) {
-                        if (!output.isEmpty()) {
-                            refreshPost(output, holder);
+            holder.likeButton.setOnLikeListener(new OnLikeListener() {
+                @Override
+                public void liked(LikeButton likeButton) {
+                    HttpPost hpp = new HttpPost(new AsyncResponse() {
+                        @Override
+                        public void processFinish(String output) {
+                            if (!output.isEmpty()) {
+                                refreshPost(output, holder);
+                            }
                         }
-                    }
-                });
+                    });
 
-                hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
-            }
+                    hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                }
 
-            @Override
-            public void unLiked(LikeButton likeButton) {
-                HttpDelete hpp = new HttpDelete(new AsyncResponse() {
-                    @Override
-                    public void processFinish(String output) {
-                        if (!output.isEmpty()) {
-                            refreshPost(output, holder);
+                @Override
+                public void unLiked(LikeButton likeButton) {
+                    HttpDelete hpp = new HttpDelete(new AsyncResponse() {
+                        @Override
+                        public void processFinish(String output) {
+                            if (!output.isEmpty()) {
+                                refreshPost(output, holder);
+                            }
                         }
-                    }
-                });
+                    });
 
-                hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
-            }
-        });
+                    hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                }
+            });
 
-        holder.commentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
-            }
-        });
+            holder.commentButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
+                }
+            });
 
-        holder.bind(post, listener);
+            holder.bind(post, listener);
+        }
     }
 
     public void refreshPost(String output, final PostViewHolder holder){
@@ -230,17 +234,20 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public PostViewHolder(View view) {
             super(view);
 
-            if (layout == R.layout.row_post_with_avatars)
+            if (layout != R.layout.post)
                 this.avatar = (CircleImageView) view.findViewById(R.id.avatar_club_post);
 
             this.title = (TextView) view.findViewById(R.id.name_post);
-            this.text = (TextView) view.findViewById(R.id.post_text);
-            this.image = (ImageView) view.findViewById(R.id.image);
-            this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
-            this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
-            this.commentButton = (ImageButton) view.findViewById(R.id.comment_button);
-            this.commentCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
             this.date = (TextView) view.findViewById(R.id.date_post);
+
+            if (layout != R.layout.row_post) {
+                this.text = (TextView) view.findViewById(R.id.post_text);
+                this.image = (ImageView) view.findViewById(R.id.image);
+                this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
+                this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
+                this.commentButton = (ImageButton) view.findViewById(R.id.comment_button);
+                this.commentCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
+            }
         }
 
         public void bind(final Post post, final OnPostItemClickListener listener) {

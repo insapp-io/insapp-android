@@ -15,5 +15,5 @@
         app:civ_border_width="0dp" />
 
     <include
-        layout="@layout/row_post" />
+        layout="@layout/post" />
 </LinearLayout>

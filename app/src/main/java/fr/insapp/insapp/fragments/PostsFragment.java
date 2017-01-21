@@ -47,7 +47,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         final Bundle bundle = getArguments();
         if (bundle != null) {
-            this.layout = bundle.getInt("layout", R.layout.row_post_with_avatars);
+            this.layout = bundle.getInt("layout", R.layout.post_with_avatars);
             this.filter_club_id = bundle.getString("filter_club_id");
         }
 

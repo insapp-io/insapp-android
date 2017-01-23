@@ -86,7 +86,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         holder.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
 
         if (layout != R.layout.row_post) {
-            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new RoundedCornersTransformation(context, 5, 0)).into(holder.image);
+            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new RoundedCornersTransformation(context, 8, 0)).into(holder.image);
             holder.text.setText(post.getDescription());
             holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
             holder.commentCounter.setText(Integer.toString(post.getComments().size()));

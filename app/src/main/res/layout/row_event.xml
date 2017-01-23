@@ -28,4 +28,11 @@
         android:layout_below="@id/going_event"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="10dp" />
+
+    <ImageView
+        android:id="@+id/thumbnail_event"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/avatar_1stpi_female"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

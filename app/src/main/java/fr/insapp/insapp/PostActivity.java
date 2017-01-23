@@ -352,7 +352,7 @@ public class PostActivity extends AppCompatActivity {
                             });
                             request.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
 
-                            setResult(RESULT_OK);
+                            //setResult(RESULT_OK);
                         }
                     }
                 })
@@ -381,7 +381,7 @@ public class PostActivity extends AppCompatActivity {
 
         // result request
 
-        setResult(RESULT_CANCELED);
+        //setResult(RESULT_CANCELED);
     }
 
     private void showUsersToTag(String username) {
@@ -439,15 +439,20 @@ public class PostActivity extends AppCompatActivity {
     }
 
     @Override
+    public void finish() {
+        Intent sendIntent = new Intent();
+        sendIntent.putExtra("post", post);
+
+        setResult(RESULT_OK, sendIntent);
+
+        super.finish();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-
-                Intent sendIntent = new Intent();
-                sendIntent.putExtra("post", post);
-
-                setResult(RESULT_OK, sendIntent);
 
                 finish();
                 return true;

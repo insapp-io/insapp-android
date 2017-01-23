@@ -52,6 +52,17 @@ public class Event implements Parcelable, Comparable<Event> {
 
     };
 
+    public boolean equals(Object other){
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Event))return false;
+        Event otherMyClass = (Event)other;
+
+        if(otherMyClass.getId().equals(this.id)) return true;
+
+        return false;
+    }
+
     public Event(Parcel in){
         this.id = in.readString();
         this.name = in.readString();

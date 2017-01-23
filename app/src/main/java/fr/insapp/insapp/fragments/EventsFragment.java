@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +26,8 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Event;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by thoma on 27/10/2016.
  */
@@ -39,6 +42,8 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private EventRecyclerViewAdapter adapterWeek;
     private EventRecyclerViewAdapter adapterMonth;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static final int EVENT_REQUEST = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         adapterToday.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
+                startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
 
@@ -66,7 +71,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         adapterWeek.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
+                startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
 
@@ -74,7 +79,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         adapterMonth.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                getContext().startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
+                startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
     }
@@ -173,6 +178,30 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         } else {
             adapterToday.addItem(event);
             view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.VISIBLE);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == EVENT_REQUEST){
+            if (resultCode == RESULT_OK){
+                Event event = data.getParcelableExtra("event");
+
+                int idToday = adapterToday.getEvents().indexOf(event);
+                int idWeek = adapterWeek.getEvents().indexOf(event);
+                int idMonth = adapterMonth.getEvents().indexOf(event);
+
+                if(idToday >= 0)
+                    adapterToday.updatePost(idToday, event);
+                else if(idWeek >= 0)
+                    adapterWeek.updatePost(idWeek, event);
+                else if(idMonth >= 0)
+                    adapterMonth.updatePost(idMonth, event);
+
+            }
         }
     }
 

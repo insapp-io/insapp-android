@@ -61,6 +61,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         this.notifyDataSetChanged();
     }
 
+    public void updatePost(int id, Event event){
+        this.events.set(id, event);
+        notifyItemChanged(id);
+    }
+
     @Override
     public EventRecyclerViewAdapter.EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);

@@ -430,6 +430,16 @@ public class EventActivity extends AppCompatActivity {
     }
 
     @Override
+    public void finish() {
+        Intent sendIntent = new Intent();
+        sendIntent.putExtra("event", event);
+
+        setResult(RESULT_OK, sendIntent);
+
+        super.finish();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {

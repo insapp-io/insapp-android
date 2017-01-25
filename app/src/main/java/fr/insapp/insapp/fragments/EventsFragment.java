@@ -123,6 +123,10 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         week = false;
         today = false;
 
+        view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.VISIBLE);
+        view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.VISIBLE);
+        view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.VISIBLE);
+
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {

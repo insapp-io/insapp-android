@@ -76,7 +76,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         holder.text.setText(notification.getMessage());
         //holder.text.setText(Html.fromHtml("<FONT color='BLACK'>" + notification.getMessage() + "</FONT> <FONT color='GREY'>" + Operation.displayedDate(notification.getDate()) + "</FONT>"));
 
-        holder.date.setText(Operation.displayedDate(notification.getDate()));
+        holder.date.setText("il y a " + Operation.displayedDate(notification.getDate()));
 /*
         if (!notification.isSeen()) {
             HttpDelete seen = new HttpDelete(new AsyncResponse() {

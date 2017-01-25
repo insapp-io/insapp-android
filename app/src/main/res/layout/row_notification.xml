@@ -51,7 +51,6 @@
             android:layout_gravity="end"
             android:layout_width="65dp"
             android:layout_height="65dp"
-            android:layout_weight="0.1"
-            android:src="@drawable/avatar_1stpi_female" />
+            android:layout_weight="0.1" />
     </LinearLayout>
 </LinearLayout>

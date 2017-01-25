@@ -1,14 +1,12 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
@@ -35,6 +31,8 @@ import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
+import jp.wasabeef.glide.transformations.CropTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by thoma on 11/12/2016.
@@ -78,7 +76,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         holder.text.setText(notification.getMessage());
         //holder.text.setText(Html.fromHtml("<FONT color='BLACK'>" + notification.getMessage() + "</FONT> <FONT color='GREY'>" + Operation.displayedDate(notification.getDate()) + "</FONT>"));
 
-        holder.date.setText(Operation.displayedDate(notification.getDate()));
+        holder.date.setText("il y a " + Operation.displayedDate(notification.getDate()));
 /*
         if (!notification.isSeen()) {
             HttpDelete seen = new HttpDelete(new AsyncResponse() {
@@ -213,6 +211,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                     try {
                         Post post = new Post(new JSONObject(output));
 
+                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
                         //Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image_notification);
 /*
                         childLayout.setOnClickListener(new View.OnClickListener() {
@@ -241,7 +240,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                     try {
                         final Event event = new Event(new JSONObject(output));
 
-                        //Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).into(holder.image_notification);
+                        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
 /*
                         childLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -275,7 +274,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         public TextView text;
         public TextView date;
         public CircleImageView avatar_notification;
-        public ImageView image_notification;
+        public ImageView thumbnail;
 
         public NotificationViewHolder(View view) {
             super(view);
@@ -283,6 +282,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             this.text = (TextView) view.findViewById(R.id.notification_text);
             this.date = (TextView) view.findViewById(R.id.notification_date);
             this.avatar_notification = (CircleImageView) view.findViewById(R.id.avatar_notification);
+            this.thumbnail = (ImageView) view.findViewById(R.id.thumbnail_notification);
         }
 
         public void bind(final Notification notification, final OnNotificationItemClickListener listener) {

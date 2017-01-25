@@ -112,21 +112,25 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        // hide layouts
-
-        view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.GONE);
-        view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.GONE);
-        view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.GONE);
-
         generateEvents();
 
         return view;
     }
 
+    private boolean month = false, week = false, today = false;
+
     private void generateEvents() {
         adapterToday.getEvents().clear();
         adapterWeek.getEvents().clear();
         adapterMonth.getEvents().clear();
+
+        month = false;
+        week = false;
+        today = false;
+
+        view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.VISIBLE);
+        view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.VISIBLE);
+        view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.VISIBLE);
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
@@ -150,6 +154,13 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                             }
                         }
+
+                        if (!month)
+                            view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.GONE);
+                        if (!week)
+                            view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.GONE);
+                        if (!today)
+                            view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.GONE);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -167,17 +178,17 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         Date atm = Calendar.getInstance().getTime();
 
         final long diff = event.getDateStart().getTime() - atm.getTime();
-        final float diffInDays = ((float)(diff) / (float)(1000 * 60 * 60 * 24));
+        final float diffInDays = ((float) (diff) / (float) (1000 * 60 * 60 * 24));
 
         if (diffInDays > 7) {
             adapterMonth.addItem(event);
-            view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.VISIBLE);
+            month = true;
         } else if (diffInDays > 1) {
             adapterWeek.addItem(event);
-            view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.VISIBLE);
+            week = true;
         } else {
             adapterToday.addItem(event);
-            view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.VISIBLE);
+            today = true;
         }
     }
 

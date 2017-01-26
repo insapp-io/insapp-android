@@ -77,14 +77,15 @@ public class LoginActivity extends AppCompatActivity {
                                     HttpPost post = new HttpPost(new AsyncResponse() {
                                         @Override
                                         public void processFinish(String output) {
+
                                             if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
                                                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                                                 startActivity(i);
-                                                //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+
                                                 finish();
                                             } else {
+                                                setResult(RESULT_OK);
                                                 finish(); // back to last activity
-                                                //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                                             }
                                         }
                                     });
@@ -94,11 +95,11 @@ public class LoginActivity extends AppCompatActivity {
                                     if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
                                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(i);
-                                        //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+
                                         finish();
                                     } else {
+                                        setResult(RESULT_OK);
                                         finish(); // back to last activity
-                                        //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                                     }
                                 }
 

@@ -40,6 +40,7 @@ import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
+import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
@@ -51,6 +52,8 @@ import fr.insapp.insapp.utility.Utils;
  */
 
 public class PostActivity extends AppCompatActivity {
+
+    public static final int NOTIFICATION_MESSAGE = 10;
 
     private RecyclerView recyclerView;
     private CommentRecyclerViewAdapter adapter;
@@ -80,6 +83,8 @@ public class PostActivity extends AppCompatActivity {
     private EditText editText;
     private PopupMenu popup;
 
+    private Notification notification = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,11 +107,90 @@ public class PostActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        // if we come from an android notification
+        if (this.post == null) {
+            notification = intent.getParcelableExtra("notification");
+
+            if(HttpGet.credentials != null)
+                onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
+            else
+                startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), NOTIFICATION_MESSAGE);
+        }
+        else
+            generateActivity();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Add your code here
+
+        if(requestCode == NOTIFICATION_MESSAGE){
+            if (resultCode == RESULT_OK){
+
+                HttpGet request = new HttpGet(new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+                        try {
+                            post = new Post(new JSONObject(output));
+
+                            generateActivity();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                request.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
+
+            }
+        }
+    }
+
+    public void generateActivity() {
         // fill post elements
 
         this.club = HttpGet.clubs.get(post.getAssociation());
+        if(this.club == null) {
 
-        Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.avatar_club);
+            HttpGet asso = new HttpGet(new AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+                    try {
+                        club = new Club(new JSONObject(output));
+                        HttpGet.clubs.put(club.getId(), club);
+
+                        Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(avatar_club);
+
+                        // listener
+                        avatar_club.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            asso.execute(HttpGet.ROOTASSOCIATION + "/" + post.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
+        }
+        else {
+
+            Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.avatar_club);
+
+            // listener
+            this.avatar_club.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
+                }
+            });
+        }
+
 
         this.title.setText(post.getTitle());
         this.description.setText(post.getDescription());
@@ -116,15 +200,6 @@ public class PostActivity extends AppCompatActivity {
 
         Linkify.addLinks(description, Linkify.ALL);
         Utils.stripUnderlines(description);
-
-        // listener
-
-        this.avatar_club.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
-            }
-        });
 
         // recycler view
 

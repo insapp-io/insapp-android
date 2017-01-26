@@ -1,6 +1,7 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.ClubActivity;
+import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.ProfileActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
@@ -96,20 +101,26 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                     try {
                         final Post post = new Post(new JSONObject(output));
 
-                        //Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image_notification);
+                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
 
                         if (notification.getType().equals("tag")) {
 
-                            /*childLayout.setOnClickListener(new View.OnClickListener() {
+                            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
-                                    Intent i = new Intent(getActivity(), Comments.class);
-                                    i.putExtra("post", post);
-                                    i.putExtra("taggedCommentID", notification.getCommentID());
-                                    startActivity(i);
+                                    context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post).putExtra("taggedCommentID", notification.getCommentID()));
                                 }
-                            });*/
+                            });
+
+                        }
+                        else {
+
+                            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
+                                }
+                            });
                         }
 
                     } catch (JSONException e) {
@@ -134,35 +145,31 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                             HttpGet.clubs.put(notification.getSender(), club);
 
                             Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar_notification);
-/*
-                            img.setOnClickListener(new View.OnClickListener() {
+
+                            holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent i = new Intent(getActivity(), AssociationProfil.class);
-                                    i.putExtra("asso", asso);
-                                    startActivity(i);
-                                    getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+                                    context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
                                 }
                             });
-*/
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 });
                 request.execute(HttpGet.ROOTASSOCIATION + "/" + notification.getSender() + "?token=" + HttpGet.credentials.getSessionToken());
+
             } else {
 
                 Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar_notification);
 
-                /*img.setOnClickListener(new View.OnClickListener() {
+                holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getActivity(), AssociationProfil.class);
-                        i.putExtra("asso", asso);
-                        startActivity(i);
+                        context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
                     }
-                });*/
+                });
 
             }
         }
@@ -187,14 +194,12 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
 
                         holder.avatar_notification.setImageDrawable(d);
 
-                        /*img.setOnClickListener(new View.OnClickListener() {
+                        holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(getActivity(), ProfilActivity.class);
-                                i.putExtra("user", user);
-                                startActivity(i);
+                                context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", user));
                             }
-                        });*/
+                        });
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -203,35 +208,29 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             });
             request.execute(HttpGet.ROOTUSER + "/" + notification.getSender() + "?token=" + HttpGet.credentials.getSessionToken());
 
-        } else if (notification.getType().equals("post")) {
+        /*} else if (notification.getType().equals("post")) {
 
             HttpGet post = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
                     try {
-                        Post post = new Post(new JSONObject(output));
+                        final Post post = new Post(new JSONObject(output));
 
                         Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
-                        //Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image_notification);
-/*
-                        childLayout.setOnClickListener(new View.OnClickListener() {
+
+                        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-                                Intent i = new Intent(getActivity(), PostActivity.class);
-                                i.putExtra("notification", notification);
-                                startActivity(i);
-                                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-
+                                context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
                             }
-                        });*/
+                        });
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             });
-            post.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
+            post.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());*/
         } else if (notification.getType().equals("event")) {
 
             HttpGet event = new HttpGet(new AsyncResponse() {
@@ -241,19 +240,14 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                         final Event event = new Event(new JSONObject(output));
 
                         Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
-/*
-                        childLayout.setOnClickListener(new View.OnClickListener() {
+
+                        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-                                Intent i = new Intent(getActivity(), EventProfil.class);
-                                i.putExtra("event", event);
-                                i.putExtra("asso", event.getAssociation());
-                                startActivity(i);
-                                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+                                context.startActivity(new Intent(context, EventActivity.class).putExtra("event", event));
                             }
                         });
-*/
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

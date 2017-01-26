@@ -195,17 +195,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 if (output == null)
                     Toast.makeText(SettingsActivity.this, "Erreur lors de la modification de profil", Toast.LENGTH_LONG).show();
                 else {
-                    HttpGet get = new HttpGet(new AsyncResponse() {
-                        @Override
-                        public void processFinish(String output) {
-                            try {
-                                MainActivity.user = new User(new JSONObject(output));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                    try {
+                        MainActivity.user = new User(new JSONObject(output));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

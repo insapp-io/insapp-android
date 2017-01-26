@@ -40,6 +40,7 @@ import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
 
@@ -66,6 +67,8 @@ public class EventActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton1, floatingActionButton2;
 
     private boolean userParticipates = false;
+
+    private Notification notification = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,49 @@ public class EventActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        // if we come from an android notification
+        if (this.event == null) {
+            notification = intent.getParcelableExtra("notification");
+
+            if(HttpGet.credentials != null)
+                onActivityResult(PostActivity.NOTIFICATION_MESSAGE, RESULT_OK, null);
+            else
+                startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), PostActivity.NOTIFICATION_MESSAGE);
+        }
+        else
+            generateEvent();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Add your code here
+
+        if(requestCode == PostActivity.NOTIFICATION_MESSAGE){
+            if (resultCode == RESULT_OK){
+
+                HttpGet request = new HttpGet(new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+                        try {
+                            event = new Event(new JSONObject(output));
+
+                            generateEvent();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
+
+            }
+        }
+    }
+
+    public void generateEvent() {
+
         // collapsing toolbar
 
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_event);
@@ -118,7 +164,7 @@ public class EventActivity extends AppCompatActivity {
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(event.getName());
                     isShow = true;
-                } else if(isShow) {
+                } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
                     isShow = false;
                 }

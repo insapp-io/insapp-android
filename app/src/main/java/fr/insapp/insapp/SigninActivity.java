@@ -193,13 +193,13 @@ public class SigninActivity extends AppCompatActivity {
         gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(context);
 
-        if (TextUtils.isEmpty(regId)) {
+        //if (TextUtils.isEmpty(regId)) {
             registerInBackground();
             //Log.d("registerGCM - enregistrement auprès du GCM server OK - regId: " + regId);
-        } else {
-            System.out.println(regId);
+        //} else {
+        //    System.out.println(regId);
             //Toast.makeText(getApplicationContext(), "RegId existe déjà. RegId: " + regId, Toast.LENGTH_LONG).show();
-        }
+        //}
         return regId;
     }
 

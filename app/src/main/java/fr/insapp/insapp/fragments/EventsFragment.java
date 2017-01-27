@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -197,21 +196,20 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == EVENT_REQUEST){
+        if (requestCode == EVENT_REQUEST){
             if (resultCode == RESULT_OK){
                 Event event = data.getParcelableExtra("event");
 
-                int idToday = adapterToday.getEvents().indexOf(event);
-                int idWeek = adapterWeek.getEvents().indexOf(event);
-                int idMonth = adapterMonth.getEvents().indexOf(event);
+                final int idToday = adapterToday.getEvents().indexOf(event);
+                final int idWeek = adapterWeek.getEvents().indexOf(event);
+                final int idMonth = adapterMonth.getEvents().indexOf(event);
 
-                if(idToday >= 0)
+                if (idToday >= 0)
                     adapterToday.updatePost(idToday, event);
-                else if(idWeek >= 0)
+                else if (idWeek >= 0)
                     adapterWeek.updatePost(idWeek, event);
-                else if(idMonth >= 0)
+                else if (idMonth >= 0)
                     adapterMonth.updatePost(idMonth, event);
-
             }
         }
     }

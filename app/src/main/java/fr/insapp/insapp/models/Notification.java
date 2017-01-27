@@ -1,7 +1,6 @@
 package fr.insapp.insapp.models;
 
 import android.os.Bundle;
-import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -29,6 +28,7 @@ import fr.insapp.insapp.utility.Operation;
  */
 
 public class Notification implements Parcelable {
+
     private String id;
     private String sender, receiver;
     private String content;
@@ -37,6 +37,11 @@ public class Notification implements Parcelable {
     private boolean seen;
     private Date date;
     private String type;
+
+    private Post post;
+    private User user;
+    private Club club;
+    private Event event;
 
     public static final Creator<Notification> CREATOR = new Creator<Notification>() {
         @Override
@@ -70,7 +75,6 @@ public class Notification implements Parcelable {
         this.content = json.getString("content");
         this.commentID = json.getJSONObject("comment").getString("ID");
 
-
         this.message = json.getString("message");
         this.seen = json.getBoolean("seen");
         this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("date"), true);
@@ -79,17 +83,15 @@ public class Notification implements Parcelable {
 
 
     public Notification(Bundle extras) {
-
         this.id = extras.getString("ID");
         this.sender = extras.getString("sender");
         this.receiver = extras.getString("receiver");
         this.content = extras.getString("content");
 
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(extras.getString("comment"));
             this.commentID = jsonObject.getString("ID");
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -101,16 +103,22 @@ public class Notification implements Parcelable {
 
         this.type = extras.getString("type");
     }
-/*
-    public Notification(String sender, String receiver, String content, String commentID, String message, boolean seen, String type) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.content = content;
-        this.commentID = commentID;
-        this.message = message;
-        this.seen = seen;
-        this.type = type;
-    }*/
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 
     @Override
     public int describeContents() {
@@ -119,11 +127,10 @@ public class Notification implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
-        dest.writeString(id.toString());
-        dest.writeString(sender.toString());
-        dest.writeString(receiver.toString());
-        dest.writeString(content.toString());
+        dest.writeString(id);
+        dest.writeString(sender);
+        dest.writeString(receiver);
+        dest.writeString(content);
 
         dest.writeString(commentID);
 
@@ -143,7 +150,6 @@ public class Notification implements Parcelable {
     public String getReceiver() {
         return receiver;
     }
-
 
     public String getContent() {
         return content;
@@ -169,5 +175,20 @@ public class Notification implements Parcelable {
         return type;
     }
 
+    public Post getPost() {
+        return post;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public Club getClub() {
+        return club;
+    }
 }
 

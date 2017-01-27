@@ -3,10 +3,6 @@ package fr.insapp.insapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,27 +90,24 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         }
 */
         if (notification.getType().equals("tag") || notification.getType().equals("post")) {
-
             HttpGet post = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
                     try {
                         final Post post = new Post(new JSONObject(output));
+                        notification.setPost(post);
 
                         Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
 
                         if (notification.getType().equals("tag")) {
-
                             holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post).putExtra("taggedCommentID", notification.getCommentID()));
                                 }
                             });
-
                         }
                         else {
-
                             holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -122,7 +115,6 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                                 }
                             });
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -132,16 +124,15 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         }
 
         if (notification.getType().equals("post") || notification.getType().equals("event")) {
-
             final Club club = HttpGet.clubs.get(notification.getSender());
 
             if (club == null){
-
                 HttpGet request = new HttpGet(new AsyncResponse() {
                     @Override
                     public void processFinish(String output) {
                         try {
                             final Club club = new Club(new JSONObject(output));
+                            notification.setClub(club);
                             HttpGet.clubs.put(notification.getSender(), club);
 
                             Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar_notification);
@@ -152,28 +143,24 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                                     context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
                                 }
                             });
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 });
                 request.execute(HttpGet.ROOTASSOCIATION + "/" + notification.getSender() + "?token=" + HttpGet.credentials.getSessionToken());
-
             } else {
+                notification.setClub(club);
 
                 Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar_notification);
-
                 holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
                     }
                 });
-
             }
         }
-
 
         if (notification.getType().equals("tag")) {
             HttpGet request = new HttpGet(new AsyncResponse() {
@@ -181,18 +168,12 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                 public void processFinish(String output) {
                     try {
                         final User user = new User(new JSONObject(output));
+                        notification.setUser(user);
 
-                        // Get the drawable of avatar
+                        // get the drawable of avatar
                         Resources resources = context.getResources();
-                        int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-
-                        Drawable dr = ContextCompat.getDrawable(context, id);
-                        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-
-                        // Resize the bitmap
-                        Drawable d = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, 100, 100, true));
-
-                        holder.avatar_notification.setImageDrawable(d);
+                        final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                        Glide.with(context).load(id).into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -200,44 +181,19 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                                 context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", user));
                             }
                         });
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             });
             request.execute(HttpGet.ROOTUSER + "/" + notification.getSender() + "?token=" + HttpGet.credentials.getSessionToken());
-
-        /*} else if (notification.getType().equals("post")) {
-
-            HttpGet post = new HttpGet(new AsyncResponse() {
-                @Override
-                public void processFinish(String output) {
-                    try {
-                        final Post post = new Post(new JSONObject(output));
-
-                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
-
-                        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
-                            }
-                        });
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            post.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());*/
         } else if (notification.getType().equals("event")) {
-
             HttpGet event = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
                     try {
                         final Event event = new Event(new JSONObject(output));
+                        notification.setEvent(event);
 
                         Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
 
@@ -247,7 +203,6 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                                 context.startActivity(new Intent(context, EventActivity.class).putExtra("event", event));
                             }
                         });
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

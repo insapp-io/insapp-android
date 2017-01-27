@@ -1,5 +1,6 @@
 package fr.insapp.insapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,15 +13,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Notification;
-import fr.insapp.insapp.models.Post;
 
 /**
  * Created by thoma on 27/10/2016.
@@ -42,7 +41,10 @@ public class NotificationsFragment extends Fragment {
         adapter.setOnItemClickListener(new NotificationRecyclerViewAdapter.OnNotificationItemClickListener() {
             @Override
             public void onNotificationItemClick(Notification notification) {
-
+                if (notification.getType().equals("tag") || notification.getType().equals("post"))
+                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()));
+                else if (notification.getType().equals("event"))
+                    startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", notification.getEvent()));
             }
         });
 
@@ -63,9 +65,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void generateNotifications() {
-
         HttpGet request = new HttpGet(new AsyncResponse() {
-
             public void processFinish(String output) {
                 if (!output.equals("{\"notifications\":null}")) {
                     try {
@@ -79,7 +79,6 @@ public class NotificationsFragment extends Fragment {
                                 adapter.addItem(new Notification(jsonobject));
                             }
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -87,6 +86,5 @@ public class NotificationsFragment extends Fragment {
             }
         });
         request.execute(HttpGet.ROOTNOTIFICATION + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
-
     }
 }

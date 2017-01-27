@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.ClubActivity;
@@ -88,8 +89,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         if (layout != R.layout.row_post) {
             Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new RoundedCornersTransformation(context, 8, 0)).into(holder.image);
             holder.text.setText(post.getDescription());
-            holder.likeCounter.setText(Integer.toString(post.getLikes().size()));
-            holder.commentCounter.setText(Integer.toString(post.getComments().size()));
+
+            holder.likeCounter.setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));
+            holder.commentCounter.setText(String.format(Locale.FRANCE, "%d", post.getComments().size()));
         }
 
         // club avatar
@@ -168,7 +170,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                             }
                         }
                     });
-
                     hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
                 }
 
@@ -182,7 +183,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                             }
                         }
                     });
-
                     hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
                 }
             });
@@ -201,12 +201,10 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     public void refreshPost(String output, final PostViewHolder holder){
         try {
             JSONObject json = new JSONObject(output);
-
             Post postRefreshed = new Post(json.getJSONObject("post"));
 
-            holder.likeCounter.setText(Integer.toString(postRefreshed.getLikes().size()));
-            holder.commentCounter.setText(Integer.toString(postRefreshed.getComments().size()));
-
+            holder.likeCounter.setText(String.format(Locale.FRANCE, "%d", postRefreshed.getLikes().size()));
+            holder.commentCounter.setText(String.format(Locale.FRANCE, "%d", postRefreshed.getComments().size()));
         } catch (JSONException e) {
             e.printStackTrace();
         }

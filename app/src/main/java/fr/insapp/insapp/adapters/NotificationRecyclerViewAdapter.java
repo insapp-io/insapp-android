@@ -21,8 +21,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.ClubActivity;
-import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.ProfileActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
@@ -86,23 +84,6 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                         notification.setPost(post);
 
                         Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.thumbnail);
-
-                        if (notification.getType().equals("tag")) {
-                            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post).putExtra("taggedCommentID", notification.getCommentID()));
-                                }
-                            });
-                        }
-                        else {
-                            holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    context.startActivity(new Intent(context, PostActivity.class).putExtra("post", post));
-                                }
-                            });
-                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -184,13 +165,6 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                         notification.setEvent(event);
 
                         Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.thumbnail);
-
-                        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                context.startActivity(new Intent(context, EventActivity.class).putExtra("event", event));
-                            }
-                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

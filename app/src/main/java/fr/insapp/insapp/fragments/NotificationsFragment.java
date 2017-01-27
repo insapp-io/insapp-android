@@ -41,7 +41,9 @@ public class NotificationsFragment extends Fragment {
         adapter.setOnItemClickListener(new NotificationRecyclerViewAdapter.OnNotificationItemClickListener() {
             @Override
             public void onNotificationItemClick(Notification notification) {
-                if (notification.getType().equals("tag") || notification.getType().equals("post"))
+                if (notification.getType().equals("tag"))
+                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()).putExtra("taggedCommentID", notification.getCommentID()));
+                else if (notification.getType().equals("post"))
                     startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()));
                 else if (notification.getType().equals("event"))
                     startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", notification.getEvent()));

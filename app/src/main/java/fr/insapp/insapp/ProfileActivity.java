@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -98,25 +100,23 @@ public class ProfileActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
-        // Fill the main layout
+        // fill the main layout
 
         Resources resources = ProfileActivity.this.getResources();
 
         Intent intent = getIntent();
-        if (intent.hasExtra("user")){
+        if (intent.hasExtra("user")) {
             this.user = intent.getParcelableExtra("user");
 
-            int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", ProfileActivity.this.getPackageName());
-            Drawable dr = ContextCompat.getDrawable(ProfileActivity.this, id);
+            final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", ProfileActivity.this.getPackageName());
+            Glide.with(getBaseContext()).load(id).into(this.avatar_profil);
 
-            this.avatar_profil.setImageDrawable(dr);
             this.username.setText(user.getUsername());
             this.name.setText(user.getName());
             this.email.setText(user.getEmail());
             this.promo.setText(user.getPromotion());
             this.description.setText(user.getDescription());
 
-            //
             if (user.getName().isEmpty())
                 this.name.setVisibility(View.GONE);
             if (user.getEmail().isEmpty())
@@ -233,16 +233,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void generateEvents(){
-
-        final List<Event> events = new ArrayList<Event>();
+        final List<Event> events = new ArrayList<>();
 
         for (String idEvent : user.getEvents()) {
-
-
                 HttpGet request = new HttpGet(new AsyncResponse() {
                     @Override
                     public void processFinish(String output) {
-
                         try {
                             Event event = new Event(new JSONObject(output));
                             events.add(event);
@@ -260,12 +256,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void showEvents(List<Event> events){
-
         Date atm = Calendar.getInstance().getTime();
 
         Collections.sort(events);
         for (final Event event : events) {
-
             if (event.getDateEnd().getTime() > atm.getTime())
                 adapter.addItem(event);
         }

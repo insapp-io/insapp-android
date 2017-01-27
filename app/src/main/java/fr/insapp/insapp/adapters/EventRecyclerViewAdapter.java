@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,6 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
-import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -125,7 +125,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             }
         }
 
-        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
+        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.thumbnail);
 
         holder.name.setText(event.getName());
 

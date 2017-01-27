@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +33,6 @@ import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
-import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -75,20 +75,8 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         final Notification notification = notifications.get(position);
 
         holder.text.setText(notification.getMessage());
-        //holder.text.setText(Html.fromHtml("<FONT color='BLACK'>" + notification.getMessage() + "</FONT> <FONT color='GREY'>" + Operation.displayedDate(notification.getDate()) + "</FONT>"));
-
         holder.date.setText("il y a " + Operation.displayedDate(notification.getDate()));
-/*
-        if (!notification.isSeen()) {
-            HttpDelete seen = new HttpDelete(new AsyncResponse() {
-                @Override
-                public void processFinish(String output) {
 
-                }
-            });
-            seen.execute(HttpGet.ROOTNOTIFICATION + "/" + HttpGet.credentials.getUserID() + "/" + notification.getId() + "?token=" + HttpGet.credentials.getSessionToken());
-        }
-*/
         if (notification.getType().equals("tag") || notification.getType().equals("post")) {
             HttpGet post = new HttpGet(new AsyncResponse() {
                 @Override
@@ -97,7 +85,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                         final Post post = new Post(new JSONObject(output));
                         notification.setPost(post);
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
+                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.thumbnail);
 
                         if (notification.getType().equals("tag")) {
                             holder.thumbnail.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +183,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                         final Event event = new Event(new JSONObject(output));
                         notification.setEvent(event);
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CropTransformation(context, 65, 65), new RoundedCornersTransformation(context, 3, 0)).into(holder.thumbnail);
+                        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.thumbnail);
 
                         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
                             @Override

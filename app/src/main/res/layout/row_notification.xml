@@ -18,12 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:weightSum="1"
         android:padding="14dp">
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9">
+            android:layout_weight="0.7">
 
             <TextView
                 android:id="@+id/notification_text"
@@ -43,14 +44,19 @@
                 android:layout_marginBottom="3dp" />
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/thumbnail_notification"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_gravity="end"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_weight="0.1" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_weight="0.3">
+
+            <ImageView
+                android:id="@+id/thumbnail_notification"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_width="65dp"
+                android:layout_height="65dp" />
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

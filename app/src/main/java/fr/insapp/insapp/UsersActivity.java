@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
@@ -68,8 +67,7 @@ public class UsersActivity extends AppCompatActivity {
     }
 
     private void generateUsers(List<String> users) {
-
-        for(int i=0; i<users.size(); i++) {
+        for (int i = 0 ; i < users.size(); i++) {
 
             final int id = i;
             HttpGet request = new HttpGet(new AsyncResponse() {

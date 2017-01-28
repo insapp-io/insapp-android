@@ -110,7 +110,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
         view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
 
-        for (int i = 0; i < club.getEvents().size(); i++) {
+        for (int j = 0; j < club.getEvents().size(); j++) {
             HttpGet request = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
@@ -124,7 +124,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                                 Date atm = Calendar.getInstance().getTime();
 
                                 if (event.getDateEnd().getTime() > atm.getTime()) {
-                                    adapterPast.addItem(event);
+                                    adapterFuture.addItem(event);
                                     future = true;
                                 }
                                 else {
@@ -143,7 +143,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                     }
                 }
             });
-            request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(i) + "?token=" + HttpGet.credentials.getSessionToken());
+            request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(j) + "?token=" + HttpGet.credentials.getSessionToken());
         }
 
         adapterFuture.notifyDataSetChanged();

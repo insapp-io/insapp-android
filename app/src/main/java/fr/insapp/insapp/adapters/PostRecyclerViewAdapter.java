@@ -34,7 +34,6 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by thoma on 19/11/2016.
@@ -84,10 +83,10 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         final Post post = posts.get(position);
 
         holder.title.setText(post.getTitle());
-        holder.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
+        holder.date.setText("il y a " + Operation.displayedDate(post.getDate()));
 
         if (layout != R.layout.row_post) {
-            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new RoundedCornersTransformation(context, 8, 0)).into(holder.image);
+            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image);
             holder.text.setText(post.getDescription());
 
             holder.likeCounter.setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));
@@ -130,7 +129,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     }
                 });
                 request.execute(HttpGet.ROOTASSOCIATION + "/"+ post.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
-
             }
             else {
                 // glide
@@ -144,7 +142,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     }
                 });
             }
-
         }
 
         // description links

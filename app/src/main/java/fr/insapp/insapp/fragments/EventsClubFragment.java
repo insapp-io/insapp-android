@@ -33,7 +33,6 @@ import fr.insapp.insapp.models.Event;
 public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int layout;
-    private String filter_club_id;
 
     private Club club;
 
@@ -51,7 +50,6 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         final Bundle bundle = getArguments();
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.row_event);
-            this.filter_club_id = bundle.getString("filter_club_id");
             this.club = bundle.getParcelable("club");
         }
 
@@ -126,28 +124,12 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                                 Date atm = Calendar.getInstance().getTime();
 
                                 if (event.getDateEnd().getTime() > atm.getTime()) {
-                                    if (filter_club_id != null) {
-                                        if (filter_club_id.equals(event.getAssociation())) {
-                                            adapterFuture.addItem(event);
-                                            future = true;
-                                        }
-                                    }
-                                    else {
-                                        adapterPast.addItem(event);
-                                        future = true;
-                                    }
+                                    adapterPast.addItem(event);
+                                    future = true;
                                 }
                                 else {
-                                    if (filter_club_id != null) {
-                                        if (filter_club_id.equals(event.getAssociation())) {
-                                            adapterPast.addItem(event);
-                                            past = true;
-                                        }
-                                    }
-                                    else {
-                                        adapterPast.addItem(event);
-                                        past = true;
-                                    }
+                                    adapterPast.addItem(event);
+                                    past = true;
                                 }
                             }
 

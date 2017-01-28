@@ -71,9 +71,8 @@ public class Event implements Parcelable, Comparable<Event> {
 
         this.participants = new ArrayList<>();
         int nb_participants = in.readInt();
-        if(nb_participants > 0) {
+        if (nb_participants > 0)
             in.readStringList(this.participants);
-        }
 
         this.status = in.readString();
 

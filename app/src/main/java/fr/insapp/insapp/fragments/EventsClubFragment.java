@@ -112,55 +112,57 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
         view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
 
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                if (!output.equals("{\"events\":null}")) {
-                    try {
-                        JSONArray jsonarray = new JSONArray(output);
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            JSONObject jsonObject = jsonarray.getJSONObject(i);
+        for (int i = 0; i < club.getEvents().size(); i++) {
+            HttpGet request = new HttpGet(new AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+                    if (!output.equals("{\"events\":null}")) {
+                        try {
+                            JSONArray jsonarray = new JSONArray(output);
+                            for (int i = 0; i < jsonarray.length(); i++) {
+                                JSONObject jsonObject = jsonarray.getJSONObject(i);
 
-                            Event event = new Event(jsonObject);
-                            Date atm = Calendar.getInstance().getTime();
+                                Event event = new Event(jsonObject);
+                                Date atm = Calendar.getInstance().getTime();
 
-                            if (event.getDateEnd().getTime() > atm.getTime()) {
-                                if (filter_club_id != null) {
-                                    if (filter_club_id.equals(event.getAssociation())) {
-                                        adapterFuture.addItem(event);
+                                if (event.getDateEnd().getTime() > atm.getTime()) {
+                                    if (filter_club_id != null) {
+                                        if (filter_club_id.equals(event.getAssociation())) {
+                                            adapterFuture.addItem(event);
+                                            future = true;
+                                        }
+                                    }
+                                    else {
+                                        adapterPast.addItem(event);
                                         future = true;
                                     }
                                 }
                                 else {
-                                    adapterPast.addItem(event);
-                                    future = true;
-                                }
-                            }
-                            else {
-                                if (filter_club_id != null) {
-                                    if (filter_club_id.equals(event.getAssociation())) {
+                                    if (filter_club_id != null) {
+                                        if (filter_club_id.equals(event.getAssociation())) {
+                                            adapterPast.addItem(event);
+                                            past = true;
+                                        }
+                                    }
+                                    else {
                                         adapterPast.addItem(event);
                                         past = true;
                                     }
                                 }
-                                else {
-                                    adapterPast.addItem(event);
-                                    past = true;
-                                }
                             }
-                        }
 
-                        if (!future)
-                            view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
-                        if (!past)
-                            view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            if (!future)
+                                view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
+                            if (!past)
+                                view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
-        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
+            });
+            request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(i) + "?token=" + HttpGet.credentials.getSessionToken());
+        }
 
         adapterFuture.notifyDataSetChanged();
         adapterPast.notifyDataSetChanged();

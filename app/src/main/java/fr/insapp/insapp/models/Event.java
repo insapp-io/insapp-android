@@ -69,7 +69,7 @@ public class Event implements Parcelable, Comparable<Event> {
         this.association = in.readString();
         this.description = in.readString();
 
-        this.participants = new ArrayList<String>();
+        this.participants = new ArrayList<>();
         int nb_participants = in.readInt();
         if(nb_participants > 0) {
             in.readStringList(this.participants);
@@ -104,13 +104,12 @@ public class Event implements Parcelable, Comparable<Event> {
         this.name = json.getString("name");
         this.association = json.getString("association");
         this.description = json.getString("description");
-        this.participants = new ArrayList<String>();
+        this.participants = new ArrayList<>();
 
         JSONArray jsonarray = json.optJSONArray("participants");
-        if(jsonarray != null){
-            for(int i=0; i<jsonarray.length(); i++) {
+        if (jsonarray != null){
+            for (int i=0; i<jsonarray.length(); i++)
                 participants.add(jsonarray.getString(i));
-            }
         }
 
         this.status = json.getString("status");
@@ -176,7 +175,7 @@ public class Event implements Parcelable, Comparable<Event> {
         dest.writeString(description);
 
         dest.writeInt(participants.size());
-        if(participants.size() > 0)
+        if (participants.size() > 0)
             dest.writeStringList(participants);
 
         dest.writeString(status);

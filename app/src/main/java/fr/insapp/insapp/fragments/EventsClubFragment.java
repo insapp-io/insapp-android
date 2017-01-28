@@ -23,6 +23,7 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 
 /**
@@ -33,6 +34,8 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
     private int layout;
     private String filter_club_id;
+
+    private Club club;
 
     private View view;
     private EventRecyclerViewAdapter adapterFuture;
@@ -49,6 +52,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.row_event);
             this.filter_club_id = bundle.getString("filter_club_id");
+            this.club = bundle.getParcelable("club");
         }
 
         // adapter
@@ -123,13 +127,13 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                             if (event.getDateEnd().getTime() > atm.getTime()) {
                                 if (filter_club_id != null) {
                                     if (filter_club_id.equals(event.getAssociation())) {
-                                        adapterPast.addItem(event);
-                                        past = true;
+                                        adapterFuture.addItem(event);
+                                        future = true;
                                     }
                                 }
                                 else {
                                     adapterPast.addItem(event);
-                                    past = true;
+                                    future = true;
                                 }
                             }
                             else {

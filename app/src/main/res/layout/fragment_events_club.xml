@@ -15,58 +15,70 @@
             android:layout_height="match_parent"
             android:nestedScrollingEnabled="true">
 
-            <TextView
-                android:id="@+id/events_future"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/events_future" />
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardview_events_future"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_below="@id/events_future">
+                android:orientation="vertical"
+                android:id="@+id/events_future_layout">
 
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/events_future"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/events_future" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardview_events_future"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerview_events_future"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
+                        android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/events_past"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_below="@id/cardview_events_future"
-                android:text="@string/events_past" />
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerview_events_future"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardview_events_past"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_below="@id/events_past">
+                android:orientation="vertical"
+                android:layout_below="@id/events_future_layout"
+                android:id="@+id/events_past_layout">
 
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/events_past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/events_past" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardview_events_past"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerview_events_past"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
+                        android:layout_height="match_parent">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerview_events_past"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

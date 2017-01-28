@@ -34,7 +34,7 @@ import static android.app.Activity.RESULT_OK;
 public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int layout;
-    private String filter_club_id = null;
+    private String filter_club_id;
 
     private View view;
     private EventRecyclerViewAdapter adapterToday;
@@ -190,7 +190,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             today = true;
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

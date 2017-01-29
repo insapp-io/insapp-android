@@ -61,17 +61,15 @@ public class Club implements Parcelable {
         this.email = in.readString();
         this.description = in.readString();
 
-        this.events = new ArrayList<String>();
+        this.events = new ArrayList<>();
         int nb_events = in.readInt();
-        if(nb_events > 0) {
+        if (nb_events > 0)
             in.readStringList(this.events);
-        }
 
-        this.posts = new ArrayList<String>();
+        this.posts = new ArrayList<>();
         int nb_posts = in.readInt();
-        if(nb_posts > 0) {
+        if (nb_posts > 0)
             in.readStringList(this.posts);
-        }
 
         this.profilPicture = in.readString();
         this.cover = in.readString();
@@ -92,27 +90,24 @@ public class Club implements Parcelable {
         this.fgColor = fgColor;
     }
 
-    public Club(JSONObject json) throws JSONException
-    {
+    public Club(JSONObject json) throws JSONException {
         this.id = json.getString("ID");
         this.name = json.getString("name");
         this.email = json.getString("email");
         this.description = json.getString("description");
 
-        this.events = new ArrayList<String>();
+        this.events = new ArrayList<>();
         JSONArray jsonarray = json.optJSONArray("events");
         if(jsonarray != null) {
-            for (int i = 0; i < jsonarray.length(); i++) {
+            for (int i = 0; i < jsonarray.length(); i++)
                 events.add(jsonarray.getString(i));
-            }
         }
 
-        this.posts = new ArrayList<String>();
+        this.posts = new ArrayList<>();
         JSONArray jsonarray2 = json.optJSONArray("posts");
-        if(jsonarray2 != null) {
-            for (int i = 0; i < jsonarray2.length(); i++) {
+        if (jsonarray2 != null) {
+            for (int i = 0; i < jsonarray2.length(); i++)
                 posts.add(jsonarray2.getString(i));
-            }
         }
 
         this.profilPicture = json.getString("profile");
@@ -171,10 +166,10 @@ public class Club implements Parcelable {
         dest.writeString(email);
         dest.writeString(description);
         dest.writeInt(events.size());
-        if(events.size() > 0)
+        if (events.size() > 0)
             dest.writeStringList(events);
         dest.writeInt(posts.size());
-        if(posts.size() > 0)
+        if (posts.size() > 0)
             dest.writeStringList(posts);
 
         dest.writeString(profilPicture);

@@ -171,6 +171,7 @@ public class ClubActivity extends AppCompatActivity {
         Bundle bundle2 = new Bundle();
         bundle2.putInt("layout", R.layout.row_event);
         bundle2.putString("filter_club_id", club.getId());
+        bundle2.putParcelable("club", club);
         eventsClubFragment.setArguments(bundle2);
         adapter.addFragment(eventsClubFragment, getResources().getString(R.string.events));
 

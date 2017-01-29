@@ -23,6 +23,7 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 
 /**
@@ -32,7 +33,8 @@ import fr.insapp.insapp.models.Event;
 public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int layout;
-    private String filter_club_id;
+
+    private Club club;
 
     private View view;
     private EventRecyclerViewAdapter adapterFuture;
@@ -48,7 +50,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         final Bundle bundle = getArguments();
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.row_event);
-            this.filter_club_id = bundle.getString("filter_club_id");
+            this.club = bundle.getParcelable("club");
         }
 
         // adapter
@@ -108,55 +110,41 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
         view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
 
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                if (!output.equals("{\"events\":null}")) {
-                    try {
-                        JSONArray jsonarray = new JSONArray(output);
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            JSONObject jsonObject = jsonarray.getJSONObject(i);
+        for (int j = 0; j < club.getEvents().size(); j++) {
+            HttpGet request = new HttpGet(new AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+                    if (!output.equals("{\"events\":null}")) {
+                        try {
+                            JSONArray jsonarray = new JSONArray(output);
+                            for (int i = 0; i < jsonarray.length(); i++) {
+                                JSONObject jsonObject = jsonarray.getJSONObject(i);
 
-                            Event event = new Event(jsonObject);
-                            Date atm = Calendar.getInstance().getTime();
+                                Event event = new Event(jsonObject);
+                                Date atm = Calendar.getInstance().getTime();
 
-                            if (event.getDateEnd().getTime() > atm.getTime()) {
-                                if (filter_club_id != null) {
-                                    if (filter_club_id.equals(event.getAssociation())) {
-                                        adapterPast.addItem(event);
-                                        past = true;
-                                    }
+                                if (event.getDateEnd().getTime() > atm.getTime()) {
+                                    adapterFuture.addItem(event);
+                                    future = true;
                                 }
                                 else {
                                     adapterPast.addItem(event);
                                     past = true;
                                 }
                             }
-                            else {
-                                if (filter_club_id != null) {
-                                    if (filter_club_id.equals(event.getAssociation())) {
-                                        adapterPast.addItem(event);
-                                        past = true;
-                                    }
-                                }
-                                else {
-                                    adapterPast.addItem(event);
-                                    past = true;
-                                }
-                            }
+
+                            if (!future)
+                                view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
+                            if (!past)
+                                view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-
-                        if (!future)
-                            view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
-                        if (!past)
-                            view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
-        });
-        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
+            });
+            request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(j) + "?token=" + HttpGet.credentials.getSessionToken());
+        }
 
         adapterFuture.notifyDataSetChanged();
         adapterPast.notifyDataSetChanged();

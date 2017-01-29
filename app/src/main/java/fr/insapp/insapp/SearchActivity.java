@@ -155,11 +155,6 @@ public class SearchActivity extends AppCompatActivity {
 
         // search
 
-        /*generateClubs(adapterClubs, query);
-        generatePosts(adapterPosts, query);
-        generateEvents(adapterEvents, query);
-        generateUsers(adapterUsers, query);*/
-
         generate(query);
 
     }
@@ -181,7 +176,6 @@ public class SearchActivity extends AppCompatActivity {
         HttpPost request = new HttpPost(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                //if (!output.equals("{\"associations\":null}")) {
                     try {
 
                         JSONObject json = new JSONObject(output);
@@ -254,13 +248,12 @@ public class SearchActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                //}
             }
         });
         request.execute(HttpGet.ROOTSEACHUNIVERSAL + "?token=" + HttpGet.credentials.getSessionToken(), jsonObject.toString());
 
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

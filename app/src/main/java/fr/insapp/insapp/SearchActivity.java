@@ -23,6 +23,7 @@ import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Post;
@@ -154,142 +155,112 @@ public class SearchActivity extends AppCompatActivity {
 
         // search
 
-        generateClubs(adapterClubs, query);
+        /*generateClubs(adapterClubs, query);
         generatePosts(adapterPosts, query);
         generateEvents(adapterEvents, query);
-        generateUsers(adapterUsers, query);
+        generateUsers(adapterUsers, query);*/
+
+        generate(query);
+
     }
 
-    private void generateClubs(final ClubRecyclerViewAdapter adapter, String query) {
+    private void generate(String query) {
+
         adapterClubs.getClubs().clear();
-
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                if (!output.equals("{\"associations\":null}")) {
-                    try {
-
-                        JSONObject json = new JSONObject(output);
-                        JSONArray jsonarray = json.optJSONArray("associations");
-
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            final JSONObject jsonobject = jsonarray.getJSONObject(i);
-                            Club club = new Club(jsonobject);
-
-                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
-                                adapter.addItem(club);
-                                findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
-
-                                // Add club to the list if it is new
-                                Club c = HttpGet.clubs.get(club.getId());
-                                if (c == null)
-                                    HttpGet.clubs.put(club.getId(), club);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        request.execute(HttpGet.ROOTSEARCHASSOCIAITIONS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
-
-        adapterClubs.notifyDataSetChanged();
-    }
-
-    private void generatePosts(final PostRecyclerViewAdapter adapter, String query) {
         adapterPosts.getPosts().clear();
-
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                if (!output.equals("{\"posts\":null}")) {
-                    try {
-
-                        JSONObject json = new JSONObject(output);
-                        JSONArray jsonarray = json.optJSONArray("posts");
-
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            JSONObject jsonobject = jsonarray.getJSONObject(i);
-
-                            adapter.addItem(new Post(jsonobject));
-                            findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.VISIBLE);
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        request.execute(HttpGet.ROOTSEARCHPOSTS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
-
-        adapterPosts.notifyDataSetChanged();
-    }
-
-    private void generateEvents(final EventRecyclerViewAdapter adapter, String query) {
         adapterEvents.getEvents().clear();
-
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                if (!output.equals("{\"events\":null}")) {
-
-                    Date atm = Calendar.getInstance().getTime();
-                    try {
-
-                        JSONObject json = new JSONObject(output);
-                        JSONArray jsonarray = json.optJSONArray("events");
-
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            JSONObject jsonObject = jsonarray.getJSONObject(i);
-
-                            Event event = new Event(jsonObject);
-                            if (event.getDateEnd().getTime() > atm.getTime()) {
-                                adapter.addItem(event);
-                                findViewById(R.id.search_events_layout).setVisibility(LinearLayout.VISIBLE);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        request.execute(HttpGet.ROOTSEARCHEVENTS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
-
-        adapterEvents.notifyDataSetChanged();
-    }
-
-    private void generateUsers(final UserRecyclerViewAdapter adapter, String query) {
         adapterUsers.getUsers().clear();
 
-        HttpGet request = new HttpGet(new AsyncResponse() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("terms", query);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        HttpPost request = new HttpPost(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                if (!output.equals("{\"users\":null}")) {
+                //if (!output.equals("{\"associations\":null}")) {
                     try {
 
                         JSONObject json = new JSONObject(output);
-                        JSONArray jsonarray = json.optJSONArray("users");
 
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            JSONObject jsonObject = jsonarray.getJSONObject(i);
+                        // CLUBS
+                        JSONArray jsonarrayClubs = json.optJSONArray("associations");
 
-                            adapter.addItem(new User(jsonObject));
-                            findViewById(R.id.search_users_layout).setVisibility(LinearLayout.VISIBLE);
+                        if(jsonarrayClubs != null) {
+                            for (int i = 0; i < jsonarrayClubs.length(); i++) {
+                                final JSONObject jsonobject = jsonarrayClubs.getJSONObject(i);
+                                Club club = new Club(jsonobject);
+
+                                if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                                    adapterClubs.addItem(club);
+                                    findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
+
+                                    // Add club to the list if it is new
+                                    Club c = HttpGet.clubs.get(club.getId());
+                                    if (c == null)
+                                        HttpGet.clubs.put(club.getId(), club);
+                                }
+                            }
+                            adapterClubs.notifyDataSetChanged();
                         }
+
+                        // POSTS
+                        JSONArray jsonarrayPosts = json.optJSONArray("posts");
+                        if(jsonarrayPosts != null) {
+
+                            for (int i = 0; i < jsonarrayPosts.length(); i++) {
+                                JSONObject jsonobject = jsonarrayPosts.getJSONObject(i);
+
+                                adapterPosts.addItem(new Post(jsonobject));
+                                findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.VISIBLE);
+                            }
+                            adapterPosts.notifyDataSetChanged();
+                        }
+
+                        // EVENTS
+                        Date atm = Calendar.getInstance().getTime();
+
+                        JSONArray jsonarrayEvents = json.optJSONArray("events");
+                        if(jsonarrayEvents != null) {
+
+                            for (int i = 0; i < jsonarrayEvents.length(); i++) {
+                                JSONObject jsonObject = jsonarrayEvents.getJSONObject(i);
+
+                                Event event = new Event(jsonObject);
+                                if (event.getDateEnd().getTime() > atm.getTime()) {
+                                    adapterEvents.addItem(event);
+                                    findViewById(R.id.search_events_layout).setVisibility(LinearLayout.VISIBLE);
+                                }
+                            }
+                            adapterEvents.notifyDataSetChanged();
+                        }
+
+                        // USERS
+                        JSONArray jsonarrayUsers = json.optJSONArray("users");
+                        if(jsonarrayEvents != null) {
+
+                            for (int i = 0; i < jsonarrayUsers.length(); i++) {
+                                JSONObject jsonObject = jsonarrayUsers.getJSONObject(i);
+
+                                adapterUsers.addItem(new User(jsonObject));
+                                findViewById(R.id.search_users_layout).setVisibility(LinearLayout.VISIBLE);
+                            }
+                            adapterUsers.notifyDataSetChanged();
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
+                //}
             }
         });
-        request.execute(HttpGet.ROOTSEARCHUSERS + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
+        request.execute(HttpGet.ROOTSEACHUNIVERSAL + "?token=" + HttpGet.credentials.getSessionToken(), jsonObject.toString());
 
-        adapterUsers.notifyDataSetChanged();
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

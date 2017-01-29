@@ -98,17 +98,12 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         return view;
     }
 
-    private boolean future = false, past = false;
-
     private void generateEvents() {
         adapterFuture.getEvents().clear();
         adapterPast.getEvents().clear();
 
-        future = false;
-        past = false;
-
-        view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
-        view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
+        view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
+        view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
 
         for (int j = 0; j < club.getEvents().size(); j++) {
 
@@ -123,17 +118,17 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
                             if (event.getDateEnd().getTime() > atm.getTime()) {
                                 adapterFuture.addItem(event);
-                                future = true;
+
+                                if(view.findViewById(R.id.events_future_layout).getVisibility() != LinearLayout.VISIBLE)
+                                    view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
                             }
                             else {
                                 adapterPast.addItem(event);
-                                past = true;
+
+                                if(view.findViewById(R.id.events_past_layout).getVisibility() != LinearLayout.VISIBLE)
+                                    view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
                             }
 
-                        if (!future)
-                            view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
-                        if (!past)
-                            view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -141,9 +136,6 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
             });
             request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(j) + "?token=" + HttpGet.credentials.getSessionToken());
         }
-
-        adapterFuture.notifyDataSetChanged();
-        adapterPast.notifyDataSetChanged();
     }
 
     @Override

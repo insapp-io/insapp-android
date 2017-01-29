@@ -111,35 +111,31 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
 
         for (int j = 0; j < club.getEvents().size(); j++) {
+
             HttpGet request = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
-                    if (!output.equals("{\"events\":null}")) {
-                        try {
-                            JSONArray jsonarray = new JSONArray(output);
-                            for (int i = 0; i < jsonarray.length(); i++) {
-                                JSONObject jsonObject = jsonarray.getJSONObject(i);
+                    try {
+                            JSONObject jsonObject = new JSONObject(output);
 
-                                Event event = new Event(jsonObject);
-                                Date atm = Calendar.getInstance().getTime();
+                            Event event = new Event(jsonObject);
+                            Date atm = Calendar.getInstance().getTime();
 
-                                if (event.getDateEnd().getTime() > atm.getTime()) {
-                                    adapterFuture.addItem(event);
-                                    future = true;
-                                }
-                                else {
-                                    adapterPast.addItem(event);
-                                    past = true;
-                                }
+                            if (event.getDateEnd().getTime() > atm.getTime()) {
+                                adapterFuture.addItem(event);
+                                future = true;
+                            }
+                            else {
+                                adapterPast.addItem(event);
+                                past = true;
                             }
 
-                            if (!future)
-                                view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
-                            if (!past)
-                                view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        if (!future)
+                            view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
+                        if (!past)
+                            view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
             });

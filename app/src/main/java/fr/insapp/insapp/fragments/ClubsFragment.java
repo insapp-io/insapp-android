@@ -18,11 +18,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.ClubActivity;
+import fr.insapp.insapp.LoginActivity;
+import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ClubsFragment extends Fragment {
 
@@ -60,12 +64,30 @@ public class ClubsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode){
+
+                case MainActivity.REFRESH_TOKEN_MESSAGE:
+
+                    generateClubs();
+                    break;
+            }
+        }
+    }
+
     private void generateClubs() {
 
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-                if (!output.isEmpty()) {
+                if(output.isEmpty()){
+                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                }
+                else {
                     try {
                         JSONArray jsonarray = new JSONArray(output);
 

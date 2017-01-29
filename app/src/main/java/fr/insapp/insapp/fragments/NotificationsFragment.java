@@ -14,12 +14,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.LoginActivity;
+import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Notification;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by thoma on 27/10/2016.
@@ -66,10 +70,28 @@ public class NotificationsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode){
+
+                case MainActivity.REFRESH_TOKEN_MESSAGE:
+
+                    generateNotifications();
+                    break;
+            }
+        }
+    }
+
     private void generateNotifications() {
         HttpGet request = new HttpGet(new AsyncResponse() {
             public void processFinish(String output) {
-                if (!output.equals("{\"notifications\":null}")) {
+                if(output.isEmpty()){
+                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                }
+                else if (!output.equals("{\"notifications\":null}")) {
                     try {
                         JSONObject json = new JSONObject(output);
                         JSONArray jsonarray = json.optJSONArray("notifications");

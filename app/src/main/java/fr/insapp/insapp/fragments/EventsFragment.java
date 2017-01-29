@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.LoginActivity;
+import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
@@ -134,7 +136,10 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                if (!output.equals("{\"events\":null}")) {
+                if(output.isEmpty()){
+                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                }
+                else if (!output.equals("{\"events\":null}")) {
                     try {
                         JSONArray jsonarray = new JSONArray(output);
                         for (int i = 0; i < jsonarray.length(); i++) {
@@ -195,20 +200,27 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == EVENT_REQUEST){
-            if (resultCode == RESULT_OK){
-                Event event = data.getParcelableExtra("event");
+        if (resultCode == RESULT_OK) {
+            switch (requestCode){
+                case EVENT_REQUEST:
 
-                final int idToday = adapterToday.getEvents().indexOf(event);
-                final int idWeek = adapterWeek.getEvents().indexOf(event);
-                final int idMonth = adapterMonth.getEvents().indexOf(event);
+                    Event event = data.getParcelableExtra("event");
+                    final int idToday = adapterToday.getEvents().indexOf(event);
+                    final int idWeek = adapterWeek.getEvents().indexOf(event);
+                    final int idMonth = adapterMonth.getEvents().indexOf(event);
 
-                if (idToday >= 0)
-                    adapterToday.updatePost(idToday, event);
-                else if (idWeek >= 0)
-                    adapterWeek.updatePost(idWeek, event);
-                else if (idMonth >= 0)
-                    adapterMonth.updatePost(idMonth, event);
+                    if (idToday >= 0)
+                        adapterToday.updatePost(idToday, event);
+                    else if (idWeek >= 0)
+                        adapterWeek.updatePost(idWeek, event);
+                    else if (idMonth >= 0)
+                        adapterMonth.updatePost(idMonth, event);
+                    break;
+
+                case MainActivity.REFRESH_TOKEN_MESSAGE:
+
+                    generateEvents();
+                    break;
             }
         }
     }

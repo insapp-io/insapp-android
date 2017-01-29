@@ -9,11 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.insapp.insapp.LoginActivity;
+import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
@@ -87,14 +90,20 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Add your code here
 
-        if(requestCode == WRITE_COMMENT_REQUEST){
-            if (resultCode == RESULT_OK){
-                Post post = data.getParcelableExtra("post");
+        if (resultCode == RESULT_OK) {
+            switch (requestCode){
+                case WRITE_COMMENT_REQUEST:
 
-                int id = adapter.getPosts().indexOf(post);
-                adapter.updatePost(id, post);
+                    Post post = data.getParcelableExtra("post");
+                    int id = adapter.getPosts().indexOf(post);
+                    adapter.updatePost(id, post);
+                    break;
+
+                case MainActivity.REFRESH_TOKEN_MESSAGE:
+
+                    generatePosts();
+                    break;
             }
         }
     }
@@ -106,7 +115,11 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-                if (!output.equals("{\"posts\":null}")) {
+
+                if(output.isEmpty()){
+                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                }
+                else if (!output.equals("{\"posts\":null}")) {
                     try {
                         JSONArray jsonarray = new JSONArray(output);
                         for (int i = 0; i < jsonarray.length(); i++) {

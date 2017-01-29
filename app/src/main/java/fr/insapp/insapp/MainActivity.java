@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final boolean dev = false;
 
+    public static final int REFRESH_TOKEN_MESSAGE = 5;
+
     private Toolbar toolbar;
     private MenuItem menuItem;
     private TabLayout tabLayout;

@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import fr.insapp.insapp.http.AsyncResponse;
@@ -278,6 +279,12 @@ public class EventActivity extends AppCompatActivity {
             floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
             floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
             floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+        }
+
+        // We can't participate in a finished event
+        Date atm = Calendar.getInstance().getTime();
+        if (event.getDateEnd().getTime() < atm.getTime()) {
+            floatingActionMenu.setVisibility(View.GONE);
         }
 
         this.floatingActionButton1 = (FloatingActionButton) findViewById(R.id.fab_item_1_event);

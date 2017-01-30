@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -34,6 +35,7 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by thoma on 19/11/2016.
@@ -85,10 +87,12 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         holder.title.setText(post.getTitle());
         holder.date.setText("il y a " + Operation.displayedDate(post.getDate()));
 
-        if (layout != R.layout.row_post) {
+        if (layout == R.layout.row_post)
+            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.image);
+        else {
             Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image);
-            holder.text.setText(post.getDescription());
 
+            holder.text.setText(post.getDescription());
             holder.likeCounter.setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));
             holder.commentCounter.setText(String.format(Locale.FRANCE, "%d", post.getComments().size()));
         }
@@ -236,9 +240,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             this.title = (TextView) view.findViewById(R.id.name_post);
             this.date = (TextView) view.findViewById(R.id.date_post);
 
+            if (layout == R.layout.row_post)
+                this.image = (ImageView) view.findViewById(R.id.thumbnail_post);
+            else
+                this.image = (ImageView) view.findViewById(R.id.image);
+
             if (layout != R.layout.row_post) {
                 this.text = (TextView) view.findViewById(R.id.post_text);
-                this.image = (ImageView) view.findViewById(R.id.image);
                 this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
                 this.likeCounter = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
                 this.commentButton = (ImageButton) view.findViewById(R.id.comment_button);

@@ -1,15 +1,11 @@
 package fr.insapp.insapp.utility;
 
 
-import android.util.Log;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import fr.insapp.insapp.models.User;
 
 /**
  * Created by Antoine on 24/09/2016.
@@ -45,7 +41,7 @@ public class Operation {
 
         // At least 1 week
         if(diffInDays >= 7)
-            return Integer.toString(diffInDays/7) + "s";
+            return Integer.toString(diffInDays / 7) + "w";
         // At least 1 day
         if(diffInDays >= 1)
             return Long.toString(diffInDays) + "j";

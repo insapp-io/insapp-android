@@ -234,7 +234,7 @@ public class SearchActivity extends AppCompatActivity {
 
                         // USERS
                         JSONArray jsonarrayUsers = json.optJSONArray("users");
-                        if(jsonarrayUsers != null) {
+                        if (jsonarrayUsers != null) {
 
                             for (int i = 0; i < jsonarrayUsers.length(); i++) {
                                 JSONObject jsonObject = jsonarrayUsers.getJSONObject(i);

@@ -21,9 +21,9 @@ public class IntroActivity extends AppIntro2 {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addSlide(new IntroClubsFragment());
-        addSlide(new IntroEventsFragment());
         addSlide(new IntroNewsFragment());
+        addSlide(new IntroEventsFragment());
+        addSlide(new IntroClubsFragment());
         addSlide(new IntroNotificationsFragment());
         addSlide(new IntroProfileFragment());
 

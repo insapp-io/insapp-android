@@ -108,9 +108,11 @@ public class ClubActivity extends AppCompatActivity {
         int bgColor = Color.parseColor("#" + club.getBgColor());
         int fgColor = Color.parseColor("#" + club.getFgColor());
 
-        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+            upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        }
 
         collapsingToolbar.setContentScrimColor(bgColor);
         collapsingToolbar.setStatusBarScrimColor(bgColor);

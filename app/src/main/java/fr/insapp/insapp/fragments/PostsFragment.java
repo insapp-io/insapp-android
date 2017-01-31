@@ -72,9 +72,13 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         // recycler view
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_posts);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.half_divider));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
+
+        if (layout == R.layout.post_with_avatars)
+            recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.half_divider));
+        else if (layout == R.layout.post)
+            recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.full_divider));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);

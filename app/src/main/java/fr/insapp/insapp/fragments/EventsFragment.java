@@ -158,6 +158,8 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         e.printStackTrace();
                     }
                 }
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
@@ -212,6 +214,5 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
         generateEvents();
-        swipeRefreshLayout.setRefreshing(false);
     }
 }

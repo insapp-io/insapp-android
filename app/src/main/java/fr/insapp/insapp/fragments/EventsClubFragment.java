@@ -110,10 +110,11 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         */
 
         for (int j = 0; j < club.getEvents().size(); j++) {
-
             HttpGet request = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
+                    swipeRefreshLayout.setRefreshing(false);
+
                     try {
                         JSONObject jsonObject = new JSONObject(output);
 
@@ -150,6 +151,5 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onRefresh() {
         generateEvents();
-        swipeRefreshLayout.setRefreshing(false);
     }
 }

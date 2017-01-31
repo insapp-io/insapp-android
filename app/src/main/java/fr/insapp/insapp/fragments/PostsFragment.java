@@ -139,11 +139,12 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 adapter.notifyDataSetChanged();
                             }
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
@@ -152,6 +153,5 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onRefresh() {
         generatePosts();
-        swipeRefreshLayout.setRefreshing(false);
     }
 }

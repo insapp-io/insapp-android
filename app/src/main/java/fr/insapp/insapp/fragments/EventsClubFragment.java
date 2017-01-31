@@ -9,9 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,11 +68,15 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                 startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });
+
+        generateEvents();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_events_club, container, false);
+
+        // recycler view
 
         RecyclerView recyclerViewFuture = (RecyclerView) view.findViewById(R.id.recyclerview_events_future);
         recyclerViewFuture.setHasFixedSize(true);
@@ -90,10 +92,10 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         recyclerViewPast.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewPast.setAdapter(adapterPast);
 
+        // swipe refresh layout
+
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events_club);
         swipeRefreshLayout.setOnRefreshListener(this);
-
-        generateEvents();
 
         return view;
     }
@@ -102,8 +104,10 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         adapterFuture.getEvents().clear();
         adapterPast.getEvents().clear();
 
+        /*
         view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
         view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
+        */
 
         for (int j = 0; j < club.getEvents().size(); j++) {
 
@@ -111,23 +115,28 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                 @Override
                 public void processFinish(String output) {
                     try {
-                            JSONObject jsonObject = new JSONObject(output);
+                        JSONObject jsonObject = new JSONObject(output);
 
-                            Event event = new Event(jsonObject);
-                            Date atm = Calendar.getInstance().getTime();
+                        Event event = new Event(jsonObject);
+                        Date atm = Calendar.getInstance().getTime();
 
-                            if (event.getDateEnd().getTime() > atm.getTime()) {
-                                adapterFuture.addItem(event);
+                        if (event.getDateEnd().getTime() > atm.getTime()) {
+                            adapterFuture.addItem(event);
+                            adapterFuture.notifyDataSetChanged();
 
-                                if(view.findViewById(R.id.events_future_layout).getVisibility() != LinearLayout.VISIBLE)
-                                    view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
-                            }
-                            else {
-                                adapterPast.addItem(event);
+                            /*
+                            if (view.findViewById(R.id.events_future_layout).getVisibility() != LinearLayout.VISIBLE)
+                                view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
+                            */
+                        } else {
+                            adapterPast.addItem(event);
+                            adapterPast.notifyDataSetChanged();
 
-                                if(view.findViewById(R.id.events_past_layout).getVisibility() != LinearLayout.VISIBLE)
-                                    view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
-                            }
+                            /*
+                            if (view.findViewById(R.id.events_past_layout).getVisibility() != LinearLayout.VISIBLE)
+                                view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
+                            */
+                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();

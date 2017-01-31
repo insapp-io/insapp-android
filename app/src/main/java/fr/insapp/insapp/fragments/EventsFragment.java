@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,11 +82,15 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
+
+        generateEvents();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_events, container, false);
+
+        // recycler view
 
         RecyclerView recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
         recyclerViewToday.setHasFixedSize(true);
@@ -110,33 +113,27 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerViewMonth.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewMonth.setAdapter(adapterMonth);
 
+        // swipe refresh layout
+
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        generateEvents();
+        // refresh visibility
+
+
 
         return view;
     }
-
-    private boolean month = false, week = false, today = false;
 
     private void generateEvents() {
         adapterToday.getEvents().clear();
         adapterWeek.getEvents().clear();
         adapterMonth.getEvents().clear();
 
-        month = false;
-        week = false;
-        today = false;
-
-        view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.VISIBLE);
-        view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.VISIBLE);
-        view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.VISIBLE);
-
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                if(output.isEmpty()){
+                if (output.isEmpty()) {
                     startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
                 }
                 else if (!output.equals("{\"events\":null}")) {
@@ -155,16 +152,8 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                                 }
                                 else
                                     addEventToAdapter(event);
-
                             }
                         }
-
-                        if (!month)
-                            view.findViewById(R.id.events_month_layout).setVisibility(LinearLayout.GONE);
-                        if (!week)
-                            view.findViewById(R.id.events_week_layout).setVisibility(LinearLayout.GONE);
-                        if (!today)
-                            view.findViewById(R.id.events_today_layout).setVisibility(LinearLayout.GONE);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -172,10 +161,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
         request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
-
-        adapterToday.notifyDataSetChanged();
-        adapterWeek.notifyDataSetChanged();
-        adapterMonth.notifyDataSetChanged();
     }
 
     private void addEventToAdapter(Event event) {
@@ -186,13 +171,13 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (diffInDays > 7) {
             adapterMonth.addItem(event);
-            month = true;
+            adapterMonth.notifyDataSetChanged();
         } else if (diffInDays > 1) {
             adapterWeek.addItem(event);
-            week = true;
+            adapterWeek.notifyDataSetChanged();
         } else {
             adapterToday.addItem(event);
-            today = true;
+            adapterToday.notifyDataSetChanged();
         }
     }
 
@@ -218,7 +203,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     break;
 
                 case MainActivity.REFRESH_TOKEN_MESSAGE:
-
                     generateEvents();
                     break;
             }

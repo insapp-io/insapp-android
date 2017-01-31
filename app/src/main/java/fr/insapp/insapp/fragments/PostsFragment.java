@@ -115,13 +115,10 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private void generatePosts() {
         adapter.getPosts().clear();
-        adapter.notifyDataSetChanged();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
-
             public void processFinish(String output) {
-
-                if(output.isEmpty()){
+                if (output.isEmpty()) {
                     startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
                 }
                 else if (!output.equals("{\"posts\":null}")) {
@@ -132,12 +129,15 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                             Post post = new Post(jsonobject);
 
-                            if(filter_club_id != null){
-                                if(filter_club_id.equals(post.getAssociation()))
+                            if (filter_club_id != null) {
+                                if (filter_club_id.equals(post.getAssociation())) {
                                     adapter.addItem(post);
-                            }
-                            else
+                                    adapter.notifyDataSetChanged();
+                                }
+                            } else {
                                 adapter.addItem(post);
+                                adapter.notifyDataSetChanged();
+                            }
                         }
 
                     } catch (JSONException e) {
@@ -147,7 +147,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
         request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
-
     }
 
     @Override

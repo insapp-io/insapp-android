@@ -68,7 +68,6 @@ public class Notification implements Parcelable {
     }
 
     public Notification(JSONObject json) throws JSONException {
-        System.out.println(json.toString());
         this.id = json.getString("ID");
         this.sender = json.getString("sender");
         this.receiver = json.getString("receiver");

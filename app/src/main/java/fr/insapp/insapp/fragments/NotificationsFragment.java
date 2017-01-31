@@ -64,6 +64,7 @@ public class NotificationsFragment extends Fragment {
         this.recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_notifications);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
@@ -75,10 +76,8 @@ public class NotificationsFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            switch (requestCode){
-
+            switch (requestCode) {
                 case MainActivity.REFRESH_TOKEN_MESSAGE:
-
                     generateNotifications();
                     break;
             }
@@ -88,7 +87,7 @@ public class NotificationsFragment extends Fragment {
     private void generateNotifications() {
         HttpGet request = new HttpGet(new AsyncResponse() {
             public void processFinish(String output) {
-                if(output.isEmpty()){
+                if (output.isEmpty()) {
                     startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
                 }
                 else if (!output.equals("{\"notifications\":null}")) {
@@ -96,11 +95,12 @@ public class NotificationsFragment extends Fragment {
                         JSONObject json = new JSONObject(output);
                         JSONArray jsonarray = json.optJSONArray("notifications");
 
-                        if(jsonarray != null) {
+                        if (jsonarray != null) {
                             for (int i = 0; i < jsonarray.length(); i++) {
-
                                 final JSONObject jsonobject = jsonarray.getJSONObject(i);
+
                                 adapter.addItem(new Notification(jsonobject));
+                                adapter.notifyDataSetChanged();
                             }
                         }
                     } catch (JSONException e) {

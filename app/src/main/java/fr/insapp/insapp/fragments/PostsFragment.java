@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +22,7 @@ import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.utility.DividerItemDecoration;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -72,6 +72,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         // recycler view
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_posts);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.half_divider));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 

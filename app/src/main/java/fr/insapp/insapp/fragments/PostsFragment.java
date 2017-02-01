@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +22,7 @@ import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.utility.DividerItemDecoration;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -75,6 +75,11 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
+        if (layout == R.layout.post_with_avatars)
+            recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.half_divider));
+        else if (layout == R.layout.post)
+            recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.full_divider));
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -110,13 +115,10 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private void generatePosts() {
         adapter.getPosts().clear();
-        adapter.notifyDataSetChanged();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
-
             public void processFinish(String output) {
-
-                if(output.isEmpty()){
+                if (output.isEmpty()) {
                     startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
                 }
                 else if (!output.equals("{\"posts\":null}")) {
@@ -127,27 +129,29 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                             Post post = new Post(jsonobject);
 
-                            if(filter_club_id != null){
-                                if(filter_club_id.equals(post.getAssociation()))
+                            if (filter_club_id != null) {
+                                if (filter_club_id.equals(post.getAssociation())) {
                                     adapter.addItem(post);
-                            }
-                            else
+                                    adapter.notifyDataSetChanged();
+                                }
+                            } else {
                                 adapter.addItem(post);
+                                adapter.notifyDataSetChanged();
+                            }
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
-
     }
 
     @Override
     public void onRefresh() {
         generatePosts();
-        swipeRefreshLayout.setRefreshing(false);
     }
 }

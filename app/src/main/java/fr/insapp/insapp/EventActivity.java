@@ -177,9 +177,11 @@ public class EventActivity extends AppCompatActivity {
         int bgColor = Color.parseColor("#" + event.getBgColor());
         int fgColor = Color.parseColor("#" + event.getFgColor());
 
-        final Drawable upArrow = ContextCompat.getDrawable(EventActivity.this, R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable upArrow = ContextCompat.getDrawable(EventActivity.this, R.drawable.abc_ic_ab_back_material);
+            upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        }
 
         collapsingToolbar.setContentScrimColor(bgColor);
         collapsingToolbar.setStatusBarScrimColor(bgColor);

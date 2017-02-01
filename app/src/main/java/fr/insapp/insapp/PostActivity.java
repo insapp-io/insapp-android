@@ -45,7 +45,6 @@ import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
-import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 12/11/2016.
@@ -123,9 +122,8 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Add your code here
 
-        if(requestCode == NOTIFICATION_MESSAGE){
+        if (requestCode == NOTIFICATION_MESSAGE){
             if (resultCode == RESULT_OK){
 
                 HttpGet request = new HttpGet(new AsyncResponse() {
@@ -149,10 +147,8 @@ public class PostActivity extends AppCompatActivity {
 
     public void generateActivity() {
         // fill post elements
-
         this.club = HttpGet.clubs.get(post.getAssociation());
-        if(this.club == null) {
-
+        if (this.club == null) {
             HttpGet asso = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
@@ -179,7 +175,6 @@ public class PostActivity extends AppCompatActivity {
             asso.execute(HttpGet.ROOTASSOCIATION + "/" + post.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
         }
         else {
-
             Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.avatar_club);
 
             // listener
@@ -199,7 +194,6 @@ public class PostActivity extends AppCompatActivity {
         // description links
 
         Linkify.addLinks(description, Linkify.ALL);
-        Utils.stripUnderlines(description);
 
         // recycler view
 
@@ -234,13 +228,12 @@ public class PostActivity extends AppCompatActivity {
                                         public void processFinish(String output) {
                                             try {
                                                 post = new Post(new JSONObject(output));
-                                                adapter.setComments(post.getComments());
 
-                                                //Toast.makeText(PostActivity.this, getString(R.string.delete_comment_success), Toast.LENGTH_SHORT).show();
+                                                adapter.setComments(post.getComments());
+                                                adapter.notifyDataSetChanged();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
-                                            adapter.notifyDataSetChanged();
                                         }
                                     });
                                     delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());

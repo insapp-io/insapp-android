@@ -34,16 +34,14 @@ import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.Operation;
-import fr.insapp.insapp.utility.Utils;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by thoma on 19/11/2016.
  */
 
-public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.PostViewHolder> {
+public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecyclerViewAdapter.PostViewHolder> {
 
-    private Context context;
     private List<Post> posts;
 
     private int layout;
@@ -103,7 +101,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             final Club club = HttpGet.clubs.get(post.getAssociation());
 
             if (club == null) {
-
                 HttpGet request = new HttpGet(new AsyncResponse() {
 
                     public void processFinish(String output) {
@@ -136,6 +133,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             }
             else {
                 // glide
+
                 if (layout != R.layout.post)
                     Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
 
@@ -151,8 +149,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         // description links
 
         if (layout != R.layout.row_post) {
-            Linkify.addLinks(holder.text, Linkify.ALL);
-            Utils.stripUnderlines(holder.text);
+            Linkify.addLinks(holder.text, Linkify.WEB_URLS);
+            convertToLinkSpan(holder.text);
         }
 
         // like button

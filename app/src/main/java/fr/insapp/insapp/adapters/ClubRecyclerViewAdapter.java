@@ -22,9 +22,8 @@ import fr.insapp.insapp.models.Club;
  * Created by thoma on 30/10/2016.
  */
 
-public class ClubRecyclerViewAdapter extends RecyclerView.Adapter<ClubRecyclerViewAdapter.ClubViewHolder> {
+public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecyclerViewAdapter.ClubViewHolder> {
 
-    protected Context context;
     protected boolean matchParent;
 
     protected List<Club> clubs;

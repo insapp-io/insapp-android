@@ -31,7 +31,6 @@ import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 11/11/2016.
@@ -138,8 +137,7 @@ public class ClubActivity extends AppCompatActivity {
 
         // links
 
-        Linkify.addLinks(descriptionTextView, Linkify.ALL);
-        Utils.stripUnderlines(descriptionTextView);
+        Linkify.addLinks(descriptionTextView, Linkify.WEB_URLS);
 
         // send a mail
 

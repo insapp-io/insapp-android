@@ -23,9 +23,8 @@ import fr.insapp.insapp.utility.Operation;
  * Created by thoma on 10/12/2016.
  */
 
-public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.UserViewHolder> {
+public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecyclerViewAdapter.UserViewHolder> {
 
-    protected Context context;
     protected boolean matchParent;
 
     protected List<User> users;
@@ -62,6 +61,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         final User user = users.get(position);
 
         // get the drawable of avatar
+
         Resources resources = context.getResources();
         final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         Glide.with(context).load(id).into(holder.avatar);

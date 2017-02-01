@@ -33,9 +33,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  * Created by thoma on 18/11/2016.
  */
 
-public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.EventViewHolder> {
+public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyclerViewAdapter.EventViewHolder> {
 
-    private Context context;
     protected List<Event> events;
 
     private int layout;

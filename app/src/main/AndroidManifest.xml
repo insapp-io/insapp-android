@@ -24,7 +24,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/InsappMaterialTheme">
+        android:theme="@style/InsappMaterialTheme"
+        android:largeHeap="true">
 
         <activity
             android:name="fr.insapp.insapp.IntroActivity">

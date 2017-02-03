@@ -57,7 +57,9 @@ public class Operation {
         String drawable_string = "avatar";
         if (!promo.equals("") && !gender.equals("")) {
             String userPromotion = promo.toLowerCase();
-            if (!userPromotion.contains("stpi") && Character.isDigit(userPromotion.charAt(0)))
+            if (userPromotion.contains("personnel"))
+                userPromotion = "worker";
+            else if (!userPromotion.contains("stpi") && Character.isDigit(userPromotion.charAt(0)))
                 userPromotion = userPromotion.substring(1);
 
             drawable_string += "_" + userPromotion;

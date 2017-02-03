@@ -58,13 +58,13 @@ public class User implements Parcelable{
         this.promotion = in.readString();
         this.gender = in.readString();
 
-        this.events = new ArrayList<String>();
+        this.events = new ArrayList<>();
         int nb_events = in.readInt();
         if(nb_events > 0) {
             in.readStringList(this.events);
         }
 
-        this.postsLiked = new ArrayList<String>();
+        this.postsLiked = new ArrayList<>();
         int nb_postsLiked = in.readInt();
         if(nb_postsLiked > 0) {
             in.readStringList(this.postsLiked);
@@ -94,16 +94,16 @@ public class User implements Parcelable{
         this.promotion = json.getString("promotion");
         this.gender = json.getString("gender");
 
-        events = new ArrayList<String>();
+        events = new ArrayList<>();
 
         JSONArray jsonarray = json.optJSONArray("events");
-        if(jsonarray != null){
-            for(int i=0; i<jsonarray.length(); i++) {
+        if (jsonarray != null){
+            for (int i=0; i<jsonarray.length(); i++) {
                 events.add(jsonarray.getString(i));
             }
         }
 
-        postsLiked = new ArrayList<String>();
+        postsLiked = new ArrayList<>();
 
         JSONArray jsonarray2 = json.optJSONArray("postsliked");
         if(jsonarray2 != null){
@@ -169,11 +169,11 @@ public class User implements Parcelable{
         dest.writeString(gender);
 
         dest.writeInt(events.size());
-        if(events.size() > 0)
+        if (events.size() > 0)
             dest.writeStringList(events);
 
         dest.writeInt(postsLiked.size());
-        if(postsLiked.size() > 0)
+        if (postsLiked.size() > 0)
             dest.writeStringList(postsLiked);
     }
 }

@@ -41,7 +41,7 @@ public class Operation {
 
         // At least 1 week
         if(diffInDays >= 7)
-            return Integer.toString(diffInDays / 7) + "w";
+            return Integer.toString(diffInDays / 7) + "sem";
         // At least 1 day
         if(diffInDays >= 1)
             return Long.toString(diffInDays) + "j";

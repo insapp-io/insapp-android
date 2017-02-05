@@ -83,6 +83,12 @@
                 android:paddingBottom="8dp"
                 android:text="Ceci est une description sur plusieurs lignes, ça rend pas trop mal c'est cool"
                 android:layout_below="@id/profile_class" />
+<!--
+            <ImageView
+                android:id="@+id/barcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_description"/>-->
         </RelativeLayout>
     </LinearLayout>
 

@@ -499,7 +499,12 @@ public class EventActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                onBackPressed();
+                if (isTaskRoot()) {
+                    Intent i = new Intent(EventActivity.this, MainActivity.class);
+                    startActivity(i);
+                }
+                else
+                    finish();
                 return true;
         }
 

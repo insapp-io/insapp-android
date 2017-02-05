@@ -528,8 +528,12 @@ public class PostActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-
-                finish();
+                if (isTaskRoot()) {
+                    Intent i = new Intent(PostActivity.this, MainActivity.class);
+                    startActivity(i);
+                }
+                else
+                    finish();
                 return true;
         }
 

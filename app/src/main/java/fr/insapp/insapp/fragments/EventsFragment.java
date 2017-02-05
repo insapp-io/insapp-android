@@ -38,6 +38,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private String filter_club_id;
 
     private View view;
+
+    private RecyclerView recyclerViewToday, recyclerViewWeek, recyclerViewMonth;
+
     private EventRecyclerViewAdapter adapterToday;
     private EventRecyclerViewAdapter adapterWeek;
     private EventRecyclerViewAdapter adapterMonth;
@@ -92,15 +95,15 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // recycler view
 
-        RecyclerView recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
+        this.recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
         recyclerViewToday.setHasFixedSize(true);
         recyclerViewToday.setNestedScrollingEnabled(false);
 
-        RecyclerView recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
+        this.recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
         recyclerViewWeek.setHasFixedSize(true);
         recyclerViewWeek.setNestedScrollingEnabled(false);
 
-        RecyclerView recyclerViewMonth = (RecyclerView) view.findViewById(R.id.recyclerview_events_month);
+        this.recyclerViewMonth = (RecyclerView) view.findViewById(R.id.recyclerview_events_month);
         recyclerViewMonth.setHasFixedSize(true);
         recyclerViewMonth.setNestedScrollingEnabled(false);
 
@@ -117,10 +120,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events);
         swipeRefreshLayout.setOnRefreshListener(this);
-
-        // refresh visibility
-
-
 
         return view;
     }

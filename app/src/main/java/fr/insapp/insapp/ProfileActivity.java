@@ -145,7 +145,19 @@ public class ProfileActivity extends AppCompatActivity {
                 this.promo.setVisibility(View.GONE);
         }
 
-        generateEvents();
+        if(!MainActivity.user.getId().equals(this.user.getId()))
+            generateEvents();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if(MainActivity.user.getId().equals(this.user.getId())) {
+            this.user = MainActivity.user;
+            generateEvents();
+        }
+
     }
 
     @Override
@@ -233,6 +245,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void generateEvents(){
+        adapter.getEvents().clear();
+        adapter.notifyDataSetChanged();
         final List<Event> events = new ArrayList<>();
 
         for (String idEvent : user.getEvents()) {

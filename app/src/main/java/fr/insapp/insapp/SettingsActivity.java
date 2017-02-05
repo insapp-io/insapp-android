@@ -175,7 +175,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             json.put("gender", preferences.getString("sex", ""));
 
             JSONArray events = new JSONArray();
-            for(String s : user.getEvents())
+            for (String s : user.getEvents())
                 events.put(s);
 
             json.put("events", events);

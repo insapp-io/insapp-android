@@ -41,7 +41,7 @@ public class Operation {
 
         // At least 1 week
         if(diffInDays >= 7)
-            return Integer.toString(diffInDays / 7) + "w";
+            return Integer.toString(diffInDays / 7) + "sem";
         // At least 1 day
         if(diffInDays >= 1)
             return Long.toString(diffInDays) + "j";
@@ -57,7 +57,9 @@ public class Operation {
         String drawable_string = "avatar";
         if (!promo.equals("") && !gender.equals("")) {
             String userPromotion = promo.toLowerCase();
-            if (!userPromotion.contains("stpi") && Character.isDigit(userPromotion.charAt(0)))
+            if (userPromotion.contains("personnel"))
+                userPromotion = "worker";
+            else if (!userPromotion.contains("stpi") && Character.isDigit(userPromotion.charAt(0)))
                 userPromotion = userPromotion.substring(1);
 
             drawable_string += "_" + userPromotion;

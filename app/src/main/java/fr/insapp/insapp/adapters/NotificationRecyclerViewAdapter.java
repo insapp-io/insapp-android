@@ -105,7 +105,6 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                             HttpGet.clubs.put(notification.getSender(), club);
 
                             Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar_notification);
-
                             holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

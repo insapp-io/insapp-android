@@ -115,10 +115,10 @@
             android:id="@+id/fab_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="28dp"
+            android:layout_marginEnd="28dp"
             android:layout_marginBottom="22dp"
             android:layout_gravity="bottom|end"
             fab:fab_colorNormal="@color/colorPrimary"
-            android:src="@drawable/ic_chat_bubble_black_24dp"></com.github.clans.fab.FloatingActionButton>
+            android:src="@drawable/ic_chat_bubble_black_24dp" />
     </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

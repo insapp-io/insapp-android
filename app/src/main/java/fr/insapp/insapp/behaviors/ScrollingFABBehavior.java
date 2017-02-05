@@ -2,46 +2,47 @@ package fr.insapp.insapp.behaviors;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 /**
  * Created by thoma on 22/12/2016.
  */
 
-public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FloatingActionButton> {
+public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FrameLayout> {
 
     public ScrollingFABBehavior(Context context, AttributeSet attrs) {
         super();
     }
 
-    public boolean onStartNestedScroll(CoordinatorLayout parent, FloatingActionButton child, View directTargetChild, View target, int nestedScrollAxes) {
-        return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL || super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes);
+    @Override
+    public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, FrameLayout child, View directTargetChild, View target, int nestedScrollAxes) {
+        return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL || super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
     }
 
     @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
-        return dependency instanceof RecyclerView;
-    }
+    public void onNestedScroll(CoordinatorLayout coordinatorLayout, FrameLayout fabContainer, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        super.onNestedScroll(coordinatorLayout, fabContainer, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
 
-    @Override
-    public void onNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-
-        if (dyConsumed > 15 && child.getVisibility() == View.VISIBLE) {
-            // http://stackoverflow.com/questions/41142711/25-1-0-android-support-lib-is-breaking-fab-behavior
-            child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                @Override
-                public void onHidden(FloatingActionButton fab) {
-                    super.onHidden(fab);
-                    fab.setVisibility(View.INVISIBLE);
-                }
-            });
+        if (fabContainer.getChildAt(0) instanceof FloatingActionMenu) {
+            FloatingActionMenu fabMenu = (FloatingActionMenu) fabContainer.getChildAt(0);
+            if (dyConsumed > 5 && !fabMenu.isMenuButtonHidden()) {
+                fabMenu.hideMenuButton(true);
+            } else if (dyConsumed < 5 && fabMenu.isMenuButtonHidden()) {
+                fabMenu.showMenuButton(true);
+            }
+        } else if (fabContainer.getChildAt(0) instanceof FloatingActionButton) {
+            FloatingActionButton fab = (FloatingActionButton) fabContainer.getChildAt(0);
+            if (dyConsumed > 5 && !fab.isHidden()) {
+                fab.hide(true);
+            } else if (dyConsumed < 5 && fab.isHidden()) {
+                fab.show(true);
+            }
         }
-        else if (dyConsumed < 15 && child.getVisibility() != View.VISIBLE)
-            child.show();
     }
 }

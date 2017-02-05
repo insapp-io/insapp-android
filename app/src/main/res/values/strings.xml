@@ -62,6 +62,8 @@
     <string name="events_week">Cette semaine</string>
     <string name="events_month">Ce mois-ci</string>
 
+    <string name="event_participants">Participants</string>
+
     <string name="legal_conditions">Conditions légales</string>
     <string name="legal_conditions_accept">J\'accepte</string>
 
@@ -69,18 +71,6 @@
     <string name="credits">Crédits</string>
 
     <string name="post">Post</string>
-    <string name="post_title">Ceci est le titre</string>
-    <string name="post_date">il y a 4j</string>
-    <string name="post_text">Ceci est un texte un peu long qui veut rien dire (ça s\'appelle un placeholder). Ceci est un texte un peu long qui veut rien dire (ça s\'appelle un placeholder)</string>
-
-    <string name="event_club">Bebop</string>
-    <string name="event_participants">Participants</string>
-    <string name="event_nb_participants">134 participants</string>
-    <string name="event_date">Du jeudi 08/12 à 21:00 au vendredi 09/12 à 3:00</string>
-    <string name="event_text">Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l\'imprimerie depuis les années 1500, quand un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte.\n\nIl n\'a pas fait que survivre cinq siècles, mais s\'est aussi adapté à la bureautique informatique, sans que son contenu n\'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.\n\nLe Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l\'imprimerie depuis les années 1500, quand un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte.</string>
-
-    <string name="club_name">club_name</string>
-    <string name="club_desc">Robot 1-X, save my friends! And Zoidberg! It\'s okay, Bender. I like cooking too. Enough about your promiscuous mother, Hermes! We have bigger problems. No. We\'re on the top. You mean while I\'m sleeping in it?"</string>
 
     <string name="search_results">Résultats</string>
 

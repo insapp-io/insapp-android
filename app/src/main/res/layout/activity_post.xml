@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/tools">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -44,7 +44,6 @@
 
                     <TextView
                         android:id="@+id/post_title"
-                        android:text="@string/post_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -55,7 +54,6 @@
 
                     <TextView
                         android:id="@+id/post_date"
-                        android:text="@string/post_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -108,17 +106,19 @@
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_behavior="fr.insapp.insapp.behaviors.ScrollingFABBehavior"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="26dp"
-        android:layout_marginEnd="30dp"
-        android:clickable="true"
-        app:borderWidth="0dp"
-        app:elevation="12dp"
-        app:fab_colorRipple="#99FFFFFF"
-        android:src="@drawable/ic_chat_bubble_black_24dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="fr.insapp.insapp.behaviors.ScrollingFABBehavior">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="28dp"
+            android:layout_marginBottom="22dp"
+            android:layout_gravity="bottom|end"
+            fab:fab_colorNormal="@color/colorPrimary"
+            android:src="@drawable/ic_chat_bubble_black_24dp"></com.github.clans.fab.FloatingActionButton>
+    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

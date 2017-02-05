@@ -49,7 +49,6 @@
 
                         <TextView
                             android:id="@+id/club_name"
-                            android:text="@string/club_name"
                             android:textSize="18sp"
                             android:paddingEnd="14dp"
                             android:layout_width="match_parent"
@@ -83,7 +82,6 @@
 
                         <TextView
                             android:id="@+id/club_description_text"
-                            android:text="@string/club_desc"
                             android:textSize="14sp"
                             android:linksClickable="true"
                             android:layout_width="match_parent"

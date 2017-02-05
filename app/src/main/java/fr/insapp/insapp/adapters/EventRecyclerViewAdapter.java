@@ -80,9 +80,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             final Club club = HttpGet.clubs.get(event.getAssociation());
 
             if (club == null) {
-
                 HttpGet request = new HttpGet(new AsyncResponse() {
-
                     public void processFinish(String output) {
                         if (!output.isEmpty()) {
                             try {
@@ -91,18 +89,15 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
                                 final Club club = new Club(jsonobject);
                                 HttpGet.clubs.put(club.getId(), club);
 
-                                // glide
+                                // avatar
 
-                                if (layout != R.layout.post)
-                                    Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
-
+                                Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
                                 holder.avatar.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
                                     }
                                 });
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -110,12 +105,10 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
                     }
                 });
                 request.execute(HttpGet.ROOTASSOCIATION + "/" + event.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
-
             } else {
-                // glide
-                if (layout != R.layout.post)
-                    Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
+                // avatar
 
+                Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
                 holder.avatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

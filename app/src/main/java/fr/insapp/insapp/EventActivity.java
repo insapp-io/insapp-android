@@ -183,6 +183,7 @@ public class EventActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
 
+        collapsingToolbar.setCollapsedTitleTextColor(fgColor);
         collapsingToolbar.setContentScrimColor(bgColor);
         collapsingToolbar.setStatusBarScrimColor(bgColor);
 
@@ -195,9 +196,8 @@ public class EventActivity extends AppCompatActivity {
         clubImageView.setColorFilter(fgColor);
 
         final Club club = HttpGet.clubs.get(event.getAssociation());
-        if(club == null){
+        if (club == null) {
             HttpGet request = new HttpGet(new AsyncResponse() {
-
                 public void processFinish(String output) {
                     if (!output.isEmpty()) {
                         try {
@@ -517,7 +517,7 @@ public class EventActivity extends AppCompatActivity {
                 int nb_participants = event.getParticipants().size();
 
                 if (nb_participants == 0)
-                    participantsTextView.setText("Pas encore de participants");
+                    participantsTextView.setText("Pas de participants");
                 else if (nb_participants == 1)
                     participantsTextView.setText("1 participant");
                 else

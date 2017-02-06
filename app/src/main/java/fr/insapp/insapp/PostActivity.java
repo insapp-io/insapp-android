@@ -85,6 +85,9 @@ public class PostActivity extends AppCompatActivity {
 
     private Notification notification = null;
 
+    private boolean visible = false;
+    private List<User> usersTagged = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -295,6 +298,16 @@ public class PostActivity extends AppCompatActivity {
         final FrameLayout container = new FrameLayout(PostActivity.this);
         container.addView(editText);
 
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    System.out.println("LOST FOCUS §!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    // code to execute when EditText loses focus
+                }
+            }
+        });
+
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -303,6 +316,8 @@ public class PostActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                System.out.println("IJHFBJEOIFEknjl3APJFHNKJ");
+
                 // skip execution if triggered by code
                 if (autochange) {
                     //last_count = s.length();
@@ -333,6 +348,7 @@ public class PostActivity extends AppCompatActivity {
                         tagStartsAt = 0;
 
                         deleteTag = true;
+                        //popup.dismiss();
                     }
                 }
                 // writing
@@ -343,6 +359,7 @@ public class PostActivity extends AppCompatActivity {
                     if (pos >= 0) {
                         char c = charSequence.charAt(pos);
 
+                        System.out.println("WRITTING : " + pos + " " + c + " " + userWrittingTag);
                         if (userWrittingTag) {
                             if (c == ' ' || pos <= tagStartsAt || pos - 1 > tagStartsAt + tagWritting.length()) {
                                 userWrittingTag = false;
@@ -461,41 +478,62 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void showUsersToTag(String username) {
-        HttpGet request = new HttpGet(new AsyncResponse() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("terms", username);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        HttpPost request = new HttpPost(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 try {
+
                     JSONObject json = new JSONObject(output);
                     JSONArray jsonArray = json.getJSONArray("users");
 
                     if (jsonArray != null) {
                         popup.getMenu().clear();
+                        usersTagged.clear();
 
                         for (int i = jsonArray.length() - 1; i >= jsonArray.length() - Math.min(jsonArray.length(), 3); i--) {
                             final User user = new User(jsonArray.getJSONObject(i));
 
+                            usersTagged.add(user);
                             popup.getMenu().add(Menu.NONE, Menu.NONE, i + 1, "@" + user.getUsername());
 
-                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem item) {
-                                    String currentStr = editText.getText().toString();
-                                    String strWithTag = currentStr.substring(0, tagStartsAt) + item.getTitle() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
-
-                                    tags.add(new Tag("", user.getId(), "@" + user.getUsername()));
-
-                                    autochange = true;
-                                    editText.setText(strWithTag);
-                                    editText.setSelection(tagStartsAt + user.getUsername().length() + 1);
-
-                                    userWrittingTag = false;
-                                    tagWritting = "";
-                                    tagStartsAt = 0;
-
-                                    return true;
-                                }
-                            });
                         }
+
+
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                String currentStr = editText.getText().toString();
+                                String strWithTag = currentStr.substring(0, tagStartsAt) + item.getTitle() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
+
+                                String id = "";
+                                for(User u : usersTagged){
+                                    String username = "@" + u.getUsername();
+                                    if(username.equals(item.toString()))
+                                        id = u.getId();
+                                }
+                                tags.add(new Tag("", id, item.toString()));
+
+                                autochange = true;
+                                editText.setText(strWithTag);
+                                editText.setSelection(tagStartsAt + item.toString().length() + 1);
+
+                                System.out.println("@"+item.toString());
+                                System.out.println(tagStartsAt + 1 + " " + item.toString());
+                                userWrittingTag = false;
+                                tagWritting = "";
+                                tagStartsAt = 0;
+
+                                return true;
+                            }
+                        });
                     }
                 }
                 catch (JSONException e) {
@@ -511,7 +549,7 @@ public class PostActivity extends AppCompatActivity {
                 popup.show();
             }
         });
-        request.execute(HttpGet.ROOTSEARCHUSERS + "/" + username + "?token=" + HttpGet.credentials.getSessionToken());
+        request.execute(HttpGet.ROOTSEARCHUSERS + "?token=" + HttpGet.credentials.getSessionToken(), jsonObject.toString());
     }
 
     @Override

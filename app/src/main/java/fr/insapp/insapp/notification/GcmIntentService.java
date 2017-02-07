@@ -19,6 +19,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.util.Random;
 
 import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.LoginActivity;
 import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
@@ -53,10 +54,11 @@ public class GcmIntentService extends IntentService {
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 //SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(getBaseContext().class.getSimpleName(), getBaseContext().MODE_PRIVATE);
+                System.out.println("RECU");
                 if(preferences.getBoolean("notifications", false)) {
                     Random random = new Random();
                     NOTIFICATION_ID = random.nextInt(9999 - 1000) + 1000;
-
+                    System.out.println("NOTIF ACTIVEE");
                     sendMessageNotification(extras);
                 }
 /*
@@ -125,6 +127,8 @@ public class GcmIntentService extends IntentService {
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, PostActivity.class).putExtra("notification", msg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
         else if(msg.getType().equals("event"))
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventActivity.class).putExtra("notification", msg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
+        else
+            contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, LoginActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 

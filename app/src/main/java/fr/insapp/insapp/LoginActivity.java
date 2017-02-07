@@ -2,12 +2,17 @@ package fr.insapp.insapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.google.android.gms.iid.InstanceID;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
@@ -20,6 +25,10 @@ import fr.insapp.insapp.utility.Utils;
 public class LoginActivity extends AppCompatActivity {
 
     private static int nb_try = 0;
+
+
+    private static final String SENDER_ID = "451191722739";
+    private static final String scope = "GCM";
 
     public void onResume() {
         super.onResume();  // Always call the superclass method first
@@ -63,45 +72,38 @@ public class LoginActivity extends AppCompatActivity {
                                 HttpGet.credentials = new Credentials(json);
                                 nb_try = 0; // we can login
 
-                                SharedPreferences prefs = getSharedPreferences(
-                                        SigninActivity.class.getSimpleName(), getApplicationContext().MODE_PRIVATE);
 
-                                String token = prefs.getString(SigninActivity.REG_ID, "");
+                                new AsyncTask<Void, Void, String>() {
+                                    @Override
+                                    protected String doInBackground(Void... params) {
+                                        String msg = "";
+                                        try {
 
-                                JSONObject notuser = new JSONObject();
-                                notuser.put("userid", HttpGet.credentials.getUserID());
-                                notuser.put("token", token);
-                                notuser.put("os", "android");
+                                            String token = InstanceID.getInstance(getApplicationContext()).getToken(SENDER_ID,scope);
+                                            if(!token.isEmpty()) {
 
-                                if(!token.isEmpty()) {
-                                    HttpPost post = new HttpPost(new AsyncResponse() {
-                                        @Override
-                                        public void processFinish(String output) {
-
-                                            if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
-                                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                                startActivity(i);
-
-                                                finish();
-                                            } else {
-                                                setResult(RESULT_OK);
-                                                finish(); // back to last activity
+                                                registerServer(token);
                                             }
-                                        }
-                                    });
-                                    post.execute(HttpGet.ROOTNOTIFICATION + "?token=" + HttpGet.credentials.getSessionToken(), notuser.toString());
-                                }
-                                else{
-                                    if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
-                                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(i);
+                                            else {
+                                                if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
+                                                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                                    startActivity(i);
 
-                                        finish();
-                                    } else {
-                                        setResult(RESULT_OK);
-                                        finish(); // back to last activity
+                                                    finish();
+                                                } else {
+                                                    setResult(RESULT_OK);
+                                                    finish(); // back to last activity
+                                                }
+                                            }
+
+
+                                        } catch (IOException ex) {
+
+                                        }
+                                        return msg;
                                     }
-                                }
+                                }.execute(null, null, null);
+
 
                             }
 
@@ -120,6 +122,34 @@ public class LoginActivity extends AppCompatActivity {
         else {
             cantLogin();
         }
+    }
+
+    public void registerServer(String token){
+        JSONObject notuser = new JSONObject();
+        try {
+            notuser.put("userid", HttpGet.credentials.getUserID());
+            notuser.put("token", token);
+            notuser.put("os", "android");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        HttpPost post = new HttpPost(new AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+
+                if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(i);
+
+                    finish();
+                } else {
+                    setResult(RESULT_OK);
+                    finish(); // back to last activity
+                }
+            }
+        });
+        post.execute(HttpGet.ROOTNOTIFICATION + "?token=" + HttpGet.credentials.getSessionToken(), notuser.toString());
     }
 
     public void cantLogin(){

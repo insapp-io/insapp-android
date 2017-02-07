@@ -96,13 +96,6 @@ public class SigninActivity extends AppCompatActivity {
         });
 
         context = getApplicationContext();
-
-
-        if (TextUtils.isEmpty(regId)) {
-            // Récupération du registerId du terminal ou enregistrement de ce dernier
-            regId = registerGCM();
-        }
-
     }
 
     public void signin(final String ticket){
@@ -184,66 +177,4 @@ public class SigninActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    /************** * Cette méthode récupère le registerId dans les SharedPreferences via
-     * la méthode getRegistrationId(context).
-     * S'il n'existe pas alors on enregistre le terminal via
-     * la méthode registerInBackground()
-     **/
-    public String registerGCM() {
-        gcm = GoogleCloudMessaging.getInstance(this);
-        regId = getRegistrationId(context);
-
-        //if (TextUtils.isEmpty(regId)) {
-            registerInBackground();
-            //Log.d("registerGCM - enregistrement auprès du GCM server OK - regId: " + regId);
-        //} else {
-        //    System.out.println(regId);
-            //Toast.makeText(getApplicationContext(), "RegId existe déjà. RegId: " + regId, Toast.LENGTH_LONG).show();
-        //}
-        return regId;
-    }
-
-    private String getRegistrationId(Context context) {
-        final SharedPreferences prefs = getSharedPreferences(
-                SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
-        String registrationId = prefs.getString(REG_ID, "");
-        if (registrationId.isEmpty()) {
-            //Log.i(TAG, "registrationId non trouvé.");
-            return "";
-        }
-        // On peut aussi ajouter un contrôle sur la version de l'application.
-        // Lors d'un changement de version d'application le register Id du terminal ne sera plus valide.
-        // Ainsi, s'il existe un registerId dans les SharedPreferences, mais que la version
-        // de l'application a évolué alors on retourne un registrationId="" forçant ainsi
-        // l'application à enregistrer de nouveau le terminal.
-
-        return registrationId;
-    }
-
-    /** * Cette méthode permet l'enregistrement du terminal */
-    private void registerInBackground() {
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
-                    }
-                    regId = gcm.register(SENDER_ID);
-                    System.out.println(regId);
-                    msg = "Terminal enregistré, register ID=" + regId;
-                    // On enregistre le registerId dans les SharedPreferences
-                    SharedPreferences.Editor prefs = getSharedPreferences(
-                            SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-                    prefs.putString(REG_ID, regId);
-                    prefs.commit();
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-                    //Log.d("Error: " + msg);
-                }
-                return msg;
-            }
-        }.execute(null, null, null);
-    }
 }

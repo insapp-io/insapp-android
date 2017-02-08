@@ -43,6 +43,7 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thomas on 05/12/2016.
@@ -256,7 +257,8 @@ public class EventActivity extends AppCompatActivity {
 
         this.descriptionTextView.setText(event.getDescription());
 
-        Linkify.addLinks(descriptionTextView, Linkify.ALL);
+        Linkify.addLinks(descriptionTextView, Linkify.WEB_URLS);
+        Utils.convertToLinkSpan(EventActivity.this, descriptionTextView);
 
         // floating action menu
 

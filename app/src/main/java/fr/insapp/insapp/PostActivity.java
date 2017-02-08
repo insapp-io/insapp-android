@@ -45,6 +45,7 @@ import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thoma on 12/11/2016.
@@ -110,7 +111,7 @@ public class PostActivity extends AppCompatActivity {
         if (this.post == null) {
             notification = intent.getParcelableExtra("notification");
 
-            if(HttpGet.credentials != null)
+            if (HttpGet.credentials != null)
                 onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
             else
                 startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), NOTIFICATION_MESSAGE);
@@ -123,9 +124,8 @@ public class PostActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == NOTIFICATION_MESSAGE){
-            if (resultCode == RESULT_OK){
-
+        if (requestCode == NOTIFICATION_MESSAGE) {
+            if (resultCode == RESULT_OK) {
                 HttpGet request = new HttpGet(new AsyncResponse() {
                     @Override
                     public void processFinish(String output) {
@@ -147,6 +147,7 @@ public class PostActivity extends AppCompatActivity {
 
     public void generateActivity() {
         // fill post elements
+
         this.club = HttpGet.clubs.get(post.getAssociation());
         if (this.club == null) {
             HttpGet asso = new HttpGet(new AsyncResponse() {
@@ -165,7 +166,6 @@ public class PostActivity extends AppCompatActivity {
                                 startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
                             }
                         });
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -186,14 +186,14 @@ public class PostActivity extends AppCompatActivity {
             });
         }
 
-
         this.title.setText(post.getTitle());
         this.description.setText(post.getDescription());
         this.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
 
         // description links
 
-        Linkify.addLinks(description, Linkify.ALL);
+        Linkify.addLinks(description, Linkify.WEB_URLS);
+        Utils.convertToLinkSpan(PostActivity.this, description);
 
         // recycler view
 

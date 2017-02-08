@@ -123,8 +123,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void cantLogin(){
-
-        if(Utils.isNetworkAvailable(LoginActivity.this)) {
+        if (Utils.isNetworkAvailable(LoginActivity.this)) {
             //if(HttpPost.responseCode != 0) {
             nb_try++;
             if (nb_try <= 5) {

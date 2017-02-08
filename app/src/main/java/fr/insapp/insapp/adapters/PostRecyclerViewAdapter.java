@@ -34,6 +34,7 @@ import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -150,7 +151,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
         if (layout != R.layout.row_post) {
             Linkify.addLinks(holder.text, Linkify.WEB_URLS);
-            convertToLinkSpan(holder.text);
+            Utils.convertToLinkSpan(context, holder.text);
         }
 
         // like button

@@ -147,19 +147,18 @@ public class SigninActivity extends AppCompatActivity {
                                                 Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
                                         }
                                         else if(HttpPost.responseCode >= 400 && HttpPost.responseCode < 500){
-                                            //if(!output.isEmpty())
-                                            Toast.makeText(SigninActivity.this, "Erreur : " + output, Toast.LENGTH_LONG).show();
+                                            if (MainActivity.dev)
+                                                Toast.makeText(SigninActivity.this, "Erreur " + HttpPost.responseCode + " : " + output, Toast.LENGTH_LONG).show();
+                                            else
+                                                Toast.makeText(SigninActivity.this, "Erreur : " + output, Toast.LENGTH_LONG).show();
                                         }
 
                                     } catch (Exception e){
                                         System.out.println(e.getMessage());
                                         Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
-                                    }// catch (Throwable throwable) {
-                                     //   throwable.printStackTrace();
-                                    //}
+                                    }
                                 } else
                                     Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
-
                             }
                         });
                         signin.execute(HttpGet.ROOTSIGNIN + "/" + ticket, json.toString());

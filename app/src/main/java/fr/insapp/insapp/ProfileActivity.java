@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,10 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -154,7 +155,12 @@ public class ProfileActivity extends AppCompatActivity {
                 this.promo.setVisibility(View.GONE);
         }
 
-        if(!MainActivity.user.getId().equals(this.user.getId()))
+        // links
+
+        Linkify.addLinks(email, Linkify.EMAIL_ADDRESSES);
+        email.setLinkTextColor(Color.parseColor("#ffffff"));
+
+        if (!MainActivity.user.getId().equals(this.user.getId()))
             generateEvents();
     }
 

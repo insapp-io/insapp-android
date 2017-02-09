@@ -210,7 +210,7 @@ public class PostActivity extends AppCompatActivity {
 
         // description links
 
-        Linkify.addLinks(description, Linkify.WEB_URLS);
+        Linkify.addLinks(description, Linkify.ALL);
         Utils.convertToLinkSpan(PostActivity.this, description);
 
         // recycler view

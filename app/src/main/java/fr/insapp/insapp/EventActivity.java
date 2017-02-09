@@ -257,7 +257,7 @@ public class EventActivity extends AppCompatActivity {
 
         this.descriptionTextView.setText(event.getDescription());
 
-        Linkify.addLinks(descriptionTextView, Linkify.WEB_URLS);
+        Linkify.addLinks(descriptionTextView, Linkify.ALL);
         Utils.convertToLinkSpan(EventActivity.this, descriptionTextView);
 
         // floating action menu

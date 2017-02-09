@@ -150,7 +150,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         // description links
 
         if (layout != R.layout.row_post) {
-            Linkify.addLinks(holder.text, Linkify.WEB_URLS);
+            Linkify.addLinks(holder.text, Linkify.ALL);
             Utils.convertToLinkSpan(context, holder.text);
         }
 

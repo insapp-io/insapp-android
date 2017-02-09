@@ -7,6 +7,7 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
+import android.util.Patterns;
 import android.view.View;
 
 import fr.insapp.insapp.MainActivity;
@@ -26,9 +27,11 @@ public class LinkSpan extends URLSpan {
         super(url);
 
         this.context = context;
-        this.uri = Uri.parse(url);
 
-        MainActivity.customTabsConnection.getCustomTabsSession().mayLaunchUrl(uri, null, null);
+        if (Patterns.WEB_URL.matcher(url).matches()) {
+            this.uri = Uri.parse(url);
+            MainActivity.customTabsConnection.getCustomTabsSession().mayLaunchUrl(uri, null, null);
+        }
     }
 
     @Override
@@ -39,13 +42,16 @@ public class LinkSpan extends URLSpan {
 
     @Override
     public void onClick(View view) {
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        if (uri != null) {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
-        builder.setShowTitle(true);
-        builder.setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        builder.setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+            builder.setShowTitle(true);
+            builder.setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            builder.setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
 
-        CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(context, uri);
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(context, uri);
+        } else
+            super.onClick(view);
     }
 }

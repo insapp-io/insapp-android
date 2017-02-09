@@ -258,7 +258,7 @@ public class EventActivity extends AppCompatActivity {
         this.descriptionTextView.setText(event.getDescription());
 
         Linkify.addLinks(descriptionTextView, Linkify.ALL);
-        Utils.stripUnderlines(descriptionTextView);
+        Utils.convertToLinkSpan(EventActivity.this, descriptionTextView);
 
         // floating action menu
 
@@ -283,7 +283,7 @@ public class EventActivity extends AppCompatActivity {
             floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
         }
 
-        // We can't participate in a finished event
+        // we can't participate in a finished event
         Date atm = Calendar.getInstance().getTime();
         if (event.getDateEnd().getTime() < atm.getTime()) {
             floatingActionMenu.setVisibility(View.GONE);
@@ -292,6 +292,12 @@ public class EventActivity extends AppCompatActivity {
         this.floatingActionButton1 = (FloatingActionButton) findViewById(R.id.fab_item_1_event);
         floatingActionButton1.setLabelColors(bgColor, bgColor, 0x99ffffff);
         floatingActionButton1.setLabelTextColor(fgColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
+            tick.setColorFilter(0xff4caf50, PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton1.setImageDrawable(tick);
+        }
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +383,12 @@ public class EventActivity extends AppCompatActivity {
         floatingActionButton2.setLabelColors(bgColor, bgColor, 0x99ffffff);
         floatingActionButton2.setLabelTextColor(fgColor);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable close = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp);
+            close.setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton2.setImageDrawable(close);
+        }
+
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -403,7 +415,7 @@ public class EventActivity extends AppCompatActivity {
                             floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
                             floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
                             floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
-                            floatingActionMenu.getMenuIconView().setColorFilter(R.color.colorAccent);
+                            floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
 
                             refreshEvent(output);
                         }
@@ -424,63 +436,16 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void addEventToCalendar() {
-        /*Cursor cursor = null;
-        int[] calIds = null;
-        String[] projection = new String[]{
-                CalendarContract.Calendars._ID,
-                CalendarContract.Calendars.ACCOUNT_NAME,};
-        ContentResolver cr = EventProfil.this.getContentResolver();
-        cursor = cr.query(Uri.parse("content://com.android.calendar/calendars"), projection, null, null, null);
-        if (cursor.moveToFirst()) {
-            final String[] calNames = new String[cursor.getCount()];
-            calIds = new int[cursor.getCount()];
-            for (int i = 0; i < calNames.length; i++) {
-                calIds[i] = cursor.getInt(0);
-                calNames[i] = cursor.getString(1);
-                cursor.moveToNext();
-            }
-        }
-        TimeZone tZone = TimeZone.getTimeZone("UTC");
-        try {
-            ContentValues values = new ContentValues();
-            values.put(CalendarContract.Events.DTSTART, mEvent.getDateStart().getTime());
-            values.put(CalendarContract.Events.DTEND, mEvent.getDateEnd().getTime());
-            values.put(CalendarContract.Events.TITLE, mEvent.getName());
-            values.put(CalendarContract.Events.DESCRIPTION, mEvent.getDescription());
-            values.put(CalendarContract.Events.CALENDAR_ID, calIds[0]);
-            values.put(CalendarContract.Events.EVENT_TIMEZONE, tZone.toString());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (checkSelfPermission(Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for Activity#requestPermissions for more details.
-                    Toast.makeText(EventProfil.this, "L'accès au calendrier est désactivé", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-            Uri mInsert = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-            Toast.makeText(EventProfil.this, "Évènement ajouté au calendrier", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(EventProfil.this, "Erreur d'ajout au calendrier", Toast.LENGTH_SHORT).show();
-        }*/
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(Intent.ACTION_EDIT);
         intent.setType("vnd.android.cursor.item/event");
-        //intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,cal.getTimeInMillis());
-        //intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,cal.getTimeInMillis()+60*60*1000);
 
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDateStart().getTime());
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDateEnd().getTime());
         intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
         intent.putExtra(CalendarContract.Events.TITLE, event.getName());
         intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription());
-        //intent.putExtra(CalendarContract.EVENT_LOCATION, "Event Address");
-        //intent.putExtra(CalendarContract.RRULE, "FREQ=YEARLY");
+
         startActivity(intent);
     }
 

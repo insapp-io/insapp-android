@@ -2,7 +2,11 @@ package fr.insapp.insapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -108,29 +112,41 @@ public class PostActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                final Drawable upArrow = ContextCompat.getDrawable(PostActivity.this, R.drawable.abc_ic_ab_back_material);
+                upArrow.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+                getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            }
         }
 
         // if we come from an android notification
         if (this.post == null) {
             notification = intent.getParcelableExtra("notification");
 
-            if(HttpGet.credentials != null)
+            if (HttpGet.credentials != null)
                 onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
             else
                 startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), NOTIFICATION_MESSAGE);
         }
         else
             generateActivity();
+
+        // fab icon
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable bubbleChat = ContextCompat.getDrawable(PostActivity.this, R.drawable.ic_chat_bubble_black_24dp);
+            bubbleChat.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+            fab.setImageDrawable(bubbleChat);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Add your code here
 
-        if(requestCode == NOTIFICATION_MESSAGE){
-            if (resultCode == RESULT_OK){
-
+        if (requestCode == NOTIFICATION_MESSAGE) {
+            if (resultCode == RESULT_OK) {
                 HttpGet request = new HttpGet(new AsyncResponse() {
                     @Override
                     public void processFinish(String output) {
@@ -154,8 +170,7 @@ public class PostActivity extends AppCompatActivity {
         // fill post elements
 
         this.club = HttpGet.clubs.get(post.getAssociation());
-        if(this.club == null) {
-
+        if (this.club == null) {
             HttpGet asso = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
@@ -172,7 +187,6 @@ public class PostActivity extends AppCompatActivity {
                                 startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
                             }
                         });
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -182,7 +196,6 @@ public class PostActivity extends AppCompatActivity {
             asso.execute(HttpGet.ROOTASSOCIATION + "/" + post.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
         }
         else {
-
             Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.avatar_club);
 
             // listener
@@ -194,7 +207,6 @@ public class PostActivity extends AppCompatActivity {
             });
         }
 
-
         this.title.setText(post.getTitle());
         this.description.setText(post.getDescription());
         this.date.setText(new String("il y a " + Operation.displayedDate(post.getDate())));
@@ -202,7 +214,7 @@ public class PostActivity extends AppCompatActivity {
         // description links
 
         Linkify.addLinks(description, Linkify.ALL);
-        Utils.stripUnderlines(description);
+        Utils.convertToLinkSpan(PostActivity.this, description);
 
         // recycler view
 
@@ -237,13 +249,12 @@ public class PostActivity extends AppCompatActivity {
                                         public void processFinish(String output) {
                                             try {
                                                 post = new Post(new JSONObject(output));
-                                                adapter.setComments(post.getComments());
 
-                                                //Toast.makeText(PostActivity.this, getString(R.string.delete_comment_success), Toast.LENGTH_SHORT).show();
+                                                adapter.setComments(post.getComments());
+                                                adapter.notifyDataSetChanged();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
-                                            adapter.notifyDataSetChanged();
                                         }
                                     });
                                     delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
@@ -471,10 +482,6 @@ public class PostActivity extends AppCompatActivity {
 
         this.popup = new PopupMenu(PostActivity.this, editText);
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
-
-        // result request
-
-        //setResult(RESULT_CANCELED);
     }
 
     private void showUsersToTag(String username) {

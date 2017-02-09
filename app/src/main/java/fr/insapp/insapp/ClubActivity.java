@@ -139,7 +139,7 @@ public class ClubActivity extends AppCompatActivity {
         // links
 
         Linkify.addLinks(descriptionTextView, Linkify.ALL);
-        Utils.stripUnderlines(descriptionTextView);
+        Utils.convertToLinkSpan(ClubActivity.this, descriptionTextView);
 
         // send a mail
 

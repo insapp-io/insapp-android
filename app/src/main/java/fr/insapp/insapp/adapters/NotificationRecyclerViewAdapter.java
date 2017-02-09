@@ -37,9 +37,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  * Created by thoma on 11/12/2016.
  */
 
-public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationViewHolder> {
+public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<NotificationRecyclerViewAdapter.NotificationViewHolder> {
 
-    private Context context;
     protected List<Notification> notifications;
 
     protected OnNotificationItemClickListener listener;

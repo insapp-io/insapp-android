@@ -35,9 +35,8 @@ import fr.insapp.insapp.utility.Operation;
  * Created by thoma on 18/11/2016.
  */
 
-public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecyclerViewAdapter.CommentViewHolder> {
+public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentRecyclerViewAdapter.CommentViewHolder> {
 
-    private Context context;
     protected List<Comment> comments;
 
     private OnCommentItemLongClickListener listener;

@@ -9,6 +9,7 @@ import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.view.View;
 
+import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.R;
 
 /**
@@ -19,13 +20,15 @@ import fr.insapp.insapp.R;
 public class LinkSpan extends URLSpan {
 
     private Context context;
-    private String url;
+    private Uri uri;
 
     public LinkSpan(Context context, String url) {
         super(url);
 
         this.context = context;
-        this.url = url;
+        this.uri = Uri.parse(url);
+
+        MainActivity.customTabsConnection.getCustomTabsSession().mayLaunchUrl(uri, null, null);
     }
 
     @Override
@@ -43,6 +46,6 @@ public class LinkSpan extends URLSpan {
         builder.setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
 
         CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(context, Uri.parse(url));
+        customTabsIntent.launchUrl(context, uri);
     }
 }

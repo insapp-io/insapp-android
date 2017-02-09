@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsClient;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -14,7 +15,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
 
     public static User user;
+    public static CustomTabsConnection customTabsConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
+        // custom tabs optimization
+
+        MainActivity.customTabsConnection = new CustomTabsConnection();
+        CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", customTabsConnection);
     }
 
     private void setupViewPager(ViewPager viewPager) {

@@ -2,12 +2,14 @@ package fr.insapp.insapp.utility;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
 import android.view.View;
 
-import fr.insapp.insapp.WebViewActivity;
+import fr.insapp.insapp.R;
 
 /**
  * Created by thomas on 08/02/2017.
@@ -34,8 +36,13 @@ public class LinkSpan extends URLSpan {
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(context, WebViewActivity.class);
-        intent.putExtra("url", url);
-        context.startActivity(intent);
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+
+        builder.setShowTitle(true);
+        builder.setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        builder.setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(context, Uri.parse(url));
     }
 }

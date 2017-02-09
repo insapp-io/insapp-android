@@ -75,10 +75,6 @@
         </activity>
 
         <activity
-            android:name="fr.insapp.insapp.WebViewActivity">
-        </activity>
-
-        <activity
             android:name="fr.insapp.insapp.ProfileActivity"
             android:label="@string/profile">
         </activity>

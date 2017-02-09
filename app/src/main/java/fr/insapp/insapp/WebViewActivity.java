@@ -1,27 +1,53 @@
 package fr.insapp.insapp;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.MenuItem;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 /**
  * Created by thomas on 01/02/2017.
  */
 
-public class WebViewActivity extends Activity {
+public class WebViewActivity extends AppCompatActivity {
 
     private WebView webView;
     String url;
+
+    private Toolbar toolbar;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_webview);
+
+        // toolbar
+
+        this.toolbar = (Toolbar) findViewById(R.id.toolbar_webview);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                final Drawable close = ContextCompat.getDrawable(WebViewActivity.this, R.drawable.ic_close_black_24dp);
+                close.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+                getSupportActionBar().setHomeAsUpIndicator(close);
+            } else
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_black_24dp);
+        }
+
+        // webview
 
         Intent i = getIntent();
         url = i.getStringExtra("url");
@@ -32,10 +58,20 @@ public class WebViewActivity extends Activity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
+        webSettings.setSupportMultipleWindows(true);
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                if (!TextUtils.isEmpty(title)) {
+                    WebViewActivity.this.setTitle(title);
+                }
+            }
+        });
 
         webView.setWebViewClient(new MyWebViewClient());
         webView.loadUrl(url);
-
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -46,10 +82,16 @@ public class WebViewActivity extends Activity {
 
             return true;
         }
+    }
 
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            Toast.makeText(WebViewActivity.this, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 }

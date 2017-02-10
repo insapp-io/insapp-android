@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +34,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private int layout;
     private String filter_club_id = null;
+    private int swipeColor;
 
     private View view;
     private PostRecyclerViewAdapter adapter;
@@ -52,9 +52,11 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.post_with_avatars);
             this.filter_club_id = bundle.getString("filter_club_id");
+            this.swipeColor = bundle.getInt("swipe_color");
         }
 
         // adapter
+
         this.adapter = new PostRecyclerViewAdapter(getContext(), layout);
         adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
             @Override
@@ -89,6 +91,11 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_posts);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        if (filter_club_id != null)
+            swipeRefreshLayout.setColorSchemeColors(swipeColor);
+        else
+            swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
 
         return view;
     }

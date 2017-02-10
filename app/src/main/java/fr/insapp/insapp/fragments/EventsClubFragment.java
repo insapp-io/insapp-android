@@ -31,6 +31,7 @@ import fr.insapp.insapp.models.Event;
 public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private int layout;
+    private int swipeColor;
 
     private Club club;
 
@@ -49,6 +50,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.row_event);
             this.club = bundle.getParcelable("club");
+            this.swipeColor = bundle.getInt("swipe_color");
         }
 
         // adapter
@@ -96,6 +98,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events_club);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(swipeColor);
 
         return view;
     }

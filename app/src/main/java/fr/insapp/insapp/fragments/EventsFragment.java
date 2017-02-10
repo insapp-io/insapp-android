@@ -120,6 +120,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
 
         return view;
     }

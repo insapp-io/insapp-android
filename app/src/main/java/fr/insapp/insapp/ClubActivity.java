@@ -95,14 +95,6 @@ public class ClubActivity extends AppCompatActivity {
             }
         });
 
-        // view pager
-
-        this.viewPager = (ViewPager) findViewById(R.id.viewpager_club);
-        setupViewPager(viewPager);
-
-        this.tabLayout = (TabLayout) findViewById(R.id.tabs_club);
-        tabLayout.setupWithViewPager(viewPager);
-
         // dynamic color
 
         int bgColor = Color.parseColor("#" + club.getBgColor());
@@ -118,12 +110,6 @@ public class ClubActivity extends AppCompatActivity {
         collapsingToolbar.setStatusBarScrimColor(bgColor);
 
         relativeLayout.setBackgroundColor(bgColor);
-        tabLayout.setBackgroundColor(bgColor);
-
-        if (fgColor == 0xffffffff)
-            tabLayout.setTabTextColors(0xffdbdbdb, fgColor);
-        else
-            tabLayout.setTabTextColors(0xff5e5e5e, fgColor);
 
         nameTextView.setText(club.getName());
         nameTextView.setTextColor(fgColor);
@@ -157,15 +143,32 @@ public class ClubActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black_trans80));
         }
+
+        // view pager
+
+        this.viewPager = (ViewPager) findViewById(R.id.viewpager_club);
+        setupViewPager(viewPager, bgColor);
+
+        // tab layout
+
+        this.tabLayout = (TabLayout) findViewById(R.id.tabs_club);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setBackgroundColor(bgColor);
+
+        if (fgColor == 0xffffffff)
+            tabLayout.setTabTextColors(0xffdbdbdb, fgColor);
+        else
+            tabLayout.setTabTextColors(0xff5e5e5e, fgColor);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(ViewPager viewPager, int swipeColor) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         Fragment postsFragment = new PostsFragment();
         Bundle bundle1 = new Bundle();
         bundle1.putInt("layout", R.layout.post);
         bundle1.putString("filter_club_id", club.getId());
+        bundle1.putInt("swipe_color", swipeColor);
         postsFragment.setArguments(bundle1);
         adapter.addFragment(postsFragment, getResources().getString(R.string.posts));
 
@@ -173,6 +176,7 @@ public class ClubActivity extends AppCompatActivity {
         Bundle bundle2 = new Bundle();
         bundle2.putInt("layout", R.layout.row_event);
         bundle2.putString("filter_club_id", club.getId());
+        bundle2.putInt("swipe_color", swipeColor);
         bundle2.putParcelable("club", club);
         eventsClubFragment.setArguments(bundle2);
         adapter.addFragment(eventsClubFragment, getResources().getString(R.string.events));

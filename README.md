@@ -7,8 +7,8 @@ Download it from Play Store [here](https://play.google.com/store/apps/details?id
 
 insapp is a project aiming at helping associations from INSA Rennes to communicate with students.
 
-![Screenshot 1](/screenshots/1.png?raw=true =200x)
-![Screenshot 2](/screenshots/2.png?raw=true =200x)
+<img src="/screenshots/1.png?raw=true" width="100">
+<img src="/screenshots/2.png?raw=true" width="100">
 
 ## Contribution
 

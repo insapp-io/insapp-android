@@ -130,6 +130,18 @@ public class ClubActivity extends AppCompatActivity {
         // send a mail
 
         Button club_contact = (Button) findViewById(R.id.club_contact);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable email = ContextCompat.getDrawable(ClubActivity.this, R.drawable.ic_email_black_24dp);
+
+            if (fgColor != 0xffffffff)
+                email.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+            else
+                email.setColorFilter(bgColor, PorterDuff.Mode.SRC_ATOP);
+
+            club_contact.setCompoundDrawablesWithIntrinsicBounds(email, null, null, null);
+        }
+
         club_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

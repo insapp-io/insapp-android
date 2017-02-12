@@ -161,6 +161,11 @@ public class ClubActivity extends AppCompatActivity {
         this.viewPager = (ViewPager) findViewById(R.id.viewpager_club);
         setupViewPager(viewPager, bgColor);
 
+        if (fgColor != 0xffffffff)
+            setupViewPager(viewPager, fgColor);
+        else
+            setupViewPager(viewPager, bgColor);
+
         // tab layout
 
         this.tabLayout = (TabLayout) findViewById(R.id.tabs_club);

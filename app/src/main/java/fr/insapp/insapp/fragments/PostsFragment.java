@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private View view;
     private PostRecyclerViewAdapter adapter;
+    private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final int WRITE_COMMENT_REQUEST = 1;
@@ -86,6 +88,10 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        // progress bar
+
+        this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         // swipe refresh layout
 
@@ -141,10 +147,14 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if (filter_club_id.equals(post.getAssociation())) {
                                     adapter.addItem(post);
                                     adapter.notifyDataSetChanged();
+
+                                    progressBar.setVisibility(View.GONE);
                                 }
                             } else {
                                 adapter.addItem(post);
                                 adapter.notifyDataSetChanged();
+
+                                progressBar.setVisibility(View.GONE);
                             }
                         }
                     } catch (JSONException e) {

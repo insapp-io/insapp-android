@@ -128,12 +128,11 @@ public class EventActivity extends AppCompatActivity {
             generateEvent();
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == PostActivity.NOTIFICATION_MESSAGE) {
+        if (requestCode == PostActivity.NOTIFICATION_MESSAGE) {
             if (resultCode == RESULT_OK){
 
                 HttpGet request = new HttpGet(new AsyncResponse() {
@@ -241,15 +240,9 @@ public class EventActivity extends AppCompatActivity {
         // participants
 
         participantsImageView.setColorFilter(fgColor);
-
-        int nb_participants = event.getAttendees().size();
-        if (nb_participants == 0)
-            participantsTextView.setText("Pas encore de participants");
-        else if (nb_participants == 1)
-            participantsTextView.setText("1 participant");
-        else
-            participantsTextView.setText(Integer.toString(nb_participants) + " participants");
         participantsTextView.setTextColor(fgColor);
+
+        refreshAttendeesTextView();
 
         // date
 
@@ -595,24 +588,46 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void refreshEvent(String output) {
-
         try {
             JSONObject json = new JSONObject(output);
 
-            if(event != null) {
-
+            if (event != null) {
                 event = new Event(json.getJSONObject("event"));
-                int nb_participants = event.getAttendees().size();
 
-                if (nb_participants == 0)
-                    participantsTextView.setText("Pas de participants");
-                else if (nb_participants == 1)
-                    participantsTextView.setText("1 participant");
-                else
-                    participantsTextView.setText(Integer.toString(nb_participants) + " participants");
+                refreshAttendeesTextView();
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void refreshAttendeesTextView() {
+        final int nbParticipants = event.getAttendees().size();
+        final int nbInterested = event.getMaybe().size();
+
+        if (nbParticipants == 0) {
+            if (nbInterested == 0)
+                participantsTextView.setText(getResources().getString(R.string.no_attendees_no_interested));
+            else if (nbInterested == 1)
+                participantsTextView.setText(getResources().getString(R.string.no_attendees_one_interested));
+            else
+                participantsTextView.setText(String.format(getResources().getString(R.string.no_attendees_x_interested), nbInterested));
+        }
+        else if (nbParticipants == 1) {
+            if (nbInterested == 0)
+                participantsTextView.setText(getResources().getString(R.string.one_attendee_no_interested));
+            else if (nbInterested == 1)
+                participantsTextView.setText(getResources().getString(R.string.one_attendee_one_interested));
+            else
+                participantsTextView.setText(String.format(getResources().getString(R.string.one_attendee_x_interested), nbInterested));
+        }
+        else {
+            if (nbInterested == 0)
+                participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_no_interested), nbParticipants));
+            else if (nbInterested == 1)
+                participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_one_interested), nbParticipants));
+            else
+                participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_x_interested), nbParticipants, nbInterested));
         }
     }
 }

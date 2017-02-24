@@ -70,15 +70,9 @@ public class EventActivity extends AppCompatActivity {
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
 
-    private PARTICIPATE userParticipates = PARTICIPATE.NO;
+    private Event.PARTICIPATE userParticipates = Event.PARTICIPATE.NO;
 
     private Notification notification = null;
-
-    private enum PARTICIPATE {
-        YES,
-        MAYBE,
-        NO
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +96,12 @@ public class EventActivity extends AppCompatActivity {
         participantsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getBaseContext(), UsersActivity.class).putExtra("users", event.getAttendees()));
+                Intent intent = new Intent(getBaseContext(), AttendeesActivity.class);
+
+                intent.putExtra("attendees", event.getAttendees());
+                intent.putExtra("maybe", event.getMaybe());
+
+                startActivity(intent);
             }
         });
 
@@ -274,21 +273,21 @@ public class EventActivity extends AppCompatActivity {
 
         for (final String id : event.getAttendees()) {
             if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = PARTICIPATE.YES;
+                this.userParticipates = Event.PARTICIPATE.YES;
                 break;
             }
         }
 
         for (final String id : event.getMaybe()) {
             if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = PARTICIPATE.MAYBE;
+                this.userParticipates = Event.PARTICIPATE.MAYBE;
                 break;
             }
         }
 
         for (final String id : event.getNotgoing()) {
             if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = PARTICIPATE.NO;
+                this.userParticipates = Event.PARTICIPATE.NO;
                 break;
             }
         }
@@ -306,14 +305,14 @@ public class EventActivity extends AppCompatActivity {
             case MAYBE:
                 floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
                 floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
                 floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
                 break;
 
             case YES:
                 floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
                 floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_done_all_black_24dp));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
                 floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
                 break;
 
@@ -332,7 +331,7 @@ public class EventActivity extends AppCompatActivity {
         floatingActionButton1.setLabelTextColor(fgColor);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final Drawable doubleTick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_done_all_black_24dp);
+            final Drawable doubleTick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
             doubleTick.setColorFilter(0xff4caf50, PorterDuff.Mode.SRC_ATOP);
             floatingActionButton1.setImageDrawable(doubleTick);
         }
@@ -346,7 +345,7 @@ public class EventActivity extends AppCompatActivity {
                         HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
-                                userParticipates = PARTICIPATE.YES;
+                                userParticipates = Event.PARTICIPATE.YES;
 
                                 HttpGet get = new HttpGet(new AsyncResponse() {
                                     @Override
@@ -363,7 +362,7 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.close(true);
                                 floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
                                 floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_done_all_black_24dp));
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
                                 floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
 
                                 SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
@@ -430,7 +429,7 @@ public class EventActivity extends AppCompatActivity {
         floatingActionButton2.setLabelTextColor(fgColor);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
+            final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black);
             tick.setColorFilter(0xffff9523, PorterDuff.Mode.SRC_ATOP);
             floatingActionButton2.setImageDrawable(tick);
         }
@@ -444,7 +443,7 @@ public class EventActivity extends AppCompatActivity {
                         HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
-                                userParticipates = PARTICIPATE.MAYBE;
+                                userParticipates = Event.PARTICIPATE.MAYBE;
 
                                 HttpGet get = new HttpGet(new AsyncResponse() {
                                     @Override
@@ -461,7 +460,7 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.close(true);
                                 floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
                                 floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
                                 floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
 
                                 refreshEvent(output);
@@ -502,7 +501,7 @@ public class EventActivity extends AppCompatActivity {
                         HttpDelete delete = new HttpDelete(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
-                                userParticipates = PARTICIPATE.NO;
+                                userParticipates = Event.PARTICIPATE.NO;
 
                                 HttpGet get = new HttpGet(new AsyncResponse() {
                                     @Override

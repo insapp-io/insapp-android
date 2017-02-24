@@ -11,40 +11,47 @@ import android.view.MenuItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
+import fr.insapp.insapp.adapters.AttendeeRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
 
 /**
  * Created by thoma on 10/12/2016.
  */
 
-public class UsersActivity extends AppCompatActivity {
+public class AttendeesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private AttendeeRecyclerViewAdapter adapter;
 
-    private UserRecyclerViewAdapter adapter;
+    private ArrayList<String> attendees;
+    private ArrayList<String> maybe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users);
+        setContentView(R.layout.activity_attendees);
 
         Intent intent = getIntent();
-        List<String> users = intent.getStringArrayListExtra("users");
+        this.attendees = intent.getStringArrayListExtra("attendees");
+        this.maybe = intent.getStringArrayListExtra("maybe");
 
-        this.adapter = new UserRecyclerViewAdapter(this, true);
-        adapter.setOnItemClickListener(new UserRecyclerViewAdapter.OnUserItemClickListener() {
+        generateUsers(attendees, Event.PARTICIPATE.YES);
+        generateUsers(maybe, Event.PARTICIPATE.MAYBE);
+
+        this.adapter = new AttendeeRecyclerViewAdapter(this, true);
+        adapter.setOnItemClickListener(new AttendeeRecyclerViewAdapter.OnUserItemClickListener() {
             @Override
             public void onUserItemClick(User user) {
                 startActivity(new Intent(getBaseContext(), ProfileActivity.class).putExtra("user", user));
             }
         });
 
-        generateUsers(users);
 
         // toolbar
 
@@ -66,20 +73,17 @@ public class UsersActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void generateUsers(List<String> users) {
+    private void generateUsers(List<String> users, final Event.PARTICIPATE action) {
         for (int i = 0 ; i < users.size(); i++) {
-
-            final int id = i;
             HttpGet request = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
-                    JSONObject json = null;
+                    JSONObject json;
                     try {
                         json = new JSONObject(output);
                         final User user = new User(json);
 
-                        adapter.addItem(user);
-
+                        adapter.addItem(user, action);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

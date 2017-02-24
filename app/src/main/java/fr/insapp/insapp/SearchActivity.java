@@ -39,6 +39,7 @@ public class SearchActivity extends AppCompatActivity {
     private ClubRecyclerViewAdapter adapterClubs;
     private PostRecyclerViewAdapter adapterPosts;
     private EventRecyclerViewAdapter adapterEvents;
+
     private UserRecyclerViewAdapter adapterUsers;
 
     private String query;
@@ -56,7 +57,7 @@ public class SearchActivity extends AppCompatActivity {
             HttpGet request = new HttpGet(new AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
-                    System.out.println(output);
+
                 }
             });
             request.execute(HttpGet.ROOTSEACHUNIVERSAL + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
@@ -156,11 +157,9 @@ public class SearchActivity extends AppCompatActivity {
         // search
 
         generate(query);
-
     }
 
     private void generate(String query) {
-
         adapterClubs.getClubs().clear();
         adapterPosts.getPosts().clear();
         adapterEvents.getEvents().clear();
@@ -232,7 +231,7 @@ public class SearchActivity extends AppCompatActivity {
                             adapterEvents.notifyDataSetChanged();
                         }
 
-                        // USERS
+                        // users
                         JSONArray jsonarrayUsers = json.optJSONArray("users");
                         if (jsonarrayUsers != null) {
 

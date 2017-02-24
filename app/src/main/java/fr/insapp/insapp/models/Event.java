@@ -32,6 +32,12 @@ public class Event implements Parcelable, Comparable<Event> {
     private Date dateStart, dateEnd;
     private String image, bgColor, fgColor;
 
+    public enum PARTICIPATE {
+        YES,
+        MAYBE,
+        NO
+    }
+
     public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
 
         @Override
@@ -47,8 +53,6 @@ public class Event implements Parcelable, Comparable<Event> {
     };
 
     public Event(JSONObject json) throws JSONException {
-        System.out.println(json);
-
         this.id = json.getString("ID");
         this.name = json.getString("name");
         this.association = json.getString("association");

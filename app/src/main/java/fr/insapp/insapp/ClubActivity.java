@@ -232,11 +232,12 @@ public class ClubActivity extends AppCompatActivity {
 
     public void sendEmail(){
         Intent intent = new Intent(Intent.ACTION_SENDTO);
+
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{ club.getEmail() });
         intent.putExtra(Intent.EXTRA_SUBJECT, "");
-        if (intent.resolveActivity(getPackageManager()) != null) {
+
+        if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
-        }
     }
 }

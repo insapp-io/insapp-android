@@ -126,7 +126,7 @@
         </activity>
 
         <activity
-            android:name="fr.insapp.insapp.UsersActivity"
+            android:name="fr.insapp.insapp.AttendeesActivity"
             android:label="@string/event_participants"
             android:parentActivityName=".EventActivity">
             <meta-data

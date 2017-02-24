@@ -12,22 +12,25 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
 
 /**
- * Created by thoma on 24/02/2017.
+ * Created by thoma on 10/12/2016.
  */
 
-public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecyclerViewAdapter.UserViewHolder> {
+public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<AttendeeRecyclerViewAdapter.UserViewHolder> {
 
     protected boolean matchParent;
 
-    protected List<User> users;
+    protected Map<User, Event.PARTICIPATE> users;
 
     protected OnUserItemClickListener listener;
 
@@ -35,41 +38,48 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
         void onUserItemClick(User user);
     }
 
-    public UserRecyclerViewAdapter(Context context, boolean matchParent) {
+    public AttendeeRecyclerViewAdapter(Context context, boolean matchParent) {
         this.context = context;
         this.matchParent = matchParent;
-        this.users = new ArrayList<>();
+        this.users = new LinkedHashMap<>();
     }
 
     public void setOnItemClickListener(OnUserItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void addItem(User user) {
-        this.users.add(user);
+    public void addItem(User user, Event.PARTICIPATE action) {
+        this.users.put(user, action);
         this.notifyDataSetChanged();
     }
 
     @Override
-    public UserRecyclerViewAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AttendeeRecyclerViewAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_thumb, parent, false);
         return new UserViewHolder(view, matchParent);
     }
 
     @Override
-    public void onBindViewHolder(UserRecyclerViewAdapter.UserViewHolder holder, int position) {
-        final User user = users.get(position);
+    public void onBindViewHolder(AttendeeRecyclerViewAdapter.UserViewHolder holder, int position) {
+        User user = null;
 
-        // get the drawable of avatar
+        final List keys = new ArrayList<>(users.keySet());
+        for (int i = 0; i < keys.size(); i++) {
+            user = (User) keys.get(i);
+        }
 
-        Resources resources = context.getResources();
-        final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-        Glide.with(context).load(id).into(holder.avatar);
+        if (user != null) {
+            // get the drawable of avatar
 
-        holder.name.setText(user.getName());
-        holder.username.setText(user.getUsername());
+            final Resources resources = context.getResources();
+            final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+            Glide.with(context).load(id).into(holder.avatar);
 
-        holder.bind(user, listener);
+            holder.name.setText(user.getName());
+            holder.username.setText(user.getUsername());
+
+            holder.bind(user, listener);
+        }
     }
 
     @Override
@@ -77,7 +87,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
         return users.size();
     }
 
-    public List<User> getUsers() { return users; }
+    public Map<User, Event.PARTICIPATE> getUsers() { return users; }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView avatar;

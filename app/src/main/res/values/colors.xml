@@ -8,5 +8,5 @@
     <color name="barre_division">#7F7F7F</color>
 
     <color name="white">#fff</color>
-    <color name="black_trans80">#40000000</color>
+    <color name="black_trans80">#00000000</color>
 </resources>

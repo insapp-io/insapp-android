@@ -1,6 +1,13 @@
 package fr.insapp.insapp.utility;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Spannable;
@@ -8,26 +15,7 @@ import android.text.SpannableString;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 public class Utils {
-
-    public static void CopyStream(InputStream is, OutputStream os) {
-        final int buffer_size = 1024;
-
-        try {
-            byte[] bytes = new byte[buffer_size];
-
-            for(;;) {
-                int count = is.read(bytes, 0, buffer_size);
-                if (count == -1)
-                    break;
-
-                os.write(bytes, 0, count);
-            }
-        } catch(Exception ex){}
-    }
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager)  context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -51,5 +39,14 @@ public class Utils {
         }
 
         textView.setText(s);
+    }
+
+    public static Bitmap darkenBitmap(Bitmap bitmap) {
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint(Color.RED);
+        ColorFilter filter = new LightingColorFilter(0xffbababa, 0x00000000);
+        paint.setColorFilter(filter);
+        canvas.drawBitmap(bitmap, new Matrix(), paint);
+        return bitmap;
     }
 }

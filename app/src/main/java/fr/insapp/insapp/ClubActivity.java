@@ -1,6 +1,7 @@
 package fr.insapp.insapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -24,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
@@ -97,14 +100,8 @@ public class ClubActivity extends AppCompatActivity {
 
         // dynamic color
 
-        int bgColor = Color.parseColor("#" + club.getBgColor());
-        int fgColor = Color.parseColor("#" + club.getFgColor());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
-            upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
-        }
+        final int bgColor = Color.parseColor("#" + club.getBgColor());
+        final int fgColor = Color.parseColor("#" + club.getFgColor());
 
         collapsingToolbar.setContentScrimColor(bgColor);
         collapsingToolbar.setStatusBarScrimColor(bgColor);
@@ -120,7 +117,13 @@ public class ClubActivity extends AppCompatActivity {
         collapsingToolbar.setCollapsedTitleTextColor(fgColor);
 
         Glide.with(this).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(iconImageView);
-        Glide.with(this).load(HttpGet.IMAGEURL + club.getCover()).into(headerImageView);
+        Glide.with(this).load(HttpGet.IMAGEURL + club.getCover()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                super.onResourceReady(bitmap, anim);
+                Utils.darkenBitmap(bitmap);
+            }
+        });
 
         // links
 

@@ -33,7 +33,7 @@ import fr.insapp.insapp.models.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final boolean dev = true;
+    public static final boolean dev = false;
 
     public static final int REFRESH_TOKEN_MESSAGE = 5;
 

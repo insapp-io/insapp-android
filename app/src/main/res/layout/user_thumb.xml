@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/user_thumb_layout"
     android:layout_width="wrap_content"
@@ -8,17 +7,34 @@
     android:padding="15dp"
     android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_avatar"
-        android:layout_marginTop="12dp"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        app:civ_border_width="0dp" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_avatar"
+            android:layout_marginTop="12dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            app:civ_border_width="0dp"
+            android:layout_alignParentEnd="true" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/macaroon"
+            android:src="@drawable/ic_question_mark_black"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:civ_fill_color="@color/white"
+            android:layout_alignBottom="@+id/user_avatar"
+            android:layout_alignEnd="@+id/user_avatar" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/user_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:layout_marginTop="8dp"
         android:textColor="#3e3e3e"
         android:textSize="13sp" />

@@ -52,7 +52,6 @@ public class AttendeesActivity extends AppCompatActivity {
             }
         });
 
-
         // toolbar
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_users);

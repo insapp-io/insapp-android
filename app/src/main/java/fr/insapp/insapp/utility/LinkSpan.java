@@ -30,7 +30,9 @@ public class LinkSpan extends URLSpan {
 
         if (Patterns.WEB_URL.matcher(url).matches()) {
             this.uri = Uri.parse(url);
-            MainActivity.customTabsConnection.getCustomTabsSession().mayLaunchUrl(uri, null, null);
+
+            if (MainActivity.customTabsConnection != null && MainActivity.customTabsConnection.getCustomTabsSession() != null)
+                MainActivity.customTabsConnection.getCustomTabsSession().mayLaunchUrl(uri, null, null);
         }
     }
 

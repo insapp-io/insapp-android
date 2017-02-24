@@ -59,6 +59,8 @@ public class Operation {
             String userPromotion = promo.toLowerCase();
             if (userPromotion.contains("personnel"))
                 userPromotion = "worker";
+            else if (userPromotion.contains("alternant"))
+                userPromotion = "apprentice";
             else if (!userPromotion.contains("stpi") && Character.isDigit(userPromotion.charAt(0)))
                 userPromotion = userPromotion.substring(1);
 

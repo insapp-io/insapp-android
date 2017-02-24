@@ -193,7 +193,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public void processFinish(String output) {
                 if (output == null)
-                    Toast.makeText(SettingsActivity.this, "Erreur lors de la modification de profil", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SettingsActivity.this, "Erreur lors de la modification du profil", Toast.LENGTH_LONG).show();
                 else {
                     try {
                         MainActivity.user = new User(new JSONObject(output));

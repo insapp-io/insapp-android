@@ -3,6 +3,7 @@ package fr.insapp.insapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -24,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -53,7 +56,7 @@ public class EventActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private RelativeLayout relativeLayout;
-    private ImageView header_image_event;
+    private ImageView headerImageView;
     private ImageView clubImageView;
     private TextView clubTextView;
     private ImageView participantsImageView;
@@ -80,7 +83,7 @@ public class EventActivity extends AppCompatActivity {
         this.event = intent.getParcelableExtra("event");
 
         this.relativeLayout = (RelativeLayout) findViewById(R.id.event_info);
-        this.header_image_event = (ImageView) findViewById(R.id.header_image_event);
+        this.headerImageView = (ImageView) findViewById(R.id.header_image_event);
         this.clubImageView = (ImageView) findViewById(R.id.event_club_icon);
         this.clubTextView = (TextView) findViewById(R.id.event_club_text);
         this.participantsImageView = (ImageView) findViewById(R.id.event_participants_icon);
@@ -123,9 +126,8 @@ public class EventActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Add your code here
 
-        if(requestCode == PostActivity.NOTIFICATION_MESSAGE){
+        if(requestCode == PostActivity.NOTIFICATION_MESSAGE) {
             if (resultCode == RESULT_OK){
 
                 HttpGet request = new HttpGet(new AsyncResponse() {
@@ -142,12 +144,26 @@ public class EventActivity extends AppCompatActivity {
                     }
                 });
                 request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
-
             }
         }
     }
 
     public void generateEvent() {
+
+        // dynamic color
+
+        final int bgColor = Color.parseColor("#" + event.getBgColor());
+        final int fgColor = Color.parseColor("#" + event.getFgColor());
+
+        Glide.with(this).load(HttpGet.IMAGEURL + event.getImage()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                super.onResourceReady(bitmap, anim);
+                Utils.darkenBitmap(bitmap);
+            }
+        });
+
+        relativeLayout.setBackgroundColor(bgColor);
 
         // collapsing toolbar
 
@@ -165,31 +181,28 @@ public class EventActivity extends AppCompatActivity {
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(event.getName());
                     isShow = true;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        final Drawable upArrow = ContextCompat.getDrawable(EventActivity.this, R.drawable.abc_ic_ab_back_material);
+                        upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+                        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    }
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
                     isShow = false;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        final Drawable upArrow = ContextCompat.getDrawable(EventActivity.this, R.drawable.abc_ic_ab_back_material);
+                        upArrow.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+                        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    }
                 }
             }
         });
 
-        // dynamic color
-
-        int bgColor = Color.parseColor("#" + event.getBgColor());
-        int fgColor = Color.parseColor("#" + event.getFgColor());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final Drawable upArrow = ContextCompat.getDrawable(EventActivity.this, R.drawable.abc_ic_ab_back_material);
-            upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
-        }
-
         collapsingToolbar.setCollapsedTitleTextColor(fgColor);
         collapsingToolbar.setContentScrimColor(bgColor);
         collapsingToolbar.setStatusBarScrimColor(bgColor);
-
-        Glide.with(this).load(HttpGet.IMAGEURL + event.getImage()).into(header_image_event);
-
-        relativeLayout.setBackgroundColor(bgColor);
 
         // club
 
@@ -319,7 +332,6 @@ public class EventActivity extends AppCompatActivity {
                                 }
                             });
                             get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
-
 
                             floatingActionMenu.close(true);
                             floatingActionMenu.setMenuButtonColorNormal(0xffffffff);

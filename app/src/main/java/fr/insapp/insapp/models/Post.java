@@ -21,22 +21,26 @@ public class Post implements Parcelable {
     private String id, title;
     private String association, description;
     private Date date;
+
     private ArrayList<String> likes;
     private ArrayList<Comment> comments;
+
     private String image;
     private int width;
     private int height;
 
-    public Post(String id, String title, String association, String description, Date date, ArrayList<String> likes, ArrayList<Comment> comments, String photoURL, int width, int height) {
-        this.id = id;
-        this.title = title;
-        this.association = association;
-        this.description = description;
-        this.date = date;
-        this.likes = likes;
-        this.comments = comments;
-        this.image = photoURL;
-    }
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 
     public Post(JSONObject json) throws JSONException {
         this.id = json.getString("ID");
@@ -44,17 +48,18 @@ public class Post implements Parcelable {
         this.association = json.getString("association");
         this.description = json.getString("description");
         this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("date"), true);
-        this.likes = new ArrayList<String>();
 
-        JSONArray jsonarray = json.optJSONArray("likes");
-        if (jsonarray != null) {
-            for (int i = 0; i < jsonarray.length(); i++)
-                likes.add(jsonarray.getString(i));
+        this.likes = new ArrayList<>();
+
+        final JSONArray jsonarray1 = json.optJSONArray("likes");
+        if (jsonarray1 != null) {
+            for (int i = 0; i < jsonarray1.length(); i++)
+                likes.add(jsonarray1.getString(i));
         }
 
-        this.comments = new ArrayList<Comment>();
+        this.comments = new ArrayList<>();
 
-        JSONArray jsonarray2 = json.optJSONArray("comments");
+        final JSONArray jsonarray2 = json.optJSONArray("comments");
         if (jsonarray2 != null) {
             for (int i = 0; i < jsonarray2.length(); i++)
                 comments.add(new Comment(jsonarray2.getJSONObject(i)));
@@ -72,14 +77,16 @@ public class Post implements Parcelable {
         description = in.readString();
         date = new Date(in.readLong());
 
-        int nbLikes = in.readInt();
-        likes = new ArrayList<String>();
-        if(nbLikes > 0)
+        this.likes = new ArrayList<>();
+
+        final int nbLikes = in.readInt();
+        if (nbLikes > 0)
             in.readStringList(likes);
 
-        int nbComments = in.readInt();
-        comments = new ArrayList<Comment>();
-        if(nbComments > 0)
+        this.comments = new ArrayList<>();
+
+        final int nbComments = in.readInt();
+        if (nbComments > 0)
             in.readTypedList(comments, Comment.CREATOR);
 
         image = in.readString();
@@ -87,32 +94,40 @@ public class Post implements Parcelable {
         height = in.readInt();
     }
 
-    public static final Creator<Post> CREATOR = new Creator<Post>() {
-        @Override
-        public Post createFromParcel(Parcel in) {
-            return new Post(in);
-        }
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(association);
+        dest.writeString(description);
+        dest.writeLong(date.getTime());
 
-        @Override
-        public Post[] newArray(int size) {
-            return new Post[size];
-        }
-    };
+        dest.writeInt(likes.size());
+        if (likes.size() > 0)
+            dest.writeStringList(likes);
+
+        dest.writeInt(comments.size());
+        if (comments.size() > 0)
+            dest.writeTypedList(comments);
+
+        dest.writeString(image);
+        dest.writeInt(width);
+        dest.writeInt(height);
+    }
 
     public boolean equals(Object other){
         if (other == null) return false;
         if (other == this) return true;
-        if (!(other instanceof Post))return false;
-        Post otherMyClass = (Post)other;
+        if (!(other instanceof Post)) return false;
 
-        if(otherMyClass.getId().equals(this.id)) return true;
+        final Post otherMyClass = (Post) other;
 
-        return false;
+        return otherMyClass.getId().equals(this.id);
     }
 
     public boolean postLikedBy(String user){
-        for(String idUser : likes){
-            if(idUser.equals(user))
+        for (String idUser : likes) {
+            if (idUser.equals(user))
                 return true;
         }
 
@@ -202,26 +217,5 @@ public class Post implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(title);
-        parcel.writeString(association);
-        parcel.writeString(description);
-        parcel.writeLong(date.getTime());
-        parcel.writeInt(likes.size());
-
-        if(likes.size() > 0)
-            parcel.writeStringList(likes);
-        parcel.writeInt(comments.size());
-
-        if(comments.size() > 0)
-            parcel.writeTypedList(comments);
-
-        parcel.writeString(image);
-        parcel.writeInt(width);
-        parcel.writeInt(height);
     }
 }

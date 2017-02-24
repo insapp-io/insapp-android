@@ -68,11 +68,17 @@ public class EventActivity extends AppCompatActivity {
     private Event event;
 
     private FloatingActionMenu floatingActionMenu;
-    private FloatingActionButton floatingActionButton1, floatingActionButton2;
+    private FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
 
-    private boolean userParticipates = false;
+    private PARTICIPATE userParticipates = PARTICIPATE.NO;
 
     private Notification notification = null;
+
+    private enum PARTICIPATE {
+        YES,
+        MAYBE,
+        NO
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +102,7 @@ public class EventActivity extends AppCompatActivity {
         participantsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getBaseContext(), UsersActivity.class).putExtra("users", event.getParticipants()));
+                startActivity(new Intent(getBaseContext(), UsersActivity.class).putExtra("users", event.getAttendees()));
             }
         });
 
@@ -113,7 +119,7 @@ public class EventActivity extends AppCompatActivity {
         if (this.event == null) {
             notification = intent.getParcelableExtra("notification");
 
-            if(HttpGet.credentials != null)
+            if (HttpGet.credentials != null)
                 onActivityResult(PostActivity.NOTIFICATION_MESSAGE, RESULT_OK, null);
             else
                 startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), PostActivity.NOTIFICATION_MESSAGE);
@@ -137,7 +143,6 @@ public class EventActivity extends AppCompatActivity {
                             event = new Event(new JSONObject(output));
 
                             generateEvent();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -220,7 +225,6 @@ public class EventActivity extends AppCompatActivity {
                             HttpGet.clubs.put(club.getId(), club);
 
                             clubTextView.setText(club.getName());
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -238,7 +242,7 @@ public class EventActivity extends AppCompatActivity {
 
         participantsImageView.setColorFilter(fgColor);
 
-        int nb_participants = event.getParticipants().size();
+        int nb_participants = event.getAttendees().size();
         if (nb_participants == 0)
             participantsTextView.setText("Pas encore de participants");
         else if (nb_participants == 1)
@@ -275,9 +279,23 @@ public class EventActivity extends AppCompatActivity {
 
         // floating action menu
 
-        for (String id : event.getParticipants()) {
+        for (final String id : event.getAttendees()) {
             if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = true;
+                this.userParticipates = PARTICIPATE.YES;
+                break;
+            }
+        }
+
+        for (final String id : event.getMaybe()) {
+            if (HttpGet.credentials.getUserID().equals(id)) {
+                this.userParticipates = PARTICIPATE.MAYBE;
+                break;
+            }
+        }
+
+        for (final String id : event.getNotgoing()) {
+            if (HttpGet.credentials.getUserID().equals(id)) {
+                this.userParticipates = PARTICIPATE.NO;
                 break;
             }
         }
@@ -285,157 +303,246 @@ public class EventActivity extends AppCompatActivity {
         this.floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_event);
         floatingActionMenu.setIconAnimated(false);
 
-        if (!userParticipates) {
-            floatingActionMenu.setMenuButtonColorNormal(bgColor);
-            floatingActionMenu.setMenuButtonColorPressed(bgColor);
-            floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
-        } else {
-            floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-            floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-            floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
-            floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+        switch (userParticipates) {
+            case NO:
+                floatingActionMenu.setMenuButtonColorNormal(bgColor);
+                floatingActionMenu.setMenuButtonColorPressed(bgColor);
+                floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
+                break;
+
+            case MAYBE:
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
+                break;
+
+            case YES:
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_done_all_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+                break;
+
+            default:
+                break;
         }
 
-        // we can't participate in a finished event
-        Date atm = Calendar.getInstance().getTime();
-        if (event.getDateEnd().getTime() < atm.getTime()) {
+        final Date atm = Calendar.getInstance().getTime();
+        if (event.getDateEnd().getTime() < atm.getTime())
             floatingActionMenu.setVisibility(View.GONE);
-        }
+
+        // fab 1
 
         this.floatingActionButton1 = (FloatingActionButton) findViewById(R.id.fab_item_1_event);
         floatingActionButton1.setLabelColors(bgColor, bgColor, 0x99ffffff);
         floatingActionButton1.setLabelTextColor(fgColor);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
-            tick.setColorFilter(0xff4caf50, PorterDuff.Mode.SRC_ATOP);
-            floatingActionButton1.setImageDrawable(tick);
+            final Drawable doubleTick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_done_all_black_24dp);
+            doubleTick.setColorFilter(0xff4caf50, PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton1.setImageDrawable(doubleTick);
         }
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!userParticipates) {
-                    HttpPost request = new HttpPost(new AsyncResponse() {
-                        @Override
-                        public void processFinish(String output) {
-                            userParticipates = true;
+                switch (userParticipates) {
+                    case NO:
+                    case MAYBE:
+                        HttpPost request = new HttpPost(new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output) {
+                                userParticipates = PARTICIPATE.YES;
 
-                            HttpGet get = new HttpGet(new AsyncResponse() {
-                                @Override
-                                public void processFinish(String output) {
-                                    try {
-                                        MainActivity.user = new User(new JSONObject(output));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                HttpGet get = new HttpGet(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        try {
+                                            MainActivity.user = new User(new JSONObject(output));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
+                                });
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
+                                floatingActionMenu.close(true);
+                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_done_all_black_24dp));
+                                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+
+                                SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
+
+                                // if first time user join an event
+                                if (prefs.getString("addEventToCalender", "").equals("")) {
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EventActivity.this);
+
+                                    // set title
+                                    alertDialogBuilder.setTitle("Ajout au calendrier");
+
+                                    // set dialog message
+                                    alertDialogBuilder
+                                            .setMessage("Voulez-vous ajouter les évènements auquels vous participer dans votre calendrier ?")
+                                            .setCancelable(false)
+                                            .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialogAlert, int id) {
+                                                    SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                                                    prefs.putString("addEventToCalender", "true");
+                                                    prefs.apply();
+
+                                                    addEventToCalendar();
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.negative_button, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialogAlert, int id) {
+                                                    SharedPreferences.Editor prefs = getSharedPreferences(
+                                                            SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                                                    prefs.putString("addEventToCalender", "false");
+                                                    prefs.apply();
+
+                                                    dialogAlert.cancel();
+                                                }
+                                            });
+
+                                    // create alert dialog
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
                                 }
-                            });
-                            get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                                else if (prefs.getString("addEventToCalender", "true").equals("true"))
+                                    addEventToCalendar();
 
-                            floatingActionMenu.close(true);
-                            floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                            floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                            floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
-                            floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
-
-                            SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
-
-                            // if first time user join an event
-                            if (prefs.getString("addEventToCalender", "").equals("")){
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EventActivity.this);
-
-                                // set title
-                                alertDialogBuilder.setTitle("Ajout au calendrier");
-
-                                // set dialog message
-                                alertDialogBuilder
-                                        .setMessage("Voulez-vous ajouter les évènements auquels vous participer dans votre calendrier ?")
-                                        .setCancelable(false)
-                                        .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialogAlert, int id) {
-                                                SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-                                                prefs.putString("addEventToCalender", "true");
-                                                prefs.apply();
-
-                                                addEventToCalendar();
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.negative_button, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialogAlert, int id) {
-                                                SharedPreferences.Editor prefs = getSharedPreferences(
-                                                        SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-                                                prefs.putString("addEventToCalender", "false");
-                                                prefs.apply();
-
-                                                dialogAlert.cancel();
-                                            }
-                                        });
-
-                                // create alert dialog
-                                AlertDialog alertDialog = alertDialogBuilder.create();
-                                // show it
-                                alertDialog.show();
+                                refreshEvent(output);
                             }
-                            else if(prefs.getString("addEventToCalender", "true").equals("true")){
-                                addEventToCalendar();
-                            }
+                        });
 
-                            refreshEvent(output);
-                        }
-                    });
-                    request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/going" + "?token=" + HttpGet.credentials.getSessionToken());
+                        break;
+
+                    case YES:
+                        floatingActionMenu.close(true);
+                        break;
+
+                    default:
+                        break;
                 }
-                else
-                    floatingActionMenu.close(true);
             }
         });
+
+        // fab 2
 
         this.floatingActionButton2 = (FloatingActionButton) findViewById(R.id.fab_item_2_event);
         floatingActionButton2.setLabelColors(bgColor, bgColor, 0x99ffffff);
         floatingActionButton2.setLabelTextColor(fgColor);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final Drawable close = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp);
-            close.setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
-            floatingActionButton2.setImageDrawable(close);
+            final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
+            tick.setColorFilter(0xffff9523, PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton2.setImageDrawable(tick);
         }
 
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userParticipates) {
-                    HttpDelete delete = new HttpDelete(new AsyncResponse() {
-                        @Override
-                        public void processFinish(String output) {
-                            userParticipates = false;
+                switch (userParticipates) {
+                    case NO:
+                    case YES:
+                        HttpPost request = new HttpPost(new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output) {
+                                userParticipates = PARTICIPATE.MAYBE;
 
-                            HttpGet get = new HttpGet(new AsyncResponse() {
-                                @Override
-                                public void processFinish(String output) {
-                                    try {
-                                        MainActivity.user = new User(new JSONObject(output));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                HttpGet get = new HttpGet(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        try {
+                                            MainActivity.user = new User(new JSONObject(output));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
-                            });
-                            get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                                });
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
+                                floatingActionMenu.close(true);
+                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+                                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
 
-                            floatingActionMenu.close(true);
-                            floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                            floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                            floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
-                            floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
+                                refreshEvent(output);
+                            }
+                        });
 
-                            refreshEvent(output);
-                        }
-                    });
-                    delete.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/maybe" + "?token=" + HttpGet.credentials.getSessionToken());
+                        break;
+
+                    case MAYBE:
+                        floatingActionMenu.close(true);
+                        break;
+
+                    default:
+                        break;
                 }
-                else
-                    floatingActionMenu.close(true);
+            }
+        });
+
+        // fab 3
+
+        this.floatingActionButton3 = (FloatingActionButton) findViewById(R.id.fab_item_3_event);
+        floatingActionButton3.setLabelColors(bgColor, bgColor, 0x99ffffff);
+        floatingActionButton3.setLabelTextColor(fgColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable close = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp);
+            close.setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton3.setImageDrawable(close);
+        }
+
+        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (userParticipates) {
+                    case YES:
+                    case MAYBE:
+                        HttpDelete delete = new HttpDelete(new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output) {
+                                userParticipates = PARTICIPATE.NO;
+
+                                HttpGet get = new HttpGet(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        try {
+                                            MainActivity.user = new User(new JSONObject(output));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
+                                floatingActionMenu.close(true);
+                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
+                                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
+
+                                refreshEvent(output);
+                            }
+                        });
+
+                        delete.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                        break;
+
+                    case NO:
+                        floatingActionMenu.close(true);
+                        break;
+
+                    default:
+                        break;
+                }
             }
         });
 
@@ -448,7 +555,6 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void addEventToCalendar() {
-        Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(Intent.ACTION_EDIT);
         intent.setType("vnd.android.cursor.item/event");
 
@@ -496,7 +602,7 @@ public class EventActivity extends AppCompatActivity {
             if(event != null) {
 
                 event = new Event(json.getJSONObject("event"));
-                int nb_participants = event.getParticipants().size();
+                int nb_participants = event.getAttendees().size();
 
                 if (nb_participants == 0)
                     participantsTextView.setText("Pas de participants");

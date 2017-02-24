@@ -2,6 +2,7 @@ package fr.insapp.insapp.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,26 +15,19 @@ import fr.insapp.insapp.utility.Operation;
 
 /**
  * Created by Antoine on 25/02/2016.
- *
- * type Event struct {
- ID bson.ObjectId `bson:"_id,omitempty"`
- Name string `json:"name"`
- Association bson.ObjectId `json:"association" bson:"association"`
- Description string `json:"description"`
- Participants []bson.ObjectId `json:"participants" bson:"participants,omitempty"`
- Status string `json:"status"`
- DateStart time.Time `json:"dateStart"`
- dateEnd time.Time `json:"dateEnd"`
- PhotoURL string `json:"image"`
- BgColor string `json:"bgColor"`
- FgColor string `json:"fgColor"`
- }
  */
+
 public class Event implements Parcelable, Comparable<Event> {
 
     private String id;
     private String name, association, description;
-    private ArrayList<String> participants;
+
+    private ArrayList<String> attendees;
+    private ArrayList<String> maybe;
+    private ArrayList<String> notgoing;
+
+    private ArrayList<Comment> comments;
+
     private String status;
     private Date dateStart, dateEnd;
     private String image, bgColor, fgColor;
@@ -41,8 +35,8 @@ public class Event implements Parcelable, Comparable<Event> {
     public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
 
         @Override
-        public Event createFromParcel(Parcel source) {
-            return new Event(source);
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
         }
 
         @Override
@@ -52,15 +46,50 @@ public class Event implements Parcelable, Comparable<Event> {
 
     };
 
-    public boolean equals(Object other){
-        if (other == null) return false;
-        if (other == this) return true;
-        if (!(other instanceof Event))return false;
-        Event otherMyClass = (Event)other;
+    public Event(JSONObject json) throws JSONException {
+        System.out.println(json);
 
-        if(otherMyClass.getId().equals(this.id)) return true;
+        this.id = json.getString("ID");
+        this.name = json.getString("name");
+        this.association = json.getString("association");
+        this.description = json.getString("description");
 
-        return false;
+        this.attendees = new ArrayList<>();
+        this.maybe = new ArrayList<>();
+        this.notgoing = new ArrayList<>();
+
+        JSONArray jsonarray1 = json.optJSONArray("participants");
+        if (jsonarray1 != null) {
+            for (int i = 0; i < jsonarray1.length(); i++)
+                attendees.add(jsonarray1.getString(i));
+        }
+
+        JSONArray jsonarray2 = json.optJSONArray("maybe");
+        if (jsonarray2 != null) {
+            for (int i = 0; i < jsonarray2.length(); i++)
+                maybe.add(jsonarray2.getString(i));
+        }
+
+        JSONArray jsonarray3 = json.optJSONArray("notgoing");
+        if (jsonarray3 != null) {
+            for (int i = 0; i < jsonarray3.length(); i++)
+                notgoing.add(jsonarray3.getString(i));
+        }
+
+        this.comments = new ArrayList<>();
+
+        JSONArray jsonarray4 = json.optJSONArray("comments");
+        if (jsonarray4 != null) {
+            for (int i = 0; i < jsonarray4.length(); i++)
+                comments.add(new Comment(jsonarray4.getJSONObject(i)));
+        }
+
+        this.status = json.getString("status");
+        this.dateStart = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateStart"), true);
+        this.dateEnd = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateEnd"), true);
+        this.image = json.getString("image");
+        this.bgColor = json.getString("bgColor");
+        this.fgColor = json.getString("fgColor");
     }
 
     public Event(Parcel in){
@@ -69,10 +98,27 @@ public class Event implements Parcelable, Comparable<Event> {
         this.association = in.readString();
         this.description = in.readString();
 
-        this.participants = new ArrayList<>();
-        int nb_participants = in.readInt();
-        if (nb_participants > 0)
-            in.readStringList(this.participants);
+        this.attendees = new ArrayList<>();
+        this.maybe = new ArrayList<>();
+        this.notgoing = new ArrayList<>();
+
+        final int nbAttendees = in.readInt();
+        if (nbAttendees > 0)
+            in.readStringList(this.attendees);
+
+        final int nbMaybe = in.readInt();
+        if (nbMaybe > 0)
+            in.readStringList(this.maybe);
+
+        final int nbNotgoing = in.readInt();
+        if (nbNotgoing > 0)
+            in.readStringList(this.notgoing);
+
+        this.comments = new ArrayList<>();
+
+        final int nbComments = in.readInt();
+        if (nbComments > 0)
+            in.readTypedList(comments, Comment.CREATOR);
 
         this.status = in.readString();
 
@@ -84,39 +130,46 @@ public class Event implements Parcelable, Comparable<Event> {
         this.fgColor = in.readString();
     }
 
-    public Event(String id, String name, String association, String description, ArrayList<String> participants, String status, Date dateStart, Date dateEnd, String image, String bgColor, String fgColor) {
-        this.id = id;
-        this.name = name;
-        this.association = association;
-        this.description = description;
-        this.participants = participants;
-        this.status = status;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
-        this.image = image;
-        this.bgColor = bgColor;
-        this.fgColor = fgColor;
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(association);
+        dest.writeString(description);
+
+        dest.writeInt(attendees.size());
+        if (attendees.size() > 0)
+            dest.writeStringList(attendees);
+
+        dest.writeInt(maybe.size());
+        if (maybe.size() > 0)
+            dest.writeStringList(maybe);
+
+        dest.writeInt(notgoing.size());
+        if (notgoing.size() > 0)
+            dest.writeStringList(notgoing);
+
+        dest.writeInt(comments.size());
+        if (comments.size() > 0)
+            dest.writeTypedList(comments);
+
+        dest.writeString(status);
+
+        dest.writeLong(dateStart.getTime());
+        dest.writeLong(dateEnd.getTime());
+
+        dest.writeString(image);
+        dest.writeString(bgColor);
+        dest.writeString(fgColor);
     }
 
-    public Event(JSONObject json) throws JSONException {
-        this.id = json.getString("ID");
-        this.name = json.getString("name");
-        this.association = json.getString("association");
-        this.description = json.getString("description");
-        this.participants = new ArrayList<>();
+    public boolean equals(Object other){
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Event)) return false;
 
-        JSONArray jsonarray = json.optJSONArray("participants");
-        if (jsonarray != null){
-            for (int i=0; i<jsonarray.length(); i++)
-                participants.add(jsonarray.getString(i));
-        }
+        Event otherMyClass = (Event) other;
 
-        this.status = json.getString("status");
-        this.dateStart = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateStart"), true);
-        this.dateEnd = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateEnd"), true);
-        this.image = json.getString("image");
-        this.bgColor = json.getString("bgColor");
-        this.fgColor = json.getString("fgColor");
+        return otherMyClass.getId().equals(this.id);
     }
 
     public String getId() {
@@ -135,8 +188,16 @@ public class Event implements Parcelable, Comparable<Event> {
         return description;
     }
 
-    public ArrayList<String> getParticipants() {
-        return participants;
+    public ArrayList<String> getAttendees() {
+        return attendees;
+    }
+
+    public ArrayList<String> getMaybe() {
+        return maybe;
+    }
+
+    public ArrayList<String> getNotgoing() {
+        return notgoing;
     }
 
     public String getStatus() {
@@ -164,29 +225,12 @@ public class Event implements Parcelable, Comparable<Event> {
     }
 
     public int describeContents() {
-        return 0; //On renvoie 0, car notre classe ne contient pas de FileDescriptor
-    }
-
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(association);
-        dest.writeString(description);
-
-        dest.writeInt(participants.size());
-        if (participants.size() > 0)
-            dest.writeStringList(participants);
-
-        dest.writeString(status);
-        dest.writeLong(dateStart.getTime());
-        dest.writeLong(dateEnd.getTime());
-        dest.writeString(image);
-        dest.writeString(bgColor);
-        dest.writeString(fgColor);
+        // on renvoie 0, car notre classe ne contient pas de FileDescriptor
+        return 0;
     }
 
     @Override
-    public int compareTo(Event another) {
+    public int compareTo(@NonNull Event another) {
         return this.getDateStart().compareTo(another.getDateStart());
     }
 }

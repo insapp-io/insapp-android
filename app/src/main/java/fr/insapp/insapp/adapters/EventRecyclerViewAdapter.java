@@ -121,7 +121,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
         holder.name.setText(event.getName());
 
-        int nb_participants = event.getParticipants().size();
+        int nb_participants = event.getAttendees().size();
         if (nb_participants <= 1)
             holder.participants.setText(Integer.toString(nb_participants) + " participant");
         else

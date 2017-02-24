@@ -75,6 +75,11 @@ public class ClubActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        // dynamic color
+
+        final int bgColor = Color.parseColor("#" + club.getBgColor());
+        final int fgColor = Color.parseColor("#" + club.getFgColor());
+
         // collapsing toolbar
 
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_club);
@@ -91,17 +96,26 @@ public class ClubActivity extends AppCompatActivity {
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(club.getName());
                     isShow = true;
-                } else if(isShow) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        final Drawable upArrow = ContextCompat.getDrawable(ClubActivity.this, R.drawable.abc_ic_ab_back_material);
+                        upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
+                        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    }
+                } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
                     isShow = false;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        final Drawable upArrow = ContextCompat.getDrawable(ClubActivity.this, R.drawable.abc_ic_ab_back_material);
+                        upArrow.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+                        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    }
                 }
             }
         });
 
         // dynamic color
-
-        final int bgColor = Color.parseColor("#" + club.getBgColor());
-        final int fgColor = Color.parseColor("#" + club.getFgColor());
 
         collapsingToolbar.setContentScrimColor(bgColor);
         collapsingToolbar.setStatusBarScrimColor(bgColor);
@@ -132,7 +146,7 @@ public class ClubActivity extends AppCompatActivity {
 
         // send a mail
 
-        Button club_contact = (Button) findViewById(R.id.club_contact);
+        Button clubContactButton = (Button) findViewById(R.id.club_contact);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable email = ContextCompat.getDrawable(ClubActivity.this, R.drawable.ic_email_black_24dp);
@@ -142,10 +156,10 @@ public class ClubActivity extends AppCompatActivity {
             else
                 email.setColorFilter(bgColor, PorterDuff.Mode.SRC_ATOP);
 
-            club_contact.setCompoundDrawablesWithIntrinsicBounds(email, null, null, null);
+            clubContactButton.setCompoundDrawablesWithIntrinsicBounds(email, null, null, null);
         }
 
-        club_contact.setOnClickListener(new View.OnClickListener() {
+        clubContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendEmail();

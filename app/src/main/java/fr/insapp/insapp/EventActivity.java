@@ -309,7 +309,9 @@ public class EventActivity extends AppCompatActivity {
                                 System.out.println(output);
 
                                 try {
-                                    event.refresh(new JSONArray(output).getJSONObject(0));
+                                    JSONObject json = new JSONObject(output);
+                                    JSONArray jsonArray = json.optJSONArray("event");
+                                    event.refresh(jsonArray.getJSONObject(0));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -374,7 +376,9 @@ public class EventActivity extends AppCompatActivity {
                                 System.out.println(output);
 
                                 try {
-                                    event.refresh(new JSONArray(output).getJSONObject(0));
+                                    JSONObject json = new JSONObject(output);
+                                    JSONArray jsonArray = json.optJSONArray("event");
+                                    event.refresh(jsonArray.getJSONObject(0));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -437,7 +441,9 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
 
                                 try {
-                                    event.refresh(new JSONArray(output).getJSONObject(0));
+                                    JSONObject json = new JSONObject(output);
+                                    JSONArray jsonArray = json.optJSONArray("event");
+                                    event.refresh(jsonArray.getJSONObject(0));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

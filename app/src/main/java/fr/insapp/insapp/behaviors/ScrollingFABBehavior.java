@@ -31,16 +31,16 @@ public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FrameLayout
 
         if (fabContainer.getChildAt(0) instanceof FloatingActionMenu) {
             FloatingActionMenu fabMenu = (FloatingActionMenu) fabContainer.getChildAt(0);
-            if (dyConsumed > 5 && !fabMenu.isMenuButtonHidden()) {
+            if (dyConsumed > 0) {
                 fabMenu.hideMenuButton(true);
-            } else if (dyConsumed < 5 && fabMenu.isMenuButtonHidden()) {
+            } else if (dyConsumed < 0) {
                 fabMenu.showMenuButton(true);
             }
         } else if (fabContainer.getChildAt(0) instanceof FloatingActionButton) {
             FloatingActionButton fab = (FloatingActionButton) fabContainer.getChildAt(0);
             if (dyConsumed > 5 && !fab.isHidden()) {
                 fab.hide(true);
-            } else if (dyConsumed < 5 && fab.isHidden()) {
+            } else if (dyConsumed <= 5 && fab.isHidden()) {
                 fab.show(true);
             }
         }

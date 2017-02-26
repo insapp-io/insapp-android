@@ -1,18 +1,22 @@
 package fr.insapp.insapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -25,21 +29,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.AboutFragment;
 import fr.insapp.insapp.fragments.CommentsEventFragment;
 import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
 
 /**
@@ -62,6 +73,11 @@ public class EventActivity extends AppCompatActivity {
     private TextView dateTextView;
 
     private Event event;
+
+    private FloatingActionMenu floatingActionMenu;
+    private FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+
+    private Event.PARTICIPATE userParticipates = Event.PARTICIPATE.NO;
 
     private int bgColor;
     private int fgColor;
@@ -146,6 +162,293 @@ public class EventActivity extends AppCompatActivity {
             tabLayout.setTabTextColors(0xffdbdbdb, fgColor);
         else
             tabLayout.setTabTextColors(0xff5e5e5e, fgColor);
+
+        // floating action menu
+
+        for (final String id : event.getAttendees()) {
+            if (HttpGet.credentials.getUserID().equals(id)) {
+                this.userParticipates = Event.PARTICIPATE.YES;
+                break;
+            }
+        }
+
+        for (final String id : event.getMaybe()) {
+            if (HttpGet.credentials.getUserID().equals(id)) {
+                this.userParticipates = Event.PARTICIPATE.MAYBE;
+                break;
+            }
+        }
+
+        for (final String id : event.getNotgoing()) {
+            if (HttpGet.credentials.getUserID().equals(id)) {
+                this.userParticipates = Event.PARTICIPATE.NO;
+                break;
+            }
+        }
+
+        this.floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_participate_event);
+        floatingActionMenu.setIconAnimated(false);
+
+        switch (userParticipates) {
+            case NO:
+                floatingActionMenu.setMenuButtonColorNormal(bgColor);
+                floatingActionMenu.setMenuButtonColorPressed(bgColor);
+                floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
+                break;
+
+            case MAYBE:
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
+                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
+                break;
+
+            case YES:
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+                break;
+
+            default:
+                break;
+        }
+
+        final Date atm = Calendar.getInstance().getTime();
+        if (event.getDateEnd().getTime() < atm.getTime())
+            floatingActionMenu.setVisibility(View.GONE);
+
+        // fab 1
+
+        this.floatingActionButton1 = (FloatingActionButton) findViewById(R.id.fab_item_1_event);
+        floatingActionButton1.setLabelColors(bgColor, bgColor, 0x99ffffff);
+        floatingActionButton1.setLabelTextColor(fgColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable doubleTick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
+            doubleTick.setColorFilter(0xff4caf50, PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton1.setImageDrawable(doubleTick);
+        }
+
+        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (userParticipates) {
+                    case NO:
+                    case MAYBE:
+                        HttpPost request = new HttpPost(new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output) {
+                                userParticipates = Event.PARTICIPATE.YES;
+
+                                HttpGet get = new HttpGet(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        try {
+                                            MainActivity.user = new User(new JSONObject(output));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
+                                floatingActionMenu.close(true);
+                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+                                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+
+                                SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
+
+                                // if first time user join an event
+                                if (prefs.getString("addEventToCalender", "").equals("")) {
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EventActivity.this);
+
+                                    // set title
+                                    alertDialogBuilder.setTitle(getResources().getString(R.string.add_to_calendar_action));
+
+                                    // set dialog message
+                                    alertDialogBuilder
+                                            .setMessage(getResources().getString(R.string.add_to_calendar_are_you_sure))
+                                            .setCancelable(false)
+                                            .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialogAlert, int id) {
+                                                    SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                                                    prefs.putString("addEventToCalender", "true");
+                                                    prefs.apply();
+
+                                                    addEventToCalendar();
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.negative_button, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialogAlert, int id) {
+                                                    SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                                                    prefs.putString("addEventToCalender", "false");
+                                                    prefs.apply();
+
+                                                    dialogAlert.cancel();
+                                                }
+                                            });
+
+                                    // create alert dialog
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
+                                }
+                                else if (prefs.getString("addEventToCalender", "true").equals("true"))
+                                    addEventToCalendar();
+
+                                System.out.println(output);
+
+                                try {
+                                    event.refresh(new JSONObject(output));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                refreshAttendeesTextView();
+                            }
+                        });
+
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/going" + "?token=" + HttpGet.credentials.getSessionToken());
+                        break;
+
+                    case YES:
+                        floatingActionMenu.close(true);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+
+        // fab 2
+
+        this.floatingActionButton2 = (FloatingActionButton) findViewById(R.id.fab_item_2_event);
+        floatingActionButton2.setLabelColors(bgColor, bgColor, 0x99ffffff);
+        floatingActionButton2.setLabelTextColor(fgColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black);
+            tick.setColorFilter(0xffff9523, PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton2.setImageDrawable(tick);
+        }
+
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (userParticipates) {
+                    case NO:
+                    case YES:
+                        HttpPost request = new HttpPost(new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output) {
+                                userParticipates = Event.PARTICIPATE.MAYBE;
+
+                                HttpGet get = new HttpGet(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        try {
+                                            MainActivity.user = new User(new JSONObject(output));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
+                                floatingActionMenu.close(true);
+                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
+                                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
+
+                                System.out.println(output);
+
+                                try {
+                                    event.refresh(new JSONObject(output));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                refreshAttendeesTextView();
+                            }
+                        });
+
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/maybe" + "?token=" + HttpGet.credentials.getSessionToken());
+                        break;
+
+                    case MAYBE:
+                        floatingActionMenu.close(true);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+
+        // fab 3
+
+        this.floatingActionButton3 = (FloatingActionButton) findViewById(R.id.fab_item_3_event);
+        floatingActionButton3.setLabelColors(bgColor, bgColor, 0x99ffffff);
+        floatingActionButton3.setLabelTextColor(fgColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Drawable close = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp);
+            close.setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+            floatingActionButton3.setImageDrawable(close);
+        }
+
+        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (userParticipates) {
+                    case YES:
+                    case MAYBE:
+                        HttpDelete delete = new HttpDelete(new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output) {
+                                userParticipates = Event.PARTICIPATE.NO;
+
+                                HttpGet get = new HttpGet(new AsyncResponse() {
+                                    @Override
+                                    public void processFinish(String output) {
+                                        try {
+                                            MainActivity.user = new User(new JSONObject(output));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+
+                                floatingActionMenu.close(true);
+                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
+                                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
+
+                                try {
+                                    event.refresh(new JSONObject(output));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                refreshAttendeesTextView();
+                            }
+                        });
+
+                        delete.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                        break;
+
+                    case NO:
+                        floatingActionMenu.close(true);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
     private void setupViewPager(ViewPager viewPager, int swipeColor) {
@@ -333,7 +636,7 @@ public class EventActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshAttendeesTextView() {
+    public void refreshAttendeesTextView() {
         final int nbParticipants = event.getAttendees().size();
         final int nbInterested = event.getMaybe().size();
 
@@ -361,5 +664,18 @@ public class EventActivity extends AppCompatActivity {
             else
                 participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_x_interested), nbParticipants, nbInterested));
         }
+    }
+
+    private void addEventToCalendar() {
+        Intent intent = new Intent(Intent.ACTION_EDIT);
+        intent.setType("vnd.android.cursor.item/event");
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDateStart().getTime());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getDateEnd().getTime());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+        intent.putExtra(CalendarContract.Events.TITLE, event.getName());
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription());
+
+        startActivity(intent);
     }
 }

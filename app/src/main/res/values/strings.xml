@@ -69,6 +69,8 @@
     <string name="events">Events</string>
     <string name="users">Utilisateurs</string>
     <string name="notifications">Notifications</string>
+    <string name="about">À propos</string>
+    <string name="comments">Commentaires</string>
 
     <string name="events_future">À venir</string>
     <string name="events_past">Passés</string>

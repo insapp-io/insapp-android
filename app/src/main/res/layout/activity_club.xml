@@ -26,10 +26,10 @@
 
                 <ImageView
                     android:id="@+id/header_image_club"
-                    android:background="#212121"
                     android:layout_width="match_parent"
+                    android:layout_height="192dp"
                     android:scaleType="centerCrop"
-                    android:layout_height="192dp" />
+                    android:background="#ff7f7f7f" />
 
                 <RelativeLayout
                     android:id="@+id/club_profile"

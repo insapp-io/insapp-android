@@ -43,14 +43,18 @@ public class ClubActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
+    private ViewPager viewPager;
     private RelativeLayout relativeLayout;
+
     private TextView nameTextView;
     private TextView descriptionTextView;
     private CircleImageView iconImageView;
     private ImageView headerImageView;
-    private ViewPager viewPager;
 
     private Club club;
+
+    private int bgColor;
+    private int fgColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public class ClubActivity extends AppCompatActivity {
         this.club = intent.getParcelableExtra("club");
 
         this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
+
         this.nameTextView = (TextView) findViewById(R.id.club_name);
         this.descriptionTextView = (TextView) findViewById(R.id.club_description_text);
         this.iconImageView = (CircleImageView) findViewById(R.id.club_avatar);
@@ -77,8 +82,8 @@ public class ClubActivity extends AppCompatActivity {
 
         // dynamic color
 
-        final int bgColor = Color.parseColor("#" + club.getBgColor());
-        final int fgColor = Color.parseColor("#" + club.getFgColor());
+        this.bgColor = Color.parseColor("#" + club.getBgColor());
+        this.fgColor = Color.parseColor("#" + club.getFgColor());
 
         // collapsing toolbar
 

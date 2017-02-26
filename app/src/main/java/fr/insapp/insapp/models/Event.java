@@ -53,6 +53,48 @@ public class Event implements Parcelable, Comparable<Event> {
     };
 
     public Event(JSONObject json) throws JSONException {
+        refresh(json);
+    }
+
+    public Event(Parcel in){
+        this.id = in.readString();
+        this.name = in.readString();
+        this.association = in.readString();
+        this.description = in.readString();
+
+        this.attendees = new ArrayList<>();
+        this.maybe = new ArrayList<>();
+        this.notgoing = new ArrayList<>();
+
+        final int nbAttendees = in.readInt();
+        if (nbAttendees > 0)
+            in.readStringList(this.attendees);
+
+        final int nbMaybe = in.readInt();
+        if (nbMaybe > 0)
+            in.readStringList(this.maybe);
+
+        final int nbNotgoing = in.readInt();
+        if (nbNotgoing > 0)
+            in.readStringList(this.notgoing);
+
+        this.comments = new ArrayList<>();
+
+        final int nbComments = in.readInt();
+        if (nbComments > 0)
+            in.readTypedList(comments, Comment.CREATOR);
+
+        this.status = in.readString();
+
+        this.dateStart = new Date(in.readLong());
+        this.dateEnd = new Date(in.readLong());
+
+        this.image = in.readString();
+        this.bgColor = in.readString();
+        this.fgColor = in.readString();
+    }
+
+    public void refresh(JSONObject json) throws JSONException {
         this.id = json.getString("ID");
         this.name = json.getString("name");
         this.association = json.getString("association");
@@ -94,44 +136,6 @@ public class Event implements Parcelable, Comparable<Event> {
         this.image = json.getString("image");
         this.bgColor = json.getString("bgColor");
         this.fgColor = json.getString("fgColor");
-    }
-
-    public Event(Parcel in){
-        this.id = in.readString();
-        this.name = in.readString();
-        this.association = in.readString();
-        this.description = in.readString();
-
-        this.attendees = new ArrayList<>();
-        this.maybe = new ArrayList<>();
-        this.notgoing = new ArrayList<>();
-
-        final int nbAttendees = in.readInt();
-        if (nbAttendees > 0)
-            in.readStringList(this.attendees);
-
-        final int nbMaybe = in.readInt();
-        if (nbMaybe > 0)
-            in.readStringList(this.maybe);
-
-        final int nbNotgoing = in.readInt();
-        if (nbNotgoing > 0)
-            in.readStringList(this.notgoing);
-
-        this.comments = new ArrayList<>();
-
-        final int nbComments = in.readInt();
-        if (nbComments > 0)
-            in.readTypedList(comments, Comment.CREATOR);
-
-        this.status = in.readString();
-
-        this.dateStart = new Date(in.readLong());
-        this.dateEnd = new Date(in.readLong());
-
-        this.image = in.readString();
-        this.bgColor = in.readString();
-        this.fgColor = in.readString();
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -202,6 +206,10 @@ public class Event implements Parcelable, Comparable<Event> {
 
     public ArrayList<String> getNotgoing() {
         return notgoing;
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
     }
 
     public String getStatus() {

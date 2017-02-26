@@ -70,23 +70,22 @@ public class ClubsFragment extends Fragment {
 
         if (resultCode == RESULT_OK) {
             switch (requestCode){
-
                 case MainActivity.REFRESH_TOKEN_MESSAGE:
-
                     generateClubs();
+                    break;
+
+                default:
                     break;
             }
         }
     }
 
     private void generateClubs() {
-
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-                if(output.isEmpty()){
+                if (output.isEmpty())
                     startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
-                }
                 else {
                     try {
                         JSONArray jsonarray = new JSONArray(output);
@@ -98,9 +97,9 @@ public class ClubsFragment extends Fragment {
                             if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
                                 adapter.addItem(club);
 
-                                // Add club to the list if it is new
+                                // add club to the list if it is new
                                 Club c = HttpGet.clubs.get(club.getId());
-                                if(c == null)
+                                if (c == null)
                                     HttpGet.clubs.put(club.getId(), club);
                             }
                         }

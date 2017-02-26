@@ -124,7 +124,9 @@ public class MainActivity extends AppCompatActivity {
             Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
             mCursorDrawableRes.setAccessible(true);
             mCursorDrawableRes.set(searchView, R.drawable.cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
-        } catch (Exception e) {}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
@@ -38,12 +37,10 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
-import fr.insapp.insapp.http.HttpPut;
+import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
@@ -62,8 +59,8 @@ public class PostActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CommentRecyclerViewAdapter adapter;
 
-    private Post post = null;
-    private Club club = null;
+    private Post post;
+    private Club club;
 
     private CircleImageView avatar_club;
     private TextView title;
@@ -87,9 +84,8 @@ public class PostActivity extends AppCompatActivity {
     private EditText editText;
     private PopupMenu popup;
 
-    private Notification notification = null;
+    private Notification notification;
 
-    private boolean visible = false;
     private List<User> usersTagged = new ArrayList<>();
 
     @Override
@@ -101,6 +97,8 @@ public class PostActivity extends AppCompatActivity {
         this.title = (TextView) findViewById(R.id.post_title);
         this.description = (TextView) findViewById(R.id.post_text);
         this.date = (TextView) findViewById(R.id.post_date);
+
+        // post
 
         Intent intent = getIntent();
         this.post = intent.getParcelableExtra("post");
@@ -161,7 +159,6 @@ public class PostActivity extends AppCompatActivity {
                     }
                 });
                 request.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
-
             }
         }
     }
@@ -216,87 +213,21 @@ public class PostActivity extends AppCompatActivity {
         Linkify.addLinks(description, Linkify.ALL);
         Utils.convertToLinkSpan(PostActivity.this, description);
 
+        // adapter
+
+        this.adapter = new CommentRecyclerViewAdapter(PostActivity.this, post.getComments());
+        adapter.setOnItemLongClickListener(new PostCommentLongClickListener(PostActivity.this, post, adapter));
+
         // recycler view
 
-        this.recyclerView = (RecyclerView) findViewById(R.id.recyclerview_comments);
+        this.recyclerView = (RecyclerView) findViewById(R.id.recyclerview_comments_post);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        // adapter
-
-        this.adapter = new CommentRecyclerViewAdapter(PostActivity.this, post.getComments());
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemLongClickListener(new CommentRecyclerViewAdapter.OnCommentItemLongClickListener() {
-            @Override
-            public void onCommentItemLongClick(final Comment comment) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
-
-                // delete comment
-                if (HttpGet.credentials.getId().equalsIgnoreCase(comment.getUserId())) {
-                    alertDialogBuilder.setTitle(getString(R.string.delete_comment_action));
-                    alertDialogBuilder
-                            .setMessage(R.string.delete_comment_are_you_sure)
-                            .setCancelable(true)
-                            .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogAlert, int id) {
-                                    setResult(RESULT_OK);
-
-                                    HttpDelete delete = new HttpDelete(new AsyncResponse() {
-                                        @Override
-                                        public void processFinish(String output) {
-                                            try {
-                                                post = new Post(new JSONObject(output));
-
-                                                adapter.setComments(post.getComments());
-                                                adapter.notifyDataSetChanged();
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                    delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogAlert, int id) {
-                                    dialogAlert.cancel();
-                                }
-                            });
-
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }
-                // report comment
-                else {
-                    alertDialogBuilder.setTitle(getString(R.string.report_comment_action));
-                    alertDialogBuilder
-                            .setMessage(R.string.report_comment_are_you_sure)
-                            .setCancelable(true)
-                            .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogAlert, int id) {
-                                    HttpPut report = new HttpPut(new AsyncResponse() {
-                                        @Override
-                                        public void processFinish(String output) {
-                                            Toast.makeText(PostActivity.this, getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    report.execute(HttpGet.ROOTURL + "/report/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogAlert, int id) {
-                                    dialogAlert.cancel();
-                                }
-                            });
-
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }
-            }
-        });
 
         // edit text
 
@@ -313,7 +244,6 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    System.out.println("LOST FOCUS §!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     // code to execute when EditText loses focus
                 }
             }
@@ -327,8 +257,6 @@ public class PostActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                System.out.println("IJHFBJEOIFEknjl3APJFHNKJ");
-
                 // skip execution if triggered by code
                 if (autochange) {
                     //last_count = s.length();
@@ -368,9 +296,7 @@ public class PostActivity extends AppCompatActivity {
 
                     int pos = editText.getSelectionStart() - 1;
                     if (pos >= 0) {
-                        char c = charSequence.charAt(pos);
-
-                        System.out.println("WRITTING : " + pos + " " + c + " " + userWrittingTag);
+                        final char c = charSequence.charAt(pos);
                         if (userWrittingTag) {
                             if (c == ' ' || pos <= tagStartsAt || pos - 1 > tagStartsAt + tagWritting.length()) {
                                 userWrittingTag = false;
@@ -421,7 +347,6 @@ public class PostActivity extends AppCompatActivity {
                                 List<String> already_tagged = new ArrayList<>();
                                 for (Tag tag : tags) {
                                     // if the user didn't delete it
-                                    System.out.println("1 TAG" + tag.getName());
                                     if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
 
                                         System.out.println("Valide: " + tag.getName());

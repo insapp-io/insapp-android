@@ -32,6 +32,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -301,7 +302,7 @@ public class EventActivity extends AppCompatActivity {
                                 System.out.println(output);
 
                                 try {
-                                    event.refresh(new JSONObject(output));
+                                    event.refresh(new JSONArray(output).getJSONObject(0));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -366,7 +367,7 @@ public class EventActivity extends AppCompatActivity {
                                 System.out.println(output);
 
                                 try {
-                                    event.refresh(new JSONObject(output));
+                                    event.refresh(new JSONArray(output).getJSONObject(0));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -429,7 +430,7 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
 
                                 try {
-                                    event.refresh(new JSONObject(output));
+                                    event.refresh(new JSONArray(output).getJSONObject(0));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

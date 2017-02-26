@@ -93,7 +93,7 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        this.avatar_club = (CircleImageView) findViewById(R.id.club_avatar_post);
+        this.avatar_club = (CircleImageView) findViewById(R.id.post_club_avatar);
         this.title = (TextView) findViewById(R.id.post_title);
         this.description = (TextView) findViewById(R.id.post_text);
         this.date = (TextView) findViewById(R.id.post_date);

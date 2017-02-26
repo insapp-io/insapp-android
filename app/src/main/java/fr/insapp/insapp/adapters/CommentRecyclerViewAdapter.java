@@ -161,7 +161,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         public CommentViewHolder(View view) {
             super(view);
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.club_avatar_post);
+            this.avatar = (CircleImageView) view.findViewById(R.id.username_avatar);
             this.username = (TextView) view.findViewById(R.id.username_comment);
             this.text = (TextView) view.findViewById(R.id.text_comment);
             this.date = (TextView) view.findViewById(R.id.date_comment);

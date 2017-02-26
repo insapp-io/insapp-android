@@ -111,12 +111,12 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                JSONObject json = null;
+                JSONObject json;
                 try {
                     json = new JSONObject(output);
                     final User user = new User(json);
 
-                    // Get the drawable of avatar
+                    // get the drawable of avatar
                     Resources resources = context.getResources();
                     final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                     Glide.with(context).load(id).into(holder.avatar);

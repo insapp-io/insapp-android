@@ -1,39 +1,41 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/comment_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:padding="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/username_avatar"
-            android:layout_marginTop="12dp"
+            android:id="@+id/comment_event_username_avatar"
+            android:layout_marginTop="6dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="6dp"
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:civ_border_width="0dp" />
 
-        <TextView
-            android:id="@+id/username_comment"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/comment_event_input"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#3e3e3e"
-            android:textSize="15sp"
-            android:layout_marginBottom="5dp"
             android:layout_marginStart="10dp"
-            android:layout_toEndOf="@id/username_avatar"
-            android:layout_alignTop="@id/username_avatar" />
+            android:textSize="15sp"
+            android:layout_toEndOf="@id/comment_event_username_avatar"
+            android:inputType="text"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="16dp"
+            android:hint="@string/write_comment_action" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_comments_event"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/comment_event" />
 </RelativeLayout>

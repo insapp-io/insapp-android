@@ -43,14 +43,14 @@
     <string name="settings_calendar">Ajouter les évènements au calendrier</string>
     <string name="settings_calendar_summary">Les évènements auxquels tu participes sont ajoutés à ton calendrier</string>
 
-    <string name="write_comment">Écrire un commentaire</string>
-
     <string name="report">Signaler</string>
     <string name="delete_account">Supprimer mon compte</string>
 
     <string name="report_user_action">Signaler un utilisateur</string>
     <string name="report_user_are_you_sure">Voulez-vous vraiment signaler cet utilisateur ?</string>
     <string name="report_user_success">Utilisateur signalé avec succès</string>
+
+    <string name="write_comment_action">Écrire un commentaire</string>
 
     <string name="report_comment_action">Signaler un commentaire</string>
     <string name="report_comment_are_you_sure">Voulez-vous signaler ce commentaire ?</string>

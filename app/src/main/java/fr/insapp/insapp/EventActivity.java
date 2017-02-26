@@ -1,11 +1,13 @@
 package fr.insapp.insapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +22,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -77,6 +82,8 @@ public class EventActivity extends AppCompatActivity {
 
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+
+    private AppBarLayout appBarLayout;
 
     private Event.PARTICIPATE userParticipates = Event.PARTICIPATE.NO;
 
@@ -450,6 +457,10 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // app bar layout
+
+        this.appBarLayout = (AppBarLayout) findViewById(R.id.appbar_event);
     }
 
     private void setupViewPager(ViewPager viewPager, int swipeColor) {
@@ -678,5 +689,32 @@ public class EventActivity extends AppCompatActivity {
         intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription());
 
         startActivity(intent);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                    floatingActionMenu.showMenu(false);
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
+    }
+
+    public FloatingActionMenu getFloatingActionMenu() {
+        return floatingActionMenu;
+    }
+
+    public AppBarLayout getAppBarLayout() {
+        return appBarLayout;
     }
 }

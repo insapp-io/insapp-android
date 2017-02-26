@@ -329,7 +329,7 @@ public class PostActivity extends AppCompatActivity {
         // alert dialog
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PostActivity.this);
-        alertDialogBuilder.setTitle(getString(R.string.write_comment));
+        alertDialogBuilder.setTitle(getString(R.string.write_comment_action));
         alertDialogBuilder
                 .setView(container)
                 .setCancelable(true)

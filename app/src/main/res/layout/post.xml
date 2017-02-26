@@ -14,11 +14,11 @@
         android:layout_marginBottom="5dp" />
 
     <TextView
+        android:id="@+id/date_post"
         android:textColor="#7f7f7f"
         android:textSize="13sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/date_post"
         android:layout_alignBaseline="@+id/name_post"
         android:layout_alignParentEnd="true" />
 

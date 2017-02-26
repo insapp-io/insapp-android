@@ -30,7 +30,7 @@
                 <ImageView
                     android:id="@+id/header_image_event"
                     android:layout_width="match_parent"
-                    android:layout_height="192dp"
+                    android:layout_height="156dp"
                     android:scaleType="centerCrop"
                     android:background="#ff7f7f7f" />
             </RelativeLayout>

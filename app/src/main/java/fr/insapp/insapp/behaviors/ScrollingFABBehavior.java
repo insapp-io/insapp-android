@@ -38,9 +38,9 @@ public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FrameLayout
             }
         } else if (fabContainer.getChildAt(0) instanceof FloatingActionButton) {
             FloatingActionButton fab = (FloatingActionButton) fabContainer.getChildAt(0);
-            if (dyConsumed > 5 && !fab.isHidden()) {
+            if (dyConsumed > 0) {
                 fab.hide(true);
-            } else if (dyConsumed <= 5 && fab.isHidden()) {
+            } else if (dyConsumed < 0) {
                 fab.show(true);
             }
         }

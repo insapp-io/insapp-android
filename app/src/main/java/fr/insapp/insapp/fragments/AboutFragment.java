@@ -187,11 +187,11 @@ public class AboutFragment extends Fragment {
                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 
                                     // set title
-                                    alertDialogBuilder.setTitle("Ajout au calendrier");
+                                    alertDialogBuilder.setTitle(getResources().getString(R.string.add_to_calendar_action));
 
                                     // set dialog message
                                     alertDialogBuilder
-                                            .setMessage("Voulez-vous ajouter les évènements auxquels vous participez à votre calendrier ?")
+                                            .setMessage(getResources().getString(R.string.add_to_calendar_are_you_sure))
                                             .setCancelable(false)
                                             .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialogAlert, int id) {

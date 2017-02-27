@@ -84,7 +84,7 @@ public class EventActivity extends AppCompatActivity {
 
     private AppBarLayout appBarLayout;
 
-    private Event.PARTICIPATE userParticipates = Event.PARTICIPATE.UNDEFINED;
+    private Event.PARTICIPATE status = Event.PARTICIPATE.UNDEFINED;
 
     private int bgColor;
     private int fgColor;
@@ -172,32 +172,13 @@ public class EventActivity extends AppCompatActivity {
 
         // floating action menu
 
-        for (final String id : event.getAttendees()) {
-            if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = Event.PARTICIPATE.YES;
-                break;
-            }
-        }
-
-        for (final String id : event.getMaybe()) {
-            if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = Event.PARTICIPATE.MAYBE;
-                break;
-            }
-        }
-
-        for (final String id : event.getNotgoing()) {
-            if (HttpGet.credentials.getUserID().equals(id)) {
-                this.userParticipates = Event.PARTICIPATE.NO;
-                break;
-            }
-        }
+        this.status = event.getStatusForUser(HttpGet.credentials.getUserID());
 
         // fab style
 
         this.floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_participate_event);
         floatingActionMenu.setIconAnimated(false);
-        setFloatingActionMenuTheme(userParticipates);
+        setFloatingActionMenuTheme(status);
 
         // hide fab is event is past
 
@@ -213,21 +194,21 @@ public class EventActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable doubleTick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
-            doubleTick.setColorFilter(0xff4caf50, PorterDuff.Mode.SRC_ATOP);
+            doubleTick.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_green), PorterDuff.Mode.SRC_ATOP);
             floatingActionButton1.setImageDrawable(doubleTick);
         }
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (userParticipates) {
+                switch (status) {
                     case NO:
                     case MAYBE:
                     case UNDEFINED:
                         HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
-                                userParticipates = Event.PARTICIPATE.YES;
+                                status = Event.PARTICIPATE.YES;
 
                                 HttpGet get = new HttpGet(new AsyncResponse() {
                                     @Override
@@ -242,7 +223,7 @@ public class EventActivity extends AppCompatActivity {
                                 get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
                                 floatingActionMenu.close(true);
-                                setFloatingActionMenuTheme(userParticipates);
+                                setFloatingActionMenuTheme(status);
                                 refreshFloatingActionButtons();
 
                                 SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
@@ -316,21 +297,21 @@ public class EventActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black);
-            tick.setColorFilter(0xffff9523, PorterDuff.Mode.SRC_ATOP);
+            tick.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_orange), PorterDuff.Mode.SRC_ATOP);
             floatingActionButton2.setImageDrawable(tick);
         }
 
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (userParticipates) {
+                switch (status) {
                     case NO:
                     case YES:
                     case UNDEFINED:
                         HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
-                                userParticipates = Event.PARTICIPATE.MAYBE;
+                                status = Event.PARTICIPATE.MAYBE;
 
                                 HttpGet get = new HttpGet(new AsyncResponse() {
                                     @Override
@@ -345,7 +326,7 @@ public class EventActivity extends AppCompatActivity {
                                 get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
                                 floatingActionMenu.close(true);
-                                setFloatingActionMenuTheme(userParticipates);
+                                setFloatingActionMenuTheme(status);
                                 refreshFloatingActionButtons();
 
                                 try {
@@ -380,21 +361,21 @@ public class EventActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable close = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp);
-            close.setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+            close.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_red), PorterDuff.Mode.SRC_ATOP);
             floatingActionButton3.setImageDrawable(close);
         }
 
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (userParticipates) {
+                switch (status) {
                     case YES:
                     case MAYBE:
                     case UNDEFINED:
                         HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
-                                userParticipates = Event.PARTICIPATE.NO;
+                                status = Event.PARTICIPATE.NO;
 
                                 HttpGet get = new HttpGet(new AsyncResponse() {
                                     @Override
@@ -409,7 +390,7 @@ public class EventActivity extends AppCompatActivity {
                                 get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
                                 floatingActionMenu.close(true);
-                                setFloatingActionMenuTheme(userParticipates);
+                                setFloatingActionMenuTheme(status);
                                 refreshFloatingActionButtons();
 
                                 try {
@@ -472,24 +453,24 @@ public class EventActivity extends AppCompatActivity {
                 break;
 
             case NO:
-                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
+                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_close_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_red));
                 break;
 
             case MAYBE:
-                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
-                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
+                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_question_mark_black));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_orange));
                 break;
 
             case YES:
-                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_check_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_green));
                 break;
 
             default:
@@ -698,7 +679,7 @@ public class EventActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                switch (userParticipates) {
+                switch (status) {
                     case YES:
                         floatingActionButton1.setVisibility(View.GONE);
                         floatingActionButton2.setVisibility(View.VISIBLE);

@@ -7,6 +7,10 @@
     <color name="theme_red">#C9504B</color>
     <color name="barre_division">#7f7f7f</color>
 
-    <color name="white">#fff</color>
+    <color name="white">#ffffffff</color>
     <color name="transparent_black">#40000000</color>
+
+    <color name="fab_red">#ffec5d57</color>
+    <color name="fab_orange">#ffff9523</color>
+    <color name="fab_green">#ff4caf50</color>
 </resources>

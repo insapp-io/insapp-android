@@ -171,6 +171,25 @@ public class Event implements Parcelable, Comparable<Event> {
         dest.writeString(fgColor);
     }
 
+    public PARTICIPATE getStatusForUser(String userID) {
+        for (final String id : getNotgoing()) {
+            if (userID.equals(id))
+                return Event.PARTICIPATE.NO;
+        }
+
+        for (final String id : getMaybe()) {
+            if (userID.equals(id))
+                return Event.PARTICIPATE.MAYBE;
+        }
+
+        for (final String id : getAttendees()) {
+            if (userID.equals(id))
+                return Event.PARTICIPATE.YES;
+        }
+
+        return PARTICIPATE.UNDEFINED;
+    }
+
     public boolean equals(Object other){
         if (other == null) return false;
         if (other == this) return true;

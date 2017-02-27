@@ -29,7 +29,7 @@
                     android:layout_height="40dp"
                     app:civ_border_width="0dp" />
 
-                <EditText
+                <fr.insapp.insapp.utility.CommentEditText
                     android:id="@+id/comment_event_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

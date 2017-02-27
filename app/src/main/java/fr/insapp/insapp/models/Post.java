@@ -18,8 +18,8 @@ import fr.insapp.insapp.utility.Operation;
 
 public class Post implements Parcelable {
 
-    private String id, title;
-    private String association, description;
+    private String id;
+    private String title, association, description;
     private Date date;
 
     private ArrayList<String> likes;
@@ -43,6 +43,34 @@ public class Post implements Parcelable {
     };
 
     public Post(JSONObject json) throws JSONException {
+        refresh(json);
+    }
+
+    protected Post(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        association = in.readString();
+        description = in.readString();
+        date = new Date(in.readLong());
+
+        this.likes = new ArrayList<>();
+
+        final int nbLikes = in.readInt();
+        if (nbLikes > 0)
+            in.readStringList(likes);
+
+        this.comments = new ArrayList<>();
+
+        final int nbComments = in.readInt();
+        if (nbComments > 0)
+            in.readTypedList(comments, Comment.CREATOR);
+
+        image = in.readString();
+        width = in.readInt();
+        height = in.readInt();
+    }
+
+    public void refresh(JSONObject json) throws JSONException {
         this.id = json.getString("ID");
         this.title = json.getString("title");
         this.association = json.getString("association");
@@ -70,30 +98,6 @@ public class Post implements Parcelable {
         this.height = json.getJSONObject("imageSize").getInt("width");
     }
 
-    protected Post(Parcel in) {
-        id = in.readString();
-        title = in.readString();
-        association = in.readString();
-        description = in.readString();
-        date = new Date(in.readLong());
-
-        this.likes = new ArrayList<>();
-
-        final int nbLikes = in.readInt();
-        if (nbLikes > 0)
-            in.readStringList(likes);
-
-        this.comments = new ArrayList<>();
-
-        final int nbComments = in.readInt();
-        if (nbComments > 0)
-            in.readTypedList(comments, Comment.CREATOR);
-
-        image = in.readString();
-        width = in.readInt();
-        height = in.readInt();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int i) {
         dest.writeString(id);
@@ -115,7 +119,7 @@ public class Post implements Parcelable {
         dest.writeInt(height);
     }
 
-    public boolean equals(Object other){
+    public boolean equals(Object other) {
         if (other == null) return false;
         if (other == this) return true;
         if (!(other instanceof Post)) return false;
@@ -125,9 +129,9 @@ public class Post implements Parcelable {
         return otherMyClass.getId().equals(this.id);
     }
 
-    public boolean postLikedBy(String user){
+    public boolean isPostLikedBy(String userID) {
         for (String idUser : likes) {
-            if (idUser.equals(user))
+            if (idUser.equals(userID))
                 return true;
         }
 

@@ -157,7 +157,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         // like button
 
         if (layout != R.layout.row_post) {
-            holder.likeButton.setLiked(post.postLikedBy(HttpGet.credentials.getUserID()));
+            holder.likeButton.setLiked(post.isPostLikedBy(HttpGet.credentials.getUserID()));
 
             holder.likeButton.setOnLikeListener(new OnLikeListener() {
                 @Override

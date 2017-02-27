@@ -190,7 +190,7 @@ public class Event implements Parcelable, Comparable<Event> {
         return PARTICIPATE.UNDEFINED;
     }
 
-    public boolean equals(Object other){
+    public boolean equals(Object other) {
         if (other == null) return false;
         if (other == this) return true;
         if (!(other instanceof Event)) return false;

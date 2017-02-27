@@ -9,12 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -42,7 +38,7 @@ import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.listeners.EventCommentLongClickListener;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Tag;
-import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
 
 /**
@@ -53,25 +49,16 @@ public class CommentsEventFragment extends Fragment {
 
     private View view;
 
-    private CircleImageView circleImageView;
-    private EditText editText;
-    private PopupMenu popup;
-
     private RecyclerView recyclerView;
     private CommentRecyclerViewAdapter adapter;
 
     private Event event;
 
-    private ArrayList<Tag> tags = new ArrayList<>();
+    // comment
 
-    private boolean userWrittingTag = false;
-    private int tagStartsAt = 0;
-    private String tagWritting = "";
-    private boolean autochange = false;
-    private boolean deleteTag = false;
-    private int lastCount = 0;
-
-    private List<User> usersTagged = new ArrayList<>();
+    private CircleImageView circleImageView;
+    private CommentEditText commentEditText;
+    private PopupMenu popup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,15 +86,28 @@ public class CommentsEventFragment extends Fragment {
         this.circleImageView = (CircleImageView) view.findViewById(R.id.comment_event_username_avatar);
 
         // get the drawable of avatar
+
         Resources resources = getContext().getResources();
         final int id = resources.getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getContext().getPackageName());
         Glide.with(getContext()).load(id).into(circleImageView);
 
+        // popup menu
+
+        this.popup = new PopupMenu(getContext(), commentEditText);
+        popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
+        popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                menu.show();
+            }
+        });
+
         // edit text
 
-        this.editText = (EditText) view.findViewById(R.id.comment_event_input);
+        this.commentEditText = (CommentEditText) view.findViewById(R.id.comment_event_input);
+        commentEditText.setTextChangedListener(popup);
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        commentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
@@ -126,82 +126,7 @@ public class CommentsEventFragment extends Fragment {
             }
         });
 
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // skip execution if triggered by code
-                if (autochange) {
-                    //last_count = s.length();
-                    autochange = false; // next change is not triggered by code
-                    return;
-                }
-
-                if (charSequence.length() == 0) {
-                    lastCount = 0;
-                    userWrittingTag = false;
-                    tagWritting = "";
-                    tagStartsAt = 0;
-                }
-
-                // deletion
-                if (charSequence.length() - lastCount < 0) {
-                    if (userWrittingTag) {
-                        String currentStr = editText.getText().toString();
-                        String strWithoutTag = currentStr.substring(0, tagStartsAt) + currentStr.substring(tagStartsAt + tagWritting.length(), currentStr.length());
-
-                        autochange = true;
-                        editText.setText(strWithoutTag);
-                        editText.setSelection(tagStartsAt);
-
-                        lastCount = strWithoutTag.length();
-                        userWrittingTag = false;
-                        tagWritting = "";
-                        tagStartsAt = 0;
-
-                        deleteTag = true;
-                        //popup.dismiss();
-                    }
-                }
-                // writing
-                else {
-                    deleteTag = false;
-
-                    int pos = editText.getSelectionStart() - 1;
-                    if (pos >= 0) {
-                        final char c = charSequence.charAt(pos);
-                        if (userWrittingTag) {
-                            if (c == ' ' || pos <= tagStartsAt || pos - 1 > tagStartsAt + tagWritting.length()) {
-                                userWrittingTag = false;
-                            } else {
-                                tagWritting += charSequence.toString().charAt(pos);
-                                showUsersToTag(tagWritting);
-                            }
-                        } else {
-                            if (c == '@') {
-                                userWrittingTag = true;
-                                tagStartsAt = pos;
-                                tagWritting = "";
-                            }
-                        }
-                    }
-                }
-
-                if (!deleteTag)
-                    lastCount = charSequence.length();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        commentEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -209,7 +134,7 @@ public class CommentsEventFragment extends Fragment {
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-                    final String text = editText.getText().toString();
+                    final String text = commentEditText.getText().toString();
                     if (!text.isEmpty()) {
                         final JSONObject json = new JSONObject();
 
@@ -219,7 +144,7 @@ public class CommentsEventFragment extends Fragment {
 
                             JSONArray jsonArray = new JSONArray();
                             List<String> already_tagged = new ArrayList<>();
-                            for (Tag tag : tags) {
+                            for (final Tag tag : commentEditText.getTags()) {
                                 // if the user didn't delete it
                                 if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
                                     JSONObject jsonTag = new JSONObject();
@@ -242,7 +167,7 @@ public class CommentsEventFragment extends Fragment {
                                     event.refresh(new JSONObject(output));
                                     adapter.setComments(event.getComments());
 
-                                    editText.getText().clear();
+                                    commentEditText.getText().clear();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -260,17 +185,6 @@ public class CommentsEventFragment extends Fragment {
             }
         });
 
-        // popup menu
-
-        this.popup = new PopupMenu(getActivity(), editText);
-        popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
-        popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-                menu.show();
-            }
-        });
-
         // recycler view
 
         this.recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_comments_event);
@@ -283,75 +197,5 @@ public class CommentsEventFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
-    }
-
-    private void showUsersToTag(String username) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("terms", username);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        HttpPost request = new HttpPost(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                try {
-                    JSONObject json = new JSONObject(output);
-                    JSONArray jsonArray = json.getJSONArray("users");
-
-                    if (jsonArray != null) {
-                        popup.getMenu().clear();
-                        usersTagged.clear();
-
-                        for (int i = jsonArray.length() - 1; i >= jsonArray.length() - Math.min(jsonArray.length(), 3); i--) {
-                            final User user = new User(jsonArray.getJSONObject(i));
-
-                            usersTagged.add(user);
-                            popup.getMenu().add(Menu.NONE, Menu.NONE, i + 1, "@" + user.getUsername());
-                        }
-
-                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                String currentStr = editText.getText().toString();
-                                String strWithTag = currentStr.substring(0, tagStartsAt) + item.getTitle() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
-
-                                String id = "";
-                                for (User u : usersTagged) {
-                                    String username = "@" + u.getUsername();
-                                    if (username.equals(item.toString()))
-                                        id = u.getId();
-                                }
-
-                                tags.add(new Tag("", id, item.toString()));
-
-                                autochange = true;
-                                editText.setText(strWithTag);
-                                editText.setSelection(tagStartsAt + item.toString().length() + 1);
-
-                                userWrittingTag = false;
-                                tagWritting = "";
-                                tagStartsAt = 0;
-
-                                return true;
-                            }
-                        });
-                    }
-                } catch (JSONException e) {
-                    userWrittingTag = false;
-                    tagWritting = "";
-                    tagStartsAt = 0;
-
-                    popup.dismiss();
-
-                    e.printStackTrace();
-                }
-
-                popup.show();
-            }
-        });
-
-        request.execute(HttpGet.ROOTSEARCHUSERS + "?token=" + HttpGet.credentials.getSessionToken(), jsonObject.toString());
     }
 }

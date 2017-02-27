@@ -78,6 +78,8 @@
     <string name="events_week">Cette semaine</string>
     <string name="events_month">Ce mois-ci</string>
 
+    <string name="ago">il y a %1$s</string>
+
     <string name="event_participants">Participants</string>
 
     <string name="add_to_calendar_action">Ajout au calendrier</string>

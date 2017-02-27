@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.CalendarContract;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -37,7 +38,6 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -267,6 +267,8 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
                                 floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
 
+                                refreshFloatingActionButtons(userParticipates);
+
                                 SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
 
                                 // if first time user join an event
@@ -306,15 +308,13 @@ public class EventActivity extends AppCompatActivity {
                                 else if (prefs.getString("addEventToCalender", "true").equals("true"))
                                     addEventToCalendar();
 
-                                System.out.println(output);
-
                                 try {
                                     JSONObject json = new JSONObject(output);
-                                    JSONArray jsonArray = json.optJSONArray("event");
-                                    event.refresh(jsonArray.getJSONObject(0));
+                                    event.refresh(json.getJSONObject("event"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+
                                 refreshAttendeesTextView();
                             }
                         });
@@ -331,9 +331,6 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
         });
-
-        if (userParticipates == Event.PARTICIPATE.YES)
-            floatingActionButton1.setVisibility(View.GONE);
 
         // fab 2
 
@@ -376,15 +373,15 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
                                 floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
 
-                                System.out.println(output);
+                                refreshFloatingActionButtons(userParticipates);
 
                                 try {
                                     JSONObject json = new JSONObject(output);
-                                    JSONArray jsonArray = json.optJSONArray("event");
-                                    event.refresh(jsonArray.getJSONObject(0));
+                                    event.refresh(json.getJSONObject("event"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+
                                 refreshAttendeesTextView();
                             }
                         });
@@ -401,9 +398,6 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
         });
-
-        if (userParticipates == Event.PARTICIPATE.MAYBE)
-            floatingActionButton2.setVisibility(View.GONE);
 
         // fab 3
 
@@ -446,13 +440,15 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
                                 floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
 
+                                refreshFloatingActionButtons(userParticipates);
+
                                 try {
                                     JSONObject json = new JSONObject(output);
-                                    JSONArray jsonArray = json.optJSONArray("event");
-                                    event.refresh(jsonArray.getJSONObject(0));
+                                    event.refresh(json.getJSONObject("event"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+
                                 refreshAttendeesTextView();
                             }
                         });
@@ -470,8 +466,7 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
-        if (userParticipates == Event.PARTICIPATE.NO)
-            floatingActionButton3.setVisibility(View.GONE);
+        refreshFloatingActionButtons(userParticipates);
 
         // app bar layout
 
@@ -691,6 +686,37 @@ public class EventActivity extends AppCompatActivity {
             else
                 participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_x_interested), nbParticipants, nbInterested));
         }
+    }
+
+    private void refreshFloatingActionButtons(final Event.PARTICIPATE userParticipates) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                switch (userParticipates) {
+                    case YES:
+                        floatingActionButton1.setVisibility(View.GONE);
+                        floatingActionButton2.setVisibility(View.VISIBLE);
+                        floatingActionButton3.setVisibility(View.VISIBLE);
+                        break;
+
+                    case MAYBE:
+                        floatingActionButton1.setVisibility(View.VISIBLE);
+                        floatingActionButton2.setVisibility(View.GONE);
+                        floatingActionButton3.setVisibility(View.VISIBLE);
+                        break;
+
+                    case NO:
+                        floatingActionButton1.setVisibility(View.VISIBLE);
+                        floatingActionButton2.setVisibility(View.VISIBLE);
+                        floatingActionButton3.setVisibility(View.GONE);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }, 500);
     }
 
     private void addEventToCalendar() {

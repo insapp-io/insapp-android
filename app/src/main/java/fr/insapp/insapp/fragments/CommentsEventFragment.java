@@ -3,6 +3,7 @@ package fr.insapp.insapp.fragments;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -79,7 +80,13 @@ public class CommentsEventFragment extends Fragment {
                     ((EventActivity) getActivity()).getFloatingActionMenu().hideMenu(false);
                 }
                 else {
-                    ((EventActivity) getActivity()).getFloatingActionMenu().showMenu(false);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((EventActivity) getActivity()).getFloatingActionMenu().showMenu(true);
+                        }
+                    }, 500);
                 }
             }
         });

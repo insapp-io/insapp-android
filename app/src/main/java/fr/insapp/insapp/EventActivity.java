@@ -708,8 +708,6 @@ public class EventActivity extends AppCompatActivity {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-                    floatingActionMenu.showMenu(false);
                 }
             }
         }

@@ -35,7 +35,8 @@ public class Event implements Parcelable, Comparable<Event> {
     public enum PARTICIPATE {
         YES,
         MAYBE,
-        NO
+        NO,
+        UNDEFINED
     }
 
     public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {

@@ -50,7 +50,6 @@ import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.AboutFragment;
 import fr.insapp.insapp.fragments.CommentsEventFragment;
 import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Club;
@@ -85,7 +84,7 @@ public class EventActivity extends AppCompatActivity {
 
     private AppBarLayout appBarLayout;
 
-    private Event.PARTICIPATE userParticipates = Event.PARTICIPATE.NO;
+    private Event.PARTICIPATE userParticipates = Event.PARTICIPATE.UNDEFINED;
 
     private int bgColor;
     private int fgColor;
@@ -194,34 +193,13 @@ public class EventActivity extends AppCompatActivity {
             }
         }
 
+        // fab style
+
         this.floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_participate_event);
         floatingActionMenu.setIconAnimated(false);
+        setFloatingActionMenuTheme(userParticipates);
 
-        switch (userParticipates) {
-            case NO:
-                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
-                break;
-
-            case MAYBE:
-                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
-                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
-                break;
-
-            case YES:
-                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
-                break;
-
-            default:
-                break;
-        }
+        // hide fab is event is past
 
         final Date atm = Calendar.getInstance().getTime();
         if (event.getDateEnd().getTime() < atm.getTime())
@@ -245,6 +223,7 @@ public class EventActivity extends AppCompatActivity {
                 switch (userParticipates) {
                     case NO:
                     case MAYBE:
+                    case UNDEFINED:
                         HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
@@ -263,11 +242,7 @@ public class EventActivity extends AppCompatActivity {
                                 get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
                                 floatingActionMenu.close(true);
-                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
-                                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
-
+                                setFloatingActionMenuTheme(userParticipates);
                                 refreshFloatingActionButtons();
 
                                 SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
@@ -351,6 +326,7 @@ public class EventActivity extends AppCompatActivity {
                 switch (userParticipates) {
                     case NO:
                     case YES:
+                    case UNDEFINED:
                         HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
@@ -369,11 +345,7 @@ public class EventActivity extends AppCompatActivity {
                                 get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
                                 floatingActionMenu.close(true);
-                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
-                                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
-
+                                setFloatingActionMenuTheme(userParticipates);
                                 refreshFloatingActionButtons();
 
                                 try {
@@ -418,7 +390,8 @@ public class EventActivity extends AppCompatActivity {
                 switch (userParticipates) {
                     case YES:
                     case MAYBE:
-                        HttpDelete delete = new HttpDelete(new AsyncResponse() {
+                    case UNDEFINED:
+                        HttpPost request = new HttpPost(new AsyncResponse() {
                             @Override
                             public void processFinish(String output) {
                                 userParticipates = Event.PARTICIPATE.NO;
@@ -436,11 +409,7 @@ public class EventActivity extends AppCompatActivity {
                                 get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
                                 floatingActionMenu.close(true);
-                                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
-                                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
-                                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
-                                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
-
+                                setFloatingActionMenuTheme(userParticipates);
                                 refreshFloatingActionButtons();
 
                                 try {
@@ -454,7 +423,7 @@ public class EventActivity extends AppCompatActivity {
                             }
                         });
 
-                        delete.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/notgoing" + "?token=" + HttpGet.credentials.getSessionToken());
                         break;
 
                     case NO:
@@ -492,6 +461,41 @@ public class EventActivity extends AppCompatActivity {
         adapter.addFragment(commentsEventFragment, getResources().getString(R.string.comments));
 
         viewPager.setAdapter(adapter);
+    }
+
+    private void setFloatingActionMenuTheme(Event.PARTICIPATE status) {
+        switch (status) {
+            case UNDEFINED:
+                floatingActionMenu.setMenuButtonColorNormal(bgColor);
+                floatingActionMenu.setMenuButtonColorPressed(bgColor);
+                floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
+                break;
+
+            case NO:
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
+                break;
+
+            case MAYBE:
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
+                floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
+                break;
+
+            case YES:
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
+                break;
+
+            default:
+                break;
+        }
+
     }
 
     @Override

@@ -332,6 +332,9 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
+        if (userParticipates == Event.PARTICIPATE.YES)
+            floatingActionButton1.setVisibility(View.GONE);
+
         // fab 2
 
         this.floatingActionButton2 = (FloatingActionButton) findViewById(R.id.fab_item_2_event);
@@ -399,6 +402,9 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
+        if (userParticipates == Event.PARTICIPATE.MAYBE)
+            floatingActionButton2.setVisibility(View.GONE);
+
         // fab 3
 
         this.floatingActionButton3 = (FloatingActionButton) findViewById(R.id.fab_item_3_event);
@@ -463,6 +469,9 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if (userParticipates == Event.PARTICIPATE.NO)
+            floatingActionButton3.setVisibility(View.GONE);
 
         // app bar layout
 

@@ -1,6 +1,7 @@
 package fr.insapp.insapp.fragments;
 
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -201,9 +203,55 @@ public class CommentsEventFragment extends Fragment {
 
         editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    System.out.println("test");
+                    // hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                    final String text = editText.getText().toString();
+                    if (!text.isEmpty()) {
+                        final JSONObject json = new JSONObject();
+
+                        try {
+                            json.put("user", HttpGet.credentials.getUserID());
+                            json.put("content", text);
+
+                            JSONArray jsonArray = new JSONArray();
+                            List<String> already_tagged = new ArrayList<>();
+                            for (Tag tag : tags) {
+                                // if the user didn't delete it
+                                if (text.contains(tag.getName()) && already_tagged.lastIndexOf(tag.getName()) == -1) {
+                                    JSONObject jsonTag = new JSONObject();
+                                    jsonTag.put("user", tag.getUser());
+                                    jsonTag.put("name", tag.getName());
+
+                                    jsonArray.put(jsonTag);
+                                    already_tagged.add(tag.getName());
+                                }
+                            }
+                            json.put("tags", jsonArray);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        HttpPost request = new HttpPost(new AsyncResponse() {
+                            @Override
+                            public void processFinish(String output) {
+                                try {
+                                    event.refresh(new JSONObject(output));
+                                    adapter.setComments(event.getComments());
+
+                                    editText.getText().clear();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/comment?token=" + HttpGet.credentials.getSessionToken(), json.toString());
+                    }
 
                     return true;
                 }
@@ -216,6 +264,12 @@ public class CommentsEventFragment extends Fragment {
 
         this.popup = new PopupMenu(getActivity(), editText);
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
+        popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                menu.show();
+            }
+        });
 
         // recycler view
 

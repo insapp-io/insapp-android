@@ -199,9 +199,10 @@ public class EventActivity extends AppCompatActivity {
 
         switch (userParticipates) {
             case NO:
-                floatingActionMenu.setMenuButtonColorNormal(bgColor);
-                floatingActionMenu.setMenuButtonColorPressed(bgColor);
-                floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
+                floatingActionMenu.setMenuButtonColorNormal(0xffffffff);
+                floatingActionMenu.setMenuButtonColorPressed(0xffffffff);
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
                 break;
 
             case MAYBE:
@@ -267,7 +268,7 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp));
                                 floatingActionMenu.getMenuIconView().setColorFilter(0xff4caf50);
 
-                                refreshFloatingActionButtons(userParticipates);
+                                refreshFloatingActionButtons();
 
                                 SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
 
@@ -373,7 +374,7 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black));
                                 floatingActionMenu.getMenuIconView().setColorFilter(0xffff9523);
 
-                                refreshFloatingActionButtons(userParticipates);
+                                refreshFloatingActionButtons();
 
                                 try {
                                     JSONObject json = new JSONObject(output);
@@ -440,7 +441,7 @@ public class EventActivity extends AppCompatActivity {
                                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp));
                                 floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(EventActivity.this, R.color.colorAccent));
 
-                                refreshFloatingActionButtons(userParticipates);
+                                refreshFloatingActionButtons();
 
                                 try {
                                     JSONObject json = new JSONObject(output);
@@ -466,7 +467,7 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
-        refreshFloatingActionButtons(userParticipates);
+        refreshFloatingActionButtons();
 
         // app bar layout
 
@@ -688,7 +689,7 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshFloatingActionButtons(final Event.PARTICIPATE userParticipates) {
+    private void refreshFloatingActionButtons() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

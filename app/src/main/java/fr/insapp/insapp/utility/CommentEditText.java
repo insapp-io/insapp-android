@@ -55,7 +55,7 @@ public class CommentEditText extends MultiAutoCompleteTextView {
         this.adapter = new AutoCompleterAdapter(getContext(), R.id.comment_event_input);
         setAdapter(adapter);
 
-        this.tokenizer = new ProfileTagTokenizer();
+        this.tokenizer = new TagTokenizer();
         setTokenizer(tokenizer);
 
         setOnItemClickListener(new AdapterView.OnItemClickListener() {

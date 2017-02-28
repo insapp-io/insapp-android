@@ -6,7 +6,7 @@ import android.widget.MultiAutoCompleteTextView;
  * Created by thomas on 28/02/2017.
  */
 
-public class ProfileTagTokenizer implements MultiAutoCompleteTextView.Tokenizer {
+public class TagTokenizer implements MultiAutoCompleteTextView.Tokenizer {
 
     @Override
     public int findTokenStart(CharSequence text, int cursor) {

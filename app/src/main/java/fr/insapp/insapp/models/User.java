@@ -176,4 +176,9 @@ public class User implements Parcelable{
         if (postsLiked.size() > 0)
             dest.writeStringList(postsLiked);
     }
+
+    @Override
+    public String toString() {
+        return username;
+    }
 }

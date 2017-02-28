@@ -79,6 +79,7 @@
     <string name="events_month">Ce mois-ci</string>
 
     <string name="ago">il y a %1$s</string>
+    <string name="tag">\@%1$s</string>
 
     <string name="event_participants">Participants</string>
 

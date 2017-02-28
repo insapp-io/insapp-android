@@ -104,7 +104,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         holder.text.setMovementMethod(LinkMovementMethod.getInstance());
         holder.text.setEnabled(true);
 
-        holder.date.setText("il y a " + Operation.displayedDate(comment.getDate()));
+        holder.date.setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(comment.getDate())));
 
         // user
 
@@ -121,7 +121,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                     final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                     Glide.with(context).load(id).into(holder.avatar);
 
-                    holder.username.setText("@" + user.getUsername());
+                    holder.username.setText(String.format(resources.getString(R.string.tag), user.getUsername()));
 
                     View.OnClickListener listener = new View.OnClickListener() {
                         @Override

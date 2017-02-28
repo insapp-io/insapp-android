@@ -2,19 +2,11 @@ package fr.insapp.insapp.http;
 
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Antoine on 25/09/2016.
@@ -29,7 +21,7 @@ public class HttpPost extends AsyncTask<String, Void, String> {
     public static int responseCode = 0;
 
     public HttpPost(AsyncResponse asyncResponse) {
-        delegate = asyncResponse; //Assigning call back interfacethrough constructor
+        delegate = asyncResponse; // assigning call back interface through constructor
     }
 
     /**
@@ -46,12 +38,11 @@ public class HttpPost extends AsyncTask<String, Void, String> {
             URL obj = new URL(params[0]);
 
             HttpURLConnection httpURLConnection = (HttpURLConnection) obj.openConnection();
-            httpURLConnection.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded");
+            httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
 
-            if(params.length > 1){
+            if (params.length > 1) {
                 OutputStreamWriter out = new OutputStreamWriter(httpURLConnection.getOutputStream());
                 out.write(params[1]);
                 out.close();
@@ -68,10 +59,11 @@ public class HttpPost extends AsyncTask<String, Void, String> {
             }
             in.close();
 
-        } catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        if(response != null)
+        if (response != null)
             return response.toString();
 
         return "";

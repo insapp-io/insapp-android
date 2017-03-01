@@ -39,11 +39,18 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private View view;
 
-    private RecyclerView recyclerViewToday, recyclerViewWeek, recyclerViewMonth;
+    private RecyclerView recyclerViewNow;
+    private RecyclerView recyclerViewToday;
+    private RecyclerView recyclerViewWeek;
+    private RecyclerView recyclerViewNextWeek;
+    private RecyclerView recyclerViewLater;
 
+    private EventRecyclerViewAdapter adapterNow;
     private EventRecyclerViewAdapter adapterToday;
     private EventRecyclerViewAdapter adapterWeek;
-    private EventRecyclerViewAdapter adapterMonth;
+    private EventRecyclerViewAdapter adapterNextWeek;
+    private EventRecyclerViewAdapter adapterLater;
+
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final int EVENT_REQUEST = 2;
@@ -62,6 +69,14 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // adapters
 
+        this.adapterNow = new EventRecyclerViewAdapter(getContext(), layout);
+        adapterNow.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
+            @Override
+            public void onEventItemClick(Event event) {
+                startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
+            }
+        });
+
         this.adapterToday = new EventRecyclerViewAdapter(getContext(), layout);
         adapterToday.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
@@ -78,8 +93,16 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterMonth = new EventRecyclerViewAdapter(getContext(), layout);
-        adapterMonth.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
+        this.adapterNextWeek = new EventRecyclerViewAdapter(getContext(), layout);
+        adapterNextWeek.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
+            @Override
+            public void onEventItemClick(Event event) {
+                startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
+            }
+        });
+
+        this.adapterLater = new EventRecyclerViewAdapter(getContext(), layout);
+        adapterLater.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
                 startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
@@ -95,6 +118,10 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // recycler view
 
+        this.recyclerViewNow = (RecyclerView) view.findViewById(R.id.recyclerview_events_now);
+        recyclerViewNow.setHasFixedSize(true);
+        recyclerViewNow.setNestedScrollingEnabled(false);
+
         this.recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
         recyclerViewToday.setHasFixedSize(true);
         recyclerViewToday.setNestedScrollingEnabled(false);
@@ -103,9 +130,16 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerViewWeek.setHasFixedSize(true);
         recyclerViewWeek.setNestedScrollingEnabled(false);
 
-        this.recyclerViewMonth = (RecyclerView) view.findViewById(R.id.recyclerview_events_month);
-        recyclerViewMonth.setHasFixedSize(true);
-        recyclerViewMonth.setNestedScrollingEnabled(false);
+        this.recyclerViewNextWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_next_week);
+        recyclerViewNextWeek.setHasFixedSize(true);
+        recyclerViewNextWeek.setNestedScrollingEnabled(false);
+
+        this.recyclerViewLater = (RecyclerView) view.findViewById(R.id.recyclerview_events_later);
+        recyclerViewLater.setHasFixedSize(true);
+        recyclerViewLater.setNestedScrollingEnabled(false);
+
+        recyclerViewNow.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewNow.setAdapter(adapterNow);
 
         recyclerViewToday.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewToday.setAdapter(adapterToday);
@@ -113,8 +147,11 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerViewWeek.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewWeek.setAdapter(adapterWeek);
 
-        recyclerViewMonth.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewMonth.setAdapter(adapterMonth);
+        recyclerViewNextWeek.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewNextWeek.setAdapter(adapterNextWeek);
+
+        recyclerViewLater.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewLater.setAdapter(adapterLater);
 
         // swipe refresh layout
 
@@ -126,9 +163,11 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void generateEvents() {
+        adapterNow.getEvents().clear();
         adapterToday.getEvents().clear();
         adapterWeek.getEvents().clear();
-        adapterMonth.getEvents().clear();
+        adapterNextWeek.getEvents().clear();
+        adapterLater.getEvents().clear();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
@@ -166,21 +205,74 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void addEventToAdapter(Event event) {
-        Date atm = Calendar.getInstance().getTime();
+        Calendar now = Calendar.getInstance();
 
-        final long diff = event.getDateStart().getTime() - atm.getTime();
-        final float diffInDays = ((float) (diff) / (float) (1000 * 60 * 60 * 24));
+        if (event.getDateStart().getTime() <= now.getTime().getTime() && event.getDateEnd().getTime() > now.getTime().getTime()) {
+            adapterNow.addItem(event);
+            adapterNow.notifyDataSetChanged();
 
-        if (diffInDays > 7) {
-            adapterMonth.addItem(event);
-            adapterMonth.notifyDataSetChanged();
-        } else if (diffInDays > 1) {
-            adapterWeek.addItem(event);
-            adapterWeek.notifyDataSetChanged();
-        } else {
+            return;
+        }
+
+        Calendar tomorrow = Calendar.getInstance();
+
+        // tomorrow midnight
+
+        tomorrow.set(Calendar.HOUR_OF_DAY, 0);
+        tomorrow.set(Calendar.MINUTE, 0);
+        tomorrow.set(Calendar.SECOND, 0);
+        tomorrow.set(Calendar.MILLISECOND, 0);
+        tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+
+
+        if (event.getDateStart().getTime() <= tomorrow.getTime().getTime()) {
             adapterToday.addItem(event);
             adapterToday.notifyDataSetChanged();
+
+            return;
         }
+
+        // saturday at midday
+
+        Calendar week = Calendar.getInstance();
+
+        while (week.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY)
+            week.add(Calendar.DATE, 1);
+
+        week.set(Calendar.HOUR_OF_DAY, 12);
+        week.set(Calendar.MINUTE, 0);
+        week.set(Calendar.SECOND, 0);
+        week.set(Calendar.MILLISECOND, 0);
+
+        if (event.getDateStart().getTime() <= week.getTime().getTime()) {
+            adapterWeek.addItem(event);
+            adapterWeek.notifyDataSetChanged();
+
+            return;
+        }
+
+        // saturday (next week) at midday
+
+        Calendar nextWeek = Calendar.getInstance();
+
+        while (nextWeek.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY)
+            nextWeek.add(Calendar.DATE, 1);
+
+        nextWeek.set(Calendar.HOUR_OF_DAY, 12);
+        nextWeek.set(Calendar.MINUTE, 0);
+        nextWeek.set(Calendar.SECOND, 0);
+        nextWeek.set(Calendar.MILLISECOND, 0);
+        nextWeek.add(Calendar.WEEK_OF_MONTH, 1);
+
+        if (event.getDateStart().getTime() <= nextWeek.getTime().getTime()) {
+            adapterNextWeek.addItem(event);
+            adapterNextWeek.notifyDataSetChanged();
+
+            return;
+        }
+
+        adapterLater.addItem(event);
+        adapterLater.notifyDataSetChanged();
     }
 
     @Override
@@ -194,14 +286,14 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     Event event = data.getParcelableExtra("event");
                     final int idToday = adapterToday.getEvents().indexOf(event);
                     final int idWeek = adapterWeek.getEvents().indexOf(event);
-                    final int idMonth = adapterMonth.getEvents().indexOf(event);
+                    final int idMonth = adapterLater.getEvents().indexOf(event);
 
                     if (idToday >= 0)
                         adapterToday.updatePost(idToday, event);
                     else if (idWeek >= 0)
                         adapterWeek.updatePost(idWeek, event);
                     else if (idMonth >= 0)
-                        adapterMonth.updatePost(idMonth, event);
+                        adapterLater.updatePost(idMonth, event);
                     break;
 
                 case MainActivity.REFRESH_TOKEN_MESSAGE:

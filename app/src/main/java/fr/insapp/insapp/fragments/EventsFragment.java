@@ -209,8 +209,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= now.getTime().getTime() && event.getDateEnd().getTime() > now.getTime().getTime()) {
             adapterNow.addItem(event);
-            adapterNow.notifyDataSetChanged();
-
             return;
         }
 
@@ -227,8 +225,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= tomorrow.getTime().getTime()) {
             adapterToday.addItem(event);
-            adapterToday.notifyDataSetChanged();
-
             return;
         }
 
@@ -246,8 +242,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= week.getTime().getTime()) {
             adapterWeek.addItem(event);
-            adapterWeek.notifyDataSetChanged();
-
             return;
         }
 
@@ -266,13 +260,10 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= nextWeek.getTime().getTime()) {
             adapterNextWeek.addItem(event);
-            adapterNextWeek.notifyDataSetChanged();
-
             return;
         }
 
         adapterLater.addItem(event);
-        adapterLater.notifyDataSetChanged();
     }
 
     @Override

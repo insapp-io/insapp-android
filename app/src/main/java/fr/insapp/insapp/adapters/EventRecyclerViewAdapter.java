@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -27,6 +28,7 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.utility.EventComparator;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -57,6 +59,8 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
     public void addItem(Event event) {
         this.events.add(event);
+        Collections.sort(events, new EventComparator());
+
         this.notifyDataSetChanged();
     }
 

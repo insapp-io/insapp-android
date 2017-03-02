@@ -55,7 +55,7 @@ public class GcmIntentService extends IntentService {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 //SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(getBaseContext().class.getSimpleName(), getBaseContext().MODE_PRIVATE);
                 System.out.println("RECU");
-                if(preferences.getBoolean("notifications", false)) {
+                if(preferences.getBoolean("notifications", true)) {
                     Random random = new Random();
                     NOTIFICATION_ID = random.nextInt(9999 - 1000) + 1000;
                     System.out.println("NOTIF ACTIVEE");

@@ -174,11 +174,8 @@ public class ProfileActivity extends AppCompatActivity {
             this.user = MainActivity.user;
             generateEvents();
 
-
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             String barcode_data = preferences.getString("barcode", "");
-
-            System.out.println("BAR CODE : " + barcode_data);
 
             if(!barcode_data.equals("")) {
 

@@ -169,6 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
+        ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);
         if(MainActivity.user.getId().equals(this.user.getId())) {
             this.user = MainActivity.user;
             generateEvents();
@@ -178,9 +179,8 @@ public class ProfileActivity extends AppCompatActivity {
             String barcode_data = preferences.getString("barcode", "");
 
             System.out.println("BAR CODE : " + barcode_data);
-            ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);
 
-            if(!barcode_data.isEmpty()) {
+            if(!barcode_data.equals("")) {
 
                 ((TextView)findViewById(R.id.barcodeText)).setText(barcode_data);
 
@@ -197,11 +197,16 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
             else{
-                //barcodeImageView.setVisibility(View.GONE);
-                //((TextView)findViewById(R.id.titleBarCode)).setVisibility(View.GONE);
+                barcodeImageView.setVisibility(View.GONE);
+                findViewById(R.id.titleBarCode).setVisibility(View.GONE);
             }
 
         }
+        else{
+            barcodeImageView.setVisibility(View.GONE);
+            findViewById(R.id.titleBarCode).setVisibility(View.GONE);
+        }
+
 
     }
 

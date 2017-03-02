@@ -24,6 +24,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import fr.insapp.insapp.utility.VisionApiFocusFix;
+
 public class BarcodeDetectorActivity extends AppCompatActivity {
 
     private SurfaceView cameraView;
@@ -64,7 +66,8 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
 
         final CameraSource cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
-                .setAutoFocusEnabled(true)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                //.setAutoFocusEnabled(true)
                 .build();
 
 
@@ -81,6 +84,8 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
                     }
                     else
                     cameraSource.start(cameraView.getHolder());
+
+                    System.out.println(VisionApiFocusFix.cameraFocus(cameraSource, Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE));
                     //cameraFocus(cameraSource, Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
                 } catch (IOException ie) {
                     Log.e("CAMERA SOURCE", ie.getMessage());

@@ -122,7 +122,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
             }
         }
 
-        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnail);
+        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
 
         holder.name.setText(event.getName());
 

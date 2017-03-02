@@ -83,7 +83,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         final Post post = new Post(new JSONObject(output));
                         notification.setPost(post);
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.thumbnail);
+                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

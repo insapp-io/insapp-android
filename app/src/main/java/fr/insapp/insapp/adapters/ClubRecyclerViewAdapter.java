@@ -64,7 +64,7 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
 
         // glide
 
-        Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.avatar);
+        Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.avatar);
 
         holder.bind(club, listener);
     }

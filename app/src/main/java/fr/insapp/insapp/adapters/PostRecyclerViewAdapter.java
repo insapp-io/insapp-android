@@ -90,7 +90,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         if (layout == R.layout.row_post)
             Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.image);
         else {
-            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.image);
+            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
 
             holder.text.setText(post.getDescription());
             holder.likeCounter.setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));

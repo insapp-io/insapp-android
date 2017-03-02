@@ -596,7 +596,8 @@ public class EventActivity extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("EEEE dd/MM", Locale.FRANCE);
         SimpleDateFormat format_hours_minutes = new SimpleDateFormat("HH:mm", Locale.FRANCE);
 
-        if (event.getDateStart().getDay() == event.getDateEnd().getDay() && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
+        final int diffInDays = (int) ((event.getDateEnd().getTime() - event.getDateStart().getTime()) / (1000 * 60 * 60 * 24));
+        if (diffInDays < 1 && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
             String day = format.format(event.getDateStart());
             dateTextView.setText(day.replaceFirst(".", (day.charAt(0) + "").toUpperCase()) + " de " + format_hours_minutes.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateEnd()));
         } else {
@@ -605,7 +606,6 @@ public class EventActivity extends AppCompatActivity {
             dateTextView.setText("Du " + start.replaceFirst(".", (start.charAt(0) + "").toUpperCase()) + " au " + end.replaceFirst(".", (end.charAt(0) + "").toUpperCase()));
         }
 
-        //dateTextView.setText("" + event.getDateStart() + " au " + event.getDateEnd());
         dateTextView.setTextColor(fgColor);
 
         // transparent status bar

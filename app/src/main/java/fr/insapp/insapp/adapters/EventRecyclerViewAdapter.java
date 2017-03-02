@@ -132,9 +132,11 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         else
             holder.participants.setText(Integer.toString(nb_participants) + " participants");
 
-        if (event.getDateStart().getDay() == event.getDateEnd().getDay() && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
+        final int diffInDays = (int) ((event.getDateEnd().getTime() - event.getDateStart().getTime()) / (1000 * 60 * 60 * 24));
+        if (diffInDays < 1 && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
             DateFormat dateFormat_oneday = new SimpleDateFormat("'Le' dd/MM 'à' HH:mm");
 
+            System.out.println("WTF");
             holder.date.setText(dateFormat_oneday.format(event.getDateStart()));
         } else {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM");

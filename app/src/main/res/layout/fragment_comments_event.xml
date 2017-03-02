@@ -37,6 +37,7 @@
                     android:textSize="15sp"
                     android:layout_toEndOf="@id/comment_event_username_avatar"
                     android:inputType="text"
+                    android:dropDownWidth="200dp"
                     android:background="@android:color/transparent"
                     android:layout_marginTop="16dp"
                     android:imeOptions="actionSend"

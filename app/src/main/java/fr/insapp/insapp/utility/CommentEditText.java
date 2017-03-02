@@ -1,13 +1,14 @@
 package fr.insapp.insapp.utility;
 
 import android.content.Context;
-import android.support.v7.widget.PopupMenu;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.EditText;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +17,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.R;
+import fr.insapp.insapp.adapters.AutoCompleterAdapter;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.Tag;
@@ -26,183 +28,96 @@ import fr.insapp.insapp.models.User;
  * Created by thomas on 27/02/2017.
  */
 
-public class CommentEditText extends EditText {
+public class CommentEditText extends MultiAutoCompleteTextView {
+
+    private AutoCompleterAdapter adapter;
+    private Tokenizer tokenizer;
 
     // tags
 
     private ArrayList<Tag> tags = new ArrayList<>();
-    private List<User> usersTagged = new ArrayList<>();
-
-    private boolean userWrittingTag = false;
-    private int tagStartsAt = 0;
-    private String tagWritting = "";
-    private boolean autochange = false;
-    private boolean deleteTag = false;
-    private int lastCount = 0;
-
-    private PopupMenu popup;
-
-    public CommentEditText(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-    }
 
     public CommentEditText(Context context) {
         super(context);
-
     }
 
-    public CommentEditText(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public CommentEditText(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
-    public void setTextChangedListener(PopupMenu popup) {
-        this.popup = popup;
+    public CommentEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
 
-        addTextChangedListener(new TextWatcher() {
+    public void setupComponent(final HttpPost request, final String params) {
+        setThreshold(2);
+
+        this.adapter = new AutoCompleterAdapter(getContext(), R.id.comment_event_input);
+        setAdapter(adapter);
+
+        this.tokenizer = new TagTokenizer();
+        setTokenizer(tokenizer);
+
+        setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final String itemString = (((TextView) view.findViewById(R.id.dropdown_textview)).getText()).toString();
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // skip execution if triggered by code
-                if (autochange) {
-                    //last_count = s.length();
-                    autochange = false; // next change is not triggered by code
-                    return;
+                String id = "";
+                for (final User user : adapter.getTaggedUsers()) {
+                    final String username = "@" + user.getUsername();
+                    if (username.equals(itemString))
+                        id = user.getId();
                 }
 
-                if (charSequence.length() == 0) {
-                    lastCount = 0;
-                    userWrittingTag = false;
-                    tagWritting = "";
-                    tagStartsAt = 0;
-                }
-
-                // deletion
-                if (charSequence.length() - lastCount < 0) {
-                    if (userWrittingTag) {
-                        String currentStr = getText().toString();
-                        String strWithoutTag = currentStr.substring(0, tagStartsAt) + currentStr.substring(tagStartsAt + tagWritting.length(), currentStr.length());
-
-                        autochange = true;
-                        setText(strWithoutTag);
-                        setSelection(tagStartsAt);
-
-                        lastCount = strWithoutTag.length();
-                        userWrittingTag = false;
-                        tagWritting = "";
-                        tagStartsAt = 0;
-
-                        deleteTag = true;
-                        //popup.dismiss();
-                    }
-                }
-                // writing
-                else {
-                    deleteTag = false;
-
-                    int pos = getSelectionStart() - 1;
-                    if (pos >= 0) {
-                        final char c = charSequence.charAt(pos);
-                        if (userWrittingTag) {
-                            if (c == ' ' || pos <= tagStartsAt || pos - 1 > tagStartsAt + tagWritting.length()) {
-                                userWrittingTag = false;
-                            } else {
-                                tagWritting += charSequence.toString().charAt(pos);
-                                showUsersToTag(tagWritting);
-                            }
-                        } else {
-                            if (c == '@') {
-                                userWrittingTag = true;
-                                tagStartsAt = pos;
-                                tagWritting = "";
-                            }
-                        }
-                    }
-                }
-
-                if (!deleteTag)
-                    lastCount = charSequence.length();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+                tags.add(new Tag("", id, itemString));
             }
         });
-    }
 
-    private void showUsersToTag(String username) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("terms", username);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        HttpPost request = new HttpPost(new AsyncResponse() {
+        setOnEditorActionListener(new OnEditorActionListener() {
             @Override
-            public void processFinish(String output) {
-                try {
-                    JSONObject json = new JSONObject(output);
-                    JSONArray jsonArray = json.getJSONArray("users");
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    // hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
-                    if (jsonArray != null) {
-                        popup.getMenu().clear();
-                        usersTagged.clear();
+                    final String text = getText().toString();
+                    getText().clear();
 
-                        for (int i = jsonArray.length() - 1; i >= jsonArray.length() - Math.min(jsonArray.length(), 3); i--) {
-                            final User user = new User(jsonArray.getJSONObject(i));
+                    if (!text.isEmpty()) {
+                        final JSONObject json = new JSONObject();
 
-                            usersTagged.add(user);
-                            popup.getMenu().add(Menu.NONE, Menu.NONE, i + 1, "@" + user.getUsername());
-                        }
+                        try {
+                            json.put("user", HttpGet.credentials.getUserID());
+                            json.put("content", text);
 
-                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                String currentStr = getText().toString();
-                                String strWithTag = currentStr.substring(0, tagStartsAt) + item.getTitle() + " " + currentStr.substring(tagStartsAt + tagWritting.length() + 1, currentStr.length());
+                            JSONArray jsonArray = new JSONArray();
+                            List<String> alreadyTagged = new ArrayList<>();
+                            for (final Tag tag : getTags()) {
+                                if (text.contains(tag.getName()) && alreadyTagged.lastIndexOf(tag.getName()) == -1) {
+                                    JSONObject jsonTag = new JSONObject();
+                                    jsonTag.put("user", tag.getUser());
+                                    jsonTag.put("name", tag.getName());
 
-                                String id = "";
-                                for (User u : usersTagged) {
-                                    String username = "@" + u.getUsername();
-                                    if (username.equals(item.toString()))
-                                        id = u.getId();
+                                    jsonArray.put(jsonTag);
+                                    alreadyTagged.add(tag.getName());
                                 }
-
-                                tags.add(new Tag("", id, item.toString()));
-
-                                autochange = true;
-                                setText(strWithTag);
-                                setSelection(tagStartsAt + item.toString().length() + 1);
-
-                                userWrittingTag = false;
-                                tagWritting = "";
-                                tagStartsAt = 0;
-
-                                return true;
                             }
-                        });
+                            json.put("tags", jsonArray);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        request.execute(params, json.toString());
                     }
-                } catch (JSONException e) {
-                    userWrittingTag = false;
-                    tagWritting = "";
-                    tagStartsAt = 0;
 
-                    popup.dismiss();
-
-                    e.printStackTrace();
+                    return true;
                 }
 
-                popup.show();
+                return false;
             }
         });
-
-        request.execute(HttpGet.ROOTSEARCHUSERS + "?token=" + HttpGet.credentials.getSessionToken(), jsonObject.toString());
     }
 
     public ArrayList<Tag> getTags() {

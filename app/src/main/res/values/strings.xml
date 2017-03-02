@@ -73,13 +73,16 @@
     <string name="about">À propos</string>
     <string name="comments">Commentaires</string>
 
+    <string name="events_now">En ce moment</string>
     <string name="events_future">À venir</string>
     <string name="events_past">Passés</string>
     <string name="events_today">Aujourd\'hui</string>
     <string name="events_week">Cette semaine</string>
-    <string name="events_month">Ce mois-ci</string>
+    <string name="events_next_week">La semaine prochaine</string>
+    <string name="events_later">Plus tard</string>
 
     <string name="ago">il y a %1$s</string>
+    <string name="tag">\@%1$s</string>
 
     <string name="event_participants">Participants</string>
 

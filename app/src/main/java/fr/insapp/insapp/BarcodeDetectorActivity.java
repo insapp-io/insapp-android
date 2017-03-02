@@ -1,8 +1,11 @@
 package fr.insapp.insapp;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +28,10 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
 
     private SurfaceView cameraView;
     private String barcode = "";
+
+
+    // permission request codes need to be < 256
+    private static final int RC_HANDLE_CAMERA_PERM = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
                 .setAutoFocusEnabled(true)
                 .build();
 
+
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -67,10 +75,13 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
                         Toast.makeText(getApplicationContext(), "La permisson pour utiliser la caméra n'a pas été accordée !", Toast.LENGTH_LONG).show();
-                        
+                        requestCameraPermission();
+
                         return;
                     }
+                    else
                     cameraSource.start(cameraView.getHolder());
+                    //cameraFocus(cameraSource, Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
                 } catch (IOException ie) {
                     Log.e("CAMERA SOURCE", ie.getMessage());
                 }
@@ -114,5 +125,20 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Handles the requesting of the camera permission.  This includes
+     * showing a "Snackbar" message of why the permission is needed then
+     * sending the request.
+     */
+    private void requestCameraPermission() {
+        final String[] permissions = new String[]{android.Manifest.permission.CAMERA};
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                android.Manifest.permission.CAMERA)) {
+            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
+            return;
+        }
     }
 }

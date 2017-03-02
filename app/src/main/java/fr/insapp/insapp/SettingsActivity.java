@@ -58,6 +58,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         PreferenceManager.setDefaultValues(SettingsActivity.this, R.xml.preferences, false);
         initSummary(getPreferenceScreen());
 
+        final Preference chimeMaster = findPreference("barcode");
+        chimeMaster.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newVal) {
+                ((EditTextPreference)preference).setText((String)newVal);
+                return true;
+            }
+
+        });
+
         // request
 
         HttpGet request = new HttpGet(new AsyncResponse() {
@@ -147,6 +157,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         super.onResume();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+/*
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+
+        EditTextPreference chimeMaster = (EditTextPreference)findPreference("barcode");
+        chimeMaster.setText(sharedPreferences.getString("barcode", ""));
+
+        System.out.println("WTF" + sharedPreferences.getString("barcode", ""));*/
     }
 
     @Override

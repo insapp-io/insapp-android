@@ -83,23 +83,58 @@
                 android:paddingBottom="8dp"
                 android:text="Ceci est une description sur plusieurs lignes, ça rend pas trop mal c'est cool"
                 android:layout_below="@id/profile_class" />
-<!--
-            <ImageView
-                android:id="@+id/barcode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profile_description"/>-->
+
         </RelativeLayout>
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/eventsList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_extension">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_events_participate"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
+
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/eventsList">
+
+        <TextView
+            android:id="@+id/titleBarCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#3e3e3e"
+            android:textSize="15sp"
+            android:padding="14dp"
+            android:text="Ma carte amicaliste"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_below="@id/titleBarCode">
+
+            <ImageView
+                android:id="@+id/barcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/barcodeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#3e3e3e"
+                android:textSize="15sp"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
 </RelativeLayout>

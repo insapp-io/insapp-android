@@ -19,6 +19,7 @@ import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -172,20 +173,34 @@ public class ProfileActivity extends AppCompatActivity {
             this.user = MainActivity.user;
             generateEvents();
 
-            /*String barcode_data = "161700660";
 
-            // barcode image
-            Bitmap bitmap = null;
-            ImageView iv = (ImageView) findViewById(R.id.barcode);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String barcode_data = preferences.getString("barcode", "");
 
-            try {
+            System.out.println("BAR CODE : " + barcode_data);
+            ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);
 
-                bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 600, 300);
-                iv.setImageBitmap(bitmap);
+            if(!barcode_data.isEmpty()) {
 
-            } catch (WriterException e) {
-                e.printStackTrace();
-            }*/
+                ((TextView)findViewById(R.id.barcodeText)).setText(barcode_data);
+
+                // barcode image
+                Bitmap bitmap = null;
+
+                try {
+
+                    bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 700, 300);
+                    barcodeImageView.setImageBitmap(bitmap);
+
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                //barcodeImageView.setVisibility(View.GONE);
+                //((TextView)findViewById(R.id.titleBarCode)).setVisibility(View.GONE);
+            }
+
         }
 
     }

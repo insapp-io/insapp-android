@@ -27,6 +27,7 @@
     <string name="intro_clubs">Retrouve toutes les associations de l\'INSA de Rennes</string>
 
     <string name="settings_profile">Profil</string>
+    <string name="settings_amicaliste">Amicaliste</string>
     <string name="settings_options">Options</string>
     <string name="settings_name">Nom</string>
     <string name="settings_name_summary">Non renseigné</string>

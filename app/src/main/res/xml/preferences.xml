@@ -38,6 +38,32 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/settings_amicaliste">
+
+        <PreferenceScreen
+            android:key="carteAmicaliste"
+            android:title="Ajouter votre carte amicaliste"
+            android:persistent="false">
+
+            <EditTextPreference
+                android:title="Code barre"
+                android:key="barcode"
+                android:maxLength="9"
+                android:summary="Numero code barre" />
+
+            <PreferenceScreen
+                android:key="key"
+                android:title="Camera"
+                android:summary="Scanner votre code barre avec la caméra">
+                <intent android:targetPackage="fr.insapp.insapp"
+                    android:targetClass="fr.insapp.insapp.BarcodeDetectorActivity" />
+            </PreferenceScreen>
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/settings_options">
 
         <CheckBoxPreference

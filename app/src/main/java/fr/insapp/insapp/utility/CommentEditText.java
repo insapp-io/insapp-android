@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,6 +85,8 @@ public class CommentEditText extends MultiAutoCompleteTextView {
 
                     final String text = getText().toString();
                     getText().clear();
+
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
 
                     if (!text.isEmpty()) {
                         final JSONObject json = new JSONObject();

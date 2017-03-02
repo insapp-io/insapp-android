@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import org.json.JSONException;
@@ -72,7 +73,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
         final Notification notification = notifications.get(position);
 
         holder.text.setText(notification.getMessage());
-        holder.date.setText("il y a " + Operation.displayedDate(notification.getDate()));
+        holder.date.setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(notification.getDate())));
 
         if (notification.getType().equals("tag") || notification.getType().equals("post")) {
             HttpGet post = new HttpGet(new AsyncResponse() {
@@ -82,7 +83,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         final Post post = new Post(new JSONObject(output));
                         notification.setPost(post);
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.thumbnail);
+                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

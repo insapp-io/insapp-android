@@ -52,6 +52,7 @@
     <string name="report_user_success">Utilisateur signalé avec succès</string>
 
     <string name="write_comment_action">Écrire un commentaire</string>
+    <string name="write_comment_success">Commentaire envoyé</string>
 
     <string name="report_comment_action">Signaler un commentaire</string>
     <string name="report_comment_are_you_sure">Voulez-vous signaler ce commentaire ?</string>

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -84,12 +85,12 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         final Post post = posts.get(position);
 
         holder.title.setText(post.getTitle());
-        holder.date.setText("il y a " + Operation.displayedDate(post.getDate()));
+        holder.date.setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(post.getDate())));
 
         if (layout == R.layout.row_post)
             Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.image);
         else {
-            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).into(holder.image);
+            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
 
             holder.text.setText(post.getDescription());
             holder.likeCounter.setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));

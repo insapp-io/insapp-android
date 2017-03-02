@@ -140,7 +140,7 @@ public class ClubActivity extends AppCompatActivity {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                 super.onResourceReady(bitmap, anim);
-                Utils.darkenBitmap(bitmap);
+                headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
             }
         });
 

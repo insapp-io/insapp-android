@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
 
         // glide
 
-        Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
+        Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(holder.avatar);
 
         holder.bind(club, listener);
     }

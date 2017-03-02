@@ -1,6 +1,7 @@
 package fr.insapp.insapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
@@ -17,6 +18,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -125,6 +127,9 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
                         preferences.putString("barcode", barcode);
                         preferences.apply();
 
+                        Intent secondeActivite = new Intent(BarcodeDetectorActivity.this, SettingsActivity.class);
+                        secondeActivite.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(secondeActivite);
                         finish();
                     }
                 }

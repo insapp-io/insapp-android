@@ -108,8 +108,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
-
-        generateEvents();
     }
 
     @Override
@@ -159,15 +157,27 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
 
+        generateEvents();
+
         return view;
     }
 
-    private void generateEvents() {
+    private void clearEvents() {
         adapterNow.getEvents().clear();
         adapterToday.getEvents().clear();
         adapterWeek.getEvents().clear();
         adapterNextWeek.getEvents().clear();
         adapterLater.getEvents().clear();
+
+        view.findViewById(R.id.events_now_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.events_today_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.events_week_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.events_next_week_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.events_later_layout).setVisibility(View.GONE);
+    }
+
+    private void generateEvents() {
+        clearEvents();
 
         HttpGet request = new HttpGet(new AsyncResponse() {
             @Override
@@ -209,6 +219,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= now.getTime().getTime() && event.getDateEnd().getTime() > now.getTime().getTime()) {
             adapterNow.addItem(event);
+            view.findViewById(R.id.events_now_layout).setVisibility(View.VISIBLE);
             return;
         }
 
@@ -225,6 +236,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= tomorrow.getTime().getTime()) {
             adapterToday.addItem(event);
+            view.findViewById(R.id.events_today_layout).setVisibility(View.VISIBLE);
             return;
         }
 
@@ -242,6 +254,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= week.getTime().getTime()) {
             adapterWeek.addItem(event);
+            view.findViewById(R.id.events_week_layout).setVisibility(View.VISIBLE);
             return;
         }
 
@@ -260,10 +273,12 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         if (event.getDateStart().getTime() <= nextWeek.getTime().getTime()) {
             adapterNextWeek.addItem(event);
+            view.findViewById(R.id.events_next_week_layout).setVisibility(View.VISIBLE);
             return;
         }
 
         adapterLater.addItem(event);
+        view.findViewById(R.id.events_later_layout).setVisibility(View.VISIBLE);
     }
 
     @Override

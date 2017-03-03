@@ -70,8 +70,6 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                 startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });
-
-        generateEvents();
     }
 
     @Override
@@ -100,17 +98,21 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(swipeColor);
 
+        generateEvents();
+
         return view;
     }
 
-    private void generateEvents() {
+    private void clearEvents() {
         adapterFuture.getEvents().clear();
         adapterPast.getEvents().clear();
 
-        /*
-        view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.GONE);
-        view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.GONE);
-        */
+        view.findViewById(R.id.events_future_layout).setVisibility(View.GONE);
+        view.findViewById(R.id.events_past_layout).setVisibility(View.GONE);
+    }
+
+    private void generateEvents() {
+        clearEvents();
 
         for (int j = 0; j < club.getEvents().size(); j++) {
             HttpGet request = new HttpGet(new AsyncResponse() {
@@ -126,20 +128,10 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
                         if (event.getDateEnd().getTime() > atm.getTime()) {
                             adapterFuture.addItem(event);
-                            adapterFuture.notifyDataSetChanged();
-
-                            /*
-                            if (view.findViewById(R.id.events_future_layout).getVisibility() != LinearLayout.VISIBLE)
-                                view.findViewById(R.id.events_future_layout).setVisibility(LinearLayout.VISIBLE);
-                            */
+                            view.findViewById(R.id.events_future_layout).setVisibility(View.VISIBLE);
                         } else {
                             adapterPast.addItem(event);
-                            adapterPast.notifyDataSetChanged();
-
-                            /*
-                            if (view.findViewById(R.id.events_past_layout).getVisibility() != LinearLayout.VISIBLE)
-                                view.findViewById(R.id.events_past_layout).setVisibility(LinearLayout.VISIBLE);
-                            */
+                            view.findViewById(R.id.events_past_layout).setVisibility(View.VISIBLE);
                         }
 
                     } catch (JSONException e) {

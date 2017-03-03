@@ -49,6 +49,7 @@
                 android:title="Code barre"
                 android:key="barcode"
                 android:maxLength="9"
+                android:inputType="number"
                 android:summary="Numero code barre" />
 
             <PreferenceScreen

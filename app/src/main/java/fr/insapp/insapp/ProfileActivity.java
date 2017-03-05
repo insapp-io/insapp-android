@@ -337,7 +337,7 @@ public class ProfileActivity extends AppCompatActivity {
      * http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/encode/QRCodeEncoder.java
      */
 
-    private static final int WHITE = 0xFFFFFFFF;
+    private static final int WHITE = 0x00FFFFFF;
     private static final int BLACK = 0xFF000000;
 
     Bitmap encodeAsBitmap(String contents, BarcodeFormat format, int img_width, int img_height) throws WriterException {

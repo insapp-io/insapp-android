@@ -63,7 +63,7 @@ public class EventCommentLongClickListener implements CommentRecyclerViewAdapter
                                     }
                                 }
                             });
-                            delete.execute(HttpGet.ROOTPOST + "/" + event.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                            delete.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
 
                         }
                     })
@@ -90,7 +90,7 @@ public class EventCommentLongClickListener implements CommentRecyclerViewAdapter
                                     Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            report.execute(HttpGet.ROOTURL + "/report/" + event.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                            report.execute(HttpGet.ROOTEVENT + "/report/" + event.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
                         }
                     })
                     .setNegativeButton(context.getString(R.string.negative_button), new DialogInterface.OnClickListener() {

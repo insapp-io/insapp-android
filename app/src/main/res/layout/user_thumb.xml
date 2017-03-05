@@ -7,28 +7,12 @@
     android:padding="15dp"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_avatar"
-            android:layout_marginTop="12dp"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            app:civ_border_width="0dp"
-            android:layout_alignParentEnd="true" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/macaroon"
-            android:src="@drawable/ic_question_mark_black"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:civ_fill_color="@color/white"
-            android:layout_alignBottom="@+id/user_avatar"
-            android:layout_alignEnd="@+id/user_avatar" />
-    </RelativeLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_avatar"
+        android:layout_marginTop="12dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        app:civ_border_width="0dp" />
 
     <TextView
         android:id="@+id/user_username"

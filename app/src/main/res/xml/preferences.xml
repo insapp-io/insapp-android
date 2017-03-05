@@ -43,6 +43,7 @@
         <PreferenceScreen
             android:key="carteAmicaliste"
             android:title="Ajouter votre carte amicaliste"
+            android:summary="@string/settings_disclaimer"
             android:persistent="false">
 
             <EditTextPreference

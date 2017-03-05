@@ -88,7 +88,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
             super(view);
 
             if (matchParent)
-                (view.findViewById(R.id.user_thumb_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+                (view.findViewById(R.id.user_thumb_macaroon_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
             this.avatar = (CircleImageView) view.findViewById(R.id.user_avatar);
             this.name = (TextView) view.findViewById(R.id.user_name);

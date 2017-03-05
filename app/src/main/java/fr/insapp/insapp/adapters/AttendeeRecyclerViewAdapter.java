@@ -56,7 +56,7 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
 
     @Override
     public AttendeeRecyclerViewAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_thumb, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_thumb_macaroon, parent, false);
         return new UserViewHolder(view, matchParent);
     }
 
@@ -102,7 +102,7 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
             super(view);
 
             if (matchParent)
-                (view.findViewById(R.id.user_thumb_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+                (view.findViewById(R.id.user_thumb_macaroon_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
             this.avatar = (CircleImageView) view.findViewById(R.id.user_avatar);
             this.macaroon = (CircleImageView) view.findViewById(R.id.macaroon);

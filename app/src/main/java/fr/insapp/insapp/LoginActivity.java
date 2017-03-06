@@ -72,7 +72,16 @@ public class LoginActivity extends AppCompatActivity {
                                 HttpGet.credentials = new Credentials(json);
                                 nb_try = 0; // we can login
 
+                                if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
+                                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(i);
 
+                                    finish();
+                                } else {
+                                    setResult(RESULT_OK);
+                                    finish(); // back to last activity
+                                }
+/*
                                 new AsyncTask<Void, Void, String>() {
                                     @Override
                                     protected String doInBackground(Void... params) {
@@ -103,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                                         return msg;
                                     }
                                 }.execute(null, null, null);
-
+*/
 
                             }
 
@@ -125,6 +134,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void registerServer(String token){
+
+        System.out.println("TOKEN : " + token);
         JSONObject notuser = new JSONObject();
         try {
             notuser.put("userid", HttpGet.credentials.getUserID());
@@ -137,6 +148,8 @@ public class LoginActivity extends AppCompatActivity {
         HttpPost post = new HttpPost(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
+
+                System.out.println(output);
 
                 if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);

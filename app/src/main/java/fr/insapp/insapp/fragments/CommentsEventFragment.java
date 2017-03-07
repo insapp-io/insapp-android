@@ -16,6 +16,9 @@ import com.bumptech.glide.Glide;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.EventActivity;
 import fr.insapp.insapp.MainActivity;
@@ -105,13 +108,16 @@ public class CommentsEventFragment extends Fragment {
                     ((EventActivity) getActivity()).getFloatingActionMenu().hideMenu(false);
                 }
                 else {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            ((EventActivity) getActivity()).getFloatingActionMenu().showMenu(true);
-                        }
-                    }, 500);
+                    final Date atm = Calendar.getInstance().getTime();
+                    if (event.getDateEnd().getTime() >= atm.getTime()) {
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ((EventActivity) getActivity()).getFloatingActionMenu().showMenu(true);
+                            }
+                        }, 500);
+                    }
                 }
             }
         });

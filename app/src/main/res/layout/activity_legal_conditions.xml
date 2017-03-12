@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_conditions"
@@ -15,24 +16,6 @@
     <WebView
         android:id="@+id/webview_conditions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
-        android:layout_below="@id/toolbar_conditions" >
+        android:layout_height="match_parent">
     </WebView>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:layout_alignParentBottom="true" >
-
-        <Button
-            android:id="@+id/accept_conditions"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:textColor="@color/theme_red"
-            android:text="@string/legal_conditions_accept"
-            android:layout_height="48dp" />
-    </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

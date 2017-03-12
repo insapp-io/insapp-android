@@ -4,14 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -22,8 +19,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
@@ -111,7 +106,7 @@ public class SigninActivity extends AppCompatActivity {
         alertDialogBuilder
                 .setMessage("Si ton compte existe déjà sur un autre téléphone, tu seras déconnecté(e) de ce dernier. Tu ne perdras aucune donnée. Souhaites-tu continuer ?")
                 .setCancelable(false)
-                .setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getResources().getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogAlert, int id) {
 
                         JSONObject json = new JSONObject();
@@ -165,7 +160,7 @@ public class SigninActivity extends AppCompatActivity {
 
                     }
                 })
-                .setNegativeButton("NON", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.negative_button), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogAlert, int id) {
                         // On annule donc on retourne dans les settings
                         dialogAlert.dismiss();

@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/search"
-        android:title="Rechercher"
+        android:title="@string/search_action"
         android:icon="@drawable/ic_search_black_24dp"
         app:showAsAction="collapseActionView|ifRoom"
         android:actionViewClass="android.support.v7.widget.SearchView"
@@ -13,16 +13,21 @@
 
     <item
         android:id="@+id/action_profile"
-        android:title="Mon profil"
+        android:title="@string/profile"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
-        android:title="Paramètres"
+        android:title="@string/settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_legal_conditions"
+        android:title="@string/legal_conditions"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_credits"
-        android:title="Crédits"
+        android:title="@string/credits"
         app:showAsAction="never" />
 </menu>

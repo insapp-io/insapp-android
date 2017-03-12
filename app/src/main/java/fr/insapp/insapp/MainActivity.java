@@ -138,12 +138,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ProfileActivity.class).putExtra("user", user));
                 break;
 
-            case R.id.action_credits:
-                startActivity(new Intent(this, CreditsActivity.class));
-                break;
-
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                break;
+
+            case R.id.action_legal_conditions:
+                startActivity(new Intent(this, LegalConditionsActivity.class));
+                break;
+
+            case R.id.action_credits:
+                startActivity(new Intent(this, CreditsActivity.class));
                 break;
 
             default:

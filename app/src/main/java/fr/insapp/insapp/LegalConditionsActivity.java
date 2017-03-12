@@ -1,12 +1,10 @@
 package fr.insapp.insapp;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 import android.webkit.WebView;
-import android.widget.Button;
 
 public class LegalConditionsActivity extends AppCompatActivity {
 
@@ -22,18 +20,19 @@ public class LegalConditionsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Button accept = (Button) findViewById(R.id.accept_conditions);
-        accept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(LegalConditionsActivity.this, SigninActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(i);
-            }
-        });
-
-
         WebView webView = (WebView) findViewById(R.id.webview_conditions);
         webView.loadUrl("https://insapp.fr/api/v1/legal");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

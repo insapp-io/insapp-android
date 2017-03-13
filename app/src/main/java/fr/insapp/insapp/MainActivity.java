@@ -13,13 +13,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
@@ -57,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+
+        FirebaseApp.initializeApp(getApplicationContext());
+
+        // to make sure the token is refreshed
+        String token =  FirebaseInstanceId.getInstance().getToken();
 
         // view pager
 

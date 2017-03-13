@@ -18,7 +18,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -145,10 +144,10 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
     private void requestCameraPermission() {
         final String[] permissions = new String[]{android.Manifest.permission.CAMERA};
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                android.Manifest.permission.CAMERA)) {
+        //if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+        //        android.Manifest.permission.CAMERA)) {
             ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
-            return;
-        }
+        //    return;
+        //}
     }
 }

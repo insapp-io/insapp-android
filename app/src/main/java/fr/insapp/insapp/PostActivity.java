@@ -30,6 +30,7 @@ import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
@@ -104,15 +105,6 @@ public class PostActivity extends AppCompatActivity {
         else
             generateActivity();
 
-        // comment user avatar
-
-        this.userAvatarCircleImageView = (CircleImageView) findViewById(R.id.comment_post_username_avatar);
-
-        // get the drawable of avatar
-
-        Resources resources = getResources();
-        final int id = resources.getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getPackageName());
-        Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
     }
 
     @Override
@@ -223,6 +215,33 @@ public class PostActivity extends AppCompatActivity {
 
         this.commentEditText = (CommentEditText) findViewById(R.id.comment_post_input);
         commentEditText.setupComponent(request, params);
+
+        // comment user avatar
+        this.userAvatarCircleImageView = (CircleImageView) findViewById(R.id.comment_post_username_avatar);
+
+        // get the drawable of avatar
+        if(MainActivity.getUser() == null){
+            HttpGet get = new HttpGet(new AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+                    try {
+                        MainActivity.user = new User(new JSONObject(output));
+
+                        Resources resources = getResources();
+                        final int id = resources.getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getPackageName());
+                        Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+        }
+        else{
+            Resources resources = getResources();
+            final int id = resources.getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getPackageName());
+            Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
+        }
     }
 
     @Override

@@ -136,19 +136,6 @@ public class EventActivity extends AppCompatActivity {
         this.bgColor = Color.parseColor("#" + event.getBgColor());
         this.fgColor = Color.parseColor("#" + event.getFgColor());
 
-        // if we come from an android notification
-
-        if (this.event == null) {
-            notification = intent.getParcelableExtra("notification");
-
-            if (HttpGet.credentials != null)
-                onActivityResult(PostActivity.NOTIFICATION_MESSAGE, RESULT_OK, null);
-            else
-                startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), PostActivity.NOTIFICATION_MESSAGE);
-        }
-        else
-            generateEvent();
-
         // view pager
 
         this.viewPager = (ViewPager) findViewById(R.id.viewpager_event);
@@ -185,6 +172,105 @@ public class EventActivity extends AppCompatActivity {
         final Date atm = Calendar.getInstance().getTime();
         if (event.getDateEnd().getTime() < atm.getTime())
             floatingActionMenu.setVisibility(View.GONE);
+
+        // app bar layout
+
+        this.appBarLayout = (AppBarLayout) findViewById(R.id.appbar_event);
+
+        // if we come from an android notification
+
+        if (this.event == null) {
+            notification = intent.getParcelableExtra("notification");
+
+            if (HttpGet.credentials != null)
+                onActivityResult(PostActivity.NOTIFICATION_MESSAGE, RESULT_OK, null);
+            else
+                startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), PostActivity.NOTIFICATION_MESSAGE);
+        }
+        else
+            generateEvent();
+    }
+
+    private void setupViewPager(ViewPager viewPager, int swipeColor) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        Fragment aboutFragment = new AboutFragment();
+        Bundle bundle1 = new Bundle();
+        bundle1.putParcelable("event", event);
+        bundle1.putInt("bg_color", bgColor);
+        bundle1.putInt("fg_color", fgColor);
+        aboutFragment.setArguments(bundle1);
+        adapter.addFragment(aboutFragment, getResources().getString(R.string.about));
+
+        Fragment commentsEventFragment = new CommentsEventFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putParcelable("event", event);
+        commentsEventFragment.setArguments(bundle2);
+        adapter.addFragment(commentsEventFragment, getResources().getString(R.string.comments));
+
+        viewPager.setAdapter(adapter);
+    }
+
+    private void setFloatingActionMenuTheme(Event.PARTICIPATE status) {
+        switch (status) {
+            case UNDEFINED:
+                floatingActionMenu.setMenuButtonColorNormal(bgColor);
+                floatingActionMenu.setMenuButtonColorPressed(bgColor);
+                floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
+                break;
+
+            case NO:
+                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_close_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_red));
+                break;
+
+            case MAYBE:
+                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_question_mark_black));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_orange));
+                break;
+
+            case YES:
+                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_check_black_24dp));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_green));
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PostActivity.NOTIFICATION_MESSAGE) {
+            if (resultCode == RESULT_OK){
+
+                HttpGet request = new HttpGet(new AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+                        try {
+                            event = new Event(new JSONObject(output));
+
+                            generateEvent();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
+            }
+        }
+    }
+
+    public void generateEvent() {
 
         // fab 1
 
@@ -419,91 +505,6 @@ public class EventActivity extends AppCompatActivity {
 
         refreshFloatingActionButtons();
 
-        // app bar layout
-
-        this.appBarLayout = (AppBarLayout) findViewById(R.id.appbar_event);
-    }
-
-    private void setupViewPager(ViewPager viewPager, int swipeColor) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        Fragment aboutFragment = new AboutFragment();
-        Bundle bundle1 = new Bundle();
-        bundle1.putParcelable("event", event);
-        bundle1.putInt("bg_color", bgColor);
-        bundle1.putInt("fg_color", fgColor);
-        aboutFragment.setArguments(bundle1);
-        adapter.addFragment(aboutFragment, getResources().getString(R.string.about));
-
-        Fragment commentsEventFragment = new CommentsEventFragment();
-        Bundle bundle2 = new Bundle();
-        bundle2.putParcelable("event", event);
-        commentsEventFragment.setArguments(bundle2);
-        adapter.addFragment(commentsEventFragment, getResources().getString(R.string.comments));
-
-        viewPager.setAdapter(adapter);
-    }
-
-    private void setFloatingActionMenuTheme(Event.PARTICIPATE status) {
-        switch (status) {
-            case UNDEFINED:
-                floatingActionMenu.setMenuButtonColorNormal(bgColor);
-                floatingActionMenu.setMenuButtonColorPressed(bgColor);
-                floatingActionMenu.getMenuIconView().setColorFilter(fgColor);
-                break;
-
-            case NO:
-                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_close_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_red));
-                break;
-
-            case MAYBE:
-                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_question_mark_black));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_orange));
-                break;
-
-            case YES:
-                floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_check_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_green));
-                break;
-
-            default:
-                break;
-        }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PostActivity.NOTIFICATION_MESSAGE) {
-            if (resultCode == RESULT_OK){
-
-                HttpGet request = new HttpGet(new AsyncResponse() {
-                    @Override
-                    public void processFinish(String output) {
-                        try {
-                            event = new Event(new JSONObject(output));
-
-                            generateEvent();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
-            }
-        }
-    }
-
-    public void generateEvent() {
         Glide.with(this).load(HttpGet.IMAGEURL + event.getImage()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {

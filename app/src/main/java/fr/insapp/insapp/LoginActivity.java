@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.google.android.gms.iid.InstanceID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,10 +24,6 @@ import fr.insapp.insapp.utility.Utils;
 public class LoginActivity extends AppCompatActivity {
 
     private static int nb_try = 0;
-
-
-    private static final String SENDER_ID = "451191722739";
-    private static final String scope = "GCM";
 
     public void onResume() {
         super.onResume();  // Always call the superclass method first
@@ -81,39 +76,6 @@ public class LoginActivity extends AppCompatActivity {
                                     setResult(RESULT_OK);
                                     finish(); // back to last activity
                                 }
-/*
-                                new AsyncTask<Void, Void, String>() {
-                                    @Override
-                                    protected String doInBackground(Void... params) {
-                                        String msg = "";
-                                        try {
-
-                                            String token = InstanceID.getInstance(getApplicationContext()).getToken(SENDER_ID,scope);
-                                            if(!token.isEmpty()) {
-
-                                                registerServer(token);
-                                            }
-                                            else {
-                                                if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
-                                                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                                                    startActivity(i);
-
-                                                    finish();
-                                                } else {
-                                                    setResult(RESULT_OK);
-                                                    finish(); // back to last activity
-                                                }
-                                            }
-
-
-                                        } catch (IOException ex) {
-
-                                        }
-                                        return msg;
-                                    }
-                                }.execute(null, null, null);
-*/
-
                             }
 
                         } catch (JSONException e) {

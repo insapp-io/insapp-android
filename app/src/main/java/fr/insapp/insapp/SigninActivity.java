@@ -15,8 +15,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +28,6 @@ public class SigninActivity extends AppCompatActivity {
     public static final int REQUEST_READ_PHONE_STATE = 10;
     final String url_site = "https://cas.insa-rennes.fr/cas/login?service=https://insapp.fr/";
 
-    GoogleCloudMessaging gcm;
     Context context;
     String regId;
     public static final String REG_ID = "regId";

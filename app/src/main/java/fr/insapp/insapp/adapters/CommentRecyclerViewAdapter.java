@@ -145,6 +145,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+        notifyDataSetChanged();
     }
 
     @Override

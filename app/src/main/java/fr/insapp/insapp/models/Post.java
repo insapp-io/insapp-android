@@ -18,7 +18,7 @@ import fr.insapp.insapp.utility.Operation;
 
 public class Post implements Parcelable {
 
-    private String id;
+    private String ID;
     private String title, association, description;
     private Date date;
 
@@ -47,11 +47,11 @@ public class Post implements Parcelable {
     }
 
     protected Post(Parcel in) {
-        id = in.readString();
-        title = in.readString();
-        association = in.readString();
-        description = in.readString();
-        date = new Date(in.readLong());
+        this.ID = in.readString();
+        this.title = in.readString();
+        this.association = in.readString();
+        this.description = in.readString();
+        this.date = new Date(in.readLong());
 
         this.likes = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class Post implements Parcelable {
     }
 
     public void refresh(JSONObject json) throws JSONException {
-        this.id = json.getString("ID");
+        this.ID = json.getString("ID");
         this.title = json.getString("title");
         this.association = json.getString("association");
         this.description = json.getString("description");
@@ -100,7 +100,7 @@ public class Post implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int i) {
-        dest.writeString(id);
+        dest.writeString(ID);
         dest.writeString(title);
         dest.writeString(association);
         dest.writeString(description);
@@ -126,7 +126,7 @@ public class Post implements Parcelable {
 
         final Post otherMyClass = (Post) other;
 
-        return otherMyClass.getId().equals(this.id);
+        return otherMyClass.getId().equals(this.ID);
     }
 
     public boolean isPostLikedBy(String userID) {
@@ -139,11 +139,11 @@ public class Post implements Parcelable {
     }
 
     public String getId() {
-        return id;
+        return ID;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.ID = id;
     }
 
     public String getTitle() {

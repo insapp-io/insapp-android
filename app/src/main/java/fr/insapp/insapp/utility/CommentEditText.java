@@ -11,19 +11,21 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.AutoCompleterAdapter;
+import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
+import fr.insapp.insapp.http.Client;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPost;
+import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.models.Comment;
+import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by thomas on 27/02/2017.
@@ -50,7 +52,7 @@ public class CommentEditText extends MultiAutoCompleteTextView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setupComponent(final HttpPost request, final String params) {
+    public void setupComponent(final CommentRecyclerViewAdapter commentAdapter, final Post post) {
         setThreshold(2);
 
         this.adapter = new AutoCompleterAdapter(getContext(), R.id.comment_event_input);
@@ -79,16 +81,17 @@ public class CommentEditText extends MultiAutoCompleteTextView {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
+
                     // hide keyboard
+
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
                     final String text = getText().toString();
                     getText().clear();
 
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
-
                     if (!text.isEmpty()) {
+                        /*
                         final JSONObject json = new JSONObject();
 
                         try {
@@ -112,7 +115,30 @@ public class CommentEditText extends MultiAutoCompleteTextView {
                             e.printStackTrace();
                         }
 
-                        request.execute(params, json.toString());
+                        System.out.println(json.toString());
+                        */
+
+                        final Comment comment = new Comment(null, HttpGet.credentials.getUserID(), text, tags, null);
+
+                        Call<Post> call = ServiceGenerator.createService(Client.class).commentPost(post.getId(), comment, HttpGet.credentials.getSessionToken());
+                        call.enqueue(new Callback<Post>() {
+                            @Override
+                            public void onResponse(Call<Post> call, Response<Post> response) {
+                                if (response.isSuccessful()) {
+                                    commentAdapter.setComments(response.body().getComments());
+
+                                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Post> call, Throwable t) {
+                                Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
 
                     return true;

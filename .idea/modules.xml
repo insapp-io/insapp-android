@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/insapp-material.iml" filepath="$PROJECT_DIR$/insapp-material.iml" />
+      <module fileurl="file://$PROJECT_DIR$/insapp-android.iml" filepath="$PROJECT_DIR$/insapp-android.iml" />
     </modules>
   </component>
 </project>

@@ -13,18 +13,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.lang.reflect.Field;
 
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
@@ -32,13 +28,17 @@ import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
-import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.Client;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final boolean dev = false;
+    public static final boolean dev = true;
 
     public static final int REFRESH_TOKEN_MESSAGE = 5;
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(getApplicationContext());
 
         // to make sure the token is refreshed
-        String token =  FirebaseInstanceId.getInstance().getToken();
+        String token = FirebaseInstanceId.getInstance().getToken();
 
         // view pager
 
@@ -80,18 +80,24 @@ public class MainActivity extends AppCompatActivity {
 
         // user
 
-        HttpGet get = new HttpGet(new AsyncResponse() {
+        Call<User> call = ServiceGenerator.createService(Client.class).getUser(HttpGet.credentials.getUserID(), HttpGet.credentials.getSessionToken());
+        call.enqueue(new Callback<User>() {
             @Override
-            public void processFinish(String output) {
-                try {
-                    user = new User(new JSONObject(output));
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    user = response.body();
                     toolbar.setTitle(user.getUsername());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "MainActivity", Toast.LENGTH_LONG).show();
                 }
             }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "MainActivity", Toast.LENGTH_LONG).show();
+            }
         });
-        get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
 
         // custom tabs optimization
 

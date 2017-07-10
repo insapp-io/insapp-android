@@ -47,6 +47,11 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.android.support:customtabs:25.2.0'
+
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+
     testCompile 'junit:junit:4.12'
 }
 

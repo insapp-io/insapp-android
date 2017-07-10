@@ -98,7 +98,7 @@ public class CommentsEventFragment extends Fragment {
         String params = HttpGet.ROOTEVENT + "/" + event.getId() + "/comment?token=" + HttpGet.credentials.getSessionToken();
 
         this.commentEditText = (CommentEditText) view.findViewById(R.id.comment_event_input);
-        commentEditText.setupComponent(request, params);
+        //commentEditText.setupComponent(request, params);
 
         commentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

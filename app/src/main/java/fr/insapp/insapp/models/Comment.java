@@ -68,7 +68,7 @@ public class Comment implements Parcelable {
         this.user = json.getString("user");
         this.content = json.getString("content");
 
-        this.tags = new ArrayList<Tag>();
+        this.tags = new ArrayList<>();
 
         JSONArray jsonarray = json.optJSONArray("tags");
         if (jsonarray != null) {
@@ -113,7 +113,7 @@ public class Comment implements Parcelable {
         dest.writeString(content);
 
         dest.writeInt(tags.size());
-        if(tags.size() > 0)
+        if (tags.size() > 0)
             dest.writeTypedList(tags);
 
         dest.writeLong(date.getTime());

@@ -10,20 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
-import fr.insapp.insapp.LoginActivity;
 import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
+import fr.insapp.insapp.http.Client;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.DividerItemDecoration;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -113,14 +115,12 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (resultCode == RESULT_OK) {
             switch (requestCode){
                 case WRITE_COMMENT_REQUEST:
-
                     Post post = data.getParcelableExtra("post");
                     int id = adapter.getPosts().indexOf(post);
                     adapter.updatePost(id, post);
                     break;
 
                 case MainActivity.REFRESH_TOKEN_MESSAGE:
-
                     generatePosts();
                     break;
             }
@@ -130,42 +130,30 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private void generatePosts() {
         adapter.getPosts().clear();
 
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            public void processFinish(String output) {
-                if (output.isEmpty()) {
-                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
-                }
-                else if (!output.equals("{\"posts\":null}")) {
-                    try {
-                        JSONArray jsonarray = new JSONArray(output);
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            final JSONObject jsonobject = jsonarray.getJSONObject(i);
-
-                            Post post = new Post(jsonobject);
-
-                            if (filter_club_id != null) {
-                                if (filter_club_id.equals(post.getAssociation())) {
-                                    adapter.addItem(post);
-                                    adapter.notifyDataSetChanged();
-
-                                    progressBar.setVisibility(View.GONE);
-                                }
-                            } else {
-                                adapter.addItem(post);
-                                adapter.notifyDataSetChanged();
-
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+        Call<List<Post>> call = ServiceGenerator.createService(Client.class).getLatestPosts(HttpGet.credentials.getSessionToken());
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                if (response.isSuccessful()) {
+                    for (Post post : response.body()) {
+                        if (filter_club_id == null || filter_club_id.equals(post.getAssociation()))
+                            adapter.addItem(post);
                     }
+                }
+                else {
+                    Toast.makeText(getActivity(), "PostsFragment", Toast.LENGTH_LONG).show();
                 }
 
                 swipeRefreshLayout.setRefreshing(false);
             }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                Toast.makeText(getActivity(), "PostsFragment", Toast.LENGTH_LONG).show();
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
         });
-        request.execute(HttpGet.ROOTPOST + "?token=" + HttpGet.credentials.getSessionToken());
     }
 
     @Override

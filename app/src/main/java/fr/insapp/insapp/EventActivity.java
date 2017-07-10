@@ -202,11 +202,13 @@ public class EventActivity extends AppCompatActivity {
         aboutFragment.setArguments(bundle1);
         adapter.addFragment(aboutFragment, getResources().getString(R.string.about));
 
+        /*
         Fragment commentsEventFragment = new CommentsEventFragment();
         Bundle bundle2 = new Bundle();
         bundle2.putParcelable("event", event);
         commentsEventFragment.setArguments(bundle2);
         adapter.addFragment(commentsEventFragment, getResources().getString(R.string.comments));
+        */
 
         viewPager.setAdapter(adapter);
     }

@@ -72,13 +72,14 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(i);
 
                                     finish();
-                                } else {
+                                }
+                                else {
                                     setResult(RESULT_OK);
                                     finish(); // back to last activity
                                 }
                             }
-
-                        } catch (JSONException e) {
+                        }
+                        catch (JSONException e) {
                             cantLogin();
                             e.printStackTrace();
                         }
@@ -95,57 +96,21 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void registerServer(String token){
-
-        System.out.println("TOKEN : " + token);
-        JSONObject notuser = new JSONObject();
-        try {
-            notuser.put("userid", HttpGet.credentials.getUserID());
-            notuser.put("token", token);
-            notuser.put("os", "android");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        HttpPost post = new HttpPost(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-
-                System.out.println(output);
-
-                if (isTaskRoot() | getIntent().getBooleanExtra("signin", false)) {
-                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(i);
-
-                    finish();
-                } else {
-                    setResult(RESULT_OK);
-                    finish(); // back to last activity
-                }
-            }
-        });
-        post.execute(HttpGet.ROOTNOTIFICATION + "?token=" + HttpGet.credentials.getSessionToken(), notuser.toString());
-    }
-
     public void cantLogin(){
         if (Utils.isNetworkAvailable(LoginActivity.this)) {
-            //if(HttpPost.responseCode != 0) {
             nb_try++;
+
             if (nb_try <= 5) {
                 Intent i = new Intent(LoginActivity.this, IntroActivity.class);
                 startActivity(i);
                 finish();
-            } else
+            }
+            else {
                 Toast.makeText(this, "Problème avec le serveur...", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Internet indisponible", Toast.LENGTH_LONG).show();
-            //Thread.sleep(1000);
-            //Intent i = new Intent(LoginActivity.this, TutoActivity.class);
-            //startActivity(i);
-            //finish();
+            }
         }
-        //}
-        //else
-        //    Toast.makeText(this, "Problème d'accès à Internet...", Toast.LENGTH_LONG).show();
+        else {
+            Toast.makeText(this, "Internet indisponible", Toast.LENGTH_LONG).show();
+        }
     }
 }

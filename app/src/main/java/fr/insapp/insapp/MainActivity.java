@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 
@@ -32,6 +33,7 @@ import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.LoginCredentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,18 +57,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Firebase
+
+        FirebaseApp.initializeApp(getApplicationContext());
+        String token = FirebaseInstanceId.getInstance().getToken();
+
         // toolbar
 
         this.toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setTitle(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("login", ""), LoginCredentials.class).getUsername());
         }
-
-        FirebaseApp.initializeApp(getApplicationContext());
-
-        // to make sure the token is refreshed
-        String token = FirebaseInstanceId.getInstance().getToken();
 
         // view pager
 
@@ -77,29 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         this.tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        // user
-
-        /*
-        Call<User> call = ServiceGenerator.createService(Client.class).getUser(HttpGet.sessionCredentials.getUserID(), HttpGet.sessionCredentials.getSessionToken());
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    user = response.body();
-                    toolbar.setTitle(user.getUsername());
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "MainActivity", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "MainActivity", Toast.LENGTH_LONG).show();
-            }
-        });
-        */
 
         // custom tabs optimization
 

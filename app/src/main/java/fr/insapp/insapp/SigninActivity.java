@@ -81,16 +81,11 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginCredentials> call, Response<LoginCredentials> response) {
                 if (response.isSuccessful()) {
-                    LoginCredentials loginCredentials = response.body();
-
-                    getSharedPreferences("LoginCredentials", MODE_PRIVATE).edit()
-                            .putString("username", loginCredentials.getUsername())
-                            .putString("authToken", loginCredentials.getAuthToken())
-                            .putString("user", loginCredentials.getUser())
-                            .putString("device", loginCredentials.getDevice())
+                    getSharedPreferences("Credentials", MODE_PRIVATE).edit()
+                            .putString("login", new Gson().toJson(response.body()))
                             .apply();
 
-                    login(loginCredentials);
+                    login(response.body());
                 }
                 else {
                     Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();

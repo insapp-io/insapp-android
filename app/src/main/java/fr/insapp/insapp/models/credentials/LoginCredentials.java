@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class LoginCredentials {
 
     @SerializedName("ID")
-    private String ID;
+    private String id;
 
     @SerializedName("username")
     private String username;
@@ -23,16 +23,16 @@ public class LoginCredentials {
     @SerializedName("device")
     private String device;
 
-    public LoginCredentials(String ID, String username, String authToken, String user, String device) {
-        this.ID = ID;
+    public LoginCredentials(String id, String username, String authToken, String user, String device) {
+        this.id = id;
         this.username = username;
         this.authToken = authToken;
         this.user = user;
         this.device = device;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String Id) {
+        this.id = id;
     }
 
     public void setUsername(String username) {
@@ -51,8 +51,8 @@ public class LoginCredentials {
         this.device = device;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
     public String getUsername() {

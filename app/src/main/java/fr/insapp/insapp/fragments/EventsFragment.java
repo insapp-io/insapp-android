@@ -18,7 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.LoginActivity;
 import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
@@ -29,7 +28,7 @@ import fr.insapp.insapp.models.Event;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by thoma on 27/10/2016.
+ * Created by thomas on 27/10/2016.
  */
 
 public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -183,7 +182,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void processFinish(String output) {
                 if (output.isEmpty()) {
-                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                    //startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
                 }
                 else if (!output.equals("{\"events\":null}")) {
                     try {

@@ -9,12 +9,12 @@ import fr.insapp.insapp.models.User;
 
 public class SessionCredentials {
 
-    private LogInCredentials logInCredentials;
+    private LoginCredentials loginCredentials;
     private SessionToken sessionToken;
     private User user;
 
-    public SessionCredentials(LogInCredentials logInCredentials, SessionToken sessionToken, User user) {
-        this.logInCredentials = logInCredentials;
+    public SessionCredentials(LoginCredentials loginCredentials, SessionToken sessionToken, User user) {
+        this.loginCredentials = loginCredentials;
         this.sessionToken = sessionToken;
         this.user = user;
     }

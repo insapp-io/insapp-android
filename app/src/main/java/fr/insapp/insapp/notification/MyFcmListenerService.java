@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Random;
 
 import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.LoginActivity;
 import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
@@ -112,8 +111,10 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, PostActivity.class).putExtra("notification", msg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
         else if(msg.getType().equals("event"))
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventActivity.class).putExtra("notification", msg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
+        /*
         else
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, LoginActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        */
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 

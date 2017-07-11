@@ -19,9 +19,9 @@ import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.SessionToken;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.LogInCredentials;
+import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
-import fr.insapp.insapp.models.credentials.SignInCredentials;
+import fr.insapp.insapp.models.credentials.SigninCredentials;
 import fr.insapp.insapp.models.deserializer.Deserializer;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,15 +74,23 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     public void signin(final String ticket) {
-        SignInCredentials signInCredentials = new SignInCredentials(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
+        SigninCredentials signinCredentials = new SigninCredentials(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
 
-        Call<LogInCredentials> call = ServiceGenerator.createService(Client.class).signUser(ticket, signInCredentials);
-        call.enqueue(new Callback<LogInCredentials>() {
+        Call<LoginCredentials> call = ServiceGenerator.createService(Client.class).signUser(ticket, signinCredentials);
+        call.enqueue(new Callback<LoginCredentials>() {
             @Override
-            public void onResponse(Call<LogInCredentials> call, Response<LogInCredentials> response) {
+            public void onResponse(Call<LoginCredentials> call, Response<LoginCredentials> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(SigninActivity.this, "Signed in !", Toast.LENGTH_LONG).show();
-                    login(response.body());
+                    LoginCredentials loginCredentials = response.body();
+
+                    getSharedPreferences("LoginCredentials", MODE_PRIVATE).edit()
+                            .putString("username", loginCredentials.getUsername())
+                            .putString("authToken", loginCredentials.getAuthToken())
+                            .putString("user", loginCredentials.getUser())
+                            .putString("device", loginCredentials.getDevice())
+                            .apply();
+
+                    login(loginCredentials);
                 }
                 else {
                     Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
@@ -90,16 +98,16 @@ public class SigninActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<LogInCredentials> call, Throwable t) {
+            public void onFailure(Call<LoginCredentials> call, Throwable t) {
                 Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public void login(LogInCredentials logInCredentials) {
+    public void login(LoginCredentials loginCredentials) {
         GsonBuilder gsonBuilder = new GsonBuilder();
 
-        gsonBuilder.registerTypeAdapter(LogInCredentials.class, new Deserializer<>("credentials"));
+        gsonBuilder.registerTypeAdapter(LoginCredentials.class, new Deserializer<>("credentials"));
         gsonBuilder.registerTypeAdapter(SessionToken.class, new Deserializer<>("sessionToken"));
         gsonBuilder.registerTypeAdapter(User.class, new Deserializer<>("user"));
 
@@ -107,7 +115,7 @@ public class SigninActivity extends AppCompatActivity {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson)).build();
 
-        Call<SessionCredentials> call = retrofit.create(Client.class).logUser(logInCredentials);
+        Call<SessionCredentials> call = retrofit.create(Client.class).logUser(loginCredentials);
         call.enqueue(new Callback<SessionCredentials>() {
             @Override
             public void onResponse(Call<SessionCredentials> call, Response<SessionCredentials> response) {
@@ -122,7 +130,6 @@ public class SigninActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SessionCredentials> call, Throwable t) {
-                System.out.println(t.getMessage());
                 Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
             }
         });

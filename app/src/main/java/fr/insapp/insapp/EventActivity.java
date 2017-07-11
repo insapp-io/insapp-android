@@ -185,8 +185,10 @@ public class EventActivity extends AppCompatActivity {
 
             if (HttpGet.sessionCredentials != null)
                 onActivityResult(PostActivity.NOTIFICATION_MESSAGE, RESULT_OK, null);
+            /*
             else
                 startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), PostActivity.NOTIFICATION_MESSAGE);
+            */
         }
         else
             generateEvent();

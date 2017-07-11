@@ -18,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.ClubActivity;
-import fr.insapp.insapp.LoginActivity;
 import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
@@ -84,8 +83,9 @@ public class ClubsFragment extends Fragment {
         HttpGet request = new HttpGet(new AsyncResponse() {
 
             public void processFinish(String output) {
-                if (output.isEmpty())
-                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                if (output.isEmpty()) {
+                    //startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                }
                 else {
                     try {
                         JSONArray jsonarray = new JSONArray(output);

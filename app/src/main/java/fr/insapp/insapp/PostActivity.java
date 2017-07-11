@@ -99,8 +99,10 @@ public class PostActivity extends AppCompatActivity {
 
             if (HttpGet.sessionCredentials != null)
                 onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
+            /*
             else
                 startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), NOTIFICATION_MESSAGE);
+             */
         }
         else
             generateActivity();

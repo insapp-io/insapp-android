@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by thomas on 10/07/2017.
  */
 
-public class LogInCredentials {
+public class LoginCredentials {
 
     @SerializedName("ID")
     private String ID;
@@ -15,7 +15,7 @@ public class LogInCredentials {
     private String username;
 
     @SerializedName("authtoken")
-    private String authtoken;
+    private String authToken;
 
     @SerializedName("user")
     private String user;
@@ -23,10 +23,10 @@ public class LogInCredentials {
     @SerializedName("device")
     private String device;
 
-    public LogInCredentials(String ID, String username, String authtoken, String user, String device) {
+    public LoginCredentials(String ID, String username, String authToken, String user, String device) {
         this.ID = ID;
         this.username = username;
-        this.authtoken = authtoken;
+        this.authToken = authToken;
         this.user = user;
         this.device = device;
     }
@@ -39,8 +39,8 @@ public class LogInCredentials {
         this.username = username;
     }
 
-    public void setAuthtoken(String authtoken) {
-        this.authtoken = authtoken;
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
     public void setUser(String user) {
@@ -59,8 +59,8 @@ public class LogInCredentials {
         return username;
     }
 
-    public String getAuthtoken() {
-        return authtoken;
+    public String getAuthToken() {
+        return authToken;
     }
 
     public String getUser() {

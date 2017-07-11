@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.insapp.insapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,23 +19,20 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/InsappMaterialTheme">
-        <activity android:name=".IntroActivity"></activity>
+
         <activity
-            android:name=".LegalConditionsActivity"
-            android:label="@string/legal_conditions"
-            android:parentActivityName=".IntroActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".IntroActivity" />
-        </activity>
-        <activity android:name=".SigninActivity">
+            android:name=".LauncherActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--
+
+        <activity
+            android:name=".IntroActivity">
+        </activity>
+
         <activity
             android:name=".SigninActivity"
             android:label="@string/login"
@@ -43,7 +41,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".IntroActivity" />
         </activity>
-        -->
+
+        <activity
+            android:name=".LegalConditionsActivity"
+            android:label="@string/legal_conditions"
+            android:parentActivityName=".IntroActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".IntroActivity" />
+        </activity>
+
         <activity
             android:name=".CreditsActivity"
             android:label="@string/credits"
@@ -52,6 +59,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings"
@@ -60,12 +68,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/profile"></activity>
+            android:label="@string/profile">
+        </activity>
+
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name">
+        </activity>
+
         <activity
             android:name=".SearchActivity"
             android:label="@string/search_results"
@@ -81,6 +94,7 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ClubActivity"
             android:parentActivityName=".MainActivity">
@@ -88,6 +102,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
         <activity
             android:name=".PostActivity"
             android:label="@string/post"
@@ -96,6 +111,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
         <activity
             android:name=".EventActivity"
             android:parentActivityName=".MainActivity">
@@ -103,6 +119,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
         <activity
             android:name=".AttendeesActivity"
             android:label="@string/event_participants"
@@ -112,8 +129,11 @@
                 android:value=".EventActivity" />
         </activity>
 
-        <activity android:name=".BarcodeDetectorActivity">
-            <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode"/>
+        <activity
+            android:name=".BarcodeDetectorActivity">
+            <meta-data
+                android:name="com.google.android.gms.vision.DEPENDENCIES"
+                android:value="barcode"/>
         </activity>
 
         <service

@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.LoginActivity;
 import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
@@ -88,7 +87,7 @@ public class NotificationsFragment extends Fragment {
         HttpGet request = new HttpGet(new AsyncResponse() {
             public void processFinish(String output) {
                 if (output.isEmpty()) {
-                    startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
+                    //startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
                 }
                 else if (!output.equals("{\"notifications\":null}")) {
                     try {

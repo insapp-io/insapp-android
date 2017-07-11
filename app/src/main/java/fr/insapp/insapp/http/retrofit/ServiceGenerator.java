@@ -3,10 +3,9 @@ package fr.insapp.insapp.http.retrofit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.models.SessionToken;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.LogInCredentials;
+import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.deserializer.Deserializer;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -22,7 +21,7 @@ public class ServiceGenerator {
     private static GsonBuilder gsonBuilder = new GsonBuilder();
 
     static {
-        gsonBuilder.registerTypeAdapter(LogInCredentials.class, new Deserializer<>("credentials"));
+        gsonBuilder.registerTypeAdapter(LoginCredentials.class, new Deserializer<>("credentials"));
         gsonBuilder.registerTypeAdapter(SessionToken.class, new Deserializer<>("sessionToken"));
         gsonBuilder.registerTypeAdapter(User.class, new Deserializer<>("user"));
     }

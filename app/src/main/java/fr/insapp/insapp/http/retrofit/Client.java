@@ -49,7 +49,7 @@ public interface Client {
     Call<Post> getPostFromId(@Path("id") String id, @Query("token") String token);
 
     @GET("post")
-    Call<List<Post>> getLatestPosts(@Query("token") String token);
+    Call<List<Post>> getLatestPosts();
 
     @POST("post/{id}/comment")
     Call<Post> commentPost(@Path("id") String id, @Body Comment comment, @Query("token") String token);

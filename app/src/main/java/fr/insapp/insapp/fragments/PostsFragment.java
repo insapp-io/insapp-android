@@ -130,8 +130,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private void generatePosts() {
         adapter.getPosts().clear();
 
-        /*
-        Call<List<Post>> call = ServiceGenerator.createService(Client.class).getLatestPosts(HttpGet.sessionCredentials.getSessionToken());
+        Call<List<Post>> call = ServiceGenerator.createService(Client.class).getLatestPosts();
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
@@ -155,7 +154,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        */
     }
 
     @Override

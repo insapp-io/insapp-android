@@ -1,8 +1,8 @@
 package fr.insapp.insapp.http.retrofit;
 
-import android.app.Service;
 import android.content.SharedPreferences;
 
+import fr.insapp.insapp.http.token.TokenInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -16,25 +16,34 @@ public class ServiceGenerator {
 
     private static Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create());
     private static Retrofit retrofit = builder.build();
-
-    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    private static JsonInterceptor json;
+    // interceptors
+
+    private static HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+    private static JsonInterceptor jsonInterceptor;
+    private static TokenInterceptor tokenInterceptor;
 
     public static void setPreferences(SharedPreferences preferences) {
-        ServiceGenerator.json = new JsonInterceptor(preferences);
+        ServiceGenerator.jsonInterceptor = new JsonInterceptor(preferences);
+        ServiceGenerator.tokenInterceptor = new TokenInterceptor(preferences);
     }
 
     public static <S> S createService(Class<S> serviceClass) {
-        if (!httpClient.interceptors().contains(logging)) {
-            httpClient.addInterceptor(logging);
+        if (!httpClient.interceptors().contains(jsonInterceptor)) {
+            httpClient.addInterceptor(jsonInterceptor);
             builder.client(httpClient.build());
             retrofit = builder.build();
         }
 
-        if (!httpClient.interceptors().contains(json)) {
-            httpClient.addInterceptor(json);
+        if (!httpClient.interceptors().contains(tokenInterceptor)) {
+            httpClient.addInterceptor(tokenInterceptor);
+            builder.client(httpClient.build());
+            retrofit = builder.build();
+        }
+
+        if (!httpClient.interceptors().contains(loggingInterceptor)) {
+            httpClient.addInterceptor(loggingInterceptor);
             builder.client(httpClient.build());
             retrofit = builder.build();
         }

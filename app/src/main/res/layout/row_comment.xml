@@ -27,7 +27,7 @@
         android:layout_alignTop="@id/username_avatar" />
 
     <TextView
-        android:id="@+id/text_comment"
+        android:id="@+id/content_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/username_comment"

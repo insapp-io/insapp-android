@@ -11,7 +11,7 @@ public class LoginCredentials {
     @SerializedName("ID")
     private String id;
 
-    @SerializedName("username")
+    @SerializedName("usernameTextView")
     private String username;
 
     @SerializedName("authtoken")

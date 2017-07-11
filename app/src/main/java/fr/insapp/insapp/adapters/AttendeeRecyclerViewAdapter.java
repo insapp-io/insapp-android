@@ -65,7 +65,7 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
         final User user = getItem(position);
 
         if (user != null) {
-            // get the drawable of avatar
+            // get the drawable of avatarCircleImageView
 
             final Resources resources = context.getResources();
             final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());

@@ -609,7 +609,7 @@ public class EventActivity extends AppCompatActivity {
 
         refreshAttendeesTextView();
 
-        // date
+        // dateTextView
 
         dateImageView.setColorFilter(fgColor);
 

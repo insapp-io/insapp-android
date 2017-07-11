@@ -71,17 +71,17 @@ public class CommentsEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_comments_event, container, false);
 
-        // comment user avatar
+        // comment user avatarCircleImageView
 
         this.circleImageView = (CircleImageView) view.findViewById(R.id.comment_event_username_avatar);
 
-        // get the drawable of avatar
+        // get the drawable of avatarCircleImageView
 
         Resources resources = getContext().getResources();
         final int id = resources.getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getContext().getPackageName());
         Glide.with(getContext()).load(id).into(circleImageView);
 
-        // edit text
+        // edit contentTextView
 
         HttpPost request = new HttpPost(new AsyncResponse() {
             @Override

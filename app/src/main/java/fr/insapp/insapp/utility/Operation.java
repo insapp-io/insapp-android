@@ -54,7 +54,7 @@ public class Operation {
 
     public static String drawableProfilName(String promo, String gender){
 
-        String drawable_string = "avatar";
+        String drawable_string = "avatarCircleImageView";
         if (!promo.equals("") && !gender.equals("")) {
             String userPromotion = promo.toLowerCase();
             if (userPromotion.contains("personnel"))

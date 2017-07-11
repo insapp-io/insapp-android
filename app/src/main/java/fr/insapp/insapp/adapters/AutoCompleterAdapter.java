@@ -66,7 +66,7 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
 
         ((TextView) convertView.findViewById(R.id.dropdown_textview)).setText(String.format(resources.getString(R.string.tag), user.getUsername()));
 
-        // get the drawable of avatar
+        // get the drawable of avatarCircleImageView
         final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         Glide.with(context).load(id).into(((CircleImageView) convertView.findViewById(R.id.dropdown_avatar)));
 

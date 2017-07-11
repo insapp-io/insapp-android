@@ -60,7 +60,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
     public void onBindViewHolder(UserRecyclerViewAdapter.UserViewHolder holder, int position) {
         final User user = users.get(position);
 
-        // get the drawable of avatar
+        // get the drawable of avatarCircleImageView
 
         Resources resources = context.getResources();
         final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());

@@ -97,7 +97,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
             holder.commentCounter.setText(String.format(Locale.FRANCE, "%d", post.getComments().size()));
         }
 
-        // club avatar
+        // club avatarCircleImageView
 
         if (layout != R.layout.post) {
             final Club club = HttpGet.clubs.get(post.getAssociation());

@@ -75,7 +75,7 @@ public class Post implements Parcelable {
         this.title = json.getString("title");
         this.association = json.getString("association");
         this.description = json.getString("description");
-        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("date"), true);
+        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("dateTextView"), true);
 
         this.likes = new ArrayList<>();
 

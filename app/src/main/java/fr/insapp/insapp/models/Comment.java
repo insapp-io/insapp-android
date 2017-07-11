@@ -76,11 +76,11 @@ public class Comment implements Parcelable {
                 tags.add(new Tag(jsonarray.getJSONObject(i)));
         }
 
-        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("date"), true);
-        //if(this.date == null)
-        //    this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SS'Z'", json.getString("date"));
-        //if(this.date == null)
-        //    this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("date"));
+        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("dateTextView"), true);
+        //if(this.dateTextView == null)
+        //    this.dateTextView = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SS'Z'", json.getString("dateTextView"));
+        //if(this.dateTextView == null)
+        //    this.dateTextView = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateTextView"));
     }
 
     public String getId() {

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
@@ -28,6 +29,7 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
@@ -36,7 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by thoma on 12/11/2016.
+ * Created by thomas on 12/11/2016.
  */
 
 public class PostActivity extends AppCompatActivity {
@@ -73,6 +75,8 @@ public class PostActivity extends AppCompatActivity {
         this.descriptionTextView = (TextView) findViewById(R.id.post_text);
         this.dateTextView = (TextView) findViewById(R.id.post_date);
 
+        this.userAvatarCircleImageView = (CircleImageView) findViewById(R.id.comment_post_username_avatar);
+
         // post
 
         Intent intent = getIntent();
@@ -94,18 +98,14 @@ public class PostActivity extends AppCompatActivity {
         }
 
         // if we come from an android notification
+
         if (this.post == null) {
             notification = intent.getParcelableExtra("notification");
-
-            if (HttpGet.sessionCredentials != null)
-                onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
-            /*
-            else
-                startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), NOTIFICATION_MESSAGE);
-             */
+            onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
         }
-        else
+        else {
             generateActivity();
+        }
     }
 
     @Override
@@ -114,14 +114,12 @@ public class PostActivity extends AppCompatActivity {
 
         if (requestCode == NOTIFICATION_MESSAGE) {
             if (resultCode == RESULT_OK) {
-                /*
-                Call<Post> call = ServiceGenerator.createService(Client.class).getPostFromId(notification.getContent(), HttpGet.sessionCredentials.getSessionToken());
+                Call<Post> call = ServiceGenerator.createService(Client.class).getPostFromId(notification.getContent());
                 call.enqueue(new Callback<Post>() {
                     @Override
                     public void onResponse(Call<Post> call, Response<Post> response) {
                         if (response.isSuccessful()) {
                             post = response.body();
-
                             generateActivity();
                         }
                         else {
@@ -134,67 +132,45 @@ public class PostActivity extends AppCompatActivity {
                         Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                     }
                 });
-                */
             }
         }
     }
 
     public void generateActivity() {
-        // fill post elements
+        Call<Club> call = ServiceGenerator.createService(Client.class).getClubFromId(post.getAssociation());
+        call.enqueue(new Callback<Club>() {
+            @Override
+            public void onResponse(Call<Club> call, Response<Club> response) {
+                if (response.isSuccessful()) {
+                    club = response.body();
 
-        this.club = HttpGet.clubs.get(post.getAssociation());
-        if (this.club == null) {
-            generateActivity();
+                    Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(clubAvatarCircleImageView);
 
-            /*
-            Call<Club> call = ServiceGenerator.createService(Client.class).getClubFromId(post.getAssociation(), HttpGet.sessionCredentials.getSessionToken());
-            call.enqueue(new Callback<Club>() {
-                @Override
-                public void onResponse(Call<Club> call, Response<Club> response) {
-                    if (response.isSuccessful()) {
-                        club = response.body();
-                        HttpGet.clubs.put(club.getId(), club);
+                    // listener
 
-                        Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(clubAvatarCircleImageView);
-
-                        // listener
-
-                        clubAvatarCircleImageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
-                            }
-                        });
-                    }
-                    else {
-                        Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
-                    }
+                    clubAvatarCircleImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
+                        }
+                    });
                 }
-
-                @Override
-                public void onFailure(Call<Club> call, Throwable t) {
+                else {
                     Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                 }
-            });
-            */
-        }
-        else {
-            Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.clubAvatarCircleImageView);
+            }
 
-            // listener
-            this.clubAvatarCircleImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(PostActivity.this, ClubActivity.class).putExtra("club", club));
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call<Club> call, Throwable t) {
+                Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+            }
+        });
 
         this.titleTextView.setText(post.getTitle());
         this.descriptionTextView.setText(post.getDescription());
         this.dateTextView.setText(String.format(getResources().getString(R.string.ago), Operation.displayedDate(post.getDate())));
 
-        // description text view links
+        // description contentTextView view links
 
         Linkify.addLinks(descriptionTextView, Linkify.ALL);
         Utils.convertToLinkSpan(PostActivity.this, descriptionTextView);
@@ -215,70 +191,17 @@ public class PostActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        // retrieve the avatar of the user
+        // retrieve the avatarCircleImageView of the user
 
-        /*
-        Call<User> call2 = ServiceGenerator.createService(Client.class).getUser(HttpGet.sessionCredentials.getUserID(), HttpGet.sessionCredentials.getSessionToken());
-        call2.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    MainActivity.user = response.body();
+        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
-                    final int id = getResources().getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getPackageName());
-                    Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
-                }
-                else {
-                    Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
-                }
-            }
+        final int id = getResources().getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
+        Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
-            }
-        });
-        */
-
-        // edit text
+        // edit contentTextView
 
         this.commentEditText = (CommentEditText) findViewById(R.id.comment_post_input);
         commentEditText.setupComponent(adapter, post);
-
-        // comment user avatar
-
-        this.userAvatarCircleImageView = (CircleImageView) findViewById(R.id.comment_post_username_avatar);
-
-        // get the drawable of avatar
-
-        if (MainActivity.getUser() == null) {
-            /*
-            Call<User> call3 = ServiceGenerator.createService(Client.class).getUser(HttpGet.sessionCredentials.getUserID(), HttpGet.sessionCredentials.getSessionToken());
-            call3.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful()) {
-                        MainActivity.user = response.body();
-
-                        final int id = getResources().getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getPackageName());
-                        Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
-                    }
-                    else {
-                        Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
-                }
-            });
-            */
-        }
-        else {
-            final int id = getResources().getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getPackageName());
-            Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
-        }
     }
 
     @Override

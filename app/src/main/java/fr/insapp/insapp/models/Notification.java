@@ -22,7 +22,7 @@ import fr.insapp.insapp.utility.Operation;
  Comment			Comment					`json:"comment,omitempty" bson:",omitempty"`
  Message			string					`json:"message"`
  Seen				bool						`json:"seen"`
- Date				time.Time				`json:"date"`
+ Date				time.Time				`json:"dateTextView"`
  Type				string					`json:"type"`
  }
  */
@@ -76,7 +76,7 @@ public class Notification implements Parcelable {
 
         this.message = json.getString("message");
         this.seen = json.getBoolean("seen");
-        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("date"), true);
+        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("dateTextView"), true);
         this.type = json.getString("type");
     }
 

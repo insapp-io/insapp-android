@@ -177,7 +177,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         try {
             json.put("name", preferences.getString("name", ""));
-            json.put("username", user.getUsername());
+            json.put("usernameTextView", user.getUsername());
             json.put("description", preferences.getString("description", ""));
             json.put("email", preferences.getString("email", ""));
             json.put("emailpublic", user.isEmailPublic());

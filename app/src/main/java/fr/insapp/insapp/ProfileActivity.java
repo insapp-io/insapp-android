@@ -3,7 +3,6 @@ package fr.insapp.insapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -23,16 +22,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private EventRecyclerViewAdapter adapter;
 
-    private User user = null;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,10 +104,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
-        final int id = getResources().getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", ProfileActivity.this.getPackageName());
-        final Drawable dr = ContextCompat.getDrawable(ProfileActivity.this, id);
+        final int id = getResources().getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
+        final Drawable drawable = ContextCompat.getDrawable(ProfileActivity.this, id);
 
-        avatarCircleImageView.setImageDrawable(dr);
+        avatarCircleImageView.setImageDrawable(drawable);
         usernameTextView.setText(user.getUsername());
         nameTextView.setText(user.getName());
         emailTextView.setText(user.getEmail());
@@ -149,8 +144,7 @@ public class ProfileActivity extends AppCompatActivity {
             String barcode_data = preferences.getString("barcode", "");
 
             if (!barcode_data.equals("")) {
-
-                ((TextView)findViewById(R.id.barcodeText)).setText(barcode_data);
+                ((TextView) findViewById(R.id.barcodeText)).setText(barcode_data);
 
                 // barcode image
 

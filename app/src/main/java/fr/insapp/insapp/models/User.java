@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * type User struct {
  ID          bson.ObjectId   `bson:"_id,omitempty"`
  Name        string          `json:"name"`
- Username    string          `json:"username"`
+ Username    string          `json:"usernameTextView"`
  Description string          `json:"description"`
  Email       string          `json:"email"`
  EmailPublic bool            `json:"emailpublic"`
@@ -87,7 +87,7 @@ public class User implements Parcelable{
     public User(JSONObject json) throws JSONException {
         this.ID = json.getString("ID");
         this.name = json.getString("name");
-        this.username = json.getString("username");
+        this.username = json.getString("usernameTextView");
         this.description = json.getString("description");
         this.email = json.getString("email");
         this.emailPublic = json.getBoolean("emailpublic");

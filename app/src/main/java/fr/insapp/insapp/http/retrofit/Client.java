@@ -39,14 +39,14 @@ public interface Client {
      */
 
     @GET("association/{id}")
-    Call<Club> getClubFromId(@Path("id") String id, @Query("token") String token);
+    Call<Club> getClubFromId(@Path("id") String id);
 
     /*
      * POSTS
      */
 
     @GET("post/{id}")
-    Call<Post> getPostFromId(@Path("id") String id, @Query("token") String token);
+    Call<Post> getPostFromId(@Path("id") String id);
 
     @GET("post")
     Call<List<Post>> getLatestPosts();
@@ -58,5 +58,5 @@ public interface Client {
      * USER
      */
     @GET("user/{id}")
-    Call<User> getUser(@Path("id") String id, @Query("token") String token);
+    Call<User> getUserFromId(@Path("id") String id);
 }

@@ -142,7 +142,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         final User user = new User(new JSONObject(output));
                         notification.setUser(user);
 
-                        // get the drawable of avatar
+                        // get the drawable of avatarCircleImageView
                         Resources resources = context.getResources();
                         final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                         Glide.with(context).load(id).into(holder.avatar_notification);

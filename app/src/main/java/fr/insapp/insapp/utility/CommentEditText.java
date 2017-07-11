@@ -96,12 +96,12 @@ public class CommentEditText extends MultiAutoCompleteTextView {
 
                         try {
                             json.put("user", HttpGet.sessionCredentials.getUserID());
-                            json.put("content", text);
+                            json.put("content", contentTextView);
 
                             JSONArray jsonArray = new JSONArray();
                             List<String> alreadyTagged = new ArrayList<>();
                             for (final Tag tag : getTags()) {
-                                if (text.contains(tag.getName()) && alreadyTagged.lastIndexOf(tag.getName()) == -1) {
+                                if (contentTextView.contains(tag.getName()) && alreadyTagged.lastIndexOf(tag.getName()) == -1) {
                                     JSONObject jsonTag = new JSONObject();
                                     jsonTag.put("user", tag.getUser());
                                     jsonTag.put("name", tag.getName());
@@ -119,7 +119,7 @@ public class CommentEditText extends MultiAutoCompleteTextView {
                         */
 
                         /*
-                        final Comment comment = new Comment(null, HttpGet.sessionCredentials.getUserID(), text, tags, null);
+                        final Comment comment = new Comment(null, HttpGet.sessionCredentials.getUserID(), contentTextView, tags, null);
                         */
 
                         /*

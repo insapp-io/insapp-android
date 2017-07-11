@@ -3,6 +3,8 @@ package fr.insapp.insapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,33 +14,38 @@ import java.util.ArrayList;
 
 /**
  * Created by Antoine on 25/02/2016.
- *
-
- type Club struct {
- ID          bson.ObjectId   `bson:"_id,omitempty"`
- Name        string          `json:"name"`
- Email       string          `json:"email"`
- Description string          `json:"description"`
- Events      []bson.ObjectId `json:"events"`
- Posts       []bson.ObjectId `json:"posts"`
- Palette			[][]int					`json:"palette"`
- SelectedColor int						`json:"selectedcolor"`
- Profile    	string          `json:"profile"`
- Cover	    	string          `json:"cover"`
- BgColor     string          `json:"bgcolor"`
- FgColor string `json:"fgcolor"`
- }
-
  */
+
 public class Club implements Parcelable {
 
+    @SerializedName("ID")
     private String id;
-    private String name, email, description;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("events")
     private ArrayList<String> events;
+
+    @SerializedName("posts")
     private ArrayList<String> posts;
+
+    @SerializedName("profile")
     private String profilPicture;
+
+    @SerializedName("cover")
     private String cover;
+
+    @SerializedName("bgColor")
     private String bgColor;
+
+    @SerializedName("fgColor")
     private String fgColor;
 
     public static final Parcelable.Creator<Club> CREATOR = new Parcelable.Creator<Club>() {

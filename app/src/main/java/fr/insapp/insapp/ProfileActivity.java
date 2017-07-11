@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -49,6 +50,7 @@ import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.utility.File;
 import fr.insapp.insapp.utility.Operation;
 
@@ -60,14 +62,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private EventRecyclerViewAdapter adapter;
 
-    private RecyclerView recyclerView;
-    private CircleImageView avatar_profil;
-    private TextView username;
-    private TextView name;
-    private TextView email;
-    private TextView promo;
-    private TextView description;
-
     private User user = null;
 
     @Override
@@ -75,12 +69,12 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        this.avatar_profil = (CircleImageView) findViewById(R.id.profil_avatar);
-        this.username = (TextView) findViewById(R.id.profile_username);
-        this.name = (TextView) findViewById(R.id.profile_name);
-        this.email = (TextView) findViewById(R.id.profile_email);
-        this.promo = (TextView) findViewById(R.id.profile_class);
-        this.description = (TextView) findViewById(R.id.profile_description);
+        CircleImageView avatarCircleImageView = (CircleImageView) findViewById(R.id.profil_avatar);
+        TextView usernameTextView = (TextView) findViewById(R.id.profile_username);
+        TextView nameTextView = (TextView) findViewById(R.id.profile_name);
+        TextView emailTextView = (TextView) findViewById(R.id.profile_email);
+        TextView promotionTextView = (TextView) findViewById(R.id.profile_class);
+        TextView descriptionTextView = (TextView) findViewById(R.id.profile_description);
 
         // toolbar
 
@@ -104,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // recycler view
 
-        this.recyclerView = (RecyclerView) findViewById(R.id.recyclerview_events_participate);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_events_participate);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -113,57 +107,33 @@ public class ProfileActivity extends AppCompatActivity {
 
         // fill the main layout
 
-        Resources resources = ProfileActivity.this.getResources();
+        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
-        Intent intent = getIntent();
-        if (intent.hasExtra("user")) {
-            this.user = intent.getParcelableExtra("user");
+        final int id = getResources().getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", ProfileActivity.this.getPackageName());
+        final Drawable dr = ContextCompat.getDrawable(ProfileActivity.this, id);
 
-            final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", ProfileActivity.this.getPackageName());
-            Glide.with(getBaseContext()).load(id).into(this.avatar_profil);
+        avatarCircleImageView.setImageDrawable(dr);
+        usernameTextView.setText(user.getUsername());
+        nameTextView.setText(user.getName());
+        emailTextView.setText(user.getEmail());
+        promotionTextView.setText(user.getPromotion());
+        descriptionTextView.setText(user.getDescription());
 
-            this.username.setText(user.getUsername());
-            this.name.setText(user.getName());
-            this.email.setText(user.getEmail());
-            this.promo.setText(user.getPromotion());
-            this.description.setText(user.getDescription());
+        if (user.getName().isEmpty())
+            nameTextView.setVisibility(View.GONE);
 
-            if (user.getName().isEmpty())
-                this.name.setVisibility(View.GONE);
-            if (user.getEmail().isEmpty())
-                this.email.setVisibility(View.GONE);
-            if (user.getPromotion().isEmpty())
-                this.promo.setVisibility(View.GONE);
-        }
-        else {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (user.getEmail().isEmpty())
+            emailTextView.setVisibility(View.GONE);
 
-            int id = resources.getIdentifier(Operation.drawableProfilName(preferences.getString("class", ""), preferences.getString("sex", "")), "drawable", ProfileActivity.this.getPackageName());
-            Drawable dr = ContextCompat.getDrawable(ProfileActivity.this, id);
-
-            this.avatar_profil.setImageDrawable(dr);
-            /*
-            this.username.setText(HttpGet.sessionCredentials.getUsername());
-            */
-            this.name.setText(preferences.getString("name", ""));
-            this.email.setText(preferences.getString("email", ""));
-            this.promo.setText(preferences.getString("class", ""));
-            this.description.setText(preferences.getString("description", ""));
-
-            if (user.getName().isEmpty())
-                this.name.setVisibility(View.GONE);
-            if (user.getEmail().isEmpty())
-                this.email.setVisibility(View.GONE);
-            if (user.getPromotion().isEmpty())
-                this.promo.setVisibility(View.GONE);
-        }
+        if (user.getPromotion().isEmpty())
+            promotionTextView.setVisibility(View.GONE);
 
         // links
 
-        Linkify.addLinks(email, Linkify.EMAIL_ADDRESSES);
-        email.setLinkTextColor(Color.parseColor("#ffffff"));
+        Linkify.addLinks(emailTextView, Linkify.EMAIL_ADDRESSES);
+        emailTextView.setLinkTextColor(Color.parseColor("#ffffff"));
 
-        if (!MainActivity.user.getId().equals(this.user.getId()))
+        if (this.user != null)
             generateEvents();
     }
 
@@ -172,48 +142,43 @@ public class ProfileActivity extends AppCompatActivity {
         super.onResume();
 
         ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);
-        if(MainActivity.user.getId().equals(this.user.getId())) {
-            this.user = MainActivity.user;
+        if (this.user == null) {
             generateEvents();
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             String barcode_data = preferences.getString("barcode", "");
 
-            if(!barcode_data.equals("")) {
+            if (!barcode_data.equals("")) {
 
                 ((TextView)findViewById(R.id.barcodeText)).setText(barcode_data);
 
                 // barcode image
-                Bitmap bitmap = null;
+
+                Bitmap bitmap;
 
                 try {
-
                     bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 700, 300);
                     barcodeImageView.setImageBitmap(bitmap);
-
                 } catch (WriterException e) {
                     e.printStackTrace();
                 }
             }
-            else{
+            else {
                 barcodeImageView.setVisibility(View.GONE);
                 findViewById(R.id.titleBarCode).setVisibility(View.GONE);
             }
-
         }
-        else{
+        else {
             barcodeImageView.setVisibility(View.GONE);
             findViewById(R.id.titleBarCode).setVisibility(View.GONE);
         }
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
 
-        if (user.getId().equals(MainActivity.getUser().getId()))
+        if (this.user == null)
             menu.getItem(0).setTitle(R.string.delete_account);
 
         return super.onCreateOptionsMenu(menu);
@@ -302,6 +267,7 @@ public class ProfileActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         final List<Event> events = new ArrayList<>();
 
+        /*
         for (String idEvent : user.getEvents()) {
                 HttpGet request = new HttpGet(new AsyncResponse() {
                     @Override
@@ -317,11 +283,9 @@ public class ProfileActivity extends AppCompatActivity {
                             showEvents(events);
                     }
                 });
-                /*
                 request.execute(HttpGet.ROOTEVENT + "/" + idEvent + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                */
-
         }
+        */
     }
 
     private void showEvents(List<Event> events){

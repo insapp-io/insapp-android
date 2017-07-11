@@ -19,7 +19,6 @@ import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.http.retrofit.Client;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.DividerItemDecoration;
@@ -41,7 +40,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private View view;
     private PostRecyclerViewAdapter adapter;
-    private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final int WRITE_COMMENT_REQUEST = 1;
@@ -90,10 +88,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-        // progress bar
-
-        this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         // swipe refresh layout
 

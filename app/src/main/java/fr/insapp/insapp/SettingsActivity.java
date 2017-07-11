@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,14 +27,13 @@ import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 
 /**
  * Created by thomas on 15/12/2016.
  */
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,35 +63,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         chimeMaster.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newVal) {
-                ((EditTextPreference)preference).setText((String)newVal);
+                ((EditTextPreference) preference).setText((String) newVal);
                 return true;
             }
-
         });
 
-        // request
+        // filling fields
 
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                try {
-                    user = new User(new JSONObject(output));
+        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
-                    SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
-                    preferences.putString("name", user.getName());
-                    preferences.putString("sex", user.getGender());
-                    preferences.putString("class", user.getPromotion());
-                    preferences.putString("email", user.getEmail());
-                    preferences.putString("description", user.getDescription());
-                    preferences.apply();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        /*
-        request.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-        */
+        SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
+        preferences.putString("name", user.getName());
+        preferences.putString("sex", user.getGender());
+        preferences.putString("class", user.getPromotion());
+        preferences.putString("email", user.getEmail());
+        preferences.putString("description", user.getDescription());
+        preferences.apply();
     }
 
     private void initSummary(Preference preference) {
@@ -100,7 +88,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             for (int i = 0; i < preferenceGroup.getPreferenceCount(); i++) {
                 initSummary(preferenceGroup.getPreference(i));
             }
-        } else {
+        }
+        else {
             updatePreferenceSummary(preference);
         }
 
@@ -182,6 +171,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     public void updateProfile(){
+        /*
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         JSONObject json = new JSONObject();
 
@@ -223,7 +213,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 }
             }
         });
-        /*
         put.execute(HttpGet.ROOTUSER + "/" + user.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken(), json.toString());
         */
     }

@@ -1,7 +1,5 @@
 package fr.insapp.insapp.notification;
 
-import android.util.Log;
-
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -40,7 +38,9 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
         System.out.println("TOKEN : " + token);
         JSONObject notuser = new JSONObject();
         try {
-            notuser.put("userid", HttpGet.credentials.getUserID());
+            /*
+            notuser.put("userid", HttpGet.sessionCredentials.getUserID());
+            */
             notuser.put("token", token);
             notuser.put("os", "android");
         } catch (JSONException e) {
@@ -53,6 +53,8 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
                 System.out.println(output);
             }
         });
-        post.execute(HttpGet.ROOTNOTIFICATION + "?token=" + HttpGet.credentials.getSessionToken(), notuser.toString());
+        /*
+        post.execute(HttpGet.ROOTNOTIFICATION + "?token=" + HttpGet.sessionCredentials.getSessionToken(), notuser.toString());
+        */
     }
 }

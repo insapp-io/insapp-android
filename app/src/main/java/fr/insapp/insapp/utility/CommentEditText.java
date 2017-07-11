@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.AutoCompleterAdapter;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.Client;
+import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
@@ -95,7 +95,7 @@ public class CommentEditText extends MultiAutoCompleteTextView {
                         final JSONObject json = new JSONObject();
 
                         try {
-                            json.put("user", HttpGet.credentials.getUserID());
+                            json.put("user", HttpGet.sessionCredentials.getUserID());
                             json.put("content", text);
 
                             JSONArray jsonArray = new JSONArray();
@@ -118,9 +118,12 @@ public class CommentEditText extends MultiAutoCompleteTextView {
                         System.out.println(json.toString());
                         */
 
-                        final Comment comment = new Comment(null, HttpGet.credentials.getUserID(), text, tags, null);
+                        /*
+                        final Comment comment = new Comment(null, HttpGet.sessionCredentials.getUserID(), text, tags, null);
+                        */
 
-                        Call<Post> call = ServiceGenerator.createService(Client.class).commentPost(post.getId(), comment, HttpGet.credentials.getSessionToken());
+                        /*
+                        Call<Post> call = ServiceGenerator.createService(Client.class).commentPost(post.getId(), comment, HttpGet.sessionCredentials.getSessionToken());
                         call.enqueue(new Callback<Post>() {
                             @Override
                             public void onResponse(Call<Post> call, Response<Post> response) {
@@ -139,6 +142,7 @@ public class CommentEditText extends MultiAutoCompleteTextView {
                                 Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                             }
                         });
+                        */
                     }
 
                     return true;

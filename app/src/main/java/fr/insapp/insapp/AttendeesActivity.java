@@ -88,7 +88,9 @@ public class AttendeesActivity extends AppCompatActivity {
                     }
                 }
             });
-            request.execute(HttpGet.ROOTUSER + "/" + users.get(i) + "?token=" + HttpGet.credentials.getSessionToken());
+            /*
+            request.execute(HttpGet.ROOTUSER + "/" + users.get(i) + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+            */
         }
     }
 

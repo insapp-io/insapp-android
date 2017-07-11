@@ -108,7 +108,9 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
                         }
                     }
                 });
-                request.execute(HttpGet.ROOTASSOCIATION + "/" + event.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
+                /*
+                request.execute(HttpGet.ROOTASSOCIATION + "/" + event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                */
             } else {
                 // avatar
 

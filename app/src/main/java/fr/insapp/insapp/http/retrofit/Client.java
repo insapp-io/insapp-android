@@ -1,4 +1,4 @@
-package fr.insapp.insapp.http;
+package fr.insapp.insapp.http.retrofit;
 
 import java.util.List;
 
@@ -6,11 +6,13 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.LogInCredentials;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
+import fr.insapp.insapp.models.credentials.SignInCredentials;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -25,8 +27,12 @@ public interface Client {
     /*
      * PUBLIC
      */
+
     @POST("signin/user/{ticket}")
-    Call<?> signUser(@Path("ticket") String ticket);
+    Call<LogInCredentials> signUser(@Path("ticket") String ticket, @Body SignInCredentials signInCredentials);
+
+    @POST("login/user")
+    Call<SessionCredentials> logUser(@Body LogInCredentials logInCredentials);
 
     /*
      * ASSOCIATIONS

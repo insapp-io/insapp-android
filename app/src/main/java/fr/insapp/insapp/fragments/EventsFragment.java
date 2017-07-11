@@ -211,7 +211,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.credentials.getSessionToken());
+        /*
+        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+        */
     }
 
     private void addEventToAdapter(Event event) {

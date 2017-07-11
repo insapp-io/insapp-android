@@ -87,7 +87,9 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                             }
                         }
                     });
-                    request.execute(HttpGet.ROOTUSER + "/" + tag.getUser() + "?token=" + HttpGet.credentials.getSessionToken());
+                    /*
+                    request.execute(HttpGet.ROOTUSER + "/" + tag.getUser() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                    */
                 }
 
                 @Override
@@ -138,7 +140,9 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                 }
             }
         });
-        request.execute(HttpGet.ROOTUSER + "/" + comment.getUserId() + "?token=" + HttpGet.credentials.getSessionToken());
+        /*
+        request.execute(HttpGet.ROOTUSER + "/" + comment.getUserId() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+        */
 
         holder.bind(comment, listener);
     }

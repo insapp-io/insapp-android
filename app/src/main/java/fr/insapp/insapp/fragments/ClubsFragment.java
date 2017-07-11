@@ -109,6 +109,8 @@ public class ClubsFragment extends Fragment {
                 }
             }
         });
-        request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.credentials.getSessionToken());
+        /*
+        request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+        */
     }
 }

@@ -60,7 +60,9 @@ public class SearchActivity extends AppCompatActivity {
 
                 }
             });
-            request.execute(HttpGet.ROOTSEACHUNIVERSAL + "/" + query + "?token=" + HttpGet.credentials.getSessionToken());
+            /*
+            request.execute(HttpGet.ROOTSEACHUNIVERSAL + "/" + query + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+            */
         }
 
         // toolbar
@@ -249,7 +251,9 @@ public class SearchActivity extends AppCompatActivity {
                     }
             }
         });
-        request.execute(HttpGet.ROOTSEACHUNIVERSAL + "?token=" + HttpGet.credentials.getSessionToken(), jsonObject.toString());
+        /*
+        request.execute(HttpGet.ROOTSEACHUNIVERSAL + "?token=" + HttpGet.sessionCredentials.getSessionToken(), jsonObject.toString());
+        */
 
     }
 

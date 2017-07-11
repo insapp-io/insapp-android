@@ -95,7 +95,9 @@ public class CommentsEventFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
-        String params = HttpGet.ROOTEVENT + "/" + event.getId() + "/comment?token=" + HttpGet.credentials.getSessionToken();
+        /*
+        String params = HttpGet.ROOTEVENT + "/" + event.getId() + "/comment?token=" + HttpGet.sessionCredentials.getSessionToken();
+        */
 
         this.commentEditText = (CommentEditText) view.findViewById(R.id.comment_event_input);
         //commentEditText.setupComponent(request, params);

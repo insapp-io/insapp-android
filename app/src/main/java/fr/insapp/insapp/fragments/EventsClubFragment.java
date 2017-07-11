@@ -139,7 +139,9 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                     }
                 }
             });
-            request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(j) + "?token=" + HttpGet.credentials.getSessionToken());
+            /*
+            request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(j) + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+            */
         }
     }
 

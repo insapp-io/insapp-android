@@ -1,4 +1,4 @@
-package fr.insapp.insapp.fragments_intro;
+package fr.insapp.insapp.fragments.intro;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,15 +12,15 @@ import fr.insapp.insapp.R;
  * Created by thoma on 03/12/2016.
  */
 
-public class IntroProfileFragment extends Fragment {
+public class IntroNewsFragment extends Fragment {
 
-    public IntroProfileFragment() {
+    public IntroNewsFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_intro_profile, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_intro_posts, container, false);
         return rootView;
     }
 }

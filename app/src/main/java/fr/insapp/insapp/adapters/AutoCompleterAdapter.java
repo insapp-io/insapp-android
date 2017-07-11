@@ -114,11 +114,13 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
                         }
                     });
 
+                    /*
                     try {
-                        request.execute(HttpGet.ROOTSEARCHUSERS + "?token=" + HttpGet.credentials.getSessionToken(), jsonObject.toString()).get();
+                        request.execute(HttpGet.ROOTSEARCHUSERS + "?token=" + HttpGet.sessionCredentials.getSessionToken(), jsonObject.toString()).get();
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
+                    */
                 }
 
                 return filterResults;

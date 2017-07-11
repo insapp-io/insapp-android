@@ -11,7 +11,7 @@ import java.util.Map;
 
 import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.models.Credentials;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 
 /**
  * Created by Antoine on 19/09/2016.
@@ -53,7 +53,7 @@ public class HttpGet extends AsyncTask<String, Void, String> {
 
     public static final String ROOTSEACHUNIVERSAL = HttpGet.ROOTURL + "/search";
 
-    public static Credentials credentials;
+    public static SessionCredentials sessionCredentials;
 
     public static Map<String, Club> clubs = new HashMap<>();
 

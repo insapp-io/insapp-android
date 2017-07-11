@@ -109,6 +109,8 @@ public class NotificationsFragment extends Fragment {
                 }
             }
         });
-        request.execute(HttpGet.ROOTNOTIFICATION + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+        /*
+        request.execute(HttpGet.ROOTNOTIFICATION + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+        */
     }
 }

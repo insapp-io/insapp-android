@@ -18,9 +18,9 @@ import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
-import fr.insapp.insapp.http.Client;
+import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.DividerItemDecoration;
 import retrofit2.Call;
@@ -130,7 +130,8 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private void generatePosts() {
         adapter.getPosts().clear();
 
-        Call<List<Post>> call = ServiceGenerator.createService(Client.class).getLatestPosts(HttpGet.credentials.getSessionToken());
+        /*
+        Call<List<Post>> call = ServiceGenerator.createService(Client.class).getLatestPosts(HttpGet.sessionCredentials.getSessionToken());
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
@@ -154,6 +155,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+        */
     }
 
     @Override

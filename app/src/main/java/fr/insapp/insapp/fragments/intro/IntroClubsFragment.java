@@ -1,4 +1,4 @@
-package fr.insapp.insapp.fragments_intro;
+package fr.insapp.insapp.fragments.intro;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -1,8 +1,5 @@
 package fr.insapp.insapp;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,19 +12,22 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.Client;
-import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPost;
-import fr.insapp.insapp.http.ServiceGenerator;
-import fr.insapp.insapp.models.Post;
-import fr.insapp.insapp.utility.File;
+import fr.insapp.insapp.http.retrofit.Client;
+import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.models.SessionToken;
+import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.LogInCredentials;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
+import fr.insapp.insapp.models.credentials.SignInCredentials;
+import fr.insapp.insapp.models.deserializer.Deserializer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SigninActivity extends AppCompatActivity {
 
@@ -74,77 +74,57 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     public void signin(final String ticket) {
-        final String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        SignInCredentials signInCredentials = new SignInCredentials(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
 
-        JSONObject json = new JSONObject();
-        try {
-            json.put("Device", android_id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        final HttpPost signin = new HttpPost(new AsyncResponse() {
-
-            public void processFinish(String output) {
-                JSONObject json = null;
-                System.out.println(output);
-                if (output != null) {
-                    try {
-                        if (HttpPost.responseCode == 200) {
-                            json = new JSONObject(output);
-                            if (!json.has("error")) {
-                                String text = json.getString("username") + " " + json.getString("authtoken");
-
-                                System.out.println("Text: " + text);
-
-                                File.writeSettings(SigninActivity.this, text);
-
-                                Intent i = new Intent(SigninActivity.this, LoginActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                i.putExtra("signin", true);
-                                startActivity(i);
-                                finish();
-
-                            } else
-                                Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
-                        }
-                        else if (HttpPost.responseCode >= 400 && HttpPost.responseCode < 500) {
-                            if (MainActivity.dev)
-                                Toast.makeText(SigninActivity.this, "Erreur " + HttpPost.responseCode + " : " + output, Toast.LENGTH_LONG).show();
-                            else
-                                Toast.makeText(SigninActivity.this, "Erreur : " + output, Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                        Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
-                    }
-                } else
-                    Toast.makeText(SigninActivity.this, "Problème de connexion", Toast.LENGTH_SHORT).show();
-            }
-        });
-        signin.execute(HttpGet.ROOTSIGNIN + "/" + ticket, json.toString());
-
-
-        /*
-        Call<Post> call = ServiceGenerator.createService(Client.class).signUser(ticket);
-        call.enqueue(new Callback<Post>() {
+        Call<LogInCredentials> call = ServiceGenerator.createService(Client.class).signUser(ticket, signInCredentials);
+        call.enqueue(new Callback<LogInCredentials>() {
             @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
+            public void onResponse(Call<LogInCredentials> call, Response<LogInCredentials> response) {
                 if (response.isSuccessful()) {
-                    post = response.body();
-
-                    generateActivity();
+                    Toast.makeText(SigninActivity.this, "Signed in !", Toast.LENGTH_LONG).show();
+                    login(response.body());
                 }
                 else {
-                    Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+            public void onFailure(Call<LogInCredentials> call, Throwable t) {
+                Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
             }
         });
-        */
+    }
+
+    public void login(LogInCredentials logInCredentials) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        gsonBuilder.registerTypeAdapter(LogInCredentials.class, new Deserializer<>("credentials"));
+        gsonBuilder.registerTypeAdapter(SessionToken.class, new Deserializer<>("sessionToken"));
+        gsonBuilder.registerTypeAdapter(User.class, new Deserializer<>("user"));
+
+        Gson gson = gsonBuilder.create();
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson)).build();
+
+        Call<SessionCredentials> call = retrofit.create(Client.class).logUser(logInCredentials);
+        call.enqueue(new Callback<SessionCredentials>() {
+            @Override
+            public void onResponse(Call<SessionCredentials> call, Response<SessionCredentials> response) {
+                if (response.isSuccessful()) {
+                    startActivity(new Intent(SigninActivity.this, MainActivity.class));
+                    finish();
+                }
+                else {
+                    Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SessionCredentials> call, Throwable t) {
+                System.out.println(t.getMessage());
+                Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

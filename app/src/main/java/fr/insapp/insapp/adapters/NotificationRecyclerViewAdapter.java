@@ -89,7 +89,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     }
                 }
             });
-            post.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
+            /*
+            post.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+            */
         }
 
         if (notification.getType().equals("post") || notification.getType().equals("event")) {
@@ -116,7 +118,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         }
                     }
                 });
-                request.execute(HttpGet.ROOTASSOCIATION + "/" + notification.getSender() + "?token=" + HttpGet.credentials.getSessionToken());
+                /*
+                request.execute(HttpGet.ROOTASSOCIATION + "/" + notification.getSender() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                */
             } else {
                 notification.setClub(club);
 
@@ -154,7 +158,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     }
                 }
             });
-            request.execute(HttpGet.ROOTUSER + "/" + notification.getSender() + "?token=" + HttpGet.credentials.getSessionToken());
+            /*
+            request.execute(HttpGet.ROOTUSER + "/" + notification.getSender() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+            */
         } else if (notification.getType().equals("event")) {
             HttpGet event = new HttpGet(new AsyncResponse() {
                 @Override
@@ -169,7 +175,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     }
                 }
             });
-            event.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
+            /*
+            event.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+            */
         }
 
         holder.bind(notification, listener);

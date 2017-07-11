@@ -142,7 +142,9 @@ public class ProfileActivity extends AppCompatActivity {
             Drawable dr = ContextCompat.getDrawable(ProfileActivity.this, id);
 
             this.avatar_profil.setImageDrawable(dr);
-            this.username.setText(HttpGet.credentials.getUsername());
+            /*
+            this.username.setText(HttpGet.sessionCredentials.getUsername());
+            */
             this.name.setText(preferences.getString("name", ""));
             this.email.setText(preferences.getString("email", ""));
             this.promo.setText(preferences.getString("class", ""));
@@ -240,7 +242,9 @@ public class ProfileActivity extends AppCompatActivity {
                                             Toast.makeText(ProfileActivity.this, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                                    report.execute(HttpGet.ROOTURL + "/report/user/" + user.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                                    /*
+                                    report.execute(HttpGet.ROOTURL + "/report/user/" + user.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                                    */
                                 }
                             })
                             .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
@@ -258,7 +262,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     HttpDelete delete = new HttpDelete(new AsyncResponse() {
                                         @Override
                                         public void processFinish(String output) {
-                                            HttpGet.credentials = null;
+                                            HttpGet.sessionCredentials = null;
                                             File.writeSettings(ProfileActivity.this, "");
 
                                             Intent activity = new Intent(ProfileActivity.this, IntroActivity.class);
@@ -270,7 +274,9 @@ public class ProfileActivity extends AppCompatActivity {
                                             finish();
                                         }
                                     });
-                                    delete.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                                    /*
+                                    delete.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                                     */
                                 }
                             })
                             .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
@@ -311,7 +317,9 @@ public class ProfileActivity extends AppCompatActivity {
                             showEvents(events);
                     }
                 });
-                request.execute(HttpGet.ROOTEVENT + "/" + idEvent + "?token=" + HttpGet.credentials.getSessionToken());
+                /*
+                request.execute(HttpGet.ROOTEVENT + "/" + idEvent + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                */
 
         }
     }

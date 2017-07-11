@@ -1,7 +1,6 @@
 package fr.insapp.insapp;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -19,21 +18,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.Client;
+import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPost;
-import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
@@ -106,7 +97,7 @@ public class PostActivity extends AppCompatActivity {
         if (this.post == null) {
             notification = intent.getParcelableExtra("notification");
 
-            if (HttpGet.credentials != null)
+            if (HttpGet.sessionCredentials != null)
                 onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
             else
                 startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), NOTIFICATION_MESSAGE);
@@ -121,7 +112,8 @@ public class PostActivity extends AppCompatActivity {
 
         if (requestCode == NOTIFICATION_MESSAGE) {
             if (resultCode == RESULT_OK) {
-                Call<Post> call = ServiceGenerator.createService(Client.class).getPostFromId(notification.getContent(), HttpGet.credentials.getSessionToken());
+                /*
+                Call<Post> call = ServiceGenerator.createService(Client.class).getPostFromId(notification.getContent(), HttpGet.sessionCredentials.getSessionToken());
                 call.enqueue(new Callback<Post>() {
                     @Override
                     public void onResponse(Call<Post> call, Response<Post> response) {
@@ -140,6 +132,7 @@ public class PostActivity extends AppCompatActivity {
                         Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                     }
                 });
+                */
             }
         }
     }
@@ -151,7 +144,8 @@ public class PostActivity extends AppCompatActivity {
         if (this.club == null) {
             generateActivity();
 
-            Call<Club> call = ServiceGenerator.createService(Client.class).getClubFromId(post.getAssociation(), HttpGet.credentials.getSessionToken());
+            /*
+            Call<Club> call = ServiceGenerator.createService(Client.class).getClubFromId(post.getAssociation(), HttpGet.sessionCredentials.getSessionToken());
             call.enqueue(new Callback<Club>() {
                 @Override
                 public void onResponse(Call<Club> call, Response<Club> response) {
@@ -180,6 +174,7 @@ public class PostActivity extends AppCompatActivity {
                     Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                 }
             });
+            */
         }
         else {
             Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(this.clubAvatarCircleImageView);
@@ -220,7 +215,8 @@ public class PostActivity extends AppCompatActivity {
 
         // retrieve the avatar of the user
 
-        Call<User> call2 = ServiceGenerator.createService(Client.class).getUser(HttpGet.credentials.getUserID(), HttpGet.credentials.getSessionToken());
+        /*
+        Call<User> call2 = ServiceGenerator.createService(Client.class).getUser(HttpGet.sessionCredentials.getUserID(), HttpGet.sessionCredentials.getSessionToken());
         call2.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -240,6 +236,7 @@ public class PostActivity extends AppCompatActivity {
                 Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
             }
         });
+        */
 
         // edit text
 
@@ -253,7 +250,8 @@ public class PostActivity extends AppCompatActivity {
         // get the drawable of avatar
 
         if (MainActivity.getUser() == null) {
-            Call<User> call3 = ServiceGenerator.createService(Client.class).getUser(HttpGet.credentials.getUserID(), HttpGet.credentials.getSessionToken());
+            /*
+            Call<User> call3 = ServiceGenerator.createService(Client.class).getUser(HttpGet.sessionCredentials.getUserID(), HttpGet.sessionCredentials.getSessionToken());
             call3.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
@@ -273,6 +271,7 @@ public class PostActivity extends AppCompatActivity {
                     Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                 }
             });
+            */
         }
         else {
             final int id = getResources().getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getPackageName());

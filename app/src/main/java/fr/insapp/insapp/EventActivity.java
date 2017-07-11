@@ -48,7 +48,6 @@ import java.util.Locale;
 
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.AboutFragment;
-import fr.insapp.insapp.fragments.CommentsEventFragment;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
@@ -159,7 +158,9 @@ public class EventActivity extends AppCompatActivity {
 
         // floating action menu
 
-        this.status = event.getStatusForUser(HttpGet.credentials.getUserID());
+        /*
+        this.status = event.getStatusForUser(HttpGet.sessionCredentials.getUserID());
+        */
 
         // fab style
 
@@ -182,7 +183,7 @@ public class EventActivity extends AppCompatActivity {
         if (this.event == null) {
             notification = intent.getParcelableExtra("notification");
 
-            if (HttpGet.credentials != null)
+            if (HttpGet.sessionCredentials != null)
                 onActivityResult(PostActivity.NOTIFICATION_MESSAGE, RESULT_OK, null);
             else
                 startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), PostActivity.NOTIFICATION_MESSAGE);
@@ -267,7 +268,9 @@ public class EventActivity extends AppCompatActivity {
                         }
                     }
                 });
-                request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.credentials.getSessionToken());
+                /*
+                request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                */
             }
         }
     }
@@ -308,7 +311,9 @@ public class EventActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                                /*
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                                */
 
                                 floatingActionMenu.close(true);
                                 setFloatingActionMenuTheme(status);
@@ -363,8 +368,9 @@ public class EventActivity extends AppCompatActivity {
                                 refreshAttendeesTextView();
                             }
                         });
-
-                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/going" + "?token=" + HttpGet.credentials.getSessionToken());
+                        /*
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.sessionCredentials.getUserID() + "/status/going" + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                        */
                         break;
 
                     case YES:
@@ -411,7 +417,9 @@ public class EventActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                                /*
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                                */
 
                                 floatingActionMenu.close(true);
                                 setFloatingActionMenuTheme(status);
@@ -428,7 +436,9 @@ public class EventActivity extends AppCompatActivity {
                             }
                         });
 
-                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/maybe" + "?token=" + HttpGet.credentials.getSessionToken());
+                        /*
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.sessionCredentials.getUserID() + "/status/maybe" + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                        */
                         break;
 
                     case MAYBE:
@@ -475,8 +485,9 @@ public class EventActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
-
+                                /*
+                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                                */
                                 floatingActionMenu.close(true);
                                 setFloatingActionMenuTheme(status);
                                 refreshFloatingActionButtons();
@@ -492,7 +503,9 @@ public class EventActivity extends AppCompatActivity {
                             }
                         });
 
-                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.credentials.getUserID() + "/status/notgoing" + "?token=" + HttpGet.credentials.getSessionToken());
+                        /*
+                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.sessionCredentials.getUserID() + "/status/notgoing" + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                        */
                         break;
 
                     case NO:
@@ -578,7 +591,9 @@ public class EventActivity extends AppCompatActivity {
                     }
                 }
             });
-            request.execute(HttpGet.ROOTASSOCIATION + "/"+ event.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
+            /*
+            request.execute(HttpGet.ROOTASSOCIATION + "/"+ event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+            */
         }
         else
             clubTextView.setText(club.getName());

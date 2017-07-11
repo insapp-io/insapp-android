@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 public class User implements Parcelable{
 
-    private String id;
+    private String ID;
     private String name, username, description, email;
     private boolean emailPublic;
     private String promotion, gender;
@@ -48,8 +48,8 @@ public class User implements Parcelable{
 
     };
 
-    public User(Parcel in){
-        this.id = in.readString();
+    public User(Parcel in) {
+        this.ID = in.readString();
         this.name = in.readString();
         this.username = in.readString();
         this.description = in.readString();
@@ -72,7 +72,7 @@ public class User implements Parcelable{
     }
 
     public User(String id, String name, String username, String description, String email, boolean emailPublic, String promotion, String gender, ArrayList<String> events, ArrayList<String> postsLiked) {
-        this.id = id;
+        this.ID = id;
         this.name = name;
         this.username = username;
         this.description = description;
@@ -85,7 +85,7 @@ public class User implements Parcelable{
     }
 
     public User(JSONObject json) throws JSONException {
-        this.id = json.getString("ID");
+        this.ID = json.getString("ID");
         this.name = json.getString("name");
         this.username = json.getString("username");
         this.description = json.getString("description");
@@ -97,8 +97,8 @@ public class User implements Parcelable{
         events = new ArrayList<>();
 
         JSONArray jsonarray = json.optJSONArray("events");
-        if (jsonarray != null){
-            for (int i=0; i<jsonarray.length(); i++) {
+        if (jsonarray != null) {
+            for (int i = 0; i < jsonarray.length(); i++) {
                 events.add(jsonarray.getString(i));
             }
         }
@@ -114,7 +114,7 @@ public class User implements Parcelable{
     }
 
     public String getId() {
-        return id;
+        return ID;
     }
 
     public String getName() {
@@ -159,7 +159,7 @@ public class User implements Parcelable{
     }
 
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeString(ID);
         dest.writeString(name);
         dest.writeString(username);
         dest.writeString(description);

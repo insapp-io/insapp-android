@@ -131,7 +131,9 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                         }
                     }
                 });
-                request.execute(HttpGet.ROOTASSOCIATION + "/"+ post.getAssociation() + "?token=" + HttpGet.credentials.getSessionToken());
+                /*
+                request.execute(HttpGet.ROOTASSOCIATION + "/"+ post.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                */
             }
             else {
                 // glide
@@ -158,7 +160,9 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         // like button
 
         if (layout != R.layout.row_post) {
-            holder.likeButton.setLiked(post.isPostLikedBy(HttpGet.credentials.getUserID()));
+            /*
+            holder.likeButton.setLiked(post.isPostLikedBy(HttpGet.sessionCredentials.getUserID()));
+            */
 
             holder.likeButton.setOnLikeListener(new OnLikeListener() {
                 @Override
@@ -171,7 +175,9 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                             }
                         }
                     });
-                    hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                    /*
+                    hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                    */
                 }
 
                 @Override
@@ -184,7 +190,9 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                             }
                         }
                     });
-                    hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+                    /*
+                    hpp.execute(HttpGet.ROOTURL + "/post/" + post.getId() + "/like/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+                    */
                 }
             });
 

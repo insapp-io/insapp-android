@@ -40,7 +40,8 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         // delete comment
-        if (HttpGet.credentials.getId().equalsIgnoreCase(comment.getUserId())) {
+        /*
+        if (HttpGet.sessionCredentials.getID().equalsIgnoreCase(comment.getUserId())) {
             alertDialogBuilder.setTitle(context.getResources().getString(R.string.delete_comment_action));
             alertDialogBuilder
                     .setMessage(R.string.delete_comment_are_you_sure)
@@ -63,7 +64,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                                     }
                                 }
                             });
-                            delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                            delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
 
                         }
                     })
@@ -90,7 +91,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                                     Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            report.execute(HttpGet.ROOTURL + "/report/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.credentials.getSessionToken());
+                            report.execute(HttpGet.ROOTURL + "/report/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
                         }
                     })
                     .setNegativeButton(context.getString(R.string.negative_button), new DialogInterface.OnClickListener() {
@@ -102,5 +103,6 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
+        */
     }
 }

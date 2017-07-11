@@ -6,11 +6,11 @@ import android.support.v4.app.Fragment;
 
 import com.github.paolorotolo.appintro.AppIntro2;
 
-import fr.insapp.insapp.fragments_intro.IntroClubsFragment;
-import fr.insapp.insapp.fragments_intro.IntroEventsFragment;
-import fr.insapp.insapp.fragments_intro.IntroNewsFragment;
-import fr.insapp.insapp.fragments_intro.IntroNotificationsFragment;
-import fr.insapp.insapp.fragments_intro.IntroProfileFragment;
+import fr.insapp.insapp.fragments.intro.IntroClubsFragment;
+import fr.insapp.insapp.fragments.intro.IntroEventsFragment;
+import fr.insapp.insapp.fragments.intro.IntroNewsFragment;
+import fr.insapp.insapp.fragments.intro.IntroNotificationsFragment;
+import fr.insapp.insapp.fragments.intro.IntroProfileFragment;
 
 /**
  * Created by thoma on 02/12/2016.

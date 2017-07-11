@@ -88,7 +88,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 }
             }
         });
-        request.execute(HttpGet.ROOTUSER + "/" + HttpGet.credentials.getUserID() + "?token=" + HttpGet.credentials.getSessionToken());
+        /*
+        request.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
+        */
     }
 
     private void initSummary(Preference preference) {
@@ -221,6 +223,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 }
             }
         });
-        put.execute(HttpGet.ROOTUSER + "/" + user.getId() + "?token=" + HttpGet.credentials.getSessionToken(), json.toString());
+        /*
+        put.execute(HttpGet.ROOTUSER + "/" + user.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken(), json.toString());
+        */
     }
 }

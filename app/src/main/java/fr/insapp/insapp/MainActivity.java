@@ -28,9 +28,9 @@ import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
-import fr.insapp.insapp.http.Client;
+import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
         // user
 
-        Call<User> call = ServiceGenerator.createService(Client.class).getUser(HttpGet.credentials.getUserID(), HttpGet.credentials.getSessionToken());
+        /*
+        Call<User> call = ServiceGenerator.createService(Client.class).getUser(HttpGet.sessionCredentials.getUserID(), HttpGet.sessionCredentials.getSessionToken());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "MainActivity", Toast.LENGTH_LONG).show();
             }
         });
+        */
 
         // custom tabs optimization
 

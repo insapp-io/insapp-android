@@ -1,12 +1,8 @@
 package fr.insapp.insapp.http.retrofit;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import android.app.Service;
+import android.content.SharedPreferences;
 
-import fr.insapp.insapp.models.SessionToken;
-import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.LoginCredentials;
-import fr.insapp.insapp.models.deserializer.Deserializer;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -18,25 +14,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static GsonBuilder gsonBuilder = new GsonBuilder();
-
-    static {
-        gsonBuilder.registerTypeAdapter(LoginCredentials.class, new Deserializer<>("credentials"));
-        gsonBuilder.registerTypeAdapter(SessionToken.class, new Deserializer<>("sessionToken"));
-        gsonBuilder.registerTypeAdapter(User.class, new Deserializer<>("user"));
-    }
-
-    private static Gson gson = gsonBuilder.create();
-
     private static Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create());
     private static Retrofit retrofit = builder.build();
 
     private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
+    private static JsonInterceptor json;
+
+    public static void setPreferences(SharedPreferences preferences) {
+        ServiceGenerator.json = new JsonInterceptor(preferences);
+    }
+
     public static <S> S createService(Class<S> serviceClass) {
         if (!httpClient.interceptors().contains(logging)) {
             httpClient.addInterceptor(logging);
+            builder.client(httpClient.build());
+            retrofit = builder.build();
+        }
+
+        if (!httpClient.interceptors().contains(json)) {
+            httpClient.addInterceptor(json);
             builder.client(httpClient.build());
             retrofit = builder.build();
         }

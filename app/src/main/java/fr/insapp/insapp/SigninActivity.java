@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.insapp.insapp.http.retrofit.Client;
+import fr.insapp.insapp.http.retrofit.JsonInterceptor;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.SessionToken;
 import fr.insapp.insapp.models.User;
@@ -23,6 +24,8 @@ import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;
 import fr.insapp.insapp.models.deserializer.Deserializer;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,10 +84,6 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginCredentials> call, Response<LoginCredentials> response) {
                 if (response.isSuccessful()) {
-                    getSharedPreferences("Credentials", MODE_PRIVATE).edit()
-                            .putString("login", new Gson().toJson(response.body()))
-                            .apply();
-
                     login(response.body());
                 }
                 else {
@@ -102,13 +101,27 @@ public class SigninActivity extends AppCompatActivity {
     public void login(LoginCredentials loginCredentials) {
         GsonBuilder gsonBuilder = new GsonBuilder();
 
+        // custom deserialization
+
         gsonBuilder.registerTypeAdapter(LoginCredentials.class, new Deserializer<>("credentials"));
         gsonBuilder.registerTypeAdapter(SessionToken.class, new Deserializer<>("sessionToken"));
         gsonBuilder.registerTypeAdapter(User.class, new Deserializer<>("user"));
 
         Gson gson = gsonBuilder.create();
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson)).build();
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson));
+
+        // logging interceptor
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+
+        // json interceptor
+
+        httpClient.addInterceptor(new JsonInterceptor(getSharedPreferences("Credentials", MODE_PRIVATE)));
+
+        builder.client(httpClient.build());
+        Retrofit retrofit = builder.build();
 
         Call<SessionCredentials> call = retrofit.create(Client.class).logUser(loginCredentials);
         call.enqueue(new Callback<SessionCredentials>() {

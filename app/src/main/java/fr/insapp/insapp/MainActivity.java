@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -29,25 +28,15 @@ import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
-import fr.insapp.insapp.http.retrofit.Client;
-import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final boolean dev = true;
 
     public static final int REFRESH_TOKEN_MESSAGE = 5;
-
-    private Toolbar toolbar;
-    private MenuItem menuItem;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
 
     public static User user;
     public static CustomTabsConnection customTabsConnection;
@@ -64,21 +53,21 @@ public class MainActivity extends AppCompatActivity {
 
         // toolbar
 
-        this.toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setTitle(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("login", ""), LoginCredentials.class).getUsername());
+            getSupportActionBar().setTitle(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getUsername());
         }
 
         // view pager
 
-        this.viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         // tab layout
 
-        this.tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         // custom tabs optimization
@@ -112,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        this.menuItem = menu.findItem(R.id.search);
+        MenuItem menuItem = menu.findItem(R.id.search);
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -121,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
             mCursorDrawableRes.setAccessible(true);
-            mCursorDrawableRes.set(searchView, R.drawable.cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
+            mCursorDrawableRes.set(searchView, R.drawable.cursor); // this sets the cursor resource ID to 0 or @null which will make it visible on white background
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -155,10 +144,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     *
-     * @return
-     */
     public static User getUser() {
         return user;
     }

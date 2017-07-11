@@ -18,4 +18,28 @@ public class SessionCredentials {
         this.sessionToken = sessionToken;
         this.user = user;
     }
+
+    public LoginCredentials getLoginCredentials() {
+        return loginCredentials;
+    }
+
+    public void setLoginCredentials(LoginCredentials loginCredentials) {
+        this.loginCredentials = loginCredentials;
+    }
+
+    public SessionToken getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(SessionToken sessionToken) {
+        this.sessionToken = sessionToken;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

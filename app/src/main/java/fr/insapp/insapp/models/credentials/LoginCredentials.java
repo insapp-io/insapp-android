@@ -31,43 +31,43 @@ public class LoginCredentials {
         this.device = device;
     }
 
-    public void setId(String Id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public void setDevice(String device) {
-        this.device = device;
-    }
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getAuthToken() {
         return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
     public String getUser() {
         return user;
     }
 
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     public String getDevice() {
         return device;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
     }
 }

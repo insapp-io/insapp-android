@@ -3,6 +3,8 @@ package fr.insapp.insapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,28 +13,39 @@ import java.util.ArrayList;
 
 /**
  * Created by Antoine on 19/09/2016.
- *
- * type User struct {
- ID          bson.ObjectId   `bson:"_id,omitempty"`
- Name        string          `json:"name"`
- Username    string          `json:"usernameTextView"`
- Description string          `json:"description"`
- Email       string          `json:"email"`
- EmailPublic bool            `json:"emailpublic"`
- Promotion   string          `json:"promotion"`
- Gender 			string					`json:"gender"`
- Events      []bson.ObjectId `json:"events"`
- PostsLiked []bson.ObjectId `json:"postsliked"`
- }
  */
 
 public class User implements Parcelable{
 
+    @SerializedName("ID")
     private String ID;
-    private String name, username, description, email;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("username")
+    private String username;
+
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("emailpublic")
     private boolean emailPublic;
-    private String promotion, gender;
-    private ArrayList<String> events, postsLiked;
+
+    @SerializedName("promotion")
+    private String promotion;
+
+    @SerializedName("gender")
+    private String gender;
+
+    @SerializedName("events")
+    private ArrayList<String> events;
+
+    @SerializedName("postsliked")
+    private ArrayList<String> postsLiked;
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 

@@ -2,6 +2,8 @@ package fr.insapp.insapp.http.retrofit;
 
 import android.content.SharedPreferences;
 
+import com.google.gson.GsonBuilder;
+
 import fr.insapp.insapp.http.token.TokenInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -14,12 +16,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create());
-    private static Retrofit retrofit = builder.build();
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    // interceptors
-
     private static HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     private static JsonInterceptor jsonInterceptor;
     private static TokenInterceptor tokenInterceptor;
@@ -29,25 +25,30 @@ public class ServiceGenerator {
         ServiceGenerator.tokenInterceptor = new TokenInterceptor(preferences);
     }
 
-    public static <S> S createService(Class<S> serviceClass) {
-        if (!httpClient.interceptors().contains(jsonInterceptor)) {
-            httpClient.addInterceptor(jsonInterceptor);
-            builder.client(httpClient.build());
-            retrofit = builder.build();
+    public static <S> S createService(Class<S> serviceClass, TypeAdapter... adapters) {
+        Retrofit.Builder builder;
+
+        if (adapters.length > 0) {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+
+            for (TypeAdapter adapter : adapters) {
+                gsonBuilder.registerTypeAdapter(adapter.getType(), adapter.getDeserializer());
+            }
+
+            builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()));
+        }
+        else {
+            builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create());
         }
 
-        if (!httpClient.interceptors().contains(tokenInterceptor)) {
-            httpClient.addInterceptor(tokenInterceptor);
-            builder.client(httpClient.build());
-            retrofit = builder.build();
-        }
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-        if (!httpClient.interceptors().contains(loggingInterceptor)) {
-            httpClient.addInterceptor(loggingInterceptor);
-            builder.client(httpClient.build());
-            retrofit = builder.build();
-        }
+        httpClient.addInterceptor(jsonInterceptor);
+        httpClient.addInterceptor(tokenInterceptor);
+        httpClient.addInterceptor(loggingInterceptor);
 
-        return retrofit.create(serviceClass);
+        builder.client(httpClient.build());
+
+        return builder.build().create(serviceClass);
     }
 }

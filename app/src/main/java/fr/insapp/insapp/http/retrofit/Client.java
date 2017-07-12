@@ -9,6 +9,7 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -32,7 +33,7 @@ public interface Client {
     Call<LoginCredentials> signUser(@Path("ticket") String ticket, @Body SigninCredentials signinCredentials);
 
     @POST("login/user")
-    Call<SessionCredentials> logUser(@Body LoginCredentials loginCredentials);
+    Call<ResponseBody> logUser(@Body LoginCredentials loginCredentials);
 
     /*
      * ASSOCIATIONS

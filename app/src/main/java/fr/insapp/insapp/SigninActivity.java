@@ -12,31 +12,23 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import fr.insapp.insapp.http.retrofit.Client;
-import fr.insapp.insapp.http.retrofit.JsonInterceptor;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.retrofit.TypeAdapter;
 import fr.insapp.insapp.models.SessionToken;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;
 import fr.insapp.insapp.models.deserializer.Deserializer;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SigninActivity extends AppCompatActivity {
 
     private final String CAS_URL = "https://cas.insa-rennes.fr/cas/login?service=https://insapp.fr/";
-
-    public static boolean refreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +41,6 @@ public class SigninActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        refreshing = false;
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeSessionCookie();
@@ -99,34 +89,14 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     public void login(LoginCredentials loginCredentials) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        TypeAdapter loginCredentialsTypeAdapter = new TypeAdapter("credentials", LoginCredentials.class);
+        TypeAdapter sessionTokenTypeAdapter = new TypeAdapter("sessionToken", SessionToken.class);
+        TypeAdapter userTypeAdapter = new TypeAdapter("user", User.class);
 
-        // custom deserialization
-
-        gsonBuilder.registerTypeAdapter(LoginCredentials.class, new Deserializer<>("credentials"));
-        gsonBuilder.registerTypeAdapter(SessionToken.class, new Deserializer<>("sessionToken"));
-        gsonBuilder.registerTypeAdapter(User.class, new Deserializer<>("user"));
-
-        Gson gson = gsonBuilder.create();
-
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson));
-
-        // logging interceptor
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
-
-        // json interceptor
-
-        httpClient.addInterceptor(new JsonInterceptor(getSharedPreferences("Credentials", MODE_PRIVATE)));
-
-        builder.client(httpClient.build());
-        Retrofit retrofit = builder.build();
-
-        Call<SessionCredentials> call = retrofit.create(Client.class).logUser(loginCredentials);
-        call.enqueue(new Callback<SessionCredentials>() {
+        Call<ResponseBody> call = ServiceGenerator.createService(Client.class, loginCredentialsTypeAdapter, sessionTokenTypeAdapter, userTypeAdapter).logUser(loginCredentials);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<SessionCredentials> call, Response<SessionCredentials> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     startActivity(new Intent(SigninActivity.this, MainActivity.class));
                     finish();
@@ -137,7 +107,7 @@ public class SigninActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<SessionCredentials> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
             }
         });

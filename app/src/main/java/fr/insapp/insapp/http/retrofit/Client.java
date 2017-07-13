@@ -2,6 +2,7 @@ package fr.insapp.insapp.http.retrofit;
 
 import java.util.List;
 
+import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
@@ -16,6 +17,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -24,8 +26,6 @@ import retrofit2.http.Query;
  */
 
 public interface Client {
-
-    String ROOT_URL = "https://dev.insapp.fr/api/v1/";
 
     /*
      * PUBLIC
@@ -61,7 +61,13 @@ public interface Client {
     Call<PostInteraction> dislikePost(@Path("id") String id, @Path("userId") String userId);
 
     @POST("post/{id}/comment")
-    Call<Post> commentPost(@Path("id") String id, @Body Comment comment, @Query("token") String token);
+    Call<Post> commentPost(@Path("id") String id, @Body Comment comment);
+
+    @DELETE("post/{id}/comment/{commentId}")
+    Call<Post> uncommentPost(@Path("id") String id, @Path("commentId") String commentId);
+
+    @PUT("report/{id}/comment/{commentId}")
+    Call<Post> reportComment(@Path("id") String id, @Path("commentId") String commentId);
 
     /*
      * USER

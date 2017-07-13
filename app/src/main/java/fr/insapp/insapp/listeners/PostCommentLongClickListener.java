@@ -5,20 +5,22 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpDelete;
-import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPut;
+import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by thoma on 25/02/2017.
+ * Created by thomas on 25/02/2017.
  */
 
 public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.OnCommentItemLongClickListener {
@@ -30,7 +32,6 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
 
     public PostCommentLongClickListener(Context context, Post post, CommentRecyclerViewAdapter adapter) {
         this.context = context;
-
         this.post = post;
         this.adapter = adapter;
     }
@@ -40,8 +41,8 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         // delete comment
-        /*
-        if (HttpGet.sessionCredentials.getID().equalsIgnoreCase(comment.getUserId())) {
+
+        if (new Gson().fromJson(context.getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId().equals(comment.getUserId())) {
             alertDialogBuilder.setTitle(context.getResources().getString(R.string.delete_comment_action));
             alertDialogBuilder
                     .setMessage(R.string.delete_comment_are_you_sure)
@@ -49,23 +50,26 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                     .setPositiveButton(context.getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //setResult(RESULT_OK);
-
-                            HttpDelete delete = new HttpDelete(new AsyncResponse() {
+                            Call<Post> call = ServiceGenerator.create().uncommentPost(post.getId(), comment.getId());
+                            call.enqueue(new Callback<Post>() {
                                 @Override
-                                public void processFinish(String output) {
-                                    try {
-                                        post = new Post(new JSONObject(output));
+                                public void onResponse(Call<Post> call, Response<Post> response) {
+                                    if (response.isSuccessful()) {
+                                        post = response.body();
 
                                         adapter.setComments(post.getComments());
                                         adapter.notifyDataSetChanged();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                    }
+                                    else {
+                                        Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();
                                     }
                                 }
-                            });
-                            delete.execute(HttpGet.ROOTPOST + "/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
 
+                                @Override
+                                public void onFailure(Call<Post> call, Throwable t) {
+                                    Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     })
                     .setNegativeButton(context.getString(R.string.negative_button), new DialogInterface.OnClickListener() {
@@ -77,7 +81,9 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
+
         // report comment
+
         else {
             alertDialogBuilder.setTitle(context.getString(R.string.report_comment_action));
             alertDialogBuilder
@@ -85,13 +91,23 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                     .setCancelable(true)
                     .setPositiveButton(context.getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogAlert, int id) {
-                            HttpPut report = new HttpPut(new AsyncResponse() {
+                            Call<Post> call = ServiceGenerator.create().reportComment(post.getId(), comment.getId());
+                            call.enqueue(new Callback<Post>() {
                                 @Override
-                                public void processFinish(String output) {
-                                    Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
+                                public void onResponse(Call<Post> call, Response<Post> response) {
+                                    if (response.isSuccessful()) {
+                                        Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Post> call, Throwable t) {
+                                    Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();
                                 }
                             });
-                            report.execute(HttpGet.ROOTURL + "/report/" + post.getId() + "/comment/" + comment.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
                         }
                     })
                     .setNegativeButton(context.getString(R.string.negative_button), new DialogInterface.OnClickListener() {
@@ -103,6 +119,5 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
-        */
     }
 }

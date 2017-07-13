@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.GsonBuilder;
 
+import fr.insapp.insapp.MainActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -14,6 +15,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ServiceGenerator {
+
+    public static String ROOT_URL;
+    public static String CDN_URL;
+
+    static {
+        if (MainActivity.dev) {
+            ROOT_URL = "https://dev.insapp.fr/api/v1/";
+            CDN_URL = "https://dev.insapp.fr/cdn/";
+        }
+        else {
+            ROOT_URL = "https://insapp.fr/api/v1/";
+            CDN_URL = "https://insapp.fr/cdn/";
+        }
+    }
 
     private static HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     private static JsonInterceptor jsonInterceptor;
@@ -34,10 +49,10 @@ public class ServiceGenerator {
                 gsonBuilder.registerTypeAdapter(adapter.getType(), adapter.getDeserializer());
             }
 
-            builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()));
+            builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()));
         }
         else {
-            builder = new Retrofit.Builder().baseUrl(Client.ROOT_URL).addConverterFactory(GsonConverterFactory.create());
+            builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create());
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();

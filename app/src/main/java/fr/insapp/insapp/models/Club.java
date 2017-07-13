@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -31,10 +32,10 @@ public class Club implements Parcelable {
     private String description;
 
     @SerializedName("events")
-    private ArrayList<String> events;
+    private List<String> events;
 
     @SerializedName("posts")
-    private ArrayList<String> posts;
+    private List<String> posts;
 
     @SerializedName("profile")
     private String profilPicture;
@@ -42,10 +43,10 @@ public class Club implements Parcelable {
     @SerializedName("cover")
     private String cover;
 
-    @SerializedName("bgColor")
+    @SerializedName("bgcolor")
     private String bgColor;
 
-    @SerializedName("fgColor")
+    @SerializedName("fgcolor")
     private String fgColor;
 
     public static final Parcelable.Creator<Club> CREATOR = new Parcelable.Creator<Club>() {
@@ -102,16 +103,19 @@ public class Club implements Parcelable {
         this.name = json.getString("name");
         this.email = json.getString("email");
         this.description = json.getString("description");
-
         this.events = new ArrayList<>();
+
         JSONArray jsonarray = json.optJSONArray("events");
-        if(jsonarray != null) {
+
+        if (jsonarray != null) {
             for (int i = 0; i < jsonarray.length(); i++)
                 events.add(jsonarray.getString(i));
         }
 
         this.posts = new ArrayList<>();
+
         JSONArray jsonarray2 = json.optJSONArray("posts");
+
         if (jsonarray2 != null) {
             for (int i = 0; i < jsonarray2.length(); i++)
                 posts.add(jsonarray2.getString(i));
@@ -139,11 +143,11 @@ public class Club implements Parcelable {
         return description;
     }
 
-    public ArrayList<String> getEvents() {
+    public List<String> getEvents() {
         return events;
     }
 
-    public ArrayList<String> getPosts() {
+    public List<String> getPosts() {
         return posts;
     }
 
@@ -164,7 +168,7 @@ public class Club implements Parcelable {
     }
 
     public int describeContents() {
-        return 0; //On renvoie 0, car notre classe ne contient pas de FileDescriptor
+        return 0;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -173,9 +177,12 @@ public class Club implements Parcelable {
         dest.writeString(email);
         dest.writeString(description);
         dest.writeInt(events.size());
+
         if (events.size() > 0)
             dest.writeStringList(events);
+
         dest.writeInt(posts.size());
+
         if (posts.size() > 0)
             dest.writeStringList(posts);
 

@@ -50,7 +50,7 @@ public class TokenInterceptor implements Interceptor {
             Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
             SessionCredentials refreshedSessionCredentials = call.execute().body();
 
-            HttpUrl url = request.url().newBuilder().addQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
+            HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
             request = request.newBuilder().url(url).build();
 
             return chain.proceed(request);

@@ -91,6 +91,8 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         holder.getTitleTextView().setText(post.getTitle());
         holder.getDateTextView().setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(post.getDate())));
 
+        // available layouts are row_post, post or post_with_avatars
+
         if (layout == R.layout.row_post) {
             Glide
                     .with(context)
@@ -112,38 +114,40 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
             // club avatar
 
-            Call<Club> call = ServiceGenerator.create().getClubFromId(post.getAssociation());
-            call.enqueue(new Callback<Club>() {
-                @Override
-                public void onResponse(Call<Club> call, Response<Club> response) {
-                    if (response.isSuccessful()) {
-                        final Club club = response.body();
+            if (layout == R.layout.post_with_avatars) {
+                Call<Club> call = ServiceGenerator.create().getClubFromId(post.getAssociation());
+                call.enqueue(new Callback<Club>() {
+                    @Override
+                    public void onResponse(Call<Club> call, Response<Club> response) {
+                        if (response.isSuccessful()) {
+                            final Club club = response.body();
 
-                        Glide
-                                .with(context)
-                                .load(HttpGet.IMAGEURL + club.getProfilPicture())
-                                .crossFade()
-                                .into(holder.getAvatarCircleImageView());
+                            Glide
+                                    .with(context)
+                                    .load(HttpGet.IMAGEURL + club.getProfilPicture())
+                                    .crossFade()
+                                    .into(holder.getAvatarCircleImageView());
 
-                        // listener
+                            // listener
 
-                        holder.getAvatarCircleImageView().setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                            }
-                        });
+                            holder.getAvatarCircleImageView().setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                                }
+                            });
+                        }
+                        else {
+                            Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                        }
                     }
-                    else {
+
+                    @Override
+                    public void onFailure(Call<Club> call, Throwable t) {
                         Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                     }
-                }
-
-                @Override
-                public void onFailure(Call<Club> call, Throwable t) {
-                    Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                }
-            });
+                });
+            }
 
             // description links
 

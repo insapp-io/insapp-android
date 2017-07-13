@@ -19,9 +19,6 @@ import com.google.gson.Gson;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,15 +27,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.ClubActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpDelete;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.models.Comment;
-import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
@@ -100,19 +92,27 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         holder.getTitleTextView().setText(post.getTitle());
         holder.getDateTextView().setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(post.getDate())));
 
-        if (layout == R.layout.row_post)
-            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.getImageView());
+        if (layout == R.layout.row_post) {
+            Glide
+                    .with(context)
+                    .load(HttpGet.IMAGEURL + post.getImage())
+                    .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
+                    .crossFade()
+                    .into(holder.getImageView());
+        }
         else {
-            Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.getImageView());
+            Glide
+                    .with(context)
+                    .load(HttpGet.IMAGEURL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .crossFade()
+                    .into(holder.getImageView());
 
             holder.getContentTextView().setText(post.getDescription());
             holder.getLikeCounterTextView().setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));
             holder.getCommentCounterTextView().setText(String.format(Locale.FRANCE, "%d", post.getComments().size()));
-        }
 
-        // club avatar
+            // club avatar
 
-        if (layout != R.layout.post) {
             Call<Club> call = ServiceGenerator.createService(Client.class).getClubFromId(post.getAssociation());
             call.enqueue(new Callback<Club>() {
                 @Override
@@ -120,7 +120,11 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                     if (response.isSuccessful()) {
                         final Club club = response.body();
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.getAvatarCircleImageView());
+                        Glide
+                                .with(context)
+                                .load(HttpGet.IMAGEURL + club.getProfilPicture())
+                                .crossFade()
+                                .into(holder.getAvatarCircleImageView());
 
                         // listener
 
@@ -141,18 +145,14 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                     Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                 }
             });
-        }
 
-        // description links
+            // description links
 
-        if (layout != R.layout.row_post) {
             Linkify.addLinks(holder.getContentTextView(), Linkify.ALL);
             Utils.convertToLinkSpan(context, holder.getContentTextView());
-        }
 
-        // like button
+            // like button
 
-        if (layout != R.layout.row_post) {
             final String userId = new Gson().fromJson(context.getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId();
 
             holder.getLikeButton().setLiked(post.isPostLikedBy(userId));
@@ -201,6 +201,8 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                 }
             });
 
+            // comment button
+
             holder.getCommentButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -236,16 +238,19 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         private PostViewHolder(View view) {
             super(view);
 
-            if (layout != R.layout.post)
+            if (layout != R.layout.post) {
                 this.avatarCircleImageView = (CircleImageView) view.findViewById(R.id.avatar_club_post);
+            }
 
             this.titleTextView = (TextView) view.findViewById(R.id.name_post);
             this.dateTextView = (TextView) view.findViewById(R.id.date_post);
 
-            if (layout == R.layout.row_post)
+            if (layout == R.layout.row_post) {
                 this.imageView = (ImageView) view.findViewById(R.id.thumbnail_post);
-            else
+            }
+            else {
                 this.imageView = (ImageView) view.findViewById(R.id.image);
+            }
 
             if (layout != R.layout.row_post) {
                 this.contentTextView = (TextView) view.findViewById(R.id.post_text);

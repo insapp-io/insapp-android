@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class User implements Parcelable{
 
     @SerializedName("ID")
-    private String ID;
+    private String id;
 
     @SerializedName("name")
     private String name;
@@ -62,7 +62,7 @@ public class User implements Parcelable{
     };
 
     public User(Parcel in) {
-        this.ID = in.readString();
+        this.id = in.readString();
         this.name = in.readString();
         this.username = in.readString();
         this.description = in.readString();
@@ -85,7 +85,7 @@ public class User implements Parcelable{
     }
 
     public User(String id, String name, String username, String description, String email, boolean emailPublic, String promotion, String gender, ArrayList<String> events, ArrayList<String> postsLiked) {
-        this.ID = id;
+        this.id = id;
         this.name = name;
         this.username = username;
         this.description = description;
@@ -98,7 +98,7 @@ public class User implements Parcelable{
     }
 
     public User(JSONObject json) throws JSONException {
-        this.ID = json.getString("ID");
+        this.id = json.getString("ID");
         this.name = json.getString("name");
         this.username = json.getString("usernameTextView");
         this.description = json.getString("description");
@@ -120,59 +120,18 @@ public class User implements Parcelable{
 
         JSONArray jsonarray2 = json.optJSONArray("postsliked");
         if(jsonarray2 != null){
-            for(int i=0; i<jsonarray2.length(); i++) {
+            for(int i = 0; i < jsonarray2.length(); i++) {
                 postsLiked.add(jsonarray2.getString(i));
             }
         }
     }
 
-    public String getId() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public boolean isEmailPublic() {
-        return emailPublic;
-    }
-
-    public String getPromotion() {
-        return promotion;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public ArrayList<String> getEvents() {
-        return events;
-    }
-
-    public ArrayList<String> getPostsLiked() {
-        return postsLiked;
-    }
-
-
     public int describeContents() {
-        return 0; //On renvoie 0, car notre classe ne contient pas de FileDescriptor
+        return 0;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(ID);
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(username);
         dest.writeString(description);
@@ -188,6 +147,86 @@ public class User implements Parcelable{
         dest.writeInt(postsLiked.size());
         if (postsLiked.size() > 0)
             dest.writeStringList(postsLiked);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEmailPublic() {
+        return emailPublic;
+    }
+
+    public void setEmailPublic(boolean emailPublic) {
+        this.emailPublic = emailPublic;
+    }
+
+    public String getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public ArrayList<String> getEvents() {
+        return events;
+    }
+
+    public void setEvents(ArrayList<String> events) {
+        this.events = events;
+    }
+
+    public ArrayList<String> getPostsLiked() {
+        return postsLiked;
+    }
+
+    public void setPostsLiked(ArrayList<String> postsLiked) {
+        this.postsLiked = postsLiked;
     }
 
     @Override

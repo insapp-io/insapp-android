@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -29,7 +28,7 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by thoma on 27/10/2016.
+ * Created by thomas on 27/10/2016.
  */
 
 public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -38,7 +37,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private String filter_club_id = null;
     private int swipeColor;
 
-    private View view;
     private PostRecyclerViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -72,7 +70,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_posts, container, false);
+        View view = inflater.inflate(R.layout.fragment_posts, container, false);
 
         // recycler view
 
@@ -80,10 +78,12 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        if (layout == R.layout.post_with_avatars)
+        if (layout == R.layout.post_with_avatars) {
             recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.half_divider));
-        else if (layout == R.layout.post)
+        }
+        else if (layout == R.layout.post) {
             recyclerView.addItemDecoration(new DividerItemDecoration(getResources(), R.drawable.full_divider));
+        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -94,10 +94,12 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_posts);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        if (filter_club_id != null)
+        if (filter_club_id != null) {
             swipeRefreshLayout.setColorSchemeColors(swipeColor);
-        else
+        }
+        else {
             swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        }
 
         return view;
     }

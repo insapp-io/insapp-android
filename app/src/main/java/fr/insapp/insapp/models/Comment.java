@@ -3,6 +3,8 @@ package fr.insapp.insapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,16 +15,25 @@ import java.util.Date;
 import fr.insapp.insapp.utility.Operation;
 
 /**
- * Created by tomatrocho on 17/11/16.
+ * Created by thomas on 17/11/16.
  */
 
 public class Comment implements Parcelable {
 
+    @SerializedName("ID")
     private String id;
+
+    @SerializedName("user")
     private String user;
+
+    @SerializedName("content")
     private String content;
-    private ArrayList<Tag> tags;
+
+    @SerializedName("date")
     private Date date;
+
+    @SerializedName("tags")
+    private ArrayList<Tag> tags;
 
     public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
 
@@ -43,11 +54,10 @@ public class Comment implements Parcelable {
         this.user = in.readString();
         this.content = in.readString();
 
-        this.tags = new ArrayList<Tag>();
+        this.tags = new ArrayList<>();
 
         int nb_tags = in.readInt();
         if(nb_tags > 0) {
-            //in.readTypedList(tags, Tag.CREATOR);
             in.readTypedList(tags, Tag.CREATOR);
         }
 
@@ -63,7 +73,6 @@ public class Comment implements Parcelable {
     }
 
     public Comment(JSONObject json) throws JSONException {
-        //System.out.println("JE RECOIS=" + json.toString());
         this.id = json.getString("ID");
         this.user = json.getString("user");
         this.content = json.getString("content");
@@ -81,6 +90,30 @@ public class Comment implements Parcelable {
         //    this.dateTextView = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SS'Z'", json.getString("dateTextView"));
         //if(this.dateTextView == null)
         //    this.dateTextView = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss'Z'", json.getString("dateTextView"));
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setTags(ArrayList<Tag> tags) {
+        this.tags = tags;
     }
 
     public String getId() {

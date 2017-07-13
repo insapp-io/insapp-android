@@ -3,31 +3,59 @@ package fr.insapp.insapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import fr.insapp.insapp.utility.Operation;
 
 /**
- * Created by thoma on 29/10/2016.
+ * Created by thomas on 29/10/2016.
  */
 
 public class Post implements Parcelable {
 
-    private String ID;
-    private String title, association, description;
+    @SerializedName("ID")
+    private String id;
+
+    @SerializedName("title")
+    private String title;
+
+    @SerializedName("association")
+    private String association;
+
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("date")
     private Date date;
 
-    private ArrayList<String> likes;
-    private ArrayList<Comment> comments;
+    @SerializedName("likes")
+    private List<String> likes;
 
+    @SerializedName("comments")
+    private List<Comment> comments;
+
+    @SerializedName("promotions")
+    private List<String> promotions;
+
+    @SerializedName("plateforms")
+    private List<String> plateforms;
+
+    @SerializedName("image")
     private String image;
-    private int width;
-    private int height;
+
+    @SerializedName("imageSize")
+    private ImageSize imageSize;
+
+    @SerializedName("nonotification")
+    private boolean noNotification;
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
 
@@ -47,7 +75,7 @@ public class Post implements Parcelable {
     }
 
     protected Post(Parcel in) {
-        this.ID = in.readString();
+        this.id = in.readString();
         this.title = in.readString();
         this.association = in.readString();
         this.description = in.readString();
@@ -66,16 +94,16 @@ public class Post implements Parcelable {
             in.readTypedList(comments, Comment.CREATOR);
 
         image = in.readString();
-        width = in.readInt();
-        height = in.readInt();
+
+        this.imageSize = new ImageSize(in.readInt(), in.readInt());
     }
 
     public void refresh(JSONObject json) throws JSONException {
-        this.ID = json.getString("ID");
+        this.id = json.getString("ID");
         this.title = json.getString("title");
         this.association = json.getString("association");
         this.description = json.getString("description");
-        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("dateTextView"), true);
+        this.date = Operation.stringToDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", json.getString("date"), true);
 
         this.likes = new ArrayList<>();
 
@@ -94,13 +122,13 @@ public class Post implements Parcelable {
         }
 
         this.image = json.getString("image");
-        this.width = json.getJSONObject("imageSize").getInt("width");
-        this.height = json.getJSONObject("imageSize").getInt("width");
+        this.imageSize.setWidth(json.getJSONObject("imageSize").getInt("width"));
+        this.imageSize.setHeight(json.getJSONObject("imageSize").getInt("height"));
     }
 
     @Override
     public void writeToParcel(Parcel dest, int i) {
-        dest.writeString(ID);
+        dest.writeString(id);
         dest.writeString(title);
         dest.writeString(association);
         dest.writeString(description);
@@ -115,8 +143,8 @@ public class Post implements Parcelable {
             dest.writeTypedList(comments);
 
         dest.writeString(image);
-        dest.writeInt(width);
-        dest.writeInt(height);
+        dest.writeInt(imageSize.getWidth());
+        dest.writeInt(imageSize.getHeight());
     }
 
     public boolean equals(Object other) {
@@ -126,7 +154,7 @@ public class Post implements Parcelable {
 
         final Post otherMyClass = (Post) other;
 
-        return otherMyClass.getId().equals(this.ID);
+        return otherMyClass.getId().equals(this.id);
     }
 
     public boolean isPostLikedBy(String userID) {
@@ -139,11 +167,11 @@ public class Post implements Parcelable {
     }
 
     public String getId() {
-        return ID;
+        return id;
     }
 
     public void setId(String id) {
-        this.ID = id;
+        this.id = id;
     }
 
     public String getTitle() {
@@ -178,7 +206,7 @@ public class Post implements Parcelable {
         this.date = date;
     }
 
-    public ArrayList<String> getLikes() {
+    public List<String> getLikes() {
         return likes;
     }
 
@@ -186,12 +214,28 @@ public class Post implements Parcelable {
         this.likes = likes;
     }
 
-    public ArrayList<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<String> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(ArrayList<String> promotions) {
+        this.promotions = promotions;
+    }
+
+    public List<String> getPlateforms() {
+        return plateforms;
+    }
+
+    public void setPlateforms(List<String> plateforms) {
+        this.plateforms = plateforms;
     }
 
     public String getImage() {
@@ -202,20 +246,20 @@ public class Post implements Parcelable {
         this.image = image;
     }
 
-    public int getWidth() {
-        return width;
+    public ImageSize getImageSize() {
+        return imageSize;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public void setImageSize(ImageSize imageSize) {
+        this.imageSize = imageSize;
     }
 
-    public int getHeight() {
-        return height;
+    public boolean isNoNotification() {
+        return noNotification;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public void setNoNotification(boolean noNotification) {
+        this.noNotification = noNotification;
     }
 
     @Override

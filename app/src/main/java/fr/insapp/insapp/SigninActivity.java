@@ -20,8 +20,6 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;
-import fr.insapp.insapp.models.deserializer.Deserializer;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,10 +91,10 @@ public class SigninActivity extends AppCompatActivity {
         TypeAdapter sessionTokenTypeAdapter = new TypeAdapter("sessionToken", SessionToken.class);
         TypeAdapter userTypeAdapter = new TypeAdapter("user", User.class);
 
-        Call<ResponseBody> call = ServiceGenerator.createService(Client.class, loginCredentialsTypeAdapter, sessionTokenTypeAdapter, userTypeAdapter).logUser(loginCredentials);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<SessionCredentials> call = ServiceGenerator.createService(Client.class, loginCredentialsTypeAdapter, sessionTokenTypeAdapter, userTypeAdapter).logUser(loginCredentials);
+        call.enqueue(new Callback<SessionCredentials>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<SessionCredentials> call, Response<SessionCredentials> response) {
                 if (response.isSuccessful()) {
                     startActivity(new Intent(SigninActivity.this, MainActivity.class));
                     finish();
@@ -107,7 +105,7 @@ public class SigninActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SessionCredentials> call, Throwable t) {
                 Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
             }
         });

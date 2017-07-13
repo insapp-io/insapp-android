@@ -194,7 +194,7 @@ public class PostActivity extends AppCompatActivity {
 
         final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
-        final int id = getResources().getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
+        final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
 
         // edit contentTextView

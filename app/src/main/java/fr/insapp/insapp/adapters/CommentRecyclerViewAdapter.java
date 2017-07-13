@@ -120,7 +120,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                 if (response.isSuccessful()) {
                     final User user = response.body();
 
-                    final int id = context.getResources().getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                    final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                     Glide.with(context).load(id).into(holder.avatarCircleImageView);
 
                     holder.usernameTextView.setText(String.format(context.getResources().getString(R.string.tag), user.getUsername()));

@@ -25,7 +25,6 @@ import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.listeners.EventCommentLongClickListener;
 import fr.insapp.insapp.models.Event;
@@ -78,7 +77,7 @@ public class CommentsEventFragment extends Fragment {
         // get the drawable of avatarCircleImageView
 
         Resources resources = getContext().getResources();
-        final int id = resources.getIdentifier(Operation.drawableProfilName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getContext().getPackageName());
+        final int id = resources.getIdentifier(Operation.drawableProfileName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getContext().getPackageName());
         Glide.with(getContext()).load(id).into(circleImageView);
 
         // edit contentTextView

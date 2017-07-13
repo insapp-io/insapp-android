@@ -17,12 +17,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
@@ -67,7 +65,7 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
         ((TextView) convertView.findViewById(R.id.dropdown_textview)).setText(String.format(resources.getString(R.string.tag), user.getUsername()));
 
         // get the drawable of avatarCircleImageView
-        final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+        final int id = resources.getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         Glide.with(context).load(id).into(((CircleImageView) convertView.findViewById(R.id.dropdown_avatar)));
 
         return convertView;

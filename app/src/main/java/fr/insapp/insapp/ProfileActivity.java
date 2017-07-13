@@ -104,7 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
-        final int id = getResources().getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
+        final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         final Drawable drawable = ContextCompat.getDrawable(ProfileActivity.this, id);
 
         avatarCircleImageView.setImageDrawable(drawable);
@@ -211,7 +211,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     dialogAlert.cancel();
                                 }
                             });
-                } else {
+                }
+                else {
                     alertDialogBuilder.setTitle(getString(R.string.delete_account_action));
                     alertDialogBuilder
                             .setMessage(R.string.delete_account_are_you_sure)

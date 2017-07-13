@@ -63,7 +63,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
         // get the drawable of avatarCircleImageView
 
         Resources resources = context.getResources();
-        final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+        final int id = resources.getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         Glide.with(context).load(id).into(holder.avatar);
 
         holder.name.setText(user.getName());

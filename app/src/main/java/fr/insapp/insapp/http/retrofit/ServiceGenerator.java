@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 
 import com.google.gson.GsonBuilder;
 
-import fr.insapp.insapp.http.token.TokenInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

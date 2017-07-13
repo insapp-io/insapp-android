@@ -144,7 +144,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
                         // get the drawable of avatarCircleImageView
                         Resources resources = context.getResources();
-                        final int id = resources.getIdentifier(Operation.drawableProfilName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                        final int id = resources.getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                         Glide.with(context).load(id).into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {

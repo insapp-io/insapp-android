@@ -1,4 +1,4 @@
-package fr.insapp.insapp.http.token;
+package fr.insapp.insapp.http.retrofit;
 
 import android.content.SharedPreferences;
 
@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import okhttp3.HttpUrl;

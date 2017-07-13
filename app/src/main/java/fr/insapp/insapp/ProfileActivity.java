@@ -71,6 +71,15 @@ public class ProfileActivity extends AppCompatActivity {
         TextView promotionTextView = (TextView) findViewById(R.id.profile_class);
         TextView descriptionTextView = (TextView) findViewById(R.id.profile_description);
 
+        // user
+
+        Intent intent = getIntent();
+        this.user = intent.getParcelableExtra("user");
+
+        if (this.user == null) {
+            this.user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+        }
+
         // toolbar
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_profile);
@@ -102,8 +111,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         // fill the main layout
 
-        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
-
         final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         final Drawable drawable = ContextCompat.getDrawable(ProfileActivity.this, id);
 
@@ -114,14 +121,17 @@ public class ProfileActivity extends AppCompatActivity {
         promotionTextView.setText(user.getPromotion());
         descriptionTextView.setText(user.getDescription());
 
-        if (user.getName().isEmpty())
+        if (user.getName().isEmpty()) {
             nameTextView.setVisibility(View.GONE);
+        }
 
-        if (user.getEmail().isEmpty())
+        if (user.getEmail().isEmpty()) {
             emailTextView.setVisibility(View.GONE);
+        }
 
-        if (user.getPromotion().isEmpty())
+        if (user.getPromotion().isEmpty()) {
             promotionTextView.setVisibility(View.GONE);
+        }
 
         // links
 

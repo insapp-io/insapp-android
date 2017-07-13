@@ -12,7 +12,7 @@ import java.util.TimeZone;
 
 public class Operation {
 
-    public static Date stringToDate(String format, String dateInString){
+    public static Date stringToDate(String format, String dateInString, boolean timeZoneUTC){
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
 

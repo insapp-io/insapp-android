@@ -16,16 +16,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.ProfileActivity;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Tag;
@@ -36,12 +31,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by thoma on 18/11/2016.
+ * Created by thomas on 18/11/2016.
  */
 
 public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentRecyclerViewAdapter.CommentViewHolder> {
 
-    protected List<Comment> comments;
+    private List<Comment> comments;
 
     private OnCommentItemLongClickListener listener;
 
@@ -80,19 +75,23 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
             ClickableSpan span = new ClickableSpan() {
                 @Override
                 public void onClick(View view) {
-                    HttpGet request = new HttpGet(new AsyncResponse() {
+                    Call<User> call = ServiceGenerator.create().getUserFromId(tag.getUser());
+                    call.enqueue(new Callback<User>() {
                         @Override
-                        public void processFinish(String output) {
-                            try {
-                                context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", new User(new JSONObject(output))));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if (response.isSuccessful()) {
+                                context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", response.body()));
+                            }
+                            else {
+                                Toast.makeText(context, "CommentRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                             }
                         }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            Toast.makeText(context, "CommentRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                        }
                     });
-                    /*
-                    request.execute(HttpGet.ROOTUSER + "/" + tag.getUser() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                    */
                 }
 
                 @Override
@@ -160,10 +159,11 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
     }
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView avatarCircleImageView;
-        public TextView usernameTextView;
-        public TextView contentTextView;
-        public TextView dateTextView;
+
+        private CircleImageView avatarCircleImageView;
+        private TextView usernameTextView;
+        private TextView contentTextView;
+        private TextView dateTextView;
 
         public CommentViewHolder(View view) {
             super(view);
@@ -182,6 +182,22 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                     return true;
                 }
             });
+        }
+
+        public CircleImageView getAvatarCircleImageView() {
+            return avatarCircleImageView;
+        }
+
+        public TextView getUsernameTextView() {
+            return usernameTextView;
+        }
+
+        public TextView getContentTextView() {
+            return contentTextView;
+        }
+
+        public TextView getDateTextView() {
+            return dateTextView;
         }
     }
 }

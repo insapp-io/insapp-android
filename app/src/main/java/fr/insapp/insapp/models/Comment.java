@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import fr.insapp.insapp.utility.Operation;
 
@@ -33,7 +34,7 @@ public class Comment implements Parcelable {
     private Date date;
 
     @SerializedName("tags")
-    private ArrayList<Tag> tags;
+    private List<Tag> tags;
 
     public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
 
@@ -64,7 +65,7 @@ public class Comment implements Parcelable {
         this.date = new Date(in.readLong());
     }
 
-    public Comment(String id, String user, String content, ArrayList<Tag> tags, Date date) {
+    public Comment(String id, String user, String content, List<Tag> tags, Date date) {
         this.id = id;
         this.user = user;
         this.content = content;
@@ -128,7 +129,7 @@ public class Comment implements Parcelable {
         return content;
     }
 
-    public ArrayList<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 

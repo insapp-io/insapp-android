@@ -3,15 +3,25 @@ package fr.insapp.insapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by Antoine on 12/10/2016.
  */
+
 public class Tag implements Parcelable {
+
+    @SerializedName("ID")
     private String id;
-    private String user, name;
+
+    @SerializedName("user")
+    private String user;
+
+    @SerializedName("name")
+    private String name;
 
     public Tag(String id, String user, String name) {
         this.id = id;
@@ -23,8 +33,6 @@ public class Tag implements Parcelable {
         this.id = json.getString("ID");
         this.user = json.getString("user");
         this.name = json.getString("name");
-
-        //System.out.println("NEW TAG from json : " + name);
     }
 
     protected Tag(Parcel in) {

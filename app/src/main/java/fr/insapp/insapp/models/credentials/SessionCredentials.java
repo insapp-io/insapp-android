@@ -1,5 +1,7 @@
 package fr.insapp.insapp.models.credentials;
 
+import com.google.gson.annotations.SerializedName;
+
 import fr.insapp.insapp.models.SessionToken;
 import fr.insapp.insapp.models.User;
 
@@ -9,8 +11,13 @@ import fr.insapp.insapp.models.User;
 
 public class SessionCredentials {
 
+    @SerializedName("credentials")
     private LoginCredentials loginCredentials;
+
+    @SerializedName("sessionToken")
     private SessionToken sessionToken;
+
+    @SerializedName("user")
     private User user;
 
     public SessionCredentials(LoginCredentials loginCredentials, SessionToken sessionToken, User user) {

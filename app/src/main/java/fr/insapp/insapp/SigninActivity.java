@@ -12,11 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
-import fr.insapp.insapp.http.retrofit.TypeAdapter;
-import fr.insapp.insapp.models.SessionToken;
-import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;
@@ -67,7 +63,7 @@ public class SigninActivity extends AppCompatActivity {
     public void signin(final String ticket) {
         SigninCredentials signinCredentials = new SigninCredentials(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
 
-        Call<LoginCredentials> call = ServiceGenerator.createService(Client.class).signUser(ticket, signinCredentials);
+        Call<LoginCredentials> call = ServiceGenerator.create().signUser(ticket, signinCredentials);
         call.enqueue(new Callback<LoginCredentials>() {
             @Override
             public void onResponse(Call<LoginCredentials> call, Response<LoginCredentials> response) {
@@ -87,11 +83,7 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     public void login(LoginCredentials loginCredentials) {
-        TypeAdapter loginCredentialsTypeAdapter = new TypeAdapter("credentials", LoginCredentials.class);
-        TypeAdapter sessionTokenTypeAdapter = new TypeAdapter("sessionToken", SessionToken.class);
-        TypeAdapter userTypeAdapter = new TypeAdapter("user", User.class);
-
-        Call<SessionCredentials> call = ServiceGenerator.createService(Client.class, loginCredentialsTypeAdapter, sessionTokenTypeAdapter, userTypeAdapter).logUser(loginCredentials);
+        Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
         call.enqueue(new Callback<SessionCredentials>() {
             @Override
             public void onResponse(Call<SessionCredentials> call, Response<SessionCredentials> response) {

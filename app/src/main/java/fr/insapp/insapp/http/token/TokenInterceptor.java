@@ -6,11 +6,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
-import fr.insapp.insapp.http.retrofit.TypeAdapter;
-import fr.insapp.insapp.models.SessionToken;
-import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import okhttp3.HttpUrl;
@@ -51,11 +47,7 @@ public class TokenInterceptor implements Interceptor {
         if (response.code() == 401) {
             LoginCredentials loginCredentials = new Gson().fromJson(preferences.getString("login", ""), LoginCredentials.class);
 
-            TypeAdapter loginCredentialsTypeAdapter = new TypeAdapter("credentials", LoginCredentials.class);
-            TypeAdapter sessionTokenTypeAdapter = new TypeAdapter("sessionToken", SessionToken.class);
-            TypeAdapter userTypeAdapter = new TypeAdapter("user", User.class);
-
-            Call<SessionCredentials> call = ServiceGenerator.createService(Client.class, loginCredentialsTypeAdapter, sessionTokenTypeAdapter, userTypeAdapter).logUser(loginCredentials);
+            Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
             SessionCredentials refreshedSessionCredentials = call.execute().body();
 
             HttpUrl url = request.url().newBuilder().addQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();

@@ -21,7 +21,6 @@ import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.listeners.PostCommentLongClickListener;
@@ -114,7 +113,7 @@ public class PostActivity extends AppCompatActivity {
 
         if (requestCode == NOTIFICATION_MESSAGE) {
             if (resultCode == RESULT_OK) {
-                Call<Post> call = ServiceGenerator.createService(Client.class).getPostFromId(notification.getContent());
+                Call<Post> call = ServiceGenerator.create().getPostFromId(notification.getContent());
                 call.enqueue(new Callback<Post>() {
                     @Override
                     public void onResponse(Call<Post> call, Response<Post> response) {
@@ -137,7 +136,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void generateActivity() {
-        Call<Club> call = ServiceGenerator.createService(Client.class).getClubFromId(post.getAssociation());
+        Call<Club> call = ServiceGenerator.create().getClubFromId(post.getAssociation());
         call.enqueue(new Callback<Club>() {
             @Override
             public void onResponse(Call<Club> call, Response<Club> response) {

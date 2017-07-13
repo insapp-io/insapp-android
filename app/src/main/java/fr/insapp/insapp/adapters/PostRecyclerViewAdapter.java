@@ -28,7 +28,6 @@ import fr.insapp.insapp.ClubActivity;
 import fr.insapp.insapp.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
@@ -113,7 +112,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
             // club avatar
 
-            Call<Club> call = ServiceGenerator.createService(Client.class).getClubFromId(post.getAssociation());
+            Call<Club> call = ServiceGenerator.create().getClubFromId(post.getAssociation());
             call.enqueue(new Callback<Club>() {
                 @Override
                 public void onResponse(Call<Club> call, Response<Club> response) {
@@ -160,7 +159,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
             holder.getLikeButton().setOnLikeListener(new OnLikeListener() {
                 @Override
                 public void liked(LikeButton likeButton) {
-                    Call<PostInteraction> call = ServiceGenerator.createService(Client.class).likePost(post.getId(), userId);
+                    Call<PostInteraction> call = ServiceGenerator.create().likePost(post.getId(), userId);
                     call.enqueue(new Callback<PostInteraction>() {
                         @Override
                         public void onResponse(Call<PostInteraction> call, Response<PostInteraction> response) {
@@ -181,7 +180,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
                 @Override
                 public void unLiked(LikeButton likeButton) {
-                    Call<PostInteraction> call = ServiceGenerator.createService(Client.class).dislikePost(post.getId(), userId);
+                    Call<PostInteraction> call = ServiceGenerator.create().dislikePost(post.getId(), userId);
                     call.enqueue(new Callback<PostInteraction>() {
                         @Override
                         public void onResponse(Call<PostInteraction> call, Response<PostInteraction> response) {

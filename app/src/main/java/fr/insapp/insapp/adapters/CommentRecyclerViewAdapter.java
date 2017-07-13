@@ -26,7 +26,6 @@ import fr.insapp.insapp.ProfileActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.retrofit.Client;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Tag;
@@ -114,7 +113,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
 
         // user
 
-        Call<User> call = ServiceGenerator.createService(Client.class).getUserFromId(comment.getUserId());
+        Call<User> call = ServiceGenerator.create().getUserFromId(comment.getUserId());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

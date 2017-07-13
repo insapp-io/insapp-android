@@ -51,4 +51,8 @@ public class ServiceGenerator {
 
         return builder.build().create(serviceClass);
     }
+
+    public static Client create() {
+        return ServiceGenerator.createService(Client.class);
+    }
 }

@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Antoine on 19/09/2016.
@@ -42,10 +43,10 @@ public class User implements Parcelable{
     private String gender;
 
     @SerializedName("events")
-    private ArrayList<String> events;
+    private List<String> events;
 
     @SerializedName("postsliked")
-    private ArrayList<String> postsLiked;
+    private List<String> postsLiked;
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
@@ -79,12 +80,12 @@ public class User implements Parcelable{
 
         this.postsLiked = new ArrayList<>();
         int nb_postsLiked = in.readInt();
-        if(nb_postsLiked > 0) {
+        if (nb_postsLiked > 0) {
             in.readStringList(this.postsLiked);
         }
     }
 
-    public User(String id, String name, String username, String description, String email, boolean emailPublic, String promotion, String gender, ArrayList<String> events, ArrayList<String> postsLiked) {
+    public User(String id, String name, String username, String description, String email, boolean emailPublic, String promotion, String gender, List<String> events, List<String> postsLiked) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -100,7 +101,7 @@ public class User implements Parcelable{
     public User(JSONObject json) throws JSONException {
         this.id = json.getString("ID");
         this.name = json.getString("name");
-        this.username = json.getString("usernameTextView");
+        this.username = json.getString("username");
         this.description = json.getString("description");
         this.email = json.getString("email");
         this.emailPublic = json.getBoolean("emailpublic");
@@ -119,8 +120,8 @@ public class User implements Parcelable{
         postsLiked = new ArrayList<>();
 
         JSONArray jsonarray2 = json.optJSONArray("postsliked");
-        if(jsonarray2 != null){
-            for(int i = 0; i < jsonarray2.length(); i++) {
+        if (jsonarray2 != null){
+            for (int i = 0; i < jsonarray2.length(); i++) {
                 postsLiked.add(jsonarray2.getString(i));
             }
         }
@@ -213,19 +214,19 @@ public class User implements Parcelable{
         this.gender = gender;
     }
 
-    public ArrayList<String> getEvents() {
+    public List<String> getEvents() {
         return events;
     }
 
-    public void setEvents(ArrayList<String> events) {
+    public void setEvents(List<String> events) {
         this.events = events;
     }
 
-    public ArrayList<String> getPostsLiked() {
+    public List<String> getPostsLiked() {
         return postsLiked;
     }
 
-    public void setPostsLiked(ArrayList<String> postsLiked) {
+    public void setPostsLiked(List<String> postsLiked) {
         this.postsLiked = postsLiked;
     }
 

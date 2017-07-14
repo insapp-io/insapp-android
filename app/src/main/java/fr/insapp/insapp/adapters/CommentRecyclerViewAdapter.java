@@ -148,9 +148,14 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         holder.bind(comment, listener);
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        this.notifyDataSetChanged();
+    }
+
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @Override

@@ -1,44 +1,46 @@
 package fr.insapp.insapp.utility;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.AutoCompleterAdapter;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.retrofit.Client;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by thomas on 27/02/2017.
  */
 
-public class CommentEditText extends MultiAutoCompleteTextView {
+public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
 
     private AutoCompleterAdapter adapter;
-    private Tokenizer tokenizer;
 
-    // tags
-
-    private ArrayList<Tag> tags = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<>();
 
     public CommentEditText(Context context) {
         super(context);
@@ -53,27 +55,25 @@ public class CommentEditText extends MultiAutoCompleteTextView {
     }
 
     public void setupComponent(final CommentRecyclerViewAdapter commentAdapter, final Post post) {
-        setThreshold(2);
+        setThreshold(1);
+        setTokenizer(new TagTokenizer());
 
         this.adapter = new AutoCompleterAdapter(getContext(), R.id.comment_event_input);
         setAdapter(adapter);
 
-        this.tokenizer = new TagTokenizer();
-        setTokenizer(tokenizer);
-
         setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 final String itemString = (((TextView) view.findViewById(R.id.dropdown_textview)).getText()).toString();
 
                 String id = "";
-                for (final User user : adapter.getTaggedUsers()) {
+                for (final User user : adapter.getFilteredUsers()) {
                     final String username = "@" + user.getUsername();
                     if (username.equals(itemString))
                         id = user.getId();
                 }
 
-                tags.add(new Tag("", id, itemString));
+                tags.add(new Tag(null, id, itemString));
             }
         });
 
@@ -87,43 +87,14 @@ public class CommentEditText extends MultiAutoCompleteTextView {
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
-                    final String text = getText().toString();
+                    final String content = getText().toString();
                     getText().clear();
 
-                    if (!text.isEmpty()) {
-                        /*
-                        final JSONObject json = new JSONObject();
+                    if (!content.isEmpty()) {
+                        final User user = new Gson().fromJson(getContext().getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+                        final Comment comment = new Comment(null, user.getId(), content, tags, null);
 
-                        try {
-                            json.put("user", HttpGet.sessionCredentials.getUserID());
-                            json.put("content", contentTextView);
-
-                            JSONArray jsonArray = new JSONArray();
-                            List<String> alreadyTagged = new ArrayList<>();
-                            for (final Tag tag : getTags()) {
-                                if (contentTextView.contains(tag.getName()) && alreadyTagged.lastIndexOf(tag.getName()) == -1) {
-                                    JSONObject jsonTag = new JSONObject();
-                                    jsonTag.put("user", tag.getUser());
-                                    jsonTag.put("name", tag.getName());
-
-                                    jsonArray.put(jsonTag);
-                                    alreadyTagged.add(tag.getName());
-                                }
-                            }
-                            json.put("tags", jsonArray);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        System.out.println(json.toString());
-                        */
-
-                        /*
-                        final Comment comment = new Comment(null, HttpGet.sessionCredentials.getUserID(), contentTextView, tags, null);
-                        */
-
-                        /*
-                        Call<Post> call = ServiceGenerator.createService(Client.class).commentPost(post.getId(), comment, HttpGet.sessionCredentials.getSessionToken());
+                        Call<Post> call = ServiceGenerator.createService(Client.class).commentPost(post.getId(), comment);
                         call.enqueue(new Callback<Post>() {
                             @Override
                             public void onResponse(Call<Post> call, Response<Post> response) {
@@ -142,7 +113,6 @@ public class CommentEditText extends MultiAutoCompleteTextView {
                                 Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                             }
                         });
-                        */
                     }
 
                     return true;
@@ -153,7 +123,7 @@ public class CommentEditText extends MultiAutoCompleteTextView {
         });
     }
 
-    public ArrayList<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 }

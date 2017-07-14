@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,7 +74,6 @@ public class PostActivity extends AppCompatActivity {
         this.titleTextView = (TextView) findViewById(R.id.post_title);
         this.descriptionTextView = (TextView) findViewById(R.id.post_text);
         this.dateTextView = (TextView) findViewById(R.id.post_date);
-
         this.userAvatarCircleImageView = (CircleImageView) findViewById(R.id.comment_post_username_avatar);
 
         // post
@@ -135,11 +135,11 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    public void generateActivity() {
+    private void generateActivity() {
         Call<Club> call = ServiceGenerator.create().getClubFromId(post.getAssociation());
         call.enqueue(new Callback<Club>() {
             @Override
-            public void onResponse(Call<Club> call, Response<Club> response) {
+            public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
                 if (response.isSuccessful()) {
                     club = response.body();
 
@@ -160,7 +160,7 @@ public class PostActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Club> call, Throwable t) {
+            public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
                 Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
             }
         });
@@ -169,7 +169,7 @@ public class PostActivity extends AppCompatActivity {
         this.descriptionTextView.setText(post.getDescription());
         this.dateTextView.setText(String.format(getResources().getString(R.string.ago), Operation.displayedDate(post.getDate())));
 
-        // description contentTextView view links
+        // view links contained in description
 
         Linkify.addLinks(descriptionTextView, Linkify.ALL);
         Utils.convertToLinkSpan(PostActivity.this, descriptionTextView);
@@ -178,6 +178,11 @@ public class PostActivity extends AppCompatActivity {
 
         this.adapter = new CommentRecyclerViewAdapter(PostActivity.this, post.getComments());
         adapter.setOnItemLongClickListener(new PostCommentLongClickListener(PostActivity.this, post, adapter));
+
+        // edit comment
+
+        this.commentEditText = (CommentEditText) findViewById(R.id.comment_post_input);
+        commentEditText.setupComponent(adapter, post);
 
         // recycler view
 
@@ -190,17 +195,12 @@ public class PostActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        // retrieve the avatarCircleImageView of the user
+        // retrieve the avatar of the user
 
         final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
         final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
-
-        // edit contentTextView
-
-        this.commentEditText = (CommentEditText) findViewById(R.id.comment_post_input);
-        commentEditText.setupComponent(adapter, post);
     }
 
     @Override
@@ -218,10 +218,12 @@ public class PostActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                if (isTaskRoot())
+                if (isTaskRoot()) {
                     startActivity(new Intent(PostActivity.this, MainActivity.class));
-                else
+                }
+                else {
                     finish();
+                }
 
                 return true;
         }

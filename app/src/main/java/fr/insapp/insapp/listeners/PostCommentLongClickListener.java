@@ -56,9 +56,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                                 public void onResponse(Call<Post> call, Response<Post> response) {
                                     if (response.isSuccessful()) {
                                         post = response.body();
-
                                         adapter.setComments(post.getComments());
-                                        adapter.notifyDataSetChanged();
                                     }
                                     else {
                                         Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();

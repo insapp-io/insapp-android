@@ -12,18 +12,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpPost;
+import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.models.SearchResults;
+import fr.insapp.insapp.models.SearchTerms;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
+import retrofit2.Call;
 
 /**
  * Created by thomas on 27/02/2017.
@@ -33,15 +33,13 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
 
     private Context context;
 
-    private ArrayList<User> filteredUsers;
-    private ArrayList<User> taggedUsers;
+    private List<User> filteredUsers;
 
     public AutoCompleterAdapter(Context context, int resource) {
         super(context, resource);
-        this.context = context;
 
+        this.context = context;
         this.filteredUsers = new ArrayList<>();
-        this.taggedUsers = new ArrayList<>();
     }
 
     public int getCount() {
@@ -64,7 +62,8 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
 
         ((TextView) convertView.findViewById(R.id.dropdown_textview)).setText(String.format(resources.getString(R.string.tag), user.getUsername()));
 
-        // get the drawable of avatarCircleImageView
+        // get the drawable of avatar
+
         final int id = resources.getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         Glide.with(context).load(id).into(((CircleImageView) convertView.findViewById(R.id.dropdown_avatar)));
 
@@ -76,49 +75,34 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
+
+                // this method is called async
+
                 final FilterResults filterResults = new FilterResults();
+
                 if (constraint != null) {
-                    JSONObject jsonObject = new JSONObject();
+                    Call<SearchResults> call = ServiceGenerator.create().searchUsers(new SearchTerms(constraint.toString()));
+                    SearchResults results = null;
                     try {
-                        jsonObject.put("terms", constraint);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                        results = call.execute().body();
 
-                    // a class that queries a web API, parses the data and returns an ArrayList<Style>
-                    HttpPost request = new HttpPost(new AsyncResponse() {
-                        @Override
-                        public void processFinish(String output) {
-                            try {
-                                ArrayList<User> users = new ArrayList<>();
+                        List<User> users = results.getUsers();
+                        List<User> filteredUsers = new ArrayList<>();
 
-                                JSONObject json = new JSONObject(output);
-                                JSONArray jsonArray = json.getJSONArray("users");
-
-                                if (jsonArray != null) {
-                                    for (int i = 0; i < Math.min(jsonArray.length(), 10); i++) {
-                                        final User user = new User(jsonArray.getJSONObject(i));
-
-                                        taggedUsers.add(user);
-                                        users.add(user);
-                                    }
+                        if (users != null) {
+                            if (users.size() > 0) {
+                                for (int i = 0; i < Math.min(users.size(), 10); i++) {
+                                    filteredUsers.add(users.get(i));
                                 }
-
-                                filterResults.values = users;
-                                filterResults.count = users.size();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    });
 
-                    /*
-                    try {
-                        request.execute(HttpGet.ROOTSEARCHUSERS + "?token=" + HttpGet.sessionCredentials.getSessionToken(), jsonObject.toString()).get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                            filterResults.values = filteredUsers;
+                            filterResults.count = filteredUsers.size();
+                        }
                     }
-                    */
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
 
                 return filterResults;
@@ -127,15 +111,17 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 if (results != null && results.count > 0) {
-                    filteredUsers = (ArrayList<User>) results.values;
+                    filteredUsers = (List<User>) results.values;
                     notifyDataSetChanged();
-                } else
+                }
+                else {
                     notifyDataSetInvalidated();
+                }
             }
         };
     }
 
-    public ArrayList<User> getTaggedUsers() {
-        return taggedUsers;
+    public List<User> getFilteredUsers() {
+        return filteredUsers;
     }
 }

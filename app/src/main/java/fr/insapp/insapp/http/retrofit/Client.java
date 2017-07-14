@@ -7,6 +7,8 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
+import fr.insapp.insapp.models.SearchResults;
+import fr.insapp.insapp.models.SearchTerms;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
@@ -72,6 +74,14 @@ public interface Client {
     /*
      * USER
      */
+
     @GET("user/{id}")
     Call<User> getUserFromId(@Path("id") String id);
+
+    /*
+     * SEARCH
+     */
+
+    @POST("search/users")
+    Call<SearchResults> searchUsers(@Body SearchTerms terms);
 }

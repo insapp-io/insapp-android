@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpDelete;

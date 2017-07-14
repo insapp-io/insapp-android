@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
-import fr.insapp.insapp.EventActivity;
+import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;

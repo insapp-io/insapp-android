@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import fr.insapp.insapp.activities.IntroActivity;
+import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 
 /**

@@ -17,8 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import fr.insapp.insapp.ClubActivity;
-import fr.insapp.insapp.MainActivity;
+import fr.insapp.insapp.activities.ClubActivity;
+import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;

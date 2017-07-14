@@ -10,7 +10,7 @@ import android.text.style.URLSpan;
 import android.util.Patterns;
 import android.view.View;
 
-import fr.insapp.insapp.MainActivity;
+import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.R;
 
 /**

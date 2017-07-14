@@ -2,7 +2,6 @@ package fr.insapp.insapp.http.retrofit;
 
 import java.util.List;
 
-import fr.insapp.insapp.MainActivity;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
@@ -13,7 +12,6 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -21,7 +19,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * Created by thomas on 07/07/2017.

@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.insapp.insapp.ClubActivity;
-import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.activities.ClubActivity;
+import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;

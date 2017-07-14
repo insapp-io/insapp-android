@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,6 +46,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.AboutFragment;
 import fr.insapp.insapp.http.AsyncResponse;

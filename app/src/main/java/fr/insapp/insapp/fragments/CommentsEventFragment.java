@@ -20,8 +20,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.MainActivity;
+import fr.insapp.insapp.activities.EventActivity;
+import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;

@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;

@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.insapp.insapp.MainActivity;
+import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 

@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;

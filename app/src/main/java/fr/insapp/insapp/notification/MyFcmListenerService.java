@@ -19,9 +19,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 import java.util.Random;
 
-import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.MainActivity;
-import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.activities.EventActivity;
+import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.Notification;
 

@@ -13,9 +13,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import fr.insapp.insapp.EventActivity;
-import fr.insapp.insapp.MainActivity;
-import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.activities.EventActivity;
+import fr.insapp.insapp.activities.MainActivity;
+import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;

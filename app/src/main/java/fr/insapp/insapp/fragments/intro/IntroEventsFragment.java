@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.SigninActivity;
+import fr.insapp.insapp.activities.SigninActivity;
 
 /**
  * Created by thoma on 03/12/2016.

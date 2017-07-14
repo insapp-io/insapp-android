@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import fr.insapp.insapp.MainActivity;
-import fr.insapp.insapp.PostActivity;
+import fr.insapp.insapp.activities.MainActivity;
+import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.http.retrofit.ServiceGenerator;

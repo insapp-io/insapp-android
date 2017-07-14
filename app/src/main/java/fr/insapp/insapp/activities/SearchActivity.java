@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;

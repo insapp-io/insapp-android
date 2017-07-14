@@ -1,12 +1,10 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +23,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.utility.VisionApiFocusFix;
 
 public class BarcodeDetectorActivity extends AppCompatActivity {

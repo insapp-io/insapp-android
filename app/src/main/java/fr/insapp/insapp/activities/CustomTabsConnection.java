@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
 import android.content.ComponentName;
 import android.support.customtabs.CustomTabsClient;

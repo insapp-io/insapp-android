@@ -1,4 +1,4 @@
-package fr.insapp.insapp;
+package fr.insapp.insapp.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,17 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPut;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 

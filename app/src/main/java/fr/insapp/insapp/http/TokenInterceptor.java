@@ -48,7 +48,16 @@ public class TokenInterceptor implements Interceptor {
                 LoginCredentials loginCredentials = new Gson().fromJson(preferences.getString("login", ""), LoginCredentials.class);
 
                 Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
-                SessionCredentials refreshedSessionCredentials = call.execute().body();
+                retrofit2.Response<SessionCredentials> res = call.execute();
+
+                if (res.code() == 404) {
+                    Context context = App.getAppContext();
+                    context.startActivity(new Intent(context, IntroActivity.class));
+
+                    return response;
+                }
+
+                SessionCredentials refreshedSessionCredentials = res.body();
 
                 HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
                 request = request.newBuilder().url(url).build();
@@ -60,8 +69,6 @@ public class TokenInterceptor implements Interceptor {
             case 404:
                 Context context = App.getAppContext();
                 context.startActivity(new Intent(context, IntroActivity.class));
-
-                return new Response.Builder().code(600).request(request).build();
 
             default:
                 return response;

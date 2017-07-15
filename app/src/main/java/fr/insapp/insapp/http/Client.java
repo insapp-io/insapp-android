@@ -40,6 +40,9 @@ public interface Client {
      * ASSOCIATIONS
      */
 
+    @GET("association")
+    Call<List<Club>> getClubs();
+
     @GET("association/{id}")
     Call<Club> getClubFromId(@Path("id") String id);
 

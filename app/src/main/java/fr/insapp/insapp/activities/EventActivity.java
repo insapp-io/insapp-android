@@ -52,6 +52,7 @@ import fr.insapp.insapp.fragments.AboutFragment;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
@@ -523,10 +524,11 @@ public class EventActivity extends AppCompatActivity {
 
         refreshFloatingActionButtons();
 
-        Glide.with(this).load(HttpGet.IMAGEURL + event.getImage()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
+        Glide.with(this).load(ServiceGenerator.CDN_URL + event.getImage()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                 super.onResourceReady(bitmap, anim);
+
                 headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
             }
         });

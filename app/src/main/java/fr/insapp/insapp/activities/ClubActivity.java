@@ -33,24 +33,19 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.EventsClubFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
-import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.utility.Utils;
 
 /**
- * Created by thoma on 11/11/2016.
+ * Created by thomas on 11/11/2016.
  */
+
 public class ClubActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private RelativeLayout relativeLayout;
-
-    private TextView nameTextView;
-    private TextView descriptionTextView;
-    private CircleImageView iconImageView;
-    private ImageView headerImageView;
 
     private Club club;
 
@@ -65,12 +60,12 @@ public class ClubActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.club = intent.getParcelableExtra("club");
 
-        this.relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
 
-        this.nameTextView = (TextView) findViewById(R.id.club_name);
-        this.descriptionTextView = (TextView) findViewById(R.id.club_description_text);
-        this.iconImageView = (CircleImageView) findViewById(R.id.club_avatar);
-        this.headerImageView = (ImageView) findViewById(R.id.header_image_club);
+        final TextView nameTextView = (TextView) findViewById(R.id.club_name);
+        final TextView descriptionTextView = (TextView) findViewById(R.id.club_description_text);
+        final CircleImageView iconImageView = (CircleImageView) findViewById(R.id.club_avatar);
+        final ImageView headerImageView = (ImageView) findViewById(R.id.header_image_club);
 
         // toolbar
 
@@ -136,11 +131,12 @@ public class ClubActivity extends AppCompatActivity {
 
         collapsingToolbar.setCollapsedTitleTextColor(fgColor);
 
-        Glide.with(this).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(iconImageView);
-        Glide.with(this).load(HttpGet.IMAGEURL + club.getCover()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
+        Glide.with(this).load(ServiceGenerator.CDN_URL + club.getProfilPicture()).into(iconImageView);
+        Glide.with(this).load(ServiceGenerator.CDN_URL + club.getCover()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                 super.onResourceReady(bitmap, anim);
+
                 headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
             }
         });
@@ -157,10 +153,12 @@ public class ClubActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable email = ContextCompat.getDrawable(ClubActivity.this, R.drawable.ic_email_black_24dp);
 
-            if (fgColor != 0xffffffff)
+            if (fgColor != 0xffffffff) {
                 email.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
-            else
+            }
+            else {
                 email.setColorFilter(bgColor, PorterDuff.Mode.SRC_ATOP);
+            }
 
             clubContactButton.setCompoundDrawablesWithIntrinsicBounds(email, null, null, null);
         }
@@ -184,10 +182,12 @@ public class ClubActivity extends AppCompatActivity {
         this.viewPager = (ViewPager) findViewById(R.id.viewpager_club);
         setupViewPager(viewPager, bgColor);
 
-        if (fgColor != 0xffffffff)
+        if (fgColor != 0xffffffff) {
             setupViewPager(viewPager, fgColor);
-        else
+        }
+        else {
             setupViewPager(viewPager, bgColor);
+        }
 
         // tab layout
 
@@ -195,10 +195,12 @@ public class ClubActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setBackgroundColor(bgColor);
 
-        if (fgColor == 0xffffffff)
+        if (fgColor == 0xffffffff) {
             tabLayout.setTabTextColors(0xffdbdbdb, fgColor);
-        else
+        }
+        else {
             tabLayout.setTabTextColors(0xff5e5e5e, fgColor);
+        }
     }
 
     private void setupViewPager(ViewPager viewPager, int swipeColor) {
@@ -226,24 +228,27 @@ public class ClubActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-        }
 
-        return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void sendEmail(){
         Intent intent = new Intent(Intent.ACTION_SENDTO);
 
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{ club.getEmail() });
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {
+                club.getEmail()
+        });
         intent.putExtra(Intent.EXTRA_SUBJECT, "");
 
-        if (intent.resolveActivity(getPackageManager()) != null)
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        }
     }
 }

@@ -6,30 +6,31 @@ package fr.insapp.insapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.activities.MainActivity;
-import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
 public class ClubsFragment extends Fragment {
 
-    private View view;
     private ClubRecyclerViewAdapter adapter;
 
     @Override
@@ -49,7 +50,7 @@ public class ClubsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_clubs, container, false);
+        View view = inflater.inflate(R.layout.fragment_clubs, container, false);
 
         // recycler view
 
@@ -80,37 +81,28 @@ public class ClubsFragment extends Fragment {
     }
 
     private void generateClubs() {
-        HttpGet request = new HttpGet(new AsyncResponse() {
+        Call<List<Club>> call = ServiceGenerator.create().getClubs();
+        call.enqueue(new Callback<List<Club>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Club>> call, @NonNull Response<List<Club>> response) {
+                if (response.isSuccessful()) {
+                    List<Club> clubs = response.body();
 
-            public void processFinish(String output) {
-                if (output.isEmpty()) {
-                    //startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
-                }
-                else {
-                    try {
-                        JSONArray jsonarray = new JSONArray(output);
-
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            final JSONObject jsonobject = jsonarray.getJSONObject(i);
-                            Club club = new Club(jsonobject);
-
-                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
-                                adapter.addItem(club);
-
-                                // add club to the list if it is new
-                                Club c = HttpGet.clubs.get(club.getId());
-                                if (c == null)
-                                    HttpGet.clubs.put(club.getId(), club);
-                            }
+                    for (final Club club : clubs) {
+                        if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                            adapter.addItem(club);
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
+                else {
+                    Toast.makeText(getContext(), "ClubsFragment", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Club>> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), "ClubsFragment", Toast.LENGTH_LONG).show();
             }
         });
-        /*
-        request.execute(HttpGet.ROOTASSOCIATION + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-        */
     }
 }

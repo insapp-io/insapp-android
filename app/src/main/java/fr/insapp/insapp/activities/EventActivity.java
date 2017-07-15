@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -114,10 +115,10 @@ public class EventActivity extends AppCompatActivity {
         participantsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), AttendeesActivity.class);
+                Intent intent = new Intent(EventActivity.this, AttendeesActivity.class);
 
-                intent.putExtra("attendees", event.getAttendees());
-                intent.putExtra("maybe", event.getMaybe());
+                intent.putExtra("attendees", (ArrayList<String>) event.getAttendees());
+                intent.putExtra("maybe", (ArrayList<String>) event.getMaybe());
 
                 startActivity(intent);
             }
@@ -153,10 +154,12 @@ public class EventActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setBackgroundColor(bgColor);
 
-        if (fgColor == 0xffffffff)
+        if (fgColor == 0xffffffff) {
             tabLayout.setTabTextColors(0xffdbdbdb, fgColor);
-        else
+        }
+        else {
             tabLayout.setTabTextColors(0xff5e5e5e, fgColor);
+        }
 
         // floating action menu
 
@@ -173,8 +176,9 @@ public class EventActivity extends AppCompatActivity {
         // hide fab is event is past
 
         final Date atm = Calendar.getInstance().getTime();
-        if (event.getDateEnd().getTime() < atm.getTime())
+        if (event.getDateEnd().getTime() < atm.getTime()) {
             floatingActionMenu.setVisibility(View.GONE);
+        }
 
         // app bar layout
 

@@ -9,23 +9,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
- * Created by thoma on 09/12/2016.
+ * Created by thomas on 09/12/2016.
  */
 
 public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -115,33 +115,33 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         clearEvents();
 
         for (int j = 0; j < club.getEvents().size(); j++) {
-            HttpGet request = new HttpGet(new AsyncResponse() {
+            Call<Event> call = ServiceGenerator.create().getEventFromId(club.getEvents().get(j));
+            call.enqueue(new Callback<Event>() {
                 @Override
-                public void processFinish(String output) {
-                    swipeRefreshLayout.setRefreshing(false);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(output);
-
-                        Event event = new Event(jsonObject);
+                public void onResponse(Call<Event> call, Response<Event> response) {
+                    if (response.isSuccessful()) {
+                        Event event = response.body();
                         Date atm = Calendar.getInstance().getTime();
 
                         if (event.getDateEnd().getTime() > atm.getTime()) {
                             adapterFuture.addItem(event);
                             view.findViewById(R.id.events_future_layout).setVisibility(View.VISIBLE);
-                        } else {
+                        }
+                        else {
                             adapterPast.addItem(event);
                             view.findViewById(R.id.events_past_layout).setVisibility(View.VISIBLE);
                         }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }
+                    else {
+                        Toast.makeText(getContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
                     }
                 }
+
+                @Override
+                public void onFailure(Call<Event> call, Throwable t) {
+                    Toast.makeText(getContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
+                }
             });
-            /*
-            request.execute(HttpGet.ROOTEVENT + "/" + club.getEvents().get(j) + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            */
         }
     }
 

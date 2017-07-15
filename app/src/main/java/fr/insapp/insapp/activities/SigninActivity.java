@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -67,18 +68,20 @@ public class SigninActivity extends AppCompatActivity {
         Call<LoginCredentials> call = ServiceGenerator.create().signUser(ticket, signinCredentials);
         call.enqueue(new Callback<LoginCredentials>() {
             @Override
-            public void onResponse(Call<LoginCredentials> call, Response<LoginCredentials> response) {
+            public void onResponse(@NonNull Call<LoginCredentials> call, @NonNull Response<LoginCredentials> response) {
                 if (response.isSuccessful()) {
                     login(response.body());
                 }
                 else {
-                    Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
+                    System.out.println(response.errorBody());
+                    Toast.makeText(SigninActivity.this, "1SigninActivity", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<LoginCredentials> call, Throwable t) {
-                Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<LoginCredentials> call, @NonNull Throwable t) {
+                System.out.println(t.getMessage());
+                Toast.makeText(SigninActivity.this, "2SigninActivity", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -87,19 +90,21 @@ public class SigninActivity extends AppCompatActivity {
         Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
         call.enqueue(new Callback<SessionCredentials>() {
             @Override
-            public void onResponse(Call<SessionCredentials> call, Response<SessionCredentials> response) {
+            public void onResponse(@NonNull Call<SessionCredentials> call, @NonNull Response<SessionCredentials> response) {
                 if (response.isSuccessful()) {
                     startActivity(new Intent(SigninActivity.this, MainActivity.class));
                     finish();
                 }
                 else {
-                    Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
+                    System.out.println(response.errorBody());
+                    Toast.makeText(SigninActivity.this, "3SigninActivity", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<SessionCredentials> call, Throwable t) {
-                Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<SessionCredentials> call, @NonNull Throwable t) {
+                System.out.println(t.getMessage());
+                Toast.makeText(SigninActivity.this, "4SigninActivity", Toast.LENGTH_LONG).show();
             }
         });
     }

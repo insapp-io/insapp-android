@@ -4,12 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import fr.insapp.insapp.utility.Operation;
 
@@ -19,18 +22,53 @@ import fr.insapp.insapp.utility.Operation;
 
 public class Event implements Parcelable, Comparable<Event> {
 
+    @SerializedName("ID")
     private String id;
-    private String name, association, description;
 
-    private ArrayList<String> attendees;
-    private ArrayList<String> maybe;
-    private ArrayList<String> notgoing;
+    @SerializedName("name")
+    private String name;
 
-    private ArrayList<Comment> comments;
+    @SerializedName("association")
+    private String association;
 
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("participants")
+    private List<String> attendees;
+
+    @SerializedName("maybe")
+    private List<String> maybe;
+
+    @SerializedName("notgoing")
+    private List<String> notgoing;
+
+    @SerializedName("comments")
+    private List<Comment> comments;
+
+    @SerializedName("status")
     private String status;
-    private Date dateStart, dateEnd;
-    private String image, bgColor, fgColor;
+
+    @SerializedName("dateStart")
+    private Date dateStart;
+
+    @SerializedName("dateEnd")
+    private Date dateEnd;
+
+    @SerializedName("image")
+    private String image;
+
+    @SerializedName("promotions")
+    private List<String> promotions;
+
+    @SerializedName("plateforms")
+    private List<String> plateforms;
+
+    @SerializedName("bgColor")
+    private String bgColor;
+
+    @SerializedName("fgColor")
+    private String fgColor;
 
     public enum PARTICIPATE {
         YES,
@@ -216,19 +254,19 @@ public class Event implements Parcelable, Comparable<Event> {
         return description;
     }
 
-    public ArrayList<String> getAttendees() {
+    public List<String> getAttendees() {
         return attendees;
     }
 
-    public ArrayList<String> getMaybe() {
+    public List<String> getMaybe() {
         return maybe;
     }
 
-    public ArrayList<String> getNotgoing() {
+    public List<String> getNotgoing() {
         return notgoing;
     }
 
-    public ArrayList<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
@@ -248,6 +286,14 @@ public class Event implements Parcelable, Comparable<Event> {
         return image;
     }
 
+    public List<String> getPromotions() {
+        return promotions;
+    }
+
+    public List<String> getPlateforms() {
+        return plateforms;
+    }
+
     public String getBgColor() {
         return bgColor;
     }
@@ -257,7 +303,6 @@ public class Event implements Parcelable, Comparable<Event> {
     }
 
     public int describeContents() {
-        // on renvoie 0, car notre classe ne contient pas de FileDescriptor
         return 0;
     }
 

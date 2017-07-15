@@ -2,6 +2,7 @@ package fr.insapp.insapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,21 +10,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.MainActivity;
-import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Event;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -178,41 +179,37 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private void generateEvents() {
         clearEvents();
 
-        HttpGet request = new HttpGet(new AsyncResponse() {
+        Call<List<Event>> call = ServiceGenerator.create().getFutureEvents();
+        call.enqueue(new Callback<List<Event>>() {
             @Override
-            public void processFinish(String output) {
-                if (output.isEmpty()) {
-                    //startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
-                }
-                else if (!output.equals("{\"events\":null}")) {
-                    try {
-                        JSONArray jsonarray = new JSONArray(output);
-                        for (int i = 0; i < jsonarray.length(); i++) {
-                            JSONObject jsonObject = jsonarray.getJSONObject(i);
+            public void onResponse(@NonNull Call<List<Event>> call, @NonNull Response<List<Event>> response) {
+                if (response.isSuccessful()) {
+                    List<Event> events = response.body();
+                    Date atm = Calendar.getInstance().getTime();
 
-                            Event event = new Event(jsonObject);
-                            Date atm = Calendar.getInstance().getTime();
-
-                            if (event.getDateEnd().getTime() > atm.getTime()) {
-                                if (filter_club_id != null) {
-                                    if (filter_club_id.equals(event.getAssociation()))
-                                        addEventToAdapter(event);
-                                }
-                                else
+                    for (final Event event : events) {
+                        if (event.getDateEnd().getTime() > atm.getTime()) {
+                            if (filter_club_id != null) {
+                                if (filter_club_id.equals(event.getAssociation())) {
                                     addEventToAdapter(event);
+                                }
+                            }
+                            else {
+                                addEventToAdapter(event);
                             }
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
+                else {
+                    Toast.makeText(getContext(), "EventsFragment", Toast.LENGTH_LONG).show();
+                }
+            }
 
-                swipeRefreshLayout.setRefreshing(false);
+            @Override
+            public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), "EventsFragment", Toast.LENGTH_LONG).show();
             }
         });
-        /*
-        request.execute(HttpGet.ROOTEVENT + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-        */
     }
 
     private void addEventToAdapter(Event event) {
@@ -245,8 +242,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         Calendar week = Calendar.getInstance();
 
-        while (week.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY)
+        while (week.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
             week.add(Calendar.DATE, 1);
+        }
 
         week.set(Calendar.HOUR_OF_DAY, 12);
         week.set(Calendar.MINUTE, 0);
@@ -263,8 +261,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         Calendar nextWeek = Calendar.getInstance();
 
-        while (nextWeek.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY)
+        while (nextWeek.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
             nextWeek.add(Calendar.DATE, 1);
+        }
 
         nextWeek.set(Calendar.HOUR_OF_DAY, 12);
         nextWeek.set(Calendar.MINUTE, 0);
@@ -291,16 +290,21 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 case EVENT_REQUEST:
 
                     Event event = data.getParcelableExtra("event");
+
                     final int idToday = adapterToday.getEvents().indexOf(event);
                     final int idWeek = adapterWeek.getEvents().indexOf(event);
                     final int idMonth = adapterLater.getEvents().indexOf(event);
 
-                    if (idToday >= 0)
+                    if (idToday >= 0) {
                         adapterToday.updatePost(idToday, event);
-                    else if (idWeek >= 0)
+                    }
+                    else if (idWeek >= 0) {
                         adapterWeek.updatePost(idWeek, event);
-                    else if (idMonth >= 0)
+                    }
+                    else if (idMonth >= 0) {
                         adapterLater.updatePost(idMonth, event);
+                    }
+
                     break;
 
                 case MainActivity.REFRESH_TOKEN_MESSAGE:

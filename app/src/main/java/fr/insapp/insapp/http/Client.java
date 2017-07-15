@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Comment;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.SearchResults;
@@ -45,6 +46,16 @@ public interface Client {
 
     @GET("association/{id}")
     Call<Club> getClubFromId(@Path("id") String id);
+
+    /*
+     * EVENTS
+     */
+
+    @GET("event")
+    Call<List<Event>> getFutureEvents();
+
+    @GET("event/{id}")
+    Call<Event> getEventFromId(@Path("id") String id);
 
     /*
      * POSTS

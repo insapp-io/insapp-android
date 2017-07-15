@@ -139,8 +139,7 @@ public class ProfileActivity extends AppCompatActivity {
         Linkify.addLinks(emailTextView, Linkify.EMAIL_ADDRESSES);
         emailTextView.setLinkTextColor(Color.parseColor("#ffffff"));
 
-        if (this.user != null)
-            generateEvents();
+        generateEvents();
     }
 
     @Override
@@ -164,8 +163,9 @@ public class ProfileActivity extends AppCompatActivity {
                 try {
                     bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 700, 300);
                     barcodeImageView.setImageBitmap(bitmap);
-                } catch (WriterException e) {
-                    e.printStackTrace();
+                }
+                catch (WriterException ex) {
+                    ex.printStackTrace();
                 }
             }
             else {
@@ -183,8 +183,9 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
 
-        if (this.user == null)
+        if (this.user.getId().equals(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId())) {
             menu.getItem(0).setTitle(R.string.delete_account);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -199,7 +200,7 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.action_report:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
 
-                if (!user.getId().equals(MainActivity.getUser().getId())) {
+                if (!this.user.getId().equals(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId())) {
                     alertDialogBuilder.setTitle(getString(R.string.report_user_action));
                     alertDialogBuilder
                             .setMessage(R.string.report_user_are_you_sure)

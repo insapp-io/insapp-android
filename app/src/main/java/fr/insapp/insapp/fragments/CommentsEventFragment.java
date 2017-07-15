@@ -1,7 +1,5 @@
 package fr.insapp.insapp.fragments;
 
-
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -12,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,16 +19,19 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.insapp.insapp.activities.EventActivity;
-import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.listeners.EventCommentLongClickListener;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by thoma on 25/02/2017.
@@ -37,17 +39,9 @@ import fr.insapp.insapp.utility.Operation;
 
 public class CommentsEventFragment extends Fragment {
 
-    private View view;
-
-    private RecyclerView recyclerView;
     private CommentRecyclerViewAdapter adapter;
 
     private Event event;
-
-    // comment
-
-    private CircleImageView circleImageView;
-    private CommentEditText commentEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,16 +62,15 @@ public class CommentsEventFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_comments_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_comments_event, container, false);
 
-        // comment user avatarCircleImageView
-
-        this.circleImageView = (CircleImageView) view.findViewById(R.id.comment_event_username_avatar);
+        CircleImageView circleImageView = (CircleImageView) view.findViewById(R.id.comment_event_username_avatar);
 
         // get the drawable of avatarCircleImageView
 
-        Resources resources = getContext().getResources();
-        final int id = resources.getIdentifier(Operation.drawableProfileName(MainActivity.getUser().getPromotion(), MainActivity.getUser().getGender()), "drawable", getContext().getPackageName());
+        final User user = new Gson().fromJson(getContext().getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+
+        final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getContext().getPackageName());
         Glide.with(getContext()).load(id).into(circleImageView);
 
         // edit contentTextView
@@ -88,7 +81,8 @@ public class CommentsEventFragment extends Fragment {
                 try {
                     event.refresh(new JSONObject(output));
                     adapter.setComments(event.getComments());
-                } catch (JSONException e) {
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
                 }
                 adapter.notifyDataSetChanged();
@@ -98,7 +92,7 @@ public class CommentsEventFragment extends Fragment {
         String params = HttpGet.ROOTEVENT + "/" + event.getId() + "/comment?token=" + HttpGet.sessionCredentials.getSessionToken();
         */
 
-        this.commentEditText = (CommentEditText) view.findViewById(R.id.comment_event_input);
+        CommentEditText commentEditText = (CommentEditText) view.findViewById(R.id.comment_event_input);
         //commentEditText.setupComponent(request, params);
 
         commentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -125,7 +119,7 @@ public class CommentsEventFragment extends Fragment {
 
         // recycler view
 
-        this.recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_comments_event);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_comments_event);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 

@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REFRESH_TOKEN_MESSAGE = 5;
 
-    public static User user;
     public static CustomTabsConnection customTabsConnection;
 
     @Override
@@ -111,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
             Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
             mCursorDrawableRes.setAccessible(true);
             mCursorDrawableRes.set(searchView, R.drawable.cursor); // this sets the cursor resource ID to 0 or @null which will make it visible on white background
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_profile:
-                startActivity(new Intent(this, ProfileActivity.class).putExtra("user", user));
+                startActivity(new Intent(this, ProfileActivity.class).putExtra("user", new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser()));
                 break;
 
             case R.id.action_settings:
@@ -142,9 +142,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public static User getUser() {
-        return user;
     }
 }

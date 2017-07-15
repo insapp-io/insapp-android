@@ -50,6 +50,7 @@ import java.util.Locale;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.AboutFragment;
+import fr.insapp.insapp.fragments.CommentsEventFragment;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.HttpPost;
@@ -211,13 +212,11 @@ public class EventActivity extends AppCompatActivity {
         aboutFragment.setArguments(bundle1);
         adapter.addFragment(aboutFragment, getResources().getString(R.string.about));
 
-        /*
         Fragment commentsEventFragment = new CommentsEventFragment();
         Bundle bundle2 = new Bundle();
         bundle2.putParcelable("event", event);
         commentsEventFragment.setArguments(bundle2);
         adapter.addFragment(commentsEventFragment, getResources().getString(R.string.comments));
-        */
 
         viewPager.setAdapter(adapter);
     }
@@ -309,20 +308,6 @@ public class EventActivity extends AppCompatActivity {
                             public void processFinish(String output) {
                                 status = Event.PARTICIPATE.YES;
 
-                                HttpGet get = new HttpGet(new AsyncResponse() {
-                                    @Override
-                                    public void processFinish(String output) {
-                                        try {
-                                            MainActivity.user = new User(new JSONObject(output));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                                /*
-                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                                */
-
                                 floatingActionMenu.close(true);
                                 setFloatingActionMenuTheme(status);
                                 refreshFloatingActionButtons();
@@ -369,8 +354,9 @@ public class EventActivity extends AppCompatActivity {
                                 try {
                                     JSONObject json = new JSONObject(output);
                                     event.refresh(json.getJSONObject("event"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                }
+                                catch (JSONException ex) {
+                                    ex.printStackTrace();
                                 }
 
                                 refreshAttendeesTextView();
@@ -415,20 +401,6 @@ public class EventActivity extends AppCompatActivity {
                             public void processFinish(String output) {
                                 status = Event.PARTICIPATE.MAYBE;
 
-                                HttpGet get = new HttpGet(new AsyncResponse() {
-                                    @Override
-                                    public void processFinish(String output) {
-                                        try {
-                                            MainActivity.user = new User(new JSONObject(output));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                                /*
-                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                                */
-
                                 floatingActionMenu.close(true);
                                 setFloatingActionMenuTheme(status);
                                 refreshFloatingActionButtons();
@@ -436,8 +408,9 @@ public class EventActivity extends AppCompatActivity {
                                 try {
                                     JSONObject json = new JSONObject(output);
                                     event.refresh(json.getJSONObject("event"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                }
+                                catch (JSONException ex) {
+                                    ex.printStackTrace();
                                 }
 
                                 refreshAttendeesTextView();
@@ -483,19 +456,6 @@ public class EventActivity extends AppCompatActivity {
                             public void processFinish(String output) {
                                 status = Event.PARTICIPATE.NO;
 
-                                HttpGet get = new HttpGet(new AsyncResponse() {
-                                    @Override
-                                    public void processFinish(String output) {
-                                        try {
-                                            MainActivity.user = new User(new JSONObject(output));
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                                /*
-                                get.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                                */
                                 floatingActionMenu.close(true);
                                 setFloatingActionMenuTheme(status);
                                 refreshFloatingActionButtons();
@@ -627,7 +587,8 @@ public class EventActivity extends AppCompatActivity {
         if (diffInDays < 1 && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
             String day = format.format(event.getDateStart());
             dateTextView.setText(day.replaceFirst(".", (day.charAt(0) + "").toUpperCase()) + " de " + format_hours_minutes.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateEnd()));
-        } else {
+        }
+        else {
             String start = format.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateStart());
             String end = format.format(event.getDateEnd()) + " à " + format_hours_minutes.format(event.getDateEnd());
             dateTextView.setText("Du " + start.replaceFirst(".", (start.charAt(0) + "").toUpperCase()) + " au " + end.replaceFirst(".", (end.charAt(0) + "").toUpperCase()));
@@ -662,8 +623,9 @@ public class EventActivity extends AppCompatActivity {
                     Intent i = new Intent(EventActivity.this, MainActivity.class);
                     startActivity(i);
                 }
-                else
+                else {
                     finish();
+                }
 
                 return true;
         }
@@ -676,28 +638,37 @@ public class EventActivity extends AppCompatActivity {
         final int nbInterested = event.getMaybe().size();
 
         if (nbParticipants == 0) {
-            if (nbInterested == 0)
+            if (nbInterested == 0) {
                 participantsTextView.setText(getResources().getString(R.string.no_attendees_no_interested));
-            else if (nbInterested == 1)
+            }
+            else if (nbInterested == 1) {
                 participantsTextView.setText(getResources().getString(R.string.no_attendees_one_interested));
-            else
+            }
+            else {
                 participantsTextView.setText(String.format(getResources().getString(R.string.no_attendees_x_interested), nbInterested));
+            }
         }
         else if (nbParticipants == 1) {
-            if (nbInterested == 0)
+            if (nbInterested == 0) {
                 participantsTextView.setText(getResources().getString(R.string.one_attendee_no_interested));
-            else if (nbInterested == 1)
+            }
+            else if (nbInterested == 1) {
                 participantsTextView.setText(getResources().getString(R.string.one_attendee_one_interested));
-            else
+            }
+            else {
                 participantsTextView.setText(String.format(getResources().getString(R.string.one_attendee_x_interested), nbInterested));
+            }
         }
         else {
-            if (nbInterested == 0)
+            if (nbInterested == 0) {
                 participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_no_interested), nbParticipants));
-            else if (nbInterested == 1)
+            }
+            else if (nbInterested == 1) {
                 participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_one_interested), nbParticipants));
-            else
+            }
+            else {
                 participantsTextView.setText(String.format(getResources().getString(R.string.x_attendees_x_interested), nbParticipants, nbInterested));
+            }
         }
     }
 
@@ -749,16 +720,19 @@ public class EventActivity extends AppCompatActivity {
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
+
             if ( v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         }
+
         return super.dispatchTouchEvent( event );
     }
 

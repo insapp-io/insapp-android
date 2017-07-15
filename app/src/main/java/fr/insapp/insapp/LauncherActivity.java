@@ -18,8 +18,6 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ServiceGenerator.init(LauncherActivity.this, getSharedPreferences("Credentials", MODE_PRIVATE));
-
         if (getSharedPreferences("Credentials", MODE_PRIVATE).contains("login")) {
             startActivity(new Intent(LauncherActivity.this, MainActivity.class));
         }

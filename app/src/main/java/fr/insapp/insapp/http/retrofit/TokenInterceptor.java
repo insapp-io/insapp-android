@@ -8,10 +8,10 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
-import fr.insapp.insapp.models.credentials.SigninCredentials;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -24,17 +24,10 @@ import retrofit2.Call;
 
 public class TokenInterceptor implements Interceptor {
 
-    private Context context;
-    private SharedPreferences preferences;
-
-    public TokenInterceptor(Context context, SharedPreferences preferences) {
-        this.context = context;
-        this.preferences = preferences;
-    }
-
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
+        SharedPreferences preferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
 
         SessionCredentials sessionCredentials = new Gson().fromJson(preferences.getString("session", ""), SessionCredentials.class);
 
@@ -47,26 +40,31 @@ public class TokenInterceptor implements Interceptor {
 
         Response response = chain.proceed(request);
 
-        // does the token need to be refreshed ? (unauthorized)
+        switch (response.code()) {
 
-        if (response.code() == 401) {
-            LoginCredentials loginCredentials = new Gson().fromJson(preferences.getString("login", ""), LoginCredentials.class);
+            // does the token need to be refreshed ? (unauthorized)
 
-            Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
-            SessionCredentials refreshedSessionCredentials = call.execute().body();
+            case 401:
+                LoginCredentials loginCredentials = new Gson().fromJson(preferences.getString("login", ""), LoginCredentials.class);
 
-            // if the user connected from another device, display signin form
+                Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
+                SessionCredentials refreshedSessionCredentials = call.execute().body();
 
-            if (!new Gson().fromJson(preferences.getString("signin", ""), SigninCredentials.class).getDevice().equals(refreshedSessionCredentials.getLoginCredentials().getDevice())) {
+                HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
+                request = request.newBuilder().url(url).build();
+
+                return chain.proceed(request);
+
+            // did the user log in somewhere else ?
+
+            case 404:
+                Context context = App.getAppContext();
                 context.startActivity(new Intent(context, IntroActivity.class));
-            }
 
-            HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
-            request = request.newBuilder().url(url).build();
+                return new Response.Builder().code(600).request(request).build();
 
-            return chain.proceed(request);
+            default:
+                return response;
         }
-
-        return response;
     }
 }

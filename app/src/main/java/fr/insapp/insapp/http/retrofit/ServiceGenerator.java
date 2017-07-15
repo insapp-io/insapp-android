@@ -1,8 +1,5 @@
 package fr.insapp.insapp.http.retrofit;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.google.gson.GsonBuilder;
 
 import fr.insapp.insapp.activities.MainActivity;
@@ -32,13 +29,8 @@ public class ServiceGenerator {
     }
 
     private static HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
-    private static JsonInterceptor jsonInterceptor;
-    private static TokenInterceptor tokenInterceptor;
-
-    public static void init(Context context, SharedPreferences preferences) {
-        ServiceGenerator.jsonInterceptor = new JsonInterceptor(preferences);
-        ServiceGenerator.tokenInterceptor = new TokenInterceptor(context, preferences);
-    }
+    private static JsonInterceptor jsonInterceptor = new JsonInterceptor();
+    private static TokenInterceptor tokenInterceptor = new TokenInterceptor();
 
     public static <S> S createService(Class<S> serviceClass, TypeAdapter... adapters) {
         Retrofit.Builder builder;

@@ -1,9 +1,11 @@
 package fr.insapp.insapp.http.retrofit;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.io.IOException;
 
+import fr.insapp.insapp.App;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,15 +17,10 @@ import okhttp3.ResponseBody;
 
 public class JsonInterceptor implements Interceptor {
 
-    private SharedPreferences preferences;
-
-    public JsonInterceptor(SharedPreferences preferences) {
-        this.preferences = preferences;
-    }
-
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
+        SharedPreferences preferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
 
         Response response = chain.proceed(request);
         String json = response.body().string();

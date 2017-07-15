@@ -50,7 +50,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         }
     }
 
-/*
+    /*
     private void sendNotification(String msg) {
         Log.d(TAG, "Preparing to send notification...: " + msg);
         mNotificationManager = (NotificationManager)
@@ -76,13 +76,15 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         Log.d(TAG, "Notification ID = " + NOTIFICATION_ID);
         Log.d(TAG, "Notification sent successfully.");
-    }*/
+    }
+    */
 
     /**
      *  Cette méthode permet à partir des informations envoyées par le serveur * de notification de créer le message et la notification à afficher sur * le terminal de l'utilisateur. * *
      * @param extras les extras envoyés par le serveur de notification
      */
     private void sendMessageNotification(Map<String, String> data) {
+        /*
         Log.d(TAG, "Preparing to send notification with message...: " + data.toString());
         // On crée un objet Message à partir des informations récupérées dans
         // le flux JSON du message envoyé par l'application server
@@ -110,10 +112,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, PostActivity.class).putExtra("notification", msg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
         else if(msg.getType().equals("event"))
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventActivity.class).putExtra("notification", msg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
-        /*
         else
             contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, LoginActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        */
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
@@ -136,6 +136,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         Log.d(TAG, "Notification sent successfully.");
+        */
     }
-
 }

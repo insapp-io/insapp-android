@@ -306,10 +306,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     }
 
                     break;
-
-                case MainActivity.REFRESH_TOKEN_MESSAGE:
-                    generateEvents();
-                    break;
             }
         }
     }

@@ -20,8 +20,6 @@ import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
@@ -39,11 +37,9 @@ import retrofit2.Response;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerViewClubs, recyclerViewPosts, recyclerViewEvents, recyclerViewUsers;
     private ClubRecyclerViewAdapter adapterClubs;
     private PostRecyclerViewAdapter adapterPosts;
     private EventRecyclerViewAdapter adapterEvents;
-
     private UserRecyclerViewAdapter adapterUsers;
 
     private String query;
@@ -57,16 +53,7 @@ public class SearchActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            query = intent.getStringExtra(SearchManager.QUERY);
-            HttpGet request = new HttpGet(new AsyncResponse() {
-                @Override
-                public void processFinish(String output) {
-
-                }
-            });
-            /*
-            request.execute(HttpGet.ROOTSEACHUNIVERSAL + "/" + query + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            */
+            this.query = intent.getStringExtra(SearchManager.QUERY);
         }
 
         // toolbar
@@ -80,7 +67,7 @@ public class SearchActivity extends AppCompatActivity {
 
         // clubs recycler view
 
-        this.recyclerViewClubs = (RecyclerView) findViewById(R.id.recyclerview_search_clubs);
+        RecyclerView recyclerViewClubs = (RecyclerView) findViewById(R.id.recyclerview_search_clubs);
         recyclerViewClubs.setHasFixedSize(true);
         recyclerViewClubs.setNestedScrollingEnabled(false);
 
@@ -99,7 +86,7 @@ public class SearchActivity extends AppCompatActivity {
 
         // posts recycler view
 
-        this.recyclerViewPosts = (RecyclerView) findViewById(R.id.recyclerview_search_posts);
+        RecyclerView recyclerViewPosts = (RecyclerView) findViewById(R.id.recyclerview_search_posts);
         recyclerViewPosts.setHasFixedSize(true);
         recyclerViewPosts.setNestedScrollingEnabled(false);
 
@@ -118,7 +105,7 @@ public class SearchActivity extends AppCompatActivity {
 
         // events recycler view
 
-        this.recyclerViewEvents = (RecyclerView) findViewById(R.id.recyclerview_search_events);
+        RecyclerView recyclerViewEvents = (RecyclerView) findViewById(R.id.recyclerview_search_events);
         recyclerViewEvents.setHasFixedSize(true);
         recyclerViewEvents.setNestedScrollingEnabled(false);
 
@@ -136,7 +123,7 @@ public class SearchActivity extends AppCompatActivity {
 
         // users recycler view
 
-        this.recyclerViewUsers = (RecyclerView) findViewById(R.id.recyclerview_search_users);
+        RecyclerView recyclerViewUsers = (RecyclerView) findViewById(R.id.recyclerview_search_users);
         recyclerViewUsers.setHasFixedSize(true);
         recyclerViewUsers.setNestedScrollingEnabled(false);
 
@@ -162,70 +149,72 @@ public class SearchActivity extends AppCompatActivity {
 
         // search
 
-        generate(query);
+        generateSearchResults();
     }
 
-    private void generate(String query) {
-        adapterClubs.getClubs().clear();
-        adapterPosts.getPosts().clear();
-        adapterEvents.getEvents().clear();
-        adapterUsers.getUsers().clear();
+    private void generateSearchResults() {
+        if (this.query != null) {
+            adapterClubs.getClubs().clear();
+            adapterPosts.getPosts().clear();
+            adapterEvents.getEvents().clear();
+            adapterUsers.getUsers().clear();
 
-        Call<UniversalSearchResults> call = ServiceGenerator.create().universalSearch(new SearchTerms(query));
-        call.enqueue(new Callback<UniversalSearchResults>() {
-            @Override
-            public void onResponse(@NonNull Call<UniversalSearchResults> call, @NonNull Response<UniversalSearchResults> response) {
-                if (response.isSuccessful()) {
-                    final UniversalSearchResults results = response.body();
+            Call<UniversalSearchResults> call = ServiceGenerator.create().universalSearch(new SearchTerms(query));
+            call.enqueue(new Callback<UniversalSearchResults>() {
+                @Override
+                public void onResponse(@NonNull Call<UniversalSearchResults> call, @NonNull Response<UniversalSearchResults> response) {
+                    if (response.isSuccessful()) {
+                        final UniversalSearchResults results = response.body();
 
-                    if (results.getClubs() != null) {
-                        for (int i = 0; i < results.getClubs().size(); i++) {
-                            final Club club = results.getClubs().get(i);
+                        if (results.getClubs() != null) {
+                            for (int i = 0; i < results.getClubs().size(); i++) {
+                                final Club club = results.getClubs().get(i);
 
-                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
-                                adapterClubs.addItem(club);
-                                findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
+                                if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                                    adapterClubs.addItem(club);
+                                    findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
+                                }
+                            }
+                        }
+
+                        if (results.getPosts() != null) {
+                            for (int i = 0; i < results.getPosts().size(); i++) {
+                                adapterPosts.addItem(results.getPosts().get(i));
+                                findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.VISIBLE);
+                            }
+                        }
+
+                        if (results.getEvents() != null) {
+                            final Date atm = Calendar.getInstance().getTime();
+
+                            for (int i = 0; i < results.getEvents().size(); i++) {
+                                final Event event = results.getEvents().get(i);
+
+                                if (event.getDateEnd().getTime() > atm.getTime()) {
+                                    adapterEvents.addItem(event);
+                                    findViewById(R.id.search_events_layout).setVisibility(LinearLayout.VISIBLE);
+                                }
+                            }
+                        }
+
+                        if (results.getUsers() != null) {
+                            for (int i = 0; i < results.getUsers().size(); i++) {
+                                adapterUsers.addItem(results.getUsers().get(i));
+                                findViewById(R.id.search_users_layout).setVisibility(LinearLayout.VISIBLE);
                             }
                         }
                     }
-
-                    if (results.getPosts() != null) {
-                        for (int i = 0; i < results.getPosts().size(); i++) {
-                            adapterPosts.addItem(results.getPosts().get(i));
-                            findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.VISIBLE);
-                        }
-                    }
-
-                    if (results.getEvents() != null) {
-                        final Date atm = Calendar.getInstance().getTime();
-
-                        for (int i = 0; i < results.getEvents().size(); i++) {
-                            final Event event = results.getEvents().get(i);
-
-                            if (event.getDateEnd().getTime() > atm.getTime()) {
-                                adapterEvents.addItem(event);
-                                findViewById(R.id.search_events_layout).setVisibility(LinearLayout.VISIBLE);
-                            }
-                        }
-                    }
-
-                    if (results.getUsers() != null) {
-                        for (int i = 0; i < results.getUsers().size(); i++) {
-                            adapterUsers.addItem(results.getUsers().get(i));
-                            findViewById(R.id.search_users_layout).setVisibility(LinearLayout.VISIBLE);
-                        }
+                    else {
+                        Toast.makeText(SearchActivity.this, "SearchActivity", Toast.LENGTH_LONG).show();
                     }
                 }
-                else {
+
+                @Override
+                public void onFailure(@NonNull Call<UniversalSearchResults> call, @NonNull Throwable t) {
                     Toast.makeText(SearchActivity.this, "SearchActivity", Toast.LENGTH_LONG).show();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<UniversalSearchResults> call, @NonNull Throwable t) {
-                Toast.makeText(SearchActivity.this, "SearchActivity", Toast.LENGTH_LONG).show();
-            }
-        });
+            });
+        }
     }
 
     @Override

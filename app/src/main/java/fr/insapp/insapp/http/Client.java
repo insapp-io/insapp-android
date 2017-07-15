@@ -7,6 +7,7 @@ import fr.insapp.insapp.models.ClubSearchResults;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.EventSearchResults;
+import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.PostSearchResults;
@@ -101,6 +102,13 @@ public interface Client {
 
     @PUT("report/user/{id}")
     Call<User> reportUser(@Path("id") String id);
+
+    /*
+     * NOTIFICATION
+     */
+
+    @GET("notification/{userId}")
+    Call<List<Notification>> getNotificationsForUser(@Path("userId") String userId);
 
     /*
      * SEARCH

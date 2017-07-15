@@ -216,8 +216,7 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 if (isTaskRoot()) {
                     startActivity(new Intent(PostActivity.this, MainActivity.class));
@@ -227,8 +226,9 @@ public class PostActivity extends AppCompatActivity {
                 }
 
                 return true;
-        }
 
-        return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -13,7 +13,7 @@ import fr.insapp.insapp.fragments.intro.IntroNotificationsFragment;
 import fr.insapp.insapp.fragments.intro.IntroProfileFragment;
 
 /**
- * Created by thoma on 02/12/2016.
+ * Created by thomas on 02/12/2016.
  */
 public class IntroActivity extends AppIntro2 {
 

@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final boolean dev = false;
 
-    public static final int REFRESH_TOKEN_MESSAGE = 5;
-
     public static CustomTabsConnection customTabsConnection;
 
     @Override

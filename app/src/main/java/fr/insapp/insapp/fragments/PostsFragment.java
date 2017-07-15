@@ -2,6 +2,7 @@ package fr.insapp.insapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -103,36 +104,18 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode){
-                case WRITE_COMMENT_REQUEST:
-                    Post post = data.getParcelableExtra("post");
-                    int id = adapter.getPosts().indexOf(post);
-                    adapter.updatePost(id, post);
-                    break;
-
-                case MainActivity.REFRESH_TOKEN_MESSAGE:
-                    generatePosts();
-                    break;
-            }
-        }
-    }
-
     private void generatePosts() {
-        adapter.getPosts().clear();
-
-        Call<List<Post>> call = ServiceGenerator.create().getLatestPosts();
+                Call<List<Post>> call = ServiceGenerator.create().getLatestPosts();
         call.enqueue(new Callback<List<Post>>() {
             @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
                 if (response.isSuccessful()) {
-                    for (Post post : response.body()) {
-                        if (filter_club_id == null || filter_club_id.equals(post.getAssociation()))
+                    adapter.getPosts().clear();
+
+                    for (final Post post : response.body()) {
+                        if (filter_club_id == null || filter_club_id.equals(post.getAssociation())) {
                             adapter.addItem(post);
+                        }
                     }
                 }
                 else {
@@ -143,7 +126,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
                 Toast.makeText(getActivity(), "PostsFragment", Toast.LENGTH_LONG).show();
 
                 swipeRefreshLayout.setRefreshing(false);

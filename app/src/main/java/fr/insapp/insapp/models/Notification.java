@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,36 +15,55 @@ import fr.insapp.insapp.utility.Operation;
 
 /**
  * Created by Antoine on 10/10/2016.
- *
- * type Notification struct {
- ID          bson.ObjectId   `bson:"_id,omitempty"`
- Sender      bson.ObjectId   `json:"sender"`
- Receiver    bson.ObjectId   `json:"receiver"`
- Content			bson.ObjectId		`json:"content"`
- Comment			Comment					`json:"comment,omitempty" bson:",omitempty"`
- Message			string					`json:"message"`
- Seen				bool						`json:"seen"`
- Date				time.Time				`json:"dateTextView"`
- Type				string					`json:"type"`
- }
  */
 
-public class Notification implements Parcelable {
+public class Notification {
 
+    @SerializedName("ID")
     private String id;
-    private String sender, receiver;
+
+    @SerializedName("sender")
+    private String sender;
+
+    @SerializedName("receiver")
+    private String receiver;
+
+    @SerializedName("content")
     private String content;
-    private String commentID;
+
+    @SerializedName("comment")
+    private Comment comment;
+
+    @SerializedName("message")
     private String message;
+
+    @SerializedName("seen")
     private boolean seen;
+
+    @SerializedName("date")
     private Date date;
+
+    @SerializedName("type")
     private String type;
 
-    private Post post;
-    private User user;
-    private Club club;
-    private Event event;
+    private transient Post post;
+    private transient Club club;
+    private transient User user;
+    private transient Event event;
 
+    public Notification(String id, String sender, String receiver, String content, Comment comment, String message, boolean seen, Date date, String type) {
+        this.id = id;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.content = content;
+        this.comment = comment;
+        this.message = message;
+        this.seen = seen;
+        this.date = date;
+        this.type = type;
+    }
+
+    /*
     public static final Creator<Notification> CREATOR = new Creator<Notification>() {
         @Override
         public Notification createFromParcel(Parcel in) {
@@ -54,7 +75,9 @@ public class Notification implements Parcelable {
             return new Notification[size];
         }
     };
+    */
 
+    /*
     protected Notification(Parcel in) {
         this.id = in.readString();
         this.sender = in.readString();
@@ -103,22 +126,6 @@ public class Notification implements Parcelable {
         this.type = extras.getString("type");
     }
 
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setClub(Club club) {
-        this.club = club;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -137,6 +144,7 @@ public class Notification implements Parcelable {
         dest.writeString(type);
         dest.writeByte((byte) (seen ? 1 : 0));
     }
+    */
 
     public String getId() {
         return id;
@@ -154,8 +162,8 @@ public class Notification implements Parcelable {
         return content;
     }
 
-    public String getCommentID() {
-        return commentID;
+    public Comment getComment() {
+        return comment;
     }
 
     public String getMessage() {
@@ -178,16 +186,32 @@ public class Notification implements Parcelable {
         return post;
     }
 
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
+    }
+
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Event getEvent() {
         return event;
     }
 
-    public Club getClub() {
-        return club;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }
 

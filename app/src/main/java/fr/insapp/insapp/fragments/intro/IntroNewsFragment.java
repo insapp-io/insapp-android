@@ -9,18 +9,13 @@ import android.view.ViewGroup;
 import fr.insapp.insapp.R;
 
 /**
- * Created by thoma on 03/12/2016.
+ * Created by thomas on 03/12/2016.
  */
 
 public class IntroNewsFragment extends Fragment {
 
-    public IntroNewsFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_intro_posts, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_intro_posts, container, false);
     }
 }

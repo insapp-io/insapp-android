@@ -247,8 +247,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                 getSharedPreferences("Credentials", MODE_PRIVATE).edit().clear().apply();
 
                                                 Intent activity = new Intent(ProfileActivity.this, IntroActivity.class);
-                                                activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 startActivity(activity);
 
                                                 Toast.makeText(ProfileActivity.this, R.string.delete_account_success, Toast.LENGTH_SHORT).show();
@@ -320,8 +319,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-
-
     /**************************************************************
      * getting from com.google.zxing.client.android.encode.QRCodeEncoder
      *
@@ -334,28 +331,33 @@ public class ProfileActivity extends AppCompatActivity {
     private static final int WHITE = 0x00FFFFFF;
     private static final int BLACK = 0xFF000000;
 
-    Bitmap encodeAsBitmap(String contents, BarcodeFormat format, int img_width, int img_height) throws WriterException {
-        String contentsToEncode = contents;
-        if (contentsToEncode == null) {
+    Bitmap encodeAsBitmap(String content, BarcodeFormat format, int img_width, int img_height) throws WriterException {
+        if (content == null) {
             return null;
         }
+
         Map<EncodeHintType, Object> hints = null;
-        String encoding = guessAppropriateEncoding(contentsToEncode);
+        String encoding = guessAppropriateEncoding(content);
+
         if (encoding != null) {
-            hints = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+            hints = new EnumMap<>(EncodeHintType.class);
             hints.put(EncodeHintType.CHARACTER_SET, encoding);
         }
+
         MultiFormatWriter writer = new MultiFormatWriter();
         BitMatrix result;
+
         try {
-            result = writer.encode(contentsToEncode, format, img_width, img_height, hints);
-        } catch (IllegalArgumentException iae) {
-            // Unsupported format
+            result = writer.encode(content, format, img_width, img_height, hints);
+        }
+        catch (IllegalArgumentException ex) {
             return null;
         }
+
         int width = result.getWidth();
         int height = result.getHeight();
         int[] pixels = new int[width * height];
+
         for (int y = 0; y < height; y++) {
             int offset = y * width;
             for (int x = 0; x < width; x++) {
@@ -363,20 +365,19 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(width, height,
-                Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+
         return bitmap;
     }
 
     private static String guessAppropriateEncoding(CharSequence contents) {
-        // Very crude at the moment
         for (int i = 0; i < contents.length(); i++) {
             if (contents.charAt(i) > 0xFF) {
                 return "UTF-8";
             }
         }
+
         return null;
     }
-
 }

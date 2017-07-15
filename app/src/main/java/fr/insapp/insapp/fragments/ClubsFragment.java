@@ -64,22 +64,6 @@ public class ClubsFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode){
-                case MainActivity.REFRESH_TOKEN_MESSAGE:
-                    generateClubs();
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
     private void generateClubs() {
         Call<List<Club>> call = ServiceGenerator.create().getClubs();
         call.enqueue(new Callback<List<Club>>() {

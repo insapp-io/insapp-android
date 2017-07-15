@@ -14,13 +14,10 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.SigninActivity;
 
 /**
- * Created by thoma on 03/12/2016.
+ * Created by thomas on 03/12/2016.
  */
 
 public class IntroEventsFragment extends Fragment {
-
-    public IntroEventsFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

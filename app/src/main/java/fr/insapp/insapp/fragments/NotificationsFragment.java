@@ -1,37 +1,38 @@
 package fr.insapp.insapp.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
-import fr.insapp.insapp.activities.EventActivity;
-import fr.insapp.insapp.activities.MainActivity;
-import fr.insapp.insapp.activities.PostActivity;
+import java.util.List;
+
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.activities.EventActivity;
+import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Notification;
-
-import static android.app.Activity.RESULT_OK;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
- * Created by thoma on 27/10/2016.
+ * Created by thomas on 27/10/2016.
  */
 
 public class NotificationsFragment extends Fragment {
 
-    private View view;
-    private RecyclerView recyclerView;
     private NotificationRecyclerViewAdapter adapter;
 
     @Override
@@ -44,12 +45,15 @@ public class NotificationsFragment extends Fragment {
         adapter.setOnItemClickListener(new NotificationRecyclerViewAdapter.OnNotificationItemClickListener() {
             @Override
             public void onNotificationItemClick(Notification notification) {
-                if (notification.getType().equals("tag"))
-                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()).putExtra("taggedCommentID", notification.getCommentID()));
-                else if (notification.getType().equals("post"))
+                if (notification.getType().equals("tag")) {
+                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()).putExtra("taggedCommentID", notification.getComment().getId()));
+                }
+                else if (notification.getType().equals("post")) {
                     startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()));
-                else if (notification.getType().equals("event"))
+                }
+                else if (notification.getType().equals("event")) {
                     startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", notification.getEvent()));
+                }
             }
         });
 
@@ -58,9 +62,9 @@ public class NotificationsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_notifications, container, false);
+        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        this.recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_notifications);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_notifications);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -70,46 +74,25 @@ public class NotificationsFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case MainActivity.REFRESH_TOKEN_MESSAGE:
-                    generateNotifications();
-                    break;
-            }
-        }
-    }
-
     private void generateNotifications() {
-        HttpGet request = new HttpGet(new AsyncResponse() {
-            public void processFinish(String output) {
-                if (output.isEmpty()) {
-                    //startActivityForResult(new Intent(getContext(), LoginActivity.class), MainActivity.REFRESH_TOKEN_MESSAGE);
-                }
-                else if (!output.equals("{\"notifications\":null}")) {
-                    try {
-                        JSONObject json = new JSONObject(output);
-                        JSONArray jsonarray = json.optJSONArray("notifications");
-
-                        if (jsonarray != null) {
-                            for (int i = 0; i < jsonarray.length(); i++) {
-                                final JSONObject jsonobject = jsonarray.getJSONObject(i);
-
-                                adapter.addItem(new Notification(jsonobject));
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+        Call<List<Notification>> call = ServiceGenerator.create().getNotificationsForUser(new Gson().fromJson(getContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
+        call.enqueue(new Callback<List<Notification>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Notification>> call, @NonNull Response<List<Notification>> response) {
+                if (response.isSuccessful()) {
+                    for (final Notification notification : response.body()) {
+                        adapter.addItem(notification);
                     }
                 }
+                else {
+                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Notification>> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
             }
         });
-        /*
-        request.execute(HttpGet.ROOTNOTIFICATION + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-        */
     }
 }

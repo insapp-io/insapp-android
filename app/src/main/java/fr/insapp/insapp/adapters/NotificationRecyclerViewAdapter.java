@@ -1,14 +1,17 @@
 package fr.insapp.insapp.adapters;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,6 +29,7 @@ import fr.insapp.insapp.activities.ProfileActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
@@ -33,9 +37,12 @@ import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
- * Created by thoma on 11/12/2016.
+ * Created by thomas on 11/12/2016.
  */
 
 public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<NotificationRecyclerViewAdapter.NotificationViewHolder> {
@@ -76,75 +83,78 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
         holder.date.setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(notification.getDate())));
 
         if (notification.getType().equals("tag") || notification.getType().equals("post")) {
-            HttpGet post = new HttpGet(new AsyncResponse() {
+            Call<Post> call = ServiceGenerator.create().getPostFromId(notification.getId());
+            call.enqueue(new Callback<Post>() {
                 @Override
-                public void processFinish(String output) {
-                    try {
-                        final Post post = new Post(new JSONObject(output));
+                public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                    if (response.isSuccessful()) {
+                        final Post post = response.body();
                         notification.setPost(post);
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + post.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        Glide
+                                .with(context)
+                                .load(ServiceGenerator.CDN_URL + post.getImage())
+                                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(holder.thumbnail);
+                    }
+                    else {
+                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                     }
                 }
-            });
-            /*
-            post.execute(HttpGet.ROOTPOST + "/" + notification.getContent() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            */
-        }
 
-        if (notification.getType().equals("post") || notification.getType().equals("event")) {
-            final Club club = HttpGet.clubs.get(notification.getSender());
-
-            if (club == null){
-                HttpGet request = new HttpGet(new AsyncResponse() {
-                    @Override
-                    public void processFinish(String output) {
-                        try {
-                            final Club club = new Club(new JSONObject(output));
-                            notification.setClub(club);
-                            HttpGet.clubs.put(notification.getSender(), club);
-
-                            Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar_notification);
-                            holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                                }
-                            });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                /*
-                request.execute(HttpGet.ROOTASSOCIATION + "/" + notification.getSender() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                */
-            } else {
-                notification.setClub(club);
-
-                Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar_notification);
-                holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                    }
-                });
-            }
-        }
-
-        if (notification.getType().equals("tag")) {
-            HttpGet request = new HttpGet(new AsyncResponse() {
                 @Override
-                public void processFinish(String output) {
-                    try {
-                        final User user = new User(new JSONObject(output));
+                public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        else if (notification.getType().equals("post") || notification.getType().equals("event")) {
+            Call<Club> call = ServiceGenerator.create().getClubFromId(notification.getSender());
+            call.enqueue(new Callback<Club>() {
+                @Override
+                public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
+                    if (response.isSuccessful()) {
+                        final Club club = response.body();
+                        notification.setClub(club);
+
+                        Glide
+                                .with(context)
+                                .load(ServiceGenerator.CDN_URL + club.getProfilPicture())
+                                .into(holder.avatar_notification);
+
+                        holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                            }
+                        });
+                    }
+                    else {
+                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
+                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        else if (notification.getType().equals("tag")) {
+            Call<User> call = ServiceGenerator.create().getUserFromId(notification.getSender());
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                    if (response.isSuccessful()) {
+                        final User user = response.body();
                         notification.setUser(user);
 
-                        // get the drawable of avatarCircleImageView
-                        Resources resources = context.getResources();
-                        final int id = resources.getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                        // get the drawable of avatar
+
+                        final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                         Glide.with(context).load(id).into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
@@ -153,31 +163,45 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                                 context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", user));
                             }
                         });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }
+                    else {
+                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                     }
                 }
-            });
-            /*
-            request.execute(HttpGet.ROOTUSER + "/" + notification.getSender() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            */
-        } else if (notification.getType().equals("event")) {
-            HttpGet event = new HttpGet(new AsyncResponse() {
+
                 @Override
-                public void processFinish(String output) {
-                    try {
-                        final Event event = new Event(new JSONObject(output));
+                public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
+        else if (notification.getType().equals("event")) {
+            Call<Event> call = ServiceGenerator.create().getEventFromId(notification.getContent());
+            call.enqueue(new Callback<Event>() {
+                @Override
+                public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                    if (response.isSuccessful()) {
+                        final Event event = response.body();
                         notification.setEvent(event);
 
-                        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).into(holder.thumbnail);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        Glide
+                                .with(context)
+                                .load(ServiceGenerator.CDN_URL + event.getImage())
+                                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
+                                .into(holder.thumbnail);
+                    }
+                    else {
+                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                     }
                 }
+
+                @Override
+                public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                }
             });
-            /*
-            event.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            */
         }
 
         holder.bind(notification, listener);

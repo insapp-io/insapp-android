@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.credentials.SessionCredentials;

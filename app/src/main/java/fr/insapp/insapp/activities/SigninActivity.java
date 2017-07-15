@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;

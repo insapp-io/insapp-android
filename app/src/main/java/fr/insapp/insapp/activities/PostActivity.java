@@ -24,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Notification;

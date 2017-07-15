@@ -17,7 +17,7 @@ import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.utility.DividerItemDecoration;
 import retrofit2.Call;

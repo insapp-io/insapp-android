@@ -21,7 +21,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.activities.ProfileActivity;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;

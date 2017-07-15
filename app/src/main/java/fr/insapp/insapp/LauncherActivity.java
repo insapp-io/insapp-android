@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.activities.MainActivity;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
 
 /**
  * Created by thomas on 11/07/2017.

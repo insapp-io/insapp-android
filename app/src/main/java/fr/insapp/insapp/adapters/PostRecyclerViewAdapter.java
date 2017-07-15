@@ -28,7 +28,7 @@ import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;

@@ -1,4 +1,4 @@
-package fr.insapp.insapp.http.retrofit;
+package fr.insapp.insapp.http;
 
 import com.google.gson.GsonBuilder;
 

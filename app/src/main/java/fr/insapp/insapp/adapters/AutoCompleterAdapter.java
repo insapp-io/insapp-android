@@ -18,7 +18,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.http.retrofit.ServiceGenerator;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.SearchResults;
 import fr.insapp.insapp.models.SearchTerms;
 import fr.insapp.insapp.models.User;

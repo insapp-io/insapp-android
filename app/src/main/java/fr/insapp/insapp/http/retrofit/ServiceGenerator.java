@@ -1,5 +1,6 @@
 package fr.insapp.insapp.http.retrofit;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.GsonBuilder;
@@ -34,9 +35,9 @@ public class ServiceGenerator {
     private static JsonInterceptor jsonInterceptor;
     private static TokenInterceptor tokenInterceptor;
 
-    public static void setPreferences(SharedPreferences preferences) {
+    public static void init(Context context, SharedPreferences preferences) {
         ServiceGenerator.jsonInterceptor = new JsonInterceptor(preferences);
-        ServiceGenerator.tokenInterceptor = new TokenInterceptor(preferences);
+        ServiceGenerator.tokenInterceptor = new TokenInterceptor(context, preferences);
     }
 
     public static <S> S createService(Class<S> serviceClass, TypeAdapter... adapters) {

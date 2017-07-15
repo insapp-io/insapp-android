@@ -1,13 +1,17 @@
 package fr.insapp.insapp.http.retrofit;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
+import fr.insapp.insapp.models.credentials.SigninCredentials;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -20,9 +24,11 @@ import retrofit2.Call;
 
 public class TokenInterceptor implements Interceptor {
 
+    private Context context;
     private SharedPreferences preferences;
 
-    public TokenInterceptor(SharedPreferences preferences) {
+    public TokenInterceptor(Context context, SharedPreferences preferences) {
+        this.context = context;
         this.preferences = preferences;
     }
 
@@ -48,6 +54,12 @@ public class TokenInterceptor implements Interceptor {
 
             Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
             SessionCredentials refreshedSessionCredentials = call.execute().body();
+
+            // if the user connected from another device, display signin form
+
+            if (!new Gson().fromJson(preferences.getString("signin", ""), SigninCredentials.class).getDevice().equals(refreshedSessionCredentials.getLoginCredentials().getDevice())) {
+                context.startActivity(new Intent(context, IntroActivity.class));
+            }
 
             HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
             request = request.newBuilder().url(url).build();

@@ -3,16 +3,14 @@ package fr.insapp.insapp.activities;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,14 +22,19 @@ import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
 import fr.insapp.insapp.adapters.UserRecyclerViewAdapter;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPost;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.SearchTerms;
+import fr.insapp.insapp.models.UniversalSearchResults;
 import fr.insapp.insapp.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
- * Created by thoma on 11/12/2016.
+ * Created by thomas on 11/12/2016.
  */
 
 public class SearchActivity extends AppCompatActivity {
@@ -168,105 +171,72 @@ public class SearchActivity extends AppCompatActivity {
         adapterEvents.getEvents().clear();
         adapterUsers.getUsers().clear();
 
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("terms", query);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        HttpPost request = new HttpPost(new AsyncResponse() {
+        Call<UniversalSearchResults> call = ServiceGenerator.create().universalSearch(new SearchTerms(query));
+        call.enqueue(new Callback<UniversalSearchResults>() {
             @Override
-            public void processFinish(String output) {
-                    try {
+            public void onResponse(@NonNull Call<UniversalSearchResults> call, @NonNull Response<UniversalSearchResults> response) {
+                if (response.isSuccessful()) {
+                    final UniversalSearchResults results = response.body();
 
-                        JSONObject json = new JSONObject(output);
+                    if (results.getClubs() != null) {
+                        for (int i = 0; i < results.getClubs().size(); i++) {
+                            final Club club = results.getClubs().get(i);
 
-                        // CLUBS
-                        JSONArray jsonarrayClubs = json.optJSONArray("associations");
-
-                        if(jsonarrayClubs != null) {
-                            for (int i = 0; i < jsonarrayClubs.length(); i++) {
-                                final JSONObject jsonobject = jsonarrayClubs.getJSONObject(i);
-                                Club club = new Club(jsonobject);
-
-                                if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
-                                    adapterClubs.addItem(club);
-                                    findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
-
-                                    // Add club to the list if it is new
-                                    Club c = HttpGet.clubs.get(club.getId());
-                                    if (c == null)
-                                        HttpGet.clubs.put(club.getId(), club);
-                                }
+                            if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                                adapterClubs.addItem(club);
+                                findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
                             }
-                            adapterClubs.notifyDataSetChanged();
                         }
-
-                        // POSTS
-                        JSONArray jsonarrayPosts = json.optJSONArray("posts");
-                        if(jsonarrayPosts != null) {
-
-                            for (int i = 0; i < jsonarrayPosts.length(); i++) {
-                                JSONObject jsonobject = jsonarrayPosts.getJSONObject(i);
-
-                                adapterPosts.addItem(new Post(jsonobject));
-                                findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.VISIBLE);
-                            }
-                            adapterPosts.notifyDataSetChanged();
-                        }
-
-                        // EVENTS
-                        Date atm = Calendar.getInstance().getTime();
-
-                        JSONArray jsonarrayEvents = json.optJSONArray("events");
-                        if(jsonarrayEvents != null) {
-
-                            for (int i = 0; i < jsonarrayEvents.length(); i++) {
-                                JSONObject jsonObject = jsonarrayEvents.getJSONObject(i);
-
-                                Event event = new Event(jsonObject);
-                                if (event.getDateEnd().getTime() > atm.getTime()) {
-                                    adapterEvents.addItem(event);
-                                    findViewById(R.id.search_events_layout).setVisibility(LinearLayout.VISIBLE);
-                                }
-                            }
-                            adapterEvents.notifyDataSetChanged();
-                        }
-
-                        // users
-                        JSONArray jsonarrayUsers = json.optJSONArray("users");
-                        if (jsonarrayUsers != null) {
-
-                            for (int i = 0; i < jsonarrayUsers.length(); i++) {
-                                JSONObject jsonObject = jsonarrayUsers.getJSONObject(i);
-
-                                adapterUsers.addItem(new User(jsonObject));
-                                findViewById(R.id.search_users_layout).setVisibility(LinearLayout.VISIBLE);
-                            }
-                            adapterUsers.notifyDataSetChanged();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
+
+                    if (results.getPosts() != null) {
+                        for (int i = 0; i < results.getPosts().size(); i++) {
+                            adapterPosts.addItem(results.getPosts().get(i));
+                            findViewById(R.id.search_posts_layout).setVisibility(LinearLayout.VISIBLE);
+                        }
+                    }
+
+                    if (results.getEvents() != null) {
+                        final Date atm = Calendar.getInstance().getTime();
+
+                        for (int i = 0; i < results.getEvents().size(); i++) {
+                            final Event event = results.getEvents().get(i);
+
+                            if (event.getDateEnd().getTime() > atm.getTime()) {
+                                adapterEvents.addItem(event);
+                                findViewById(R.id.search_events_layout).setVisibility(LinearLayout.VISIBLE);
+                            }
+                        }
+                    }
+
+                    if (results.getUsers() != null) {
+                        for (int i = 0; i < results.getUsers().size(); i++) {
+                            adapterUsers.addItem(results.getUsers().get(i));
+                            findViewById(R.id.search_users_layout).setVisibility(LinearLayout.VISIBLE);
+                        }
+                    }
+                }
+                else {
+                    Toast.makeText(SearchActivity.this, "SearchActivity", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UniversalSearchResults> call, @NonNull Throwable t) {
+                Toast.makeText(SearchActivity.this, "SearchActivity", Toast.LENGTH_LONG).show();
             }
         });
-        /*
-        request.execute(HttpGet.ROOTSEACHUNIVERSAL + "?token=" + HttpGet.sessionCredentials.getSessionToken(), jsonObject.toString());
-        */
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-        }
 
-        return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

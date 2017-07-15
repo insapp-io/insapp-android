@@ -3,11 +3,15 @@ package fr.insapp.insapp.http;
 import java.util.List;
 
 import fr.insapp.insapp.models.Club;
+import fr.insapp.insapp.models.ClubSearchResults;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.EventSearchResults;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
-import fr.insapp.insapp.models.SearchResults;
+import fr.insapp.insapp.models.PostSearchResults;
+import fr.insapp.insapp.models.UniversalSearchResults;
+import fr.insapp.insapp.models.UserSearchResults;
 import fr.insapp.insapp.models.SearchTerms;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
@@ -103,5 +107,17 @@ public interface Client {
      */
 
     @POST("search/users")
-    Call<SearchResults> searchUsers(@Body SearchTerms terms);
+    Call<UserSearchResults> searchUsers(@Body SearchTerms terms);
+
+    @POST("search/associations")
+    Call<ClubSearchResults> searchClubs(@Body SearchTerms terms);
+
+    @POST("search/events")
+    Call<EventSearchResults> searchEvents(@Body SearchTerms terms);
+
+    @POST("search/posts")
+    Call<PostSearchResults> searchPosts(@Body SearchTerms terms);
+
+    @POST("search")
+    Call<UniversalSearchResults> universalSearch(@Body SearchTerms terms);
 }

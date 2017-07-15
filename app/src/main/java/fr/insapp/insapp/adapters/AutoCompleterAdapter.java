@@ -19,7 +19,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
-import fr.insapp.insapp.models.SearchResults;
+import fr.insapp.insapp.models.UserSearchResults;
 import fr.insapp.insapp.models.SearchTerms;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
@@ -81,8 +81,8 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
                 final FilterResults filterResults = new FilterResults();
 
                 if (constraint != null) {
-                    Call<SearchResults> call = ServiceGenerator.create().searchUsers(new SearchTerms(constraint.toString()));
-                    SearchResults results = null;
+                    Call<UserSearchResults> call = ServiceGenerator.create().searchUsers(new SearchTerms(constraint.toString()));
+                    UserSearchResults results = null;
                     try {
                         results = call.execute().body();
 

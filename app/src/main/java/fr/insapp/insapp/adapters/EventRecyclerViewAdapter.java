@@ -94,7 +94,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
                                 final Club club = new Club(jsonobject);
                                 HttpGet.clubs.put(club.getId(), club);
 
-                                // avatarCircleImageView
+                                // avatar
 
                                 Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
                                 holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +112,8 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
                 /*
                 request.execute(HttpGet.ROOTASSOCIATION + "/" + event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
                 */
-            } else {
+            }
+            else {
                 // avatar
 
                 Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);

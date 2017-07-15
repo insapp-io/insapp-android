@@ -8,20 +8,16 @@ import java.util.List;
  * Created by thomas on 13/07/2017.
  */
 
-public class SearchResults {
+public class UserSearchResults {
 
     @SerializedName("users")
     private List<User> users;
 
-    public SearchResults(List<User> users) {
+    public UserSearchResults(List<User> users) {
         this.users = users;
     }
 
     public List<User> getUsers() {
         return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 }

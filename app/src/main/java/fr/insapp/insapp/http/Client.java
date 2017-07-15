@@ -89,6 +89,12 @@ public interface Client {
     @GET("user/{id}")
     Call<User> getUserFromId(@Path("id") String id);
 
+    @DELETE("user/{id}")
+    Call<Void> deleteUser(@Path("id") String id);
+
+    @PUT("report/user/{id}")
+    Call<User> reportUser(@Path("id") String id);
+
     /*
      * SEARCH
      */

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,15 +41,14 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpDelete;
-import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPut;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
-import fr.insapp.insapp.utility.File;
 import fr.insapp.insapp.utility.Operation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by thomas on 15/12/2016.
@@ -207,15 +207,23 @@ public class ProfileActivity extends AppCompatActivity {
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogAlert, int id) {
-                                    HttpPut report = new HttpPut(new AsyncResponse() {
+                                    Call<User> call = ServiceGenerator.create().reportUser(user.getId());
+                                    call.enqueue(new Callback<User>() {
                                         @Override
-                                        public void processFinish(String output) {
-                                            Toast.makeText(ProfileActivity.this, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show();
+                                        public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                                            if (response.isSuccessful()) {
+                                                Toast.makeText(ProfileActivity.this, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show();
+                                            }
+                                            else {
+                                                Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                                            Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                    /*
-                                    report.execute(HttpGet.ROOTURL + "/report/user/" + user.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                                    */
                                 }
                             })
                             .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {
@@ -231,24 +239,31 @@ public class ProfileActivity extends AppCompatActivity {
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogAlert, int id) {
-                                    HttpDelete delete = new HttpDelete(new AsyncResponse() {
+                                    Call<Void> call = ServiceGenerator.create().deleteUser(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
+                                    call.enqueue(new Callback<Void>() {
                                         @Override
-                                        public void processFinish(String output) {
-                                            HttpGet.sessionCredentials = null;
-                                            File.writeSettings(ProfileActivity.this, "");
+                                        public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                                            if (response.isSuccessful()) {
+                                                getSharedPreferences("Credentials", MODE_PRIVATE).edit().clear().apply();
 
-                                            Intent activity = new Intent(ProfileActivity.this, IntroActivity.class);
-                                            activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(activity);
+                                                Intent activity = new Intent(ProfileActivity.this, IntroActivity.class);
+                                                activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                startActivity(activity);
 
-                                            Toast.makeText(ProfileActivity.this, R.string.delete_account_success, Toast.LENGTH_SHORT).show();
-                                            finish();
+                                                Toast.makeText(ProfileActivity.this, R.string.delete_account_success, Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            }
+                                            else {
+                                                Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                                            Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                    /*
-                                    delete.execute(HttpGet.ROOTUSER + "/" + HttpGet.sessionCredentials.getUserID() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                                     */
                                 }
                             })
                             .setNegativeButton(getString(R.string.negative_button), new DialogInterface.OnClickListener() {

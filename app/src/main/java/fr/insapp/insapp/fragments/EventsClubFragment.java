@@ -59,6 +59,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         adapterFuture.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
+                System.out.println(event);
                 startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });
@@ -67,6 +68,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         adapterPast.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
+                System.out.println(event);
                 startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });

@@ -91,6 +91,25 @@ public class Event implements Parcelable, Comparable<Event> {
 
     };
 
+    public Event(String id, String name, String association, String description, List<String> attendees, List<String> maybe, List<String> notgoing, List<Comment> comments, String status, Date dateStart, Date dateEnd, String image, List<String> promotions, List<String> plateforms, String bgColor, String fgColor) {
+        this.id = id;
+        this.name = name;
+        this.association = association;
+        this.description = description;
+        this.attendees = attendees;
+        this.maybe = maybe;
+        this.notgoing = notgoing;
+        this.comments = comments;
+        this.status = status;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
+        this.image = image;
+        this.promotions = promotions;
+        this.plateforms = plateforms;
+        this.bgColor = bgColor;
+        this.fgColor = fgColor;
+    }
+
     public Event(JSONObject json) throws JSONException {
         refresh(json);
     }
@@ -183,17 +202,26 @@ public class Event implements Parcelable, Comparable<Event> {
         dest.writeString(association);
         dest.writeString(description);
 
-        dest.writeInt(attendees.size());
-        if (attendees.size() > 0)
-            dest.writeStringList(attendees);
+        if (attendees != null) {
+            dest.writeInt(attendees.size());
+            if (attendees.size() > 0) {
+                dest.writeStringList(attendees);
+            }
+        }
 
-        dest.writeInt(maybe.size());
-        if (maybe.size() > 0)
-            dest.writeStringList(maybe);
+        if (maybe != null) {
+            dest.writeInt(maybe.size());
+            if (maybe.size() > 0) {
+                dest.writeStringList(maybe);
+            }
+        }
 
-        dest.writeInt(notgoing.size());
-        if (notgoing.size() > 0)
-            dest.writeStringList(notgoing);
+        if (notgoing != null) {
+            dest.writeInt(notgoing.size());
+            if (notgoing.size() > 0) {
+                dest.writeStringList(notgoing);
+            }
+        }
 
         dest.writeInt(comments.size());
         if (comments.size() > 0)

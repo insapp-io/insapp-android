@@ -57,6 +57,9 @@ public interface Client {
     @GET("event/{id}")
     Call<Event> getEventFromId(@Path("id") String id);
 
+    @POST("event/{id}/participant/{userId}/status/{status}")
+    Call<Event> addParticipant(@Path("id") String id, @Path("userId") String userId, @Path("status") String status);
+
     /*
      * POSTS
      */

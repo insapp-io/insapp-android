@@ -1,9 +1,5 @@
 package fr.insapp.insapp.fragments;
 
-/**
- * Created by thoma on 27/10/2016.
- */
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +24,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
+
+/**
+ * Created by thomas on 27/10/2016.
+ */
 
 public class ClubsFragment extends Fragment {
 

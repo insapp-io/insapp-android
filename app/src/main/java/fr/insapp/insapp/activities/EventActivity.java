@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -31,12 +32,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,13 +56,16 @@ import fr.insapp.insapp.fragments.AboutFragment;
 import fr.insapp.insapp.fragments.CommentsEventFragment;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.utility.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by thomas on 05/12/2016.
@@ -144,10 +150,12 @@ public class EventActivity extends AppCompatActivity {
         this.viewPager = (ViewPager) findViewById(R.id.viewpager_event);
         setupViewPager(viewPager, bgColor);
 
-        if (fgColor != 0xffffffff)
+        if (fgColor != 0xffffffff) {
             setupViewPager(viewPager, fgColor);
-        else
+        }
+        else {
             setupViewPager(viewPager, bgColor);
+        }
 
         // tab layout
 
@@ -164,9 +172,7 @@ public class EventActivity extends AppCompatActivity {
 
         // floating action menu
 
-        /*
-        this.status = event.getStatusForUser(HttpGet.sessionCredentials.getUserID());
-        */
+        this.status = event.getStatusForUser(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
 
         // fab style
 
@@ -189,16 +195,10 @@ public class EventActivity extends AppCompatActivity {
 
         if (this.event == null) {
             notification = intent.getParcelableExtra("notification");
-
-            if (HttpGet.sessionCredentials != null)
-                onActivityResult(PostActivity.NOTIFICATION_MESSAGE, RESULT_OK, null);
-            /*
-            else
-                startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class), PostActivity.NOTIFICATION_MESSAGE);
-            */
         }
-        else
+        else {
             generateEvent();
+        }
     }
 
     private void setupViewPager(ViewPager viewPager, int swipeColor) {
@@ -283,6 +283,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void generateEvent() {
+        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
         // fab 1
 
@@ -303,68 +304,72 @@ public class EventActivity extends AppCompatActivity {
                     case NO:
                     case MAYBE:
                     case UNDEFINED:
-                        HttpPost request = new HttpPost(new AsyncResponse() {
+                        Call<Event> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "going");
+                        call.enqueue(new Callback<Event>() {
                             @Override
-                            public void processFinish(String output) {
-                                status = Event.PARTICIPATE.YES;
+                            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                                if (response.isSuccessful()) {
+                                    status = Event.PARTICIPATE.YES;
 
-                                floatingActionMenu.close(true);
-                                setFloatingActionMenuTheme(status);
-                                refreshFloatingActionButtons();
+                                    floatingActionMenu.close(true);
+                                    setFloatingActionMenuTheme(status);
+                                    refreshFloatingActionButtons();
 
-                                SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
+                                    event = response.body();
 
-                                // if first time user join an event
-                                if (prefs.getString("addEventToCalender", "").equals("")) {
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EventActivity.this);
 
-                                    // set title
-                                    alertDialogBuilder.setTitle(getResources().getString(R.string.add_to_calendar_action));
+                                    SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
 
-                                    // set dialog message
-                                    alertDialogBuilder
-                                            .setMessage(getResources().getString(R.string.add_to_calendar_are_you_sure))
-                                            .setCancelable(false)
-                                            .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialogAlert, int id) {
-                                                    SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-                                                    prefs.putString("addEventToCalender", "true");
-                                                    prefs.apply();
+                                    // if first time user join an event
 
-                                                    addEventToCalendar();
-                                                }
-                                            })
-                                            .setNegativeButton(R.string.negative_button, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialogAlert, int id) {
-                                                    SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-                                                    prefs.putString("addEventToCalender", "false");
-                                                    prefs.apply();
+                                    if (prefs.getString("addEventToCalender", "").equals("")) {
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EventActivity.this);
 
-                                                    dialogAlert.cancel();
-                                                }
-                                            });
+                                        // set title
+                                        alertDialogBuilder.setTitle(getResources().getString(R.string.add_to_calendar_action));
 
-                                    // create alert dialog
-                                    AlertDialog alertDialog = alertDialogBuilder.create();
-                                    alertDialog.show();
+                                        // set dialog message
+                                        alertDialogBuilder
+                                                .setMessage(getResources().getString(R.string.add_to_calendar_are_you_sure))
+                                                .setCancelable(false)
+                                                .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialogAlert, int id) {
+                                                        SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                                                        prefs.putString("addEventToCalender", "true");
+                                                        prefs.apply();
+
+                                                        addEventToCalendar();
+                                                    }
+                                                })
+                                                .setNegativeButton(R.string.negative_button, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialogAlert, int id) {
+                                                        SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
+                                                        prefs.putString("addEventToCalender", "false");
+                                                        prefs.apply();
+
+                                                        dialogAlert.cancel();
+                                                    }
+                                                });
+
+                                        // create alert dialog
+
+                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                        alertDialog.show();
+                                    }
+                                    else if (prefs.getString("addEventToCalender", "true").equals("true")) {
+                                        addEventToCalendar();
+                                    }
                                 }
-                                else if (prefs.getString("addEventToCalender", "true").equals("true"))
-                                    addEventToCalendar();
-
-                                try {
-                                    JSONObject json = new JSONObject(output);
-                                    event.refresh(json.getJSONObject("event"));
+                                else {
+                                    Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                                 }
-                                catch (JSONException ex) {
-                                    ex.printStackTrace();
-                                }
+                            }
 
-                                refreshAttendeesTextView();
+                            @Override
+                            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                                Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                             }
                         });
-                        /*
-                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.sessionCredentials.getUserID() + "/status/going" + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                        */
                         break;
 
                     case YES:
@@ -396,30 +401,29 @@ public class EventActivity extends AppCompatActivity {
                     case NO:
                     case YES:
                     case UNDEFINED:
-                        HttpPost request = new HttpPost(new AsyncResponse() {
+                        Call<Event> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "maybe");
+                        call.enqueue(new Callback<Event>() {
                             @Override
-                            public void processFinish(String output) {
-                                status = Event.PARTICIPATE.MAYBE;
+                            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                                if (response.isSuccessful()) {
+                                    status = Event.PARTICIPATE.MAYBE;
 
-                                floatingActionMenu.close(true);
-                                setFloatingActionMenuTheme(status);
-                                refreshFloatingActionButtons();
+                                    floatingActionMenu.close(true);
+                                    setFloatingActionMenuTheme(status);
+                                    refreshFloatingActionButtons();
 
-                                try {
-                                    JSONObject json = new JSONObject(output);
-                                    event.refresh(json.getJSONObject("event"));
+                                    event = response.body();
                                 }
-                                catch (JSONException ex) {
-                                    ex.printStackTrace();
+                                else {
+                                    Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                                 }
+                            }
 
-                                refreshAttendeesTextView();
+                            @Override
+                            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                                Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                             }
                         });
-
-                        /*
-                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.sessionCredentials.getUserID() + "/status/maybe" + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                        */
                         break;
 
                     case MAYBE:
@@ -451,29 +455,29 @@ public class EventActivity extends AppCompatActivity {
                     case YES:
                     case MAYBE:
                     case UNDEFINED:
-                        HttpPost request = new HttpPost(new AsyncResponse() {
+                        Call<Event> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "notgoing");
+                        call.enqueue(new Callback<Event>() {
                             @Override
-                            public void processFinish(String output) {
-                                status = Event.PARTICIPATE.NO;
+                            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                                if (response.isSuccessful()) {
+                                    status = Event.PARTICIPATE.NO;
 
-                                floatingActionMenu.close(true);
-                                setFloatingActionMenuTheme(status);
-                                refreshFloatingActionButtons();
+                                    floatingActionMenu.close(true);
+                                    setFloatingActionMenuTheme(status);
+                                    refreshFloatingActionButtons();
 
-                                try {
-                                    JSONObject json = new JSONObject(output);
-                                    event.refresh(json.getJSONObject("event"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    event = response.body();
                                 }
+                                else {
+                                    Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
+                                }
+                            }
 
-                                refreshAttendeesTextView();
+                            @Override
+                            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                                Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                             }
                         });
-
-                        /*
-                        request.execute(HttpGet.ROOTEVENT + "/" + event.getId() + "/participant/" + HttpGet.sessionCredentials.getUserID() + "/status/notgoing" + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                        */
                         break;
 
                     case NO:
@@ -512,6 +516,7 @@ public class EventActivity extends AppCompatActivity {
                 if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
+
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(event.getName());
                     isShow = true;
@@ -521,7 +526,8 @@ public class EventActivity extends AppCompatActivity {
                         upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
                         getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     }
-                } else if (isShow) {
+                }
+                else if (isShow) {
                     collapsingToolbar.setTitle(" ");
                     isShow = false;
 

@@ -143,7 +143,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);

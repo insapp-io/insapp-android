@@ -126,8 +126,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         if (preference instanceof EditTextPreference) {
             EditTextPreference editTextPreference = (EditTextPreference) preference;
 
-            if (editTextPreference.getText() != null && !editTextPreference.getText().isEmpty())
+            if (editTextPreference.getText() != null && !editTextPreference.getText().isEmpty()) {
                 preference.setSummary(editTextPreference.getText());
+            }
         }
 
         if (preference instanceof MultiSelectListPreference) {
@@ -141,14 +142,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         super.onResume();
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-/*
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
-
-        EditTextPreference chimeMaster = (EditTextPreference)findPreference("barcode");
-        chimeMaster.setText(sharedPreferences.getString("barcode", ""));
-
-        System.out.println("WTF" + sharedPreferences.getString("barcode", ""));*/
     }
 
     @Override
@@ -163,50 +156,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         updatePreferenceSummary(findPreference(s));
     }
 
-    public void updateProfile(){
-        /*
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        JSONObject json = new JSONObject();
-
-        try {
-            json.put("name", preferences.getString("name", ""));
-            json.put("usernameTextView", user.getUsername());
-            json.put("description", preferences.getString("description", ""));
-            json.put("email", preferences.getString("email", ""));
-            json.put("emailpublic", user.isEmailPublic());
-            json.put("promotion", preferences.getString("class", ""));
-            json.put("gender", preferences.getString("sex", ""));
-
-            JSONArray events = new JSONArray();
-            for (String s : user.getEvents())
-                events.put(s);
-
-            json.put("events", events);
-
-            JSONArray likes = new JSONArray();
-            for (String s : user.getPostsLiked())
-                likes.put(s);
-
-            json.put("postsliked", likes);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        HttpPut put = new HttpPut(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                if (output == null)
-                    Toast.makeText(SettingsActivity.this, "Erreur lors de la modification du profil", Toast.LENGTH_LONG).show();
-                else {
-                    try {
-                        MainActivity.user = new User(new JSONObject(output));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        put.execute(HttpGet.ROOTUSER + "/" + user.getId() + "?token=" + HttpGet.sessionCredentials.getSessionToken(), json.toString());
-        */
+    public void updateProfile() {
     }
 }

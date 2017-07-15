@@ -94,6 +94,7 @@ public class ClubActivity extends AppCompatActivity {
                 if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
+
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(club.getName());
                     isShow = true;
@@ -103,7 +104,8 @@ public class ClubActivity extends AppCompatActivity {
                         upArrow.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP);
                         getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     }
-                } else if (isShow) {
+                }
+                else if (isShow) {
                     collapsingToolbar.setTitle(" ");
                     isShow = false;
 
@@ -238,7 +240,7 @@ public class ClubActivity extends AppCompatActivity {
         }
     }
 
-    public void sendEmail(){
+    public void sendEmail() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
 
         intent.setData(Uri.parse("mailto:"));

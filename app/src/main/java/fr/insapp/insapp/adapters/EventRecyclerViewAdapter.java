@@ -27,13 +27,14 @@ import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.AsyncResponse;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.utility.EventComparator;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
- * Created by thoma on 18/11/2016.
+ * Created by thomas on 18/11/2016.
  */
 
 public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyclerViewAdapter.EventViewHolder> {
@@ -42,7 +43,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
     private int layout;
 
-    protected OnEventItemClickListener listener;
+    private OnEventItemClickListener listener;
 
     public interface OnEventItemClickListener {
         void onEventItemClick(Event event);
@@ -67,7 +68,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
     public void updatePost(int id, Event event){
         this.events.set(id, event);
-        notifyItemChanged(id);
+        this.notifyItemChanged(id);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
                 request.execute(HttpGet.ROOTASSOCIATION + "/" + event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
                 */
             } else {
-                // avatarCircleImageView
+                // avatar
 
                 Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
                 holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -124,23 +125,25 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
             }
         }
 
-        Glide.with(context).load(HttpGet.IMAGEURL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
+        Glide.with(context).load(ServiceGenerator.CDN_URL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
 
         holder.name.setText(event.getName());
 
         int nb_participants = event.getAttendees().size();
-        if (nb_participants <= 1)
+        if (nb_participants <= 1) {
             holder.participants.setText(Integer.toString(nb_participants) + " participant");
-        else
+        }
+        else {
             holder.participants.setText(Integer.toString(nb_participants) + " participants");
+        }
 
         final int diffInDays = (int) ((event.getDateEnd().getTime() - event.getDateStart().getTime()) / (1000 * 60 * 60 * 24));
         if (diffInDays < 1 && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
             DateFormat dateFormat_oneday = new SimpleDateFormat("'Le' dd/MM 'à' HH:mm");
 
-            System.out.println("WTF");
             holder.date.setText(dateFormat_oneday.format(event.getDateStart()));
-        } else {
+        }
+        else {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM");
             String dateStart = dateFormat.format(event.getDateStart());
             String dateEnd = dateFormat.format(event.getDateEnd());

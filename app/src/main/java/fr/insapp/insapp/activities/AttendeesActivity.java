@@ -2,24 +2,24 @@ package fr.insapp.insapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.AttendeeRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by thoma on 10/12/2016.
@@ -30,8 +30,8 @@ public class AttendeesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AttendeeRecyclerViewAdapter adapter;
 
-    private ArrayList<String> attendees;
-    private ArrayList<String> maybe;
+    private List<String> attendees;
+    private List<String> maybe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,23 +75,24 @@ public class AttendeesActivity extends AppCompatActivity {
 
     private void generateUsers(List<String> users, final Event.PARTICIPATE action) {
         for (int i = 0 ; i < users.size(); i++) {
-            HttpGet request = new HttpGet(new AsyncResponse() {
+            Call<User> call = ServiceGenerator.create().getUserFromId(users.get(i));
+            call.enqueue(new Callback<User>() {
                 @Override
-                public void processFinish(String output) {
-                    JSONObject json;
-                    try {
-                        json = new JSONObject(output);
-                        final User user = new User(json);
-
+                public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                    if (response.isSuccessful()) {
+                        final User user = response.body();
                         adapter.addItem(user, action);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }
+                    else {
+                        Toast.makeText(AttendeesActivity.this, "AttendeesActivity", Toast.LENGTH_LONG).show();
                     }
                 }
+
+                @Override
+                public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                    Toast.makeText(AttendeesActivity.this, "AttendeesActivity", Toast.LENGTH_LONG).show();
+                }
             });
-            /*
-            request.execute(HttpGet.ROOTUSER + "/" + users.get(i) + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            */
         }
     }
 

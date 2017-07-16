@@ -2,6 +2,7 @@ package fr.insapp.insapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +39,6 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
     private View view;
     private EventRecyclerViewAdapter adapterFuture;
     private EventRecyclerViewAdapter adapterPast;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,6 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         adapterFuture.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                System.out.println(event);
                 startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
             }
         });
@@ -96,7 +95,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
         // swipe refresh layout
 
-        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events_club);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events_club);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(swipeColor);
 
@@ -120,10 +119,11 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
             Call<Event> call = ServiceGenerator.create().getEventFromId(club.getEvents().get(j));
             call.enqueue(new Callback<Event>() {
                 @Override
-                public void onResponse(Call<Event> call, Response<Event> response) {
+                public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                     if (response.isSuccessful()) {
-                        Event event = response.body();
-                        Date atm = Calendar.getInstance().getTime();
+                        final Event event = response.body();
+                        System.out.println("network: + " + event);
+                        final Date atm = Calendar.getInstance().getTime();
 
                         if (event.getDateEnd().getTime() > atm.getTime()) {
                             adapterFuture.addItem(event);
@@ -140,7 +140,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                 }
 
                 @Override
-                public void onFailure(Call<Event> call, Throwable t) {
+                public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
                     Toast.makeText(getContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
                 }
             });

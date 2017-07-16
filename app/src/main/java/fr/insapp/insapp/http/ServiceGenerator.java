@@ -1,7 +1,9 @@
 package fr.insapp.insapp.http;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.activities.MainActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -45,7 +47,8 @@ public class ServiceGenerator {
             builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()));
         }
         else {
-            builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create());
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+            builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson));
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();

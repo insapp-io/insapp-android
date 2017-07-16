@@ -34,7 +34,7 @@ import fr.insapp.insapp.utility.Operation;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by thoma on 25/02/2017.
+ * Created by thomas on 25/02/2017.
  */
 
 public class CommentsEventFragment extends Fragment {
@@ -73,8 +73,9 @@ public class CommentsEventFragment extends Fragment {
         final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getContext().getPackageName());
         Glide.with(getContext()).load(id).into(circleImageView);
 
-        // edit contentTextView
+        // edit content
 
+        /*
         HttpPost request = new HttpPost(new AsyncResponse() {
             @Override
             public void processFinish(String output) {
@@ -88,7 +89,6 @@ public class CommentsEventFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
-        /*
         String params = HttpGet.ROOTEVENT + "/" + event.getId() + "/comment?token=" + HttpGet.sessionCredentials.getSessionToken();
         */
 

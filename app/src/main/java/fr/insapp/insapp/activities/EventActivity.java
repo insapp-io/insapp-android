@@ -260,6 +260,7 @@ public class EventActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        /*
         if (requestCode == PostActivity.NOTIFICATION_MESSAGE) {
             if (resultCode == RESULT_OK){
 
@@ -275,11 +276,10 @@ public class EventActivity extends AppCompatActivity {
                         }
                     }
                 });
-                /*
                 request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                */
             }
         }
+        */
     }
 
     public void generateEvent() {
@@ -316,7 +316,6 @@ public class EventActivity extends AppCompatActivity {
                                     refreshFloatingActionButtons();
 
                                     event = response.body();
-
 
                                     SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
 

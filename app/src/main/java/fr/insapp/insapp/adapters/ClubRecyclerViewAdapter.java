@@ -17,6 +17,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.HttpGet;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 
 /**
@@ -64,7 +65,7 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
 
         // glide
 
-        Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.avatar);
+        Glide.with(context).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.avatar);
 
         holder.bind(club, listener);
     }

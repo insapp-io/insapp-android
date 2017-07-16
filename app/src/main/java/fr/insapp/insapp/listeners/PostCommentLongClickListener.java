@@ -42,6 +42,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
 
         // delete comment
 
+        /*
         if (new Gson().fromJson(context.getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId().equals(comment.getUserId())) {
             alertDialogBuilder.setTitle(context.getResources().getString(R.string.delete_comment_action));
             alertDialogBuilder
@@ -117,5 +118,6 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
+        */
     }
 }

@@ -1,37 +1,32 @@
 package fr.insapp.insapp.models;
 
-import com.google.gson.annotations.SerializedName;
+import android.os.Parcelable;
+
+import auto.parcelgson.AutoParcelGson;
+import auto.parcelgson.gson.annotations.SerializedName;
 
 /**
  * Created by thomas on 12/07/2017.
  */
 
-public class ImageSize {
+@AutoParcelGson
+public abstract class ImageSize implements Parcelable {
 
     @SerializedName("width")
-    private int width;
+    abstract int width();
 
     @SerializedName("height")
-    private int height;
+    abstract int height();
 
-    public ImageSize(int width, int height) {
-        this.width = width;
-        this.height = height;
+    static ImageSize create(int width, int height) {
+        return new AutoParcelGson_ImageSize(width, height);
     }
 
     public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
+        return width();
     }
 
     public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
+        return height();
     }
 }

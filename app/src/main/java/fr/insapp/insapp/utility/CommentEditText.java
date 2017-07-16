@@ -91,6 +91,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                     getText().clear();
 
                     if (!content.isEmpty()) {
+                        /*
                         final User user = new Gson().fromJson(getContext().getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
                         final Comment comment = new Comment(null, user.getId(), content, tags, null);
 
@@ -113,6 +114,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                                 Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                             }
                         });
+                        */
                     }
 
                     return true;

@@ -33,7 +33,7 @@ import fr.insapp.insapp.models.credentials.SessionCredentials;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final boolean dev = true;
+    public static final boolean dev = false;
 
     public static CustomTabsConnection customTabsConnection;
 

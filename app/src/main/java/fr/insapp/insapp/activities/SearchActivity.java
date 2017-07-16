@@ -170,7 +170,7 @@ public class SearchActivity extends AppCompatActivity {
                             for (int i = 0; i < results.getClubs().size(); i++) {
                                 final Club club = results.getClubs().get(i);
 
-                                if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                                if (!club.getProfilePicture().isEmpty() && !club.getCover().isEmpty()) {
                                     adapterClubs.addItem(club);
                                     findViewById(R.id.search_clubs_layout).setVisibility(LinearLayout.VISIBLE);
                                 }

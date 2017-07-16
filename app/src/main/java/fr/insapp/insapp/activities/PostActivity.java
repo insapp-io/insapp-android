@@ -144,7 +144,7 @@ public class PostActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     club = response.body();
 
-                    Glide.with(getApplicationContext()).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(clubAvatarCircleImageView);
+                    Glide.with(getApplicationContext()).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(clubAvatarCircleImageView);
 
                     // listener
 

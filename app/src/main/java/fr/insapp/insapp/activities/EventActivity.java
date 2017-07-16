@@ -549,6 +549,7 @@ public class EventActivity extends AppCompatActivity {
 
         final Club club = HttpGet.clubs.get(event.getAssociation());
         if (club == null) {
+            /*
             HttpGet request = new HttpGet(new AsyncResponse() {
                 public void processFinish(String output) {
                     if (!output.isEmpty()) {
@@ -565,7 +566,6 @@ public class EventActivity extends AppCompatActivity {
                     }
                 }
             });
-            /*
             request.execute(HttpGet.ROOTASSOCIATION + "/"+ event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
             */
         }

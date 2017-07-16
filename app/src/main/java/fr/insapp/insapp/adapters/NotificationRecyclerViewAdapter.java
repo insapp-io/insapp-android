@@ -121,7 +121,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
                         Glide
                                 .with(context)
-                                .load(ServiceGenerator.CDN_URL + club.getProfilPicture())
+                                .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                 .into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {

@@ -133,7 +133,7 @@ public class ClubActivity extends AppCompatActivity {
 
         collapsingToolbar.setCollapsedTitleTextColor(fgColor);
 
-        Glide.with(this).load(ServiceGenerator.CDN_URL + club.getProfilPicture()).into(iconImageView);
+        Glide.with(this).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(iconImageView);
         Glide.with(this).load(ServiceGenerator.CDN_URL + club.getCover()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {

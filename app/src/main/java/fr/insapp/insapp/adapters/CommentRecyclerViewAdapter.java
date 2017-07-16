@@ -112,7 +112,8 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
 
         // user
 
-        Call<User> call = ServiceGenerator.create().getUserFromId(comment.getUserId());
+        /*
+        Call<User> call = ServiceGenerator.create().getUserFromId(comment.getUser().getId());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -144,6 +145,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                 Toast.makeText(context, "CommentRecyclerViewAdapter", Toast.LENGTH_LONG).show();
             }
         });
+        */
 
         holder.bind(comment, listener);
     }

@@ -73,7 +73,7 @@ public class ClubsFragment extends Fragment {
                     List<Club> clubs = response.body();
 
                     for (final Club club : clubs) {
-                        if (!club.getProfilPicture().isEmpty() && !club.getCover().isEmpty()) {
+                        if (!club.getProfilePicture().isEmpty() && !club.getCover().isEmpty()) {
                             adapter.addItem(club);
                         }
                     }

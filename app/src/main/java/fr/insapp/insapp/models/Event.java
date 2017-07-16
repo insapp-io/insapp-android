@@ -9,10 +9,6 @@ import java.util.List;
 import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.annotations.SerializedName;
 
-/**
- * Created by Antoine on 25/02/2016.
- */
-
 @AutoParcelGson
 public abstract class Event implements Parcelable, Comparable<Event> {
 

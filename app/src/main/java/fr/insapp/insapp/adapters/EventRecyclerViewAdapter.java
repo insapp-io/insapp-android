@@ -1,5 +1,6 @@
 package fr.insapp.insapp.adapters;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -85,6 +86,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
             final Club club = HttpGet.clubs.get(event.getAssociation());
 
             if (club == null) {
+                /*
                 HttpGet request = new HttpGet(new AsyncResponse() {
                     public void processFinish(String output) {
                         if (!output.isEmpty()) {
@@ -96,7 +98,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
                                 // avatar
 
-                                Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
+                                Glide.with(context).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(holder.avatar);
                                 holder.avatar.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -109,14 +111,13 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
                         }
                     }
                 });
-                /*
                 request.execute(HttpGet.ROOTASSOCIATION + "/" + event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
                 */
             }
             else {
                 // avatar
 
-                Glide.with(context).load(HttpGet.IMAGEURL + club.getProfilPicture()).into(holder.avatar);
+                Glide.with(context).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(holder.avatar);
                 holder.avatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -129,8 +130,9 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         Glide.with(context).load(ServiceGenerator.CDN_URL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
 
         holder.name.setText(event.getName());
+        System.out.println(event.getName());
 
-        int nb_participants = event.getAttendees().size();
+        final int nb_participants = (event.getAttendees() == null) ? 0 : event.getAttendees().size();
         if (nb_participants <= 1) {
             holder.participants.setText(Integer.toString(nb_participants) + " participant");
         }

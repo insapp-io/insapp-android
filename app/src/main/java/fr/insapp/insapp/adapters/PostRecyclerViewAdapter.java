@@ -124,7 +124,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
                             Glide
                                     .with(context)
-                                    .load(HttpGet.IMAGEURL + club.getProfilPicture())
+                                    .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                     .crossFade()
                                     .into(holder.getAvatarCircleImageView());
 

@@ -53,7 +53,9 @@ public class LinkSpan extends URLSpan {
 
             CustomTabsIntent customTabsIntent = builder.build();
             customTabsIntent.launchUrl(context, uri);
-        } else
+        }
+        else {
             super.onClick(view);
+        }
     }
 }

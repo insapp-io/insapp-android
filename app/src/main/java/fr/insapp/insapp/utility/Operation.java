@@ -19,8 +19,9 @@ public class Operation {
         Date date = null;
         try {
             date = formatter.parse(dateInString);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+        catch (ParseException ex) {
+            ex.printStackTrace();
         }
         return date;
     }

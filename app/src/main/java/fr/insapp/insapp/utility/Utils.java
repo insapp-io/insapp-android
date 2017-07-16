@@ -8,21 +8,12 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
 public class Utils {
-
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager)  context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
     public static void convertToLinkSpan(Context context, TextView textView) {
         Spannable s = new SpannableString(textView.getText());
@@ -45,8 +36,10 @@ public class Utils {
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Color.RED);
         ColorFilter filter = new LightingColorFilter(0xffbababa, 0x00000000);
+
         paint.setColorFilter(filter);
         canvas.drawBitmap(bitmap, new Matrix(), paint);
+
         return bitmap;
     }
 }

@@ -1,4 +1,4 @@
-package fr.insapp.insapp.utility;
+package fr.insapp.insapp.models;
 
 import java.util.Comparator;
 

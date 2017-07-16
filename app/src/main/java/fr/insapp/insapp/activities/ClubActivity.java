@@ -43,10 +43,6 @@ import fr.insapp.insapp.utility.Utils;
 
 public class ClubActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-
     private Club club;
 
     private int bgColor;
@@ -69,7 +65,7 @@ public class ClubActivity extends AppCompatActivity {
 
         // toolbar
 
-        this.toolbar = (Toolbar) findViewById(R.id.toolbar_club);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_club);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
@@ -191,7 +187,7 @@ public class ClubActivity extends AppCompatActivity {
 
         // view pager
 
-        this.viewPager = (ViewPager) findViewById(R.id.viewpager_club);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager_club);
         setupViewPager(viewPager, bgColor);
 
         if (fgColor != 0xffffffff) {
@@ -203,7 +199,7 @@ public class ClubActivity extends AppCompatActivity {
 
         // tab layout
 
-        this.tabLayout = (TabLayout) findViewById(R.id.tabs_club);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs_club);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setBackgroundColor(bgColor);
 

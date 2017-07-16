@@ -40,6 +40,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.AboutFragment;
@@ -168,7 +170,8 @@ public class EventActivity extends AppCompatActivity {
 
         // floating action menu
 
-        this.status = event.getStatusForUser(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        this.status = event.getStatusForUser(gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
 
         // fab style
 
@@ -279,7 +282,8 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void generateEvent() {
-        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final User user = gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
         // fab 1
 
@@ -543,30 +547,23 @@ public class EventActivity extends AppCompatActivity {
 
         clubImageView.setColorFilter(fgColor);
 
-        final Club club = HttpGet.clubs.get(event.getAssociation());
-        if (club == null) {
-            /*
-            HttpGet request = new HttpGet(new AsyncResponse() {
-                public void processFinish(String output) {
-                    if (!output.isEmpty()) {
-                        try {
-                            JSONObject jsonobject = new JSONObject(output);
-
-                            final Club club = new Club(jsonobject);
-                            HttpGet.clubs.put(club.getId(), club);
-
-                            clubTextView.setText(club.getName());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+        Call<Club> call = ServiceGenerator.create().getClubFromId(event.getAssociation());
+        call.enqueue(new Callback<Club>() {
+            @Override
+            public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
+                if (response.isSuccessful()) {
+                    clubTextView.setText(response.body().getName());
                 }
-            });
-            request.execute(HttpGet.ROOTASSOCIATION + "/"+ event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            */
-        }
-        else
-            clubTextView.setText(club.getName());
+                else {
+                    Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
+                Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
+            }
+        });
 
         clubTextView.setTextColor(fgColor);
 
@@ -635,7 +632,7 @@ public class EventActivity extends AppCompatActivity {
 
     public void refreshAttendeesTextView() {
         final int nbParticipants = event.getAttendees().size();
-        final int nbInterested = event.getMaybe().size();
+        final int nbInterested = (event.getMaybe() == null) ? 0 : event.getMaybe().size();
 
         if (nbParticipants == 0) {
             if (nbInterested == 0) {

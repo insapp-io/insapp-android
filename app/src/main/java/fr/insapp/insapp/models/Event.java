@@ -2,6 +2,7 @@ package fr.insapp.insapp.models;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Date;
 import java.util.List;
@@ -27,9 +28,11 @@ public abstract class Event implements Parcelable, Comparable<Event> {
     @SerializedName("participants")
     abstract List<String> attendees();
 
+    @Nullable
     @SerializedName("maybe")
     abstract List<String> maybe();
 
+    @Nullable
     @SerializedName("notgoing")
     abstract List<String> notgoing();
 
@@ -48,9 +51,11 @@ public abstract class Event implements Parcelable, Comparable<Event> {
     @SerializedName("image")
     abstract String image();
 
+    @Nullable
     @SerializedName("promotions")
     abstract List<String> promotions();
 
+    @Nullable
     @SerializedName("plateforms")
     abstract List<String> plateforms();
 
@@ -72,15 +77,19 @@ public abstract class Event implements Parcelable, Comparable<Event> {
     }
 
     public PARTICIPATE getStatusForUser(String userId) {
-        for (final String id : notgoing()) {
-            if (userId.equals(id)) {
-                return Event.PARTICIPATE.NO;
+        if (notgoing() != null) {
+            for (final String id : notgoing()) {
+                if (userId.equals(id)) {
+                    return Event.PARTICIPATE.NO;
+                }
             }
         }
 
-        for (final String id : maybe()) {
-            if (userId.equals(id)) {
-                return Event.PARTICIPATE.MAYBE;
+        if (maybe() != null) {
+            for (final String id : maybe()) {
+                if (userId.equals(id)) {
+                    return Event.PARTICIPATE.MAYBE;
+                }
             }
         }
 

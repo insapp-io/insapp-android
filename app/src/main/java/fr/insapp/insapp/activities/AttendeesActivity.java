@@ -27,23 +27,22 @@ import retrofit2.Response;
 
 public class AttendeesActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
     private AttendeeRecyclerViewAdapter adapter;
-
-    private List<String> attendees;
-    private List<String> maybe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendees);
 
-        Intent intent = getIntent();
-        this.attendees = intent.getStringArrayListExtra("attendees");
-        this.maybe = intent.getStringArrayListExtra("maybe");
+        List<String> attendees = getIntent().getStringArrayListExtra("attendees");
+        if (attendees != null) {
+            generateUsers(attendees, Event.PARTICIPATE.YES);
+        }
 
-        generateUsers(attendees, Event.PARTICIPATE.YES);
-        generateUsers(maybe, Event.PARTICIPATE.MAYBE);
+        List<String> maybe = getIntent().getStringArrayListExtra("maybe");
+        if (maybe != null) {
+            generateUsers(maybe, Event.PARTICIPATE.MAYBE);
+        }
 
         this.adapter = new AttendeeRecyclerViewAdapter(this, true);
         adapter.setOnItemClickListener(new AttendeeRecyclerViewAdapter.OnUserItemClickListener() {
@@ -64,7 +63,7 @@ public class AttendeesActivity extends AppCompatActivity {
 
         // recycler view
 
-        this.recyclerView = (RecyclerView) findViewById(R.id.recyclerview_users);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 

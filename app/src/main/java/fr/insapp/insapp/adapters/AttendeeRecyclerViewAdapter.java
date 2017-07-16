@@ -1,7 +1,6 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -24,16 +23,16 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
 
 /**
- * Created by thoma on 10/12/2016.
+ * Created by thomas on 10/12/2016.
  */
 
 public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<AttendeeRecyclerViewAdapter.UserViewHolder> {
 
-    protected boolean matchParent;
+    private boolean matchParent;
 
-    protected Map<User, Event.PARTICIPATE> users;
+    private Map<User, Event.PARTICIPATE> users;
 
-    protected OnUserItemClickListener listener;
+    private OnUserItemClickListener listener;
 
     public interface OnUserItemClickListener {
         void onUserItemClick(User user);
@@ -65,19 +64,24 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
         final User user = getItem(position);
 
         if (user != null) {
-            // get the drawable of avatarCircleImageView
+            // get the drawable of avatar
 
-            final Resources resources = context.getResources();
-            final int id = resources.getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-            Glide.with(context).load(id).into(holder.avatar);
+            final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+
+            Glide
+                    .with(context)
+                    .load(id)
+                    .crossFade()
+                    .into(holder.avatar);
 
             holder.name.setText(user.getName());
             holder.username.setText(user.getUsername());
 
             holder.bind(user, listener);
 
-            if (users.get(user) == Event.PARTICIPATE.YES)
+            if (users.get(user) == Event.PARTICIPATE.YES) {
                 holder.hideMacaroon();
+            }
         }
     }
 

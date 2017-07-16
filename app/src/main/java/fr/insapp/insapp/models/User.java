@@ -1,6 +1,7 @@
 package fr.insapp.insapp.models;
 
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -38,9 +39,11 @@ public abstract class User implements Parcelable {
     @SerializedName("gender")
     abstract String gender();
 
+    @Nullable
     @SerializedName("events")
     abstract List<String> events();
 
+    @Nullable
     @SerializedName("postsliked")
     abstract List<String> postsLiked();
 

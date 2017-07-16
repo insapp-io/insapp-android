@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
@@ -29,7 +31,8 @@ public class TokenInterceptor implements Interceptor {
         Request request = chain.request();
         SharedPreferences preferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
 
-        SessionCredentials sessionCredentials = new Gson().fromJson(preferences.getString("session", ""), SessionCredentials.class);
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        SessionCredentials sessionCredentials = gson.fromJson(preferences.getString("session", ""), SessionCredentials.class);
 
         if (sessionCredentials != null) {
             final String sessionToken = sessionCredentials.getSessionToken().getToken();

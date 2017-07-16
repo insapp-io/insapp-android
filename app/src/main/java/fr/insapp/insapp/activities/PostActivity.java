@@ -19,7 +19,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
@@ -198,7 +200,8 @@ public class PostActivity extends AppCompatActivity {
 
         // retrieve the avatar of the user
 
-        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final User user = gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
         final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);

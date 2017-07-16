@@ -2,6 +2,7 @@ package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -78,7 +79,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                     Call<User> call = ServiceGenerator.create().getUserFromId(tag.getUser());
                     call.enqueue(new Callback<User>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
+                        public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                             if (response.isSuccessful()) {
                                 context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", response.body()));
                             }
@@ -88,7 +89,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                             Toast.makeText(context, "CommentRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                         }
                     });
@@ -112,16 +113,19 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
 
         // user
 
-        /*
-        Call<User> call = ServiceGenerator.create().getUserFromId(comment.getUser().getId());
+        Call<User> call = ServiceGenerator.create().getUserFromId(comment.getUser());
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     final User user = response.body();
 
                     final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-                    Glide.with(context).load(id).into(holder.avatarCircleImageView);
+                    Glide
+                            .with(context)
+                            .load(id)
+                            .crossFade()
+                            .into(holder.avatarCircleImageView);
 
                     holder.usernameTextView.setText(String.format(context.getResources().getString(R.string.tag), user.getUsername()));
 
@@ -141,11 +145,10 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 Toast.makeText(context, "CommentRecyclerViewAdapter", Toast.LENGTH_LONG).show();
             }
         });
-        */
 
         holder.bind(comment, listener);
     }

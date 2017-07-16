@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -38,6 +39,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
@@ -78,7 +80,8 @@ public class ProfileActivity extends AppCompatActivity {
         this.user = intent.getParcelableExtra("user");
 
         if (this.user == null) {
-            this.user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+            this.user = gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
         }
 
         // toolbar
@@ -183,7 +186,8 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
 
-        if (this.user.getId().equals(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId())) {
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        if (this.user.getId().equals(gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId())) {
             menu.getItem(0).setTitle(R.string.delete_account);
         }
 

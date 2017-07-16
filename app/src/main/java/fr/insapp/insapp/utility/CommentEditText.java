@@ -73,7 +73,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                         id = user.getId();
                 }
 
-                tags.add(new Tag(null, id, itemString));
+                //tags.add(new Tag(null, id, itemString));
             }
         });
 

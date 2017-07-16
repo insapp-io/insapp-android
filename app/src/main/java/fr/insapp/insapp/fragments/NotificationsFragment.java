@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.PostActivity;
@@ -75,7 +77,8 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void generateNotifications() {
-        Call<List<Notification>> call = ServiceGenerator.create().getNotificationsForUser(new Gson().fromJson(getContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        Call<List<Notification>> call = ServiceGenerator.create().getNotificationsForUser(gson.fromJson(getContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
         call.enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(@NonNull Call<List<Notification>> call, @NonNull Response<List<Notification>> response) {

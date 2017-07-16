@@ -1,79 +1,39 @@
 package fr.insapp.insapp.models;
 
-import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import auto.parcelgson.AutoParcelGson;
+import auto.parcelgson.gson.annotations.SerializedName;
 
 /**
  * Created by Antoine on 12/10/2016.
  */
 
-public class Tag implements Parcelable {
+@AutoParcelGson
+public abstract class Tag implements Parcelable {
 
     @SerializedName("ID")
-    private String id;
+    abstract String id();
 
     @SerializedName("user")
-    private String user;
+    abstract String user();
 
     @SerializedName("name")
-    private String name;
+    abstract String name();
 
-    public Tag(String id, String user, String name) {
-        this.id = id;
-        this.user = user;
-        this.name = name;
+    static Tag create(String id, String user, String name) {
+        return new AutoParcelGson_Tag(id, user, name);
     }
-
-    public Tag(JSONObject json) throws JSONException {
-        this.id = json.getString("ID");
-        this.user = json.getString("user");
-        this.name = json.getString("name");
-    }
-
-    protected Tag(Parcel in) {
-        id = in.readString();
-        user = in.readString();
-        name = in.readString();
-    }
-
-    public static final Creator<Tag> CREATOR = new Creator<Tag>() {
-        @Override
-        public Tag createFromParcel(Parcel in) {
-            return new Tag(in);
-        }
-
-        @Override
-        public Tag[] newArray(int size) {
-            return new Tag[size];
-        }
-    };
 
     public String getId() {
-        return id;
+        return id();
     }
 
     public String getUser() {
-        return user;
+        return user();
     }
 
     public String getName() {
-        return name;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(user);
-        dest.writeString(name);
+        return name();
     }
 }

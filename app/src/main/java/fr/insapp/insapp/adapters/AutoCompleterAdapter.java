@@ -82,7 +82,7 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
 
                 if (constraint != null) {
                     Call<UserSearchResults> call = ServiceGenerator.create().searchUsers(new SearchTerms(constraint.toString()));
-                    UserSearchResults results = null;
+                    UserSearchResults results;
                     try {
                         results = call.execute().body();
 
@@ -117,6 +117,11 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
                 else {
                     notifyDataSetInvalidated();
                 }
+            }
+
+            @Override
+            public CharSequence convertResultToString(Object result) {
+                return ((User) result).getUsername();
             }
         };
     }

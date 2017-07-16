@@ -25,7 +25,6 @@ import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
@@ -146,7 +145,11 @@ public class PostActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     club = response.body();
 
-                    Glide.with(getApplicationContext()).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(clubAvatarCircleImageView);
+                    Glide
+                            .with(PostActivity.this)
+                            .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                            .crossFade()
+                            .into(clubAvatarCircleImageView);
 
                     // listener
 
@@ -204,7 +207,11 @@ public class PostActivity extends AppCompatActivity {
         final User user = gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
         final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
-        Glide.with(PostActivity.this).load(id).into(userAvatarCircleImageView);
+        Glide
+                .with(PostActivity.this)
+                .load(id)
+                .crossFade()
+                .into(userAvatarCircleImageView);
     }
 
     @Override
@@ -227,7 +234,6 @@ public class PostActivity extends AppCompatActivity {
                 else {
                     finish();
                 }
-
                 return true;
 
             default:

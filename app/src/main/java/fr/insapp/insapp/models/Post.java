@@ -1,6 +1,7 @@
 package fr.insapp.insapp.models;
 
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import java.util.Date;
 import java.util.List;
@@ -36,9 +37,11 @@ public abstract class Post implements Parcelable {
     @SerializedName("comments")
     abstract List<Comment> comments();
 
+    @Nullable
     @SerializedName("promotions")
     abstract List<String> promotions();
 
+    @Nullable
     @SerializedName("plateforms")
     abstract List<String> plateforms();
 

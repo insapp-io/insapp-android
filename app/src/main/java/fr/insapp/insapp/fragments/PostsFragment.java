@@ -105,7 +105,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private void generatePosts() {
-                Call<List<Post>> call = ServiceGenerator.create().getLatestPosts();
+        Call<List<Post>> call = ServiceGenerator.create().getLatestPosts();
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
@@ -122,14 +122,18 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     Toast.makeText(getActivity(), "PostsFragment", Toast.LENGTH_LONG).show();
                 }
 
-                swipeRefreshLayout.setRefreshing(false);
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
                 Toast.makeText(getActivity(), "PostsFragment", Toast.LENGTH_LONG).show();
 
-                swipeRefreshLayout.setRefreshing(false);
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }

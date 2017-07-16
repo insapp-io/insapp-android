@@ -1,6 +1,7 @@
 package fr.insapp.insapp.models;
 
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.annotations.SerializedName;
@@ -12,6 +13,7 @@ import auto.parcelgson.gson.annotations.SerializedName;
 @AutoParcelGson
 public abstract class Tag implements Parcelable {
 
+    @Nullable
     @SerializedName("ID")
     abstract String id();
 
@@ -21,7 +23,7 @@ public abstract class Tag implements Parcelable {
     @SerializedName("name")
     abstract String name();
 
-    static Tag create(String id, String user, String name) {
+    public static Tag create(String id, String user, String name) {
         return new AutoParcelGson_Tag(id, user, name);
     }
 

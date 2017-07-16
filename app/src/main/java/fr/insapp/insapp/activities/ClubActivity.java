@@ -133,15 +133,25 @@ public class ClubActivity extends AppCompatActivity {
 
         collapsingToolbar.setCollapsedTitleTextColor(fgColor);
 
-        Glide.with(this).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(iconImageView);
-        Glide.with(this).load(ServiceGenerator.CDN_URL + club.getCover()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
-            @Override
-            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                super.onResourceReady(bitmap, anim);
+        Glide
+                .with(this)
+                .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                .crossFade()
+                .into(iconImageView);
 
-                headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
-            }
-        });
+
+        Glide
+                .with(this)
+                .load(ServiceGenerator.CDN_URL + club.getCover())
+                .asBitmap()
+                .into(new BitmapImageViewTarget(headerImageView) {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        super.onResourceReady(bitmap, anim);
+
+                        headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
+                    }
+                });
 
         // links
 

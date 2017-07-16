@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by thoma on 10/12/2016.
+ * Created by thomas on 10/12/2016.
  */
 
 public class AttendeesActivity extends AppCompatActivity {
@@ -80,8 +80,7 @@ public class AttendeesActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                     if (response.isSuccessful()) {
-                        final User user = response.body();
-                        adapter.addItem(user, action);
+                        adapter.addItem(response.body(), action);
                     }
                     else {
                         Toast.makeText(AttendeesActivity.this, "AttendeesActivity", Toast.LENGTH_LONG).show();
@@ -98,13 +97,13 @@ public class AttendeesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-        }
 
-        return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -145,4 +145,12 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.unbindService(MainActivity.customTabsConnection);
+        MainActivity.customTabsConnection = null;
+    }
 }

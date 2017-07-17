@@ -17,7 +17,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
@@ -63,7 +65,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         // filling fields
 
-        final User user = new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final User user = gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
 
         SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
         preferences.putString("name", user.getName());

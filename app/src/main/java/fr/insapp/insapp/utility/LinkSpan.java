@@ -31,14 +31,16 @@ public class LinkSpan extends URLSpan {
         if (Patterns.WEB_URL.matcher(url).matches()) {
             this.uri = Uri.parse(url);
 
-            if (MainActivity.customTabsConnection != null && MainActivity.customTabsConnection.getCustomTabsSession() != null)
+            if (MainActivity.customTabsConnection != null && MainActivity.customTabsConnection.getCustomTabsSession() != null) {
                 MainActivity.customTabsConnection.getCustomTabsSession().mayLaunchUrl(uri, null, null);
+            }
         }
     }
 
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
+
         ds.setUnderlineText(false);
     }
 

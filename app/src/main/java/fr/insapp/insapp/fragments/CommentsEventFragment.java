@@ -62,7 +62,23 @@ public class CommentsEventFragment extends Fragment {
 
         CircleImageView circleImageView = (CircleImageView) view.findViewById(R.id.comment_event_username_avatar);
 
-        // get the drawable of avatarCircleImageView
+        // edit comment
+
+        CommentEditText commentEditText = (CommentEditText) view.findViewById(R.id.comment_event_input);
+        commentEditText.setupComponent(adapter, event);
+
+        // recycler view
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_comments_event);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setAdapter(adapter);
+
+        // retrieve the avatar of the user
 
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
@@ -74,27 +90,7 @@ public class CommentsEventFragment extends Fragment {
                 .crossFade()
                 .into(circleImageView);
 
-        // edit content
-
-        /*
-        HttpPost request = new HttpPost(new AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-                try {
-                    event.refresh(new JSONObject(output));
-                    adapter.setComments(event.getComments());
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                adapter.notifyDataSetChanged();
-            }
-        });
-        String params = HttpGet.ROOTEVENT + "/" + event.getId() + "/comment?token=" + HttpGet.sessionCredentials.getSessionToken();
-        */
-
-        CommentEditText commentEditText = (CommentEditText) view.findViewById(R.id.comment_event_input);
-        //commentEditText.setupComponent(request, params);
+        // animation on focus
 
         commentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -105,6 +101,7 @@ public class CommentsEventFragment extends Fragment {
                 }
                 else {
                     final Date atm = Calendar.getInstance().getTime();
+
                     if (event.getDateEnd().getTime() >= atm.getTime()) {
                         final Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
@@ -117,17 +114,6 @@ public class CommentsEventFragment extends Fragment {
                 }
             }
         });
-
-        // recycler view
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_comments_event);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-
-        recyclerView.setAdapter(adapter);
 
         return view;
     }

@@ -65,6 +65,9 @@ public interface Client {
     @POST("event/{id}/participant/{userId}/status/{status}")
     Call<Event> addParticipant(@Path("id") String id, @Path("userId") String userId, @Path("status") String status);
 
+    @POST("event/{id}/comment")
+    Call<Event> commentEvent(@Path("id") String id, @Body Comment comment);
+
     /*
      * POSTS
      */

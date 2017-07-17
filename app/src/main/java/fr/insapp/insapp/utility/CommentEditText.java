@@ -18,18 +18,16 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.AutoCompleterAdapter;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.Client;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +56,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setupComponent(final CommentRecyclerViewAdapter commentAdapter, final Post post) {
+    public void setupComponent(final CommentRecyclerViewAdapter commentAdapter, final Object object) {
         setThreshold(1);
         setTokenizer(new TagTokenizer());
 
@@ -101,25 +99,49 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
 
                         final Comment comment = Comment.create(null, user.getId(), content, null, tags);
 
-                        Call<Post> call = ServiceGenerator.createService(Client.class).commentPost(post.getId(), comment);
-                        call.enqueue(new Callback<Post>() {
-                            @Override
-                            public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
-                                if (response.isSuccessful()) {
-                                    commentAdapter.setComments(response.body().getComments());
+                        if (object instanceof Post) {
+                            Call<Post> call = ServiceGenerator.create().commentPost(((Post) object).getId(), comment);
+                            call.enqueue(new Callback<Post>() {
+                                @Override
+                                public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                                    if (response.isSuccessful()) {
+                                        commentAdapter.setComments(response.body().getComments());
 
-                                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                                else {
+
+                                @Override
+                                public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
                                     Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                                 }
-                            }
+                            });
+                        }
 
-                            @Override
-                            public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                        else if (object instanceof Event) {
+                            Call<Event> call = ServiceGenerator.create().commentEvent(((Event) object).getId(), comment);
+                            call.enqueue(new Callback<Event>() {
+                                @Override
+                                public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                                    if (response.isSuccessful()) {
+                                        commentAdapter.setComments(response.body().getComments());
+
+                                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                                    Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     }
 
                     return true;

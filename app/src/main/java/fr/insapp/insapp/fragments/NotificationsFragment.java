@@ -24,6 +24,7 @@ import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,7 +79,7 @@ public class NotificationsFragment extends Fragment {
 
     private void generateNotifications() {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        Call<List<Notification>> call = ServiceGenerator.create().getNotificationsForUser(gson.fromJson(getContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
+        Call<List<Notification>> call = ServiceGenerator.create().getNotificationsForUser(gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class).getId());
         call.enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(@NonNull Call<List<Notification>> call, @NonNull Response<List<Notification>> response) {

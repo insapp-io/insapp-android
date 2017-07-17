@@ -97,7 +97,8 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
 
                     if (!content.isEmpty()) {
                         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-                        final User user = gson.fromJson(getContext().getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+                        final User user = gson.fromJson(getContext().getSharedPreferences("User", MODE_PRIVATE).getString("session", ""), User.class);
+
                         final Comment comment = Comment.create(null, user.getId(), content, null, tags);
 
                         Call<Post> call = ServiceGenerator.createService(Client.class).commentPost(post.getId(), comment);

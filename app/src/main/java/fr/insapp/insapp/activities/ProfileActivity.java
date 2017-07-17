@@ -81,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (this.user == null) {
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-            this.user = gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser();
+            this.user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
         }
 
         // toolbar
@@ -187,7 +187,7 @@ public class ProfileActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
 
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        if (this.user.getId().equals(gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId())) {
+        if (this.user.getId().equals(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
             menu.getItem(0).setTitle(R.string.delete_account);
         }
 
@@ -204,7 +204,7 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.action_report:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
 
-                if (!this.user.getId().equals(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId())) {
+                if (!this.user.getId().equals(new Gson().fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
                     alertDialogBuilder.setTitle(getString(R.string.report_user_action));
                     alertDialogBuilder
                             .setMessage(R.string.report_user_are_you_sure)
@@ -243,7 +243,7 @@ public class ProfileActivity extends AppCompatActivity {
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogAlert, int id) {
-                                    Call<Void> call = ServiceGenerator.create().deleteUser(new Gson().fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId());
+                                    Call<Void> call = ServiceGenerator.create().deleteUser(new Gson().fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId());
                                     call.enqueue(new Callback<Void>() {
                                         @Override
                                         public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {

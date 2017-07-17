@@ -31,6 +31,7 @@ import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-            getSupportActionBar().setTitle(gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getUsername());
+            getSupportActionBar().setTitle(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getUsername());
         }
 
         // view pager
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_profile:
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-                startActivity(new Intent(this, ProfileActivity.class).putExtra("user", gson.fromJson(getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser()));
+                startActivity(new Intent(this, ProfileActivity.class).putExtra("user", gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class)));
                 break;
 
             case R.id.action_settings:

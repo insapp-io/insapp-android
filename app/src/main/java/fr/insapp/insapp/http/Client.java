@@ -97,6 +97,9 @@ public interface Client {
     @GET("user/{id}")
     Call<User> getUserFromId(@Path("id") String id);
 
+    @PUT("user/{id}")
+    Call<User> updateUser(@Path("id") String id, @Body User user);
+
     @DELETE("user/{id}")
     Call<Void> deleteUser(@Path("id") String id);
 

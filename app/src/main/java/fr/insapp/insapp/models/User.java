@@ -47,7 +47,7 @@ public abstract class User implements Parcelable {
     @SerializedName("postsliked")
     abstract List<String> postsLiked();
 
-    static User create(String id, String name, String username, String description, String email, boolean emailPublic, String promotion, String gender, List<String> events, List<String> postsLiked) {
+    public static User create(String id, String name, String username, String description, String email, boolean emailPublic, String promotion, String gender, List<String> events, List<String> postsLiked) {
         return new AutoParcelGson_User(id, name, username, description, email, emailPublic, promotion, gender, events, postsLiked);
     }
 

@@ -35,6 +35,8 @@ dependencies {
     compile "com.android.support:cardview-v7:$SUPPORT_LIB_VER"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIB_VER"
     compile "com.android.support:palette-v7:$SUPPORT_LIB_VER"
+    compile "com.android.support:preference-v7:$SUPPORT_LIB_VER"
+    compile "com.android.support:preference-v14:$SUPPORT_LIB_VER"
     compile "com.android.support:customtabs:$SUPPORT_LIB_VER"
 
     compile "com.google.firebase:firebase-messaging:$GOOGLE_LIB_VER"

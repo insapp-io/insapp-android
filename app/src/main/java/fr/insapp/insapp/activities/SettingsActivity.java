@@ -1,35 +1,22 @@
 package fr.insapp.insapp.activities;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceGroup;
-import android.preference.PreferenceManager;
-import android.support.design.widget.AppBarLayout;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.support.v7.app.AppCompatActivity;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 
 /**
  * Created by thomas on 15/12/2016.
  */
 
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends AppCompatActivity {
 
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_settings);
+    }
+    /*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,4 +148,5 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     public void updateProfile() {
     }
+    */
 }

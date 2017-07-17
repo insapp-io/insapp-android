@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        /*
         MenuItem menuItem = menu.findItem(R.id.search);
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
+        */
 
         return super.onCreateOptionsMenu(menu);
     }

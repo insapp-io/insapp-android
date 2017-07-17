@@ -13,9 +13,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,12 +21,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpPost;
 import fr.insapp.insapp.listeners.EventCommentLongClickListener;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
 

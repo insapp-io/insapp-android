@@ -2,17 +2,20 @@ package fr.insapp.insapp.listeners;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
+import fr.insapp.insapp.models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,8 +45,9 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
 
         // delete comment
 
-        /*
-        if (new Gson().fromJson(context.getSharedPreferences("Credentials", MODE_PRIVATE).getString("session", ""), SessionCredentials.class).getUser().getId().equals(comment.getUserId())) {
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+
+        if (gson.fromJson(context.getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId().equals(comment.getUser())) {
             alertDialogBuilder.setTitle(context.getResources().getString(R.string.delete_comment_action));
             alertDialogBuilder
                     .setMessage(R.string.delete_comment_are_you_sure)
@@ -54,7 +58,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                             Call<Post> call = ServiceGenerator.create().uncommentPost(post.getId(), comment.getId());
                             call.enqueue(new Callback<Post>() {
                                 @Override
-                                public void onResponse(Call<Post> call, Response<Post> response) {
+                                public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
                                     if (response.isSuccessful()) {
                                         post = response.body();
                                         adapter.setComments(post.getComments());
@@ -65,7 +69,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                                 }
 
                                 @Override
-                                public void onFailure(Call<Post> call, Throwable t) {
+                                public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
                                     Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();
                                 }
                             });
@@ -93,7 +97,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                             Call<Post> call = ServiceGenerator.create().reportComment(post.getId(), comment.getId());
                             call.enqueue(new Callback<Post>() {
                                 @Override
-                                public void onResponse(Call<Post> call, Response<Post> response) {
+                                public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
                                     if (response.isSuccessful()) {
                                         Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
                                     }
@@ -103,7 +107,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                                 }
 
                                 @Override
-                                public void onFailure(Call<Post> call, Throwable t) {
+                                public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
                                     Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();
                                 }
                             });
@@ -118,6 +122,5 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
-        */
     }
 }

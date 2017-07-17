@@ -22,7 +22,6 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
@@ -78,7 +77,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         final Event event = events.get(position);
 
         if (layout == R.layout.row_event_with_avatars) {
-            final Club club = HttpGet.clubs.get(event.getAssociation());
+            final Club club = null;
 
             if (club == null) {
                 /*

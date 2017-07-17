@@ -1,19 +1,9 @@
 package fr.insapp.insapp.listeners;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpDelete;
-import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPut;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Event;
 

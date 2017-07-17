@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        /*
         MenuItem menuItem = menu.findItem(R.id.search);
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
@@ -110,14 +109,13 @@ public class MainActivity extends AppCompatActivity {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
 
         try {
-            Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
-            mCursorDrawableRes.setAccessible(true);
-            mCursorDrawableRes.set(searchView, R.drawable.cursor); // this sets the cursor resource ID to 0 or @null which will make it visible on white background
+            Field cursorDrawable = TextView.class.getDeclaredField("mCursorDrawableRes");
+            cursorDrawable.setAccessible(true);
+            cursorDrawable.set(searchView, R.drawable.cursor);
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        */
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -16,7 +16,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.http.HttpGet;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 

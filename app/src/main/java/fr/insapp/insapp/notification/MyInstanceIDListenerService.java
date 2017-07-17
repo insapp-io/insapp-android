@@ -7,8 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.insapp.insapp.http.AsyncResponse;
-import fr.insapp.insapp.http.HttpGet;
-import fr.insapp.insapp.http.HttpPost;
 
 /**
  * Created by Antoine on 06/03/2017.
@@ -28,19 +26,14 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        System.out.println("Refreshed token: " + refreshedToken);
-        // TODO: Implement this method to send any registration to your app's servers.
         sendRegistrationToServer(refreshedToken);
     }
 
     public void sendRegistrationToServer(String token){
-
-        System.out.println("TOKEN : " + token);
+        /*
         JSONObject notuser = new JSONObject();
         try {
-            /*
             notuser.put("userid", HttpGet.sessionCredentials.getUserID());
-            */
             notuser.put("token", token);
             notuser.put("os", "android");
         } catch (JSONException e) {
@@ -53,7 +46,6 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
                 System.out.println(output);
             }
         });
-        /*
         post.execute(HttpGet.ROOTNOTIFICATION + "?token=" + HttpGet.sessionCredentials.getSessionToken(), notuser.toString());
         */
     }

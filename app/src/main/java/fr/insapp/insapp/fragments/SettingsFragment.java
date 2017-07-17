@@ -1,6 +1,7 @@
 package fr.insapp.insapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,15 +11,16 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.activities.ProfileActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +38,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         addPreferencesFromResource(R.xml.preferences);
 
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        initSummary(getPreferenceScreen());
 
         /*
         final Preference chimeMaster = findPreference("barcode");
@@ -48,6 +49,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             }
         });
         */
+
+        initSummary(getPreferenceScreen());
     }
 
     @Override
@@ -73,17 +76,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                if (response.isSuccessful()) {
-
-                }
-                else {
-
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-
+                Toast.makeText(getContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -106,8 +106,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             ListPreference listPreference = (ListPreference) preference;
             preference.setSummary(listPreference.getEntry());
         }
-
-        if (preference instanceof EditTextPreference) {
+        else if (preference instanceof EditTextPreference) {
             EditTextPreference editTextPreference = (EditTextPreference) preference;
 
             if (editTextPreference.getText() != null && !editTextPreference.getText().isEmpty()) {

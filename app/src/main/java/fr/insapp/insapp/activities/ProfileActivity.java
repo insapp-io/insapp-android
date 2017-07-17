@@ -204,7 +204,9 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.action_report:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
 
-                if (!this.user.getId().equals(new Gson().fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+
+                if (!this.user.getId().equals(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
                     alertDialogBuilder.setTitle(getString(R.string.report_user_action));
                     alertDialogBuilder
                             .setMessage(R.string.report_user_are_you_sure)
@@ -243,12 +245,15 @@ public class ProfileActivity extends AppCompatActivity {
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialogAlert, int id) {
-                                    Call<Void> call = ServiceGenerator.create().deleteUser(new Gson().fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId());
+                                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+
+                                    Call<Void> call = ServiceGenerator.create().deleteUser(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId());
                                     call.enqueue(new Callback<Void>() {
                                         @Override
                                         public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                                             if (response.isSuccessful()) {
                                                 getSharedPreferences("Credentials", MODE_PRIVATE).edit().clear().apply();
+                                                getSharedPreferences("User", MODE_PRIVATE).edit().clear().apply();
 
                                                 Intent activity = new Intent(ProfileActivity.this, IntroActivity.class);
                                                 activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

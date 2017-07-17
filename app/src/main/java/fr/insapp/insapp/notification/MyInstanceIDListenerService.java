@@ -3,11 +3,6 @@ package fr.insapp.insapp.notification;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import fr.insapp.insapp.http.AsyncResponse;
-
 /**
  * Created by Antoine on 06/03/2017.
  */

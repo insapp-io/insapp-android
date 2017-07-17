@@ -1,4 +1,4 @@
-package fr.insapp.insapp.http;
+package fr.insapp.insapp.http.interceptors;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import java.io.IOException;
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.activities.IntroActivity;
+import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import okhttp3.HttpUrl;

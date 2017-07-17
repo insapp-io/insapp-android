@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.activities.MainActivity;
+import fr.insapp.insapp.http.interceptors.JsonInterceptor;
+import fr.insapp.insapp.http.interceptors.TokenInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

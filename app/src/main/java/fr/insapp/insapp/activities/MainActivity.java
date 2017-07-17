@@ -32,7 +32,6 @@ import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 
 public class MainActivity extends AppCompatActivity {
 

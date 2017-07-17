@@ -31,6 +31,10 @@
 
     </style>
 
+    <style name="AppAlertDialogContent" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="TabLayoutTextStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>

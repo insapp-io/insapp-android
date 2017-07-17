@@ -11,7 +11,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
 /**
- * Created by thoma on 22/12/2016.
+ * Created by thomas on 22/12/2016.
  */
 
 public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FrameLayout> {
@@ -33,14 +33,17 @@ public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FrameLayout
             FloatingActionMenu fabMenu = (FloatingActionMenu) fabContainer.getChildAt(0);
             if (dyConsumed > 0) {
                 fabMenu.hideMenuButton(true);
-            } else if (dyConsumed < 0) {
+            }
+            else if (dyConsumed < 0) {
                 fabMenu.showMenuButton(true);
             }
-        } else if (fabContainer.getChildAt(0) instanceof FloatingActionButton) {
+        }
+        else if (fabContainer.getChildAt(0) instanceof FloatingActionButton) {
             FloatingActionButton fab = (FloatingActionButton) fabContainer.getChildAt(0);
             if (dyConsumed > 0) {
                 fab.hide(true);
-            } else if (dyConsumed < 0) {
+            }
+            else if (dyConsumed < 0) {
                 fab.show(true);
             }
         }

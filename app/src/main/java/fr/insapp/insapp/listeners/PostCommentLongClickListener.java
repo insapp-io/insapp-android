@@ -94,10 +94,10 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                     .setCancelable(true)
                     .setPositiveButton(context.getString(R.string.positive_button), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogAlert, int id) {
-                            Call<Post> call = ServiceGenerator.create().reportComment(post.getId(), comment.getId());
-                            call.enqueue(new Callback<Post>() {
+                            Call<Void> call = ServiceGenerator.create().reportComment(post.getId(), comment.getId());
+                            call.enqueue(new Callback<Void>() {
                                 @Override
-                                public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                                     if (response.isSuccessful()) {
                                         Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show();
                                     }
@@ -107,7 +107,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
                                 }
 
                                 @Override
-                                public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                                     Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show();
                                 }
                             });

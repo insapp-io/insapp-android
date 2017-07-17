@@ -1,7 +1,6 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,16 +19,16 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
 
 /**
- * Created by thoma on 24/02/2017.
+ * Created by thomas on 24/02/2017.
  */
 
 public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecyclerViewAdapter.UserViewHolder> {
 
-    protected boolean matchParent;
+    private boolean matchParent;
 
     protected List<User> users;
 
-    protected OnUserItemClickListener listener;
+    private OnUserItemClickListener listener;
 
     public interface OnUserItemClickListener {
         void onUserItemClick(User user);
@@ -62,9 +61,12 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
 
         // get the drawable of avatarCircleImageView
 
-        Resources resources = context.getResources();
-        final int id = resources.getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-        Glide.with(context).load(id).into(holder.avatar);
+        final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+        Glide
+                .with(context)
+                .load(id)
+                .crossFade()
+                .into(holder.avatar);
 
         holder.name.setText(user.getName());
         holder.username.setText(user.getUsername());

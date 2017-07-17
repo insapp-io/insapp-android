@@ -13,16 +13,12 @@ import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.utility.Utils;
 
 /**
- * Created by thoma on 25/02/2017.
+ * Created by thomas on 25/02/2017.
  */
 
 public class AboutFragment extends Fragment {
 
-    private View view;
-
     private Event event;
-
-    private TextView descriptionTextView;
 
     private int bgColor;
     private int fgColor;
@@ -44,11 +40,11 @@ public class AboutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.fragment_about, container, false);
+        View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         // description
 
-        this.descriptionTextView = (TextView) view.findViewById(R.id.event_description);
+        TextView descriptionTextView = (TextView) view.findViewById(R.id.event_description);
         descriptionTextView.setText(event.getDescription());
 
         Linkify.addLinks(descriptionTextView, Linkify.ALL);

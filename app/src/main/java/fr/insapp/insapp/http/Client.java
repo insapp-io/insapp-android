@@ -68,6 +68,9 @@ public interface Client {
     @POST("event/{id}/comment")
     Call<Event> commentEvent(@Path("id") String id, @Body Comment comment);
 
+    @DELETE("event/{id}/comment/{commentId}")
+    Call<Event> uncommentEvent(@Path("id") String id, @Path("commentId") String commentId);
+
     /*
      * POSTS
      */
@@ -90,11 +93,15 @@ public interface Client {
     @DELETE("post/{id}/comment/{commentId}")
     Call<Post> uncommentPost(@Path("id") String id, @Path("commentId") String commentId);
 
+    /*
+     * COMMENTS
+     */
+
     @PUT("report/{id}/comment/{commentId}")
-    Call<Post> reportComment(@Path("id") String id, @Path("commentId") String commentId);
+    Call<Void> reportComment(@Path("id") String id, @Path("commentId") String commentId);
 
     /*
-     * USER
+     * USERS
      */
 
     @GET("user/{id}")

@@ -20,16 +20,16 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 
 /**
- * Created by thoma on 30/10/2016.
+ * Created by thomas on 30/10/2016.
  */
 
 public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecyclerViewAdapter.ClubViewHolder> {
 
-    protected boolean matchParent;
+    private boolean matchParent;
 
     protected List<Club> clubs;
 
-    protected OnClubItemClickListener listener;
+    private OnClubItemClickListener listener;
 
     public interface OnClubItemClickListener {
         void onClubItemClick(Club club);
@@ -64,7 +64,12 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
 
         // glide
 
-        Glide.with(context).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.avatar);
+        Glide
+                .with(context)
+                .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.avatar);
 
         holder.bind(club, listener);
     }

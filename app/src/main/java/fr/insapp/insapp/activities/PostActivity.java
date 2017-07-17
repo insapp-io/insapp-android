@@ -25,14 +25,12 @@ import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
-import fr.insapp.insapp.http.Client;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.Utils;
@@ -48,7 +46,6 @@ public class PostActivity extends AppCompatActivity {
 
     public static final int NOTIFICATION_MESSAGE = 10;
 
-    private RecyclerView recyclerView;
     private CommentRecyclerViewAdapter adapter;
 
     private Post post;
@@ -64,7 +61,6 @@ public class PostActivity extends AppCompatActivity {
     // comment
 
     private CircleImageView userAvatarCircleImageView;
-    private CommentEditText commentEditText;
 
     private Notification notification;
 
@@ -119,7 +115,7 @@ public class PostActivity extends AppCompatActivity {
                 Call<Post> call = ServiceGenerator.create().getPostFromId(notification.getContent());
                 call.enqueue(new Callback<Post>() {
                     @Override
-                    public void onResponse(Call<Post> call, Response<Post> response) {
+                    public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
                         if (response.isSuccessful()) {
                             post = response.body();
                             generateActivity();
@@ -130,7 +126,7 @@ public class PostActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Post> call, Throwable t) {
+                    public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
                         Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -188,12 +184,12 @@ public class PostActivity extends AppCompatActivity {
 
         // edit comment
 
-        this.commentEditText = (CommentEditText) findViewById(R.id.comment_post_input);
+        CommentEditText commentEditText = (CommentEditText) findViewById(R.id.comment_post_input);
         commentEditText.setupComponent(adapter, post);
 
         // recycler view
 
-        this.recyclerView = (RecyclerView) findViewById(R.id.recyclerview_comments_post);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_comments_post);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 

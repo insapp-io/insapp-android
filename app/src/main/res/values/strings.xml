@@ -89,7 +89,7 @@
     <string name="event_participants">Participants</string>
 
     <string name="add_to_calendar_action">Ajout au calendrier</string>
-    <string name="add_to_calendar_are_you_sure">Voulez-vous ajouter les évènements auxquels vous participez à votre calendrier ?</string>
+    <string name="add_to_calendar_are_you_sure">Voulez-vous ajouter cet évènement à votre calendrier ?</string>
 
     <string name="legal_conditions">Mentions légales</string>
 

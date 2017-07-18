@@ -22,19 +22,19 @@ public class IntroEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_intro_events, container, false);
 
-        final SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+        final SharedPreferences.Editor defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
 
         CheckBox checkbox = (CheckBox) rootView.findViewById(R.id.checkbox_enable_calendar);
-        checkbox.setChecked(true);
+        checkbox.setChecked(false);
 
-        preferences.putBoolean("calendar", true);
-        preferences.apply();
+        defaultSharedPreferences.putBoolean("calendar", false);
+        defaultSharedPreferences.apply();
 
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                preferences.putBoolean("calendar", b);
-                preferences.apply();
+                defaultSharedPreferences.putBoolean("calendar", b);
+                defaultSharedPreferences.apply();
             }
         });
 

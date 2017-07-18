@@ -32,10 +32,11 @@ import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.notifications.FirebaseService;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final boolean dev = false;
+    public static final boolean dev = true;
 
     public static CustomTabsConnection customTabsConnection;
 
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Firebase
 
-        Log.d("Firebase", "Token: " + FirebaseInstanceId.getInstance().getToken());
+        Log.d(FirebaseService.TAG, "Token: " + FirebaseInstanceId.getInstance().getToken());
 
         // toolbar
 

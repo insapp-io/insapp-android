@@ -282,14 +282,14 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
         if (resultCode == RESULT_OK) {
             switch (requestCode){
                 case EVENT_REQUEST:
 
-                    Event event = data.getParcelableExtra("event");
+                    Event event = intent.getParcelableExtra("event");
 
                     final int idToday = adapterToday.getEvents().indexOf(event);
                     final int idWeek = adapterWeek.getEvents().indexOf(event);

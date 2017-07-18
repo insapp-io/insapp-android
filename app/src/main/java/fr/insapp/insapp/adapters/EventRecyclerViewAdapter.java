@@ -2,12 +2,14 @@ package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,6 +29,9 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.EventComparator;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by thomas on 18/11/2016.
@@ -77,54 +82,45 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         final Event event = events.get(position);
 
         if (layout == R.layout.row_event_with_avatars) {
-            final Club club = null;
+            Call<Club> call = ServiceGenerator.create().getClubFromId(event.getAssociation());
+            call.enqueue(new Callback<Club>() {
+                @Override
+                public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
+                    if (response.isSuccessful()) {
+                        final Club club = response.body();
 
-            if (club == null) {
-                /*
-                HttpGet request = new HttpGet(new AsyncResponse() {
-                    public void processFinish(String output) {
-                        if (!output.isEmpty()) {
-                            try {
-                                JSONObject jsonobject = new JSONObject(output);
+                        Glide
+                                .with(context)
+                                .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                                .crossFade()
+                                .into(holder.avatar);
 
-                                final Club club = new Club(jsonobject);
-                                HttpGet.clubs.put(club.getId(), club);
-
-                                // avatar
-
-                                Glide.with(context).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(holder.avatar);
-                                holder.avatar.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                                    }
-                                });
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        holder.avatar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
                             }
-                        }
+                        });
                     }
-                });
-                request.execute(HttpGet.ROOTASSOCIATION + "/" + event.getAssociation() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-                */
-            }
-            else {
-                // avatar
+                    else {
+                        Toast.makeText(context, "EventRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                    }
+                }
 
-                Glide.with(context).load(ServiceGenerator.CDN_URL + club.getProfilePicture()).into(holder.avatar);
-                holder.avatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                    }
-                });
-            }
+                @Override
+                public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
+                    Toast.makeText(context, "EventRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
-        Glide.with(context).load(ServiceGenerator.CDN_URL + event.getImage()).bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.thumbnail);
+        Glide.with(context)
+                .load(ServiceGenerator.CDN_URL + event.getImage())
+                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.thumbnail);
 
         holder.name.setText(event.getName());
-        System.out.println(event.getName());
 
         final int nb_participants = (event.getAttendees() == null) ? 0 : event.getAttendees().size();
         if (nb_participants <= 1) {

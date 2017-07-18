@@ -42,8 +42,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.d(FirebaseService.TAG, "Body: " + remoteMessage.getNotification().getBody());
 
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
-            if (sharedPreferences.getBoolean("notifications", true)) {
+            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+            if (defaultSharedPreferences.getBoolean("notifications", true)) {
                 sendNotification(getRandomNotificationId(), remoteMessage.getNotification().getBody(), remoteMessage.getData());
             }
         }

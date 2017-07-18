@@ -25,6 +25,7 @@ public abstract class Event implements Parcelable, Comparable<Event> {
     @SerializedName("description")
     abstract String description();
 
+    @Nullable
     @SerializedName("participants")
     abstract List<String> attendees();
 
@@ -93,9 +94,11 @@ public abstract class Event implements Parcelable, Comparable<Event> {
             }
         }
 
-        for (final String id : attendees()) {
-            if (userId.equals(id)) {
-                return Event.PARTICIPATE.YES;
+        if (attendees() != null) {
+            for (final String id : attendees()) {
+                if (userId.equals(id)) {
+                    return Event.PARTICIPATE.YES;
+                }
             }
         }
 

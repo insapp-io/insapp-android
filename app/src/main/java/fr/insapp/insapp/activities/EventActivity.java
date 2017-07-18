@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -49,6 +50,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.AboutFragment;
@@ -69,9 +71,6 @@ import retrofit2.Response;
 
 public class EventActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private RelativeLayout relativeLayout;
 
     private ImageView headerImageView;
@@ -129,7 +128,7 @@ public class EventActivity extends AppCompatActivity {
 
         // toolbar
 
-        this.toolbar = (Toolbar) findViewById(R.id.toolbar_event);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_event);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
@@ -143,7 +142,7 @@ public class EventActivity extends AppCompatActivity {
 
         // view pager
 
-        this.viewPager = (ViewPager) findViewById(R.id.viewpager_event);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager_event);
         setupViewPager(viewPager, bgColor);
 
         if (fgColor != 0xffffffff) {
@@ -155,7 +154,7 @@ public class EventActivity extends AppCompatActivity {
 
         // tab layout
 
-        this.tabLayout = (TabLayout) findViewById(R.id.tabs_event);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs_event);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setBackgroundColor(bgColor);
 
@@ -283,7 +282,7 @@ public class EventActivity extends AppCompatActivity {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 
-        // fab 1
+        // fab 1: participate
 
         this.floatingActionButton1 = (FloatingActionButton) findViewById(R.id.fab_item_1_event);
         floatingActionButton1.setLabelColors(bgColor, bgColor, 0x99ffffff);
@@ -315,11 +314,10 @@ public class EventActivity extends AppCompatActivity {
 
                                     event = response.body();
 
-                                    SharedPreferences prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE);
-
                                     // if first time user join an event
 
-                                    if (prefs.getString("addEventToCalender", "").equals("")) {
+                                    SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+                                    if (defaultSharedPreferences.getBoolean("calendar", false)) {
                                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EventActivity.this);
 
                                         // set title
@@ -331,19 +329,11 @@ public class EventActivity extends AppCompatActivity {
                                                 .setCancelable(false)
                                                 .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialogAlert, int id) {
-                                                        SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-                                                        prefs.putString("addEventToCalender", "true");
-                                                        prefs.apply();
-
                                                         addEventToCalendar();
                                                     }
                                                 })
                                                 .setNegativeButton(R.string.negative_button, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialogAlert, int id) {
-                                                        SharedPreferences.Editor prefs = getSharedPreferences(SigninActivity.class.getSimpleName(), SigninActivity.MODE_PRIVATE).edit();
-                                                        prefs.putString("addEventToCalender", "false");
-                                                        prefs.apply();
-
                                                         dialogAlert.cancel();
                                                     }
                                                 });
@@ -352,9 +342,6 @@ public class EventActivity extends AppCompatActivity {
 
                                         AlertDialog alertDialog = alertDialogBuilder.create();
                                         alertDialog.show();
-                                    }
-                                    else if (prefs.getString("addEventToCalender", "true").equals("true")) {
-                                        addEventToCalendar();
                                     }
                                 }
                                 else {
@@ -379,7 +366,7 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
-        // fab 2
+        // fab 2: maybe
 
         this.floatingActionButton2 = (FloatingActionButton) findViewById(R.id.fab_item_2_event);
         floatingActionButton2.setLabelColors(bgColor, bgColor, 0x99ffffff);
@@ -433,7 +420,7 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
-        // fab 3
+        // fab 3: notgoing
 
         this.floatingActionButton3 = (FloatingActionButton) findViewById(R.id.fab_item_3_event);
         floatingActionButton3.setLabelColors(bgColor, bgColor, 0x99ffffff);
@@ -629,7 +616,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void refreshAttendeesTextView() {
-        final int nbParticipants = event.getAttendees().size();
+        final int nbParticipants = (event.getAttendees() == null) ? 0 : event.getAttendees().size();
         final int nbInterested = (event.getMaybe() == null) ? 0 : event.getMaybe().size();
 
         if (nbParticipants == 0) {
@@ -716,12 +703,13 @@ public class EventActivity extends AppCompatActivity {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
 
-            if ( v instanceof EditText) {
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
 
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
+
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }

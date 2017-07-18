@@ -1,8 +1,16 @@
 package fr.insapp.insapp.models;
 
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.annotations.SerializedName;
@@ -14,6 +22,7 @@ import auto.parcelgson.gson.annotations.SerializedName;
 @AutoParcelGson
 public abstract class Notification implements Parcelable {
 
+    @Nullable
     @SerializedName("ID")
     abstract String id();
 
@@ -46,8 +55,52 @@ public abstract class Notification implements Parcelable {
     private transient User user;
     private transient Event event;
 
-    static Notification create(String id, String sender, String receiver, String content, Comment comment, String message, boolean seen, Date date, String type) {
+    public static Notification create(String id, String sender, String receiver, String content, Comment comment, String message, boolean seen, Date date, String type) {
         return new AutoParcelGson_Notification(id, sender, receiver, content, comment, message, seen, date, type);
+    }
+
+    public static Notification create(Map<String, String> data) {
+        Notification notification = null;
+
+        try {
+            JSONObject jsonComment = new JSONObject(data.get("comment"));
+            JSONArray jsonTags = new JSONArray(jsonComment.getJSONArray("tags"));
+
+            List<Tag> tags = new ArrayList<>();
+
+            for (int i = 0; i < jsonTags.length(); ++i) {
+                JSONObject jsonTag = jsonTags.getJSONObject(i);
+
+                tags.add(Tag.create(
+                        jsonTag.getString("ID"),
+                        jsonTag.getString("user"),
+                        jsonTag.getString("name")
+                ));
+            }
+
+            Comment comment = Comment.create(
+                    jsonComment.getString("ID"),
+                    jsonComment.getString("user"),
+                    jsonComment.getString("content"),
+                    new Date(jsonComment.getString("date")),
+                    tags);
+
+            notification = Notification.create(
+                    data.get("ID"),
+                    data.get("sender"),
+                    data.get("receiver"),
+                    data.get("content"),
+                    comment,
+                    data.get("message"),
+                    Boolean.parseBoolean(data.get("seen")),
+                    new Date(data.get("date")),
+                    data.get("type"));
+        }
+        catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        return notification;
     }
 
     public String getId() {

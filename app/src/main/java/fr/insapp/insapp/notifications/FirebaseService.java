@@ -34,7 +34,6 @@ public class FirebaseService extends FirebaseInstanceIdService {
 
     private void registerToken(String token) {
         if (token != null) {
-
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
             final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 

@@ -40,7 +40,6 @@ dependencies {
     compile "com.android.support:customtabs:$SUPPORT_LIB_VER"
 
     compile "com.google.firebase:firebase-messaging:$GOOGLE_LIB_VER"
-    compile "com.google.firebase:firebase-core:$GOOGLE_LIB_VER"
 
     compile "com.google.android.gms:play-services-maps:$GOOGLE_LIB_VER"
     compile "com.google.android.gms:play-services-location:$GOOGLE_LIB_VER"

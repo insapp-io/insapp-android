@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Firebase
 
-        FirebaseApp.initializeApp(getApplicationContext());
-        String token = FirebaseInstanceId.getInstance().getToken();
+        //FirebaseApp.initializeApp(getApplicationContext());
+        Log.d("Firebase", "Token: " + FirebaseInstanceId.getInstance().getToken());
 
         // toolbar
 

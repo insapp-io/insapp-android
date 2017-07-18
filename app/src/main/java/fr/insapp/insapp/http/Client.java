@@ -8,6 +8,7 @@ import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.EventSearchResults;
 import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.NotificationUser;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.PostSearchResults;
@@ -119,6 +120,9 @@ public interface Client {
     /*
      * NOTIFICATION
      */
+
+    @POST("notification")
+    Call<NotificationUser> registerNotification(@Body NotificationUser notificationUser);
 
     @GET("notification/{userId}")
     Call<List<Notification>> getNotificationsForUser(@Path("userId") String userId);

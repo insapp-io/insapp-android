@@ -1,20 +1,27 @@
 {
   "project_info": {
-    "project_number": "451191722739 ",
-    "project_id": "insapp-android-145914"
+    "project_number": "451191722739",
+    "firebase_url": "https://insapp-android.firebaseio.com",
+    "project_id": "insapp-android",
+    "storage_bucket": "insapp-android.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:62130413519:android:936062f71244a243",
+        "mobilesdk_app_id": "1:451191722739:android:936062f71244a243",
         "android_client_info": {
           "package_name": "fr.insapp.insapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "451191722739-58bbqqc5snbg9omvm8krqe276ji77or0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCWKY919k8ufpERLGJcdmhCrIEjNpvyND4"
+          "current_key": "AIzaSyAPzUY3_m8GeqP1pbBrS9NgqYsC_0jMfQI"
         }
       ],
       "services": {
@@ -26,7 +33,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

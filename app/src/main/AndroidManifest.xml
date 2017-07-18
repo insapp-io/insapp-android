@@ -8,9 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-permission android:name="fr.insapp.insapp.permission.C2D_MESSAGE" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".App"
@@ -138,16 +136,16 @@
         </activity>
 
         <service
-            android:name=".notification.MyInstanceIDListenerService">
+            android:name=".notifications.FirebaseMessaging">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <service
-            android:name=".notification.MyFcmListenerService">
+            android:name=".notifications.FirebaseService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 

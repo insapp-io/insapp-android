@@ -1,5 +1,7 @@
 package fr.insapp.insapp.notifications;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,18 +26,22 @@ import retrofit2.Response;
 
 public class FirebaseService extends FirebaseInstanceIdService {
 
+    public final static String TAG = "Firebase";
+
     @Override
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        registerToken(refreshedToken);
 
-        Log.d("Firebase", "Refreshed token: " + refreshedToken);
+        SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
+        firebaseCredentialsPreferences.edit().putString("token", refreshedToken).apply();
+
+        Log.d(FirebaseService.TAG, "Refreshed token: " + refreshedToken);
     }
 
-    private void registerToken(String token) {
+    public static void registerToken(String token) {
         if (token != null) {
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-            final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+            final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 
             NotificationUser notificationUser = new NotificationUser(null, user.getId(), token, "android");
 

@@ -1,5 +1,6 @@
 package fr.insapp.insapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -18,6 +20,7 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.models.credentials.SigninCredentials;
+import fr.insapp.insapp.notifications.FirebaseService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,18 +45,15 @@ public class SigninActivity extends AppCompatActivity {
         cookieManager.removeSessionCookie();
 
         final WebView webView = (WebView) findViewById(R.id.webview_conditions);
-
         webView.loadUrl(CAS_URL);
-        webView.getSettings().setJavaScriptEnabled(true);
-
         webView.setWebViewClient(new WebViewClient() {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 final int id = url.lastIndexOf("?ticket=");
                 if (url.contains("?ticket=")) {
                     final String ticket = url.substring(id + "?ticket=".length(), url.length());
 
-                    System.out.println("URL: " + url);
-                    System.out.println("Ticket: " + ticket);
+                    Log.d("CAS", "URL: " + url);
+                    Log.d("CAS", "Ticket: " + ticket);
 
                     signin(ticket);
                     webView.setVisibility(View.INVISIBLE);
@@ -73,15 +73,13 @@ public class SigninActivity extends AppCompatActivity {
                     login(response.body());
                 }
                 else {
-                    System.out.println(response.errorBody());
-                    Toast.makeText(SigninActivity.this, "1SigninActivity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<LoginCredentials> call, @NonNull Throwable t) {
-                System.out.println(t.getMessage());
-                Toast.makeText(SigninActivity.this, "2SigninActivity", Toast.LENGTH_LONG).show();
+                Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -92,19 +90,19 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<SessionCredentials> call, @NonNull Response<SessionCredentials> response) {
                 if (response.isSuccessful()) {
+                    FirebaseService.registerToken(getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE).getString("token", ""));
+
                     startActivity(new Intent(SigninActivity.this, MainActivity.class));
                     finish();
                 }
                 else {
-                    System.out.println(response.errorBody());
-                    Toast.makeText(SigninActivity.this, "3SigninActivity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<SessionCredentials> call, @NonNull Throwable t) {
-                System.out.println(t.getMessage());
-                Toast.makeText(SigninActivity.this, "4SigninActivity", Toast.LENGTH_LONG).show();
+                Toast.makeText(SigninActivity.this, "SigninActivity", Toast.LENGTH_LONG).show();
             }
         });
     }

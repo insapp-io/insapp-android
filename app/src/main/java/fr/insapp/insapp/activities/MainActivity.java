@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Firebase
 
-        //FirebaseApp.initializeApp(getApplicationContext());
         Log.d("Firebase", "Token: " + FirebaseInstanceId.getInstance().getToken());
 
         // toolbar

@@ -33,14 +33,14 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d("Firebase", "From: " + remoteMessage.getFrom());
+        Log.d(FirebaseService.TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
-            Log.d("Firebase", "Data: " + remoteMessage.getData());
+            Log.d(FirebaseService.TAG, "Data: " + remoteMessage.getData());
         }
 
         if (remoteMessage.getNotification() != null) {
-            Log.d("Firebase", "Body: " + remoteMessage.getNotification().getBody());
+            Log.d(FirebaseService.TAG, "Body: " + remoteMessage.getNotification().getBody());
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
             if (sharedPreferences.getBoolean("notifications", true)) {

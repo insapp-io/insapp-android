@@ -597,8 +597,6 @@ public class EventActivity extends AppCompatActivity {
         Intent sendIntent = new Intent();
         sendIntent.putExtra("event", event);
 
-        System.out.println(event);
-
         setResult(RESULT_OK, sendIntent);
 
         super.finish();

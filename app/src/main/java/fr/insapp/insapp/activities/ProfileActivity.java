@@ -46,7 +46,6 @@ import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.utility.Operation;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -292,39 +291,40 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void generateEvents(){
+    private void clearEvents() {
         adapter.getEvents().clear();
         adapter.notifyDataSetChanged();
-        final List<Event> events = new ArrayList<>();
-
-        /*
-        for (String idEvent : user.getEvents()) {
-                HttpGet request = new HttpGet(new AsyncResponse() {
-                    @Override
-                    public void processFinish(String output) {
-                        try {
-                            Event event = new Event(new JSONObject(output));
-                            events.add(event);
-                        } catch (JSONException e) {
-
-                        }
-
-                        if(events.size() == user.getEvents().size())
-                            showEvents(events);
-                    }
-                });
-                request.execute(HttpGet.ROOTEVENT + "/" + idEvent + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-        }
-        */
     }
 
-    private void showEvents(List<Event> events){
-        Date atm = Calendar.getInstance().getTime();
+    private void generateEvents() {
+        clearEvents();
 
-        Collections.sort(events);
-        for (final Event event : events) {
-            if (event.getDateEnd().getTime() > atm.getTime())
-                adapter.addItem(event);
+        for (final String eventId : user.getEvents()) {
+            Call<Event> call = ServiceGenerator.create().getEventFromId(eventId);
+            call.enqueue(new Callback<Event>() {
+                @Override
+                public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                    if (response.isSuccessful()) {
+                        addEventToAdapter(response.body());
+                    }
+                    else {
+                        Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                    Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    private void addEventToAdapter(Event event) {
+        final Date atm = Calendar.getInstance().getTime();
+
+        if (event.getDateEnd().getTime() > atm.getTime()) {
+            adapter.addItem(event);
         }
     }
 

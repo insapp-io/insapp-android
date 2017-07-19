@@ -25,6 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by thomas on 09/12/2016.
  */
@@ -40,6 +43,10 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
     private EventRecyclerViewAdapter adapterFuture;
     private EventRecyclerViewAdapter adapterPast;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static final int EVENT_REQUEST = 2;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +60,13 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
             this.swipeColor = bundle.getInt("swipe_color");
         }
 
-        // adapter
+        // adapters
 
         this.adapterFuture = new EventRecyclerViewAdapter(getContext(), layout);
         adapterFuture.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
+                startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
 
@@ -67,8 +74,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
         adapterPast.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                System.out.println(event);
-                startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", event));
+                startActivityForResult(new Intent(getContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
     }
@@ -95,7 +101,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
         // swipe refresh layout
 
-        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events_club);
+        this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_events_club);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(swipeColor);
 
@@ -121,29 +127,69 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                 @Override
                 public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                     if (response.isSuccessful()) {
-                        final Event event = response.body();
-                        System.out.println("network: + " + event);
-                        final Date atm = Calendar.getInstance().getTime();
-
-                        if (event.getDateEnd().getTime() > atm.getTime()) {
-                            adapterFuture.addItem(event);
-                            view.findViewById(R.id.events_future_layout).setVisibility(View.VISIBLE);
-                        }
-                        else {
-                            adapterPast.addItem(event);
-                            view.findViewById(R.id.events_past_layout).setVisibility(View.VISIBLE);
-                        }
+                        addEventToAdapter(response.body());
                     }
                     else {
                         Toast.makeText(getContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
+                    }
+
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
                     Toast.makeText(getContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
+
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             });
+        }
+    }
+
+    private void addEventToAdapter(Event event) {
+        final Date atm = Calendar.getInstance().getTime();
+
+        if (event.getDateEnd().getTime() > atm.getTime()) {
+            adapterFuture.addItem(event);
+            view.findViewById(R.id.events_future_layout).setVisibility(View.VISIBLE);
+        }
+        else {
+            adapterPast.addItem(event);
+            view.findViewById(R.id.events_past_layout).setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == EVENT_REQUEST) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    final Event event = intent.getParcelableExtra("event");
+
+                    for (int i = 0; i < adapterPast.getItemCount(); ++i) {
+                        if (adapterPast.getEvents().get(i).getId().equals(event.getId())) {
+                            adapterPast.updateEvent(i, event);
+                        }
+                    }
+
+                    for (int i = 0; i < adapterFuture.getItemCount(); ++i) {
+                        if (adapterFuture.getEvents().get(i).getId().equals(event.getId())) {
+                            adapterFuture.updateEvent(i, event);
+                        }
+                    }
+
+                    break;
+
+                case RESULT_CANCELED:
+                default:
+                    break;
+            }
         }
     }
 

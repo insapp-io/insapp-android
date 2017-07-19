@@ -38,13 +38,6 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private String filter_club_id;
 
     private View view;
-
-    private RecyclerView recyclerViewNow;
-    private RecyclerView recyclerViewToday;
-    private RecyclerView recyclerViewWeek;
-    private RecyclerView recyclerViewNextWeek;
-    private RecyclerView recyclerViewLater;
-
     private EventRecyclerViewAdapter adapterNow;
     private EventRecyclerViewAdapter adapterToday;
     private EventRecyclerViewAdapter adapterWeek;
@@ -116,23 +109,23 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // recycler view
 
-        this.recyclerViewNow = (RecyclerView) view.findViewById(R.id.recyclerview_events_now);
+        RecyclerView recyclerViewNow = (RecyclerView) view.findViewById(R.id.recyclerview_events_now);
         recyclerViewNow.setHasFixedSize(true);
         recyclerViewNow.setNestedScrollingEnabled(false);
 
-        this.recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
+        RecyclerView recyclerViewToday = (RecyclerView) view.findViewById(R.id.recyclerview_events_today);
         recyclerViewToday.setHasFixedSize(true);
         recyclerViewToday.setNestedScrollingEnabled(false);
 
-        this.recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
+        RecyclerView recyclerViewWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_week);
         recyclerViewWeek.setHasFixedSize(true);
         recyclerViewWeek.setNestedScrollingEnabled(false);
 
-        this.recyclerViewNextWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_next_week);
+        RecyclerView recyclerViewNextWeek = (RecyclerView) view.findViewById(R.id.recyclerview_events_next_week);
         recyclerViewNextWeek.setHasFixedSize(true);
         recyclerViewNextWeek.setNestedScrollingEnabled(false);
 
-        this.recyclerViewLater = (RecyclerView) view.findViewById(R.id.recyclerview_events_later);
+        RecyclerView recyclerViewLater = (RecyclerView) view.findViewById(R.id.recyclerview_events_later);
         recyclerViewLater.setHasFixedSize(true);
         recyclerViewLater.setNestedScrollingEnabled(false);
 

@@ -43,12 +43,12 @@ public class JsonInterceptor implements Interceptor {
         else if (request.url().toString().contains("login/user")) {
             credentialsPreferences.edit().putString("session", json).apply();
 
+            // retrieve user data from server
+
             try {
                 final JSONObject userJson = new JSONObject(json).getJSONObject("user");
 
                 userPreferences.edit().putString("user", userJson.toString()).apply();
-
-                // save user data from server to local shared preferences
 
                 SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
                 SharedPreferences.Editor editor = defaultSharedPreferences.edit();
@@ -65,8 +65,21 @@ public class JsonInterceptor implements Interceptor {
                 ex.printStackTrace();
             }
         }
+
+        // save user data from server to local shared preferences
+
         else if (request.url().toString().contains("user") && request.method().equals("PUT")) {
             userPreferences.edit().putString("user", json).apply();
+        }
+
+        else if (request.url().toString().contains("participant") && request.method().equals("POST") ||
+                 request.url().toString().contains("like") && (request.method().equals("POST") || request.method().equals("DELETE"))) {
+            try {
+                userPreferences.edit().putString("user", new JSONObject(json).getJSONObject("user").toString()).apply();
+            }
+            catch (JSONException ex) {
+                ex.printStackTrace();
+            }
         }
 
         return response.newBuilder().body(ResponseBody.create(response.body().contentType(), json)).build();

@@ -123,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_profile:
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-                startActivity(new Intent(this, ProfileActivity.class).putExtra("user", gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class)));
+                startActivity(new Intent(this, ProfileActivity.class));
                 break;
 
             case R.id.action_settings:

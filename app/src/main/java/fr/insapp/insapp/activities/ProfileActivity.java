@@ -61,6 +61,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private User user;
 
+    private static final int EVENT_REQUEST = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
-                startActivity(new Intent(getBaseContext(), EventActivity.class).putExtra("event", event));
+                startActivityForResult(new Intent(getBaseContext(), EventActivity.class).putExtra("event", event), EVENT_REQUEST);
             }
         });
 
@@ -325,6 +327,40 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (event.getDateEnd().getTime() > atm.getTime()) {
             adapter.addItem(event);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == EVENT_REQUEST) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    final Event event = intent.getParcelableExtra("event");
+
+                    for (int i = 0; i < adapter.getItemCount(); ++i) {
+                        if (adapter.getEvents().get(i).getId().equals(event.getId())) {
+                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+                            final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+
+                            for (final String eventId : user.getEvents()) {
+                                if (eventId.equals(event.getId())) {
+                                    adapter.updateEvent(i, event);
+                                    break;
+                                }
+                            }
+
+                            adapter.removeItem(event.getId());
+                        }
+                    }
+
+                    break;
+
+                case RESULT_CANCELED:
+                default:
+                    break;
+            }
         }
     }
 

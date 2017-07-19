@@ -1,7 +1,6 @@
 package fr.insapp.insapp.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +9,6 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceGroup;
-import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -18,7 +16,6 @@ import com.google.gson.GsonBuilder;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.activities.ProfileActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.User;
 import retrofit2.Call;
@@ -31,13 +28,9 @@ import retrofit2.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private SharedPreferences sharedPreferences;
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
-
-        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         /*
         final Preference chimeMaster = findPreference("barcode");

@@ -31,12 +31,9 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
@@ -364,10 +361,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    /**************************************************************
-     * getting from com.google.zxing.client.android.encode.QRCodeEncoder
-     *
-     * See the sites below
+    /*
      * http://code.google.com/p/zxing/
      * http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/encode/EncodeActivity.java
      * http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/encode/QRCodeEncoder.java

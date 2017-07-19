@@ -72,15 +72,15 @@
     <android.support.v7.preference.PreferenceCategory
         android:title="@string/settings_options">
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:title="@string/settings_notifications"
             android:defaultValue="true"
             android:summary="@string/settings_notifications_summary"
             android:key="notifications" />
 
-        <android.support.v7.preference.CheckBoxPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:title="@string/settings_calendar"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:summary="@string/settings_calendar_summary"
             android:key="calendar" />
     </android.support.v7.preference.PreferenceCategory>

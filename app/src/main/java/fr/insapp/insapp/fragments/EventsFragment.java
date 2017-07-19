@@ -18,7 +18,6 @@ import java.util.List;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
-import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Event;
@@ -26,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -203,11 +203,19 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 else {
                     Toast.makeText(getContext(), "EventsFragment", Toast.LENGTH_LONG).show();
                 }
+
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), "EventsFragment", Toast.LENGTH_LONG).show();
+
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
@@ -285,26 +293,45 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (resultCode == RESULT_OK) {
-            switch (requestCode){
-                case EVENT_REQUEST:
+        if (requestCode == EVENT_REQUEST) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    final Event event = intent.getParcelableExtra("event");
 
-                    Event event = intent.getParcelableExtra("event");
-
-                    final int idToday = adapterToday.getEvents().indexOf(event);
-                    final int idWeek = adapterWeek.getEvents().indexOf(event);
-                    final int idMonth = adapterLater.getEvents().indexOf(event);
-
-                    if (idToday >= 0) {
-                        adapterToday.updatePost(idToday, event);
-                    }
-                    else if (idWeek >= 0) {
-                        adapterWeek.updatePost(idWeek, event);
-                    }
-                    else if (idMonth >= 0) {
-                        adapterLater.updatePost(idMonth, event);
+                    for (int i = 0; i < adapterNow.getItemCount(); ++i) {
+                        if (adapterNow.getEvents().get(i).getId().equals(event.getId())) {
+                            adapterNow.updateEvent(i, event);
+                        }
                     }
 
+                    for (int i = 0; i < adapterToday.getItemCount(); ++i) {
+                        if (adapterToday.getEvents().get(i).getId().equals(event.getId())) {
+                            adapterToday.updateEvent(i, event);
+                        }
+                    }
+
+                    for (int i = 0; i < adapterWeek.getItemCount(); ++i) {
+                        if (adapterWeek.getEvents().get(i).getId().equals(event.getId())) {
+                            adapterWeek.updateEvent(i, event);
+                        }
+                    }
+
+                    for (int i = 0; i < adapterNextWeek.getItemCount(); ++i) {
+                        if (adapterNextWeek.getEvents().get(i).getId().equals(event.getId())) {
+                            adapterNextWeek.updateEvent(i, event);
+                        }
+                    }
+
+                    for (int i = 0; i < adapterLater.getItemCount(); ++i) {
+                        if (adapterLater.getEvents().get(i).getId().equals(event.getId())) {
+                            adapterLater.updateEvent(i, event);
+                        }
+                    }
+
+                    break;
+
+                case RESULT_CANCELED:
+                default:
                     break;
             }
         }

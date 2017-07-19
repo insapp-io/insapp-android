@@ -58,6 +58,7 @@ import fr.insapp.insapp.fragments.CommentsEventFragment;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.EventInteraction;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
@@ -258,7 +259,7 @@ public class EventActivity extends AppCompatActivity {
 
         /*
         if (requestCode == PostActivity.NOTIFICATION_MESSAGE) {
-            if (resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
 
                 HttpGet request = new HttpGet(new AsyncResponse() {
                     @Override
@@ -301,10 +302,10 @@ public class EventActivity extends AppCompatActivity {
                     case NO:
                     case MAYBE:
                     case UNDEFINED:
-                        Call<Event> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "going");
-                        call.enqueue(new Callback<Event>() {
+                        Call<EventInteraction> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "going");
+                        call.enqueue(new Callback<EventInteraction>() {
                             @Override
-                            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                            public void onResponse(@NonNull Call<EventInteraction> call, @NonNull Response<EventInteraction> response) {
                                 if (response.isSuccessful()) {
                                     status = Event.PARTICIPATE.YES;
 
@@ -312,7 +313,7 @@ public class EventActivity extends AppCompatActivity {
                                     setFloatingActionMenuTheme(status);
                                     refreshFloatingActionButtons();
 
-                                    event = response.body();
+                                    event = response.body().getEvent();
 
                                     // if first time user join an event
 
@@ -350,7 +351,7 @@ public class EventActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                            public void onFailure(@NonNull Call<EventInteraction> call, @NonNull Throwable t) {
                                 Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -385,10 +386,10 @@ public class EventActivity extends AppCompatActivity {
                     case NO:
                     case YES:
                     case UNDEFINED:
-                        Call<Event> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "maybe");
-                        call.enqueue(new Callback<Event>() {
+                        Call<EventInteraction> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "maybe");
+                        call.enqueue(new Callback<EventInteraction>() {
                             @Override
-                            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                            public void onResponse(@NonNull Call<EventInteraction> call, @NonNull Response<EventInteraction> response) {
                                 if (response.isSuccessful()) {
                                     status = Event.PARTICIPATE.MAYBE;
 
@@ -396,7 +397,7 @@ public class EventActivity extends AppCompatActivity {
                                     setFloatingActionMenuTheme(status);
                                     refreshFloatingActionButtons();
 
-                                    event = response.body();
+                                    event = response.body().getEvent();
                                 }
                                 else {
                                     Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
@@ -404,7 +405,7 @@ public class EventActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                            public void onFailure(@NonNull Call<EventInteraction> call, @NonNull Throwable t) {
                                 Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -439,10 +440,10 @@ public class EventActivity extends AppCompatActivity {
                     case YES:
                     case MAYBE:
                     case UNDEFINED:
-                        Call<Event> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "notgoing");
-                        call.enqueue(new Callback<Event>() {
+                        Call<EventInteraction> call = ServiceGenerator.create().addParticipant(event.getId(), user.getId(), "notgoing");
+                        call.enqueue(new Callback<EventInteraction>() {
                             @Override
-                            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                            public void onResponse(@NonNull Call<EventInteraction> call, @NonNull Response<EventInteraction> response) {
                                 if (response.isSuccessful()) {
                                     status = Event.PARTICIPATE.NO;
 
@@ -450,7 +451,7 @@ public class EventActivity extends AppCompatActivity {
                                     setFloatingActionMenuTheme(status);
                                     refreshFloatingActionButtons();
 
-                                    event = response.body();
+                                    event = response.body().getEvent();
                                 }
                                 else {
                                     Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
@@ -458,7 +459,7 @@ public class EventActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                            public void onFailure(@NonNull Call<EventInteraction> call, @NonNull Throwable t) {
                                 Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -476,14 +477,18 @@ public class EventActivity extends AppCompatActivity {
 
         refreshFloatingActionButtons();
 
-        Glide.with(this).load(ServiceGenerator.CDN_URL + event.getImage()).asBitmap().into(new BitmapImageViewTarget(headerImageView) {
-            @Override
-            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                super.onResourceReady(bitmap, anim);
+        Glide
+                .with(this)
+                .load(ServiceGenerator.CDN_URL + event.getImage())
+                .asBitmap()
+                .into(new BitmapImageViewTarget(headerImageView) {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        super.onResourceReady(bitmap, anim);
 
-                headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
-            }
-        });
+                        headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
+                    }
+                });
 
         relativeLayout.setBackgroundColor(bgColor);
 
@@ -591,6 +596,8 @@ public class EventActivity extends AppCompatActivity {
     public void finish() {
         Intent sendIntent = new Intent();
         sendIntent.putExtra("event", event);
+
+        System.out.println(event);
 
         setResult(RESULT_OK, sendIntent);
 

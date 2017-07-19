@@ -6,6 +6,7 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.ClubSearchResults;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Event;
+import fr.insapp.insapp.models.EventInteraction;
 import fr.insapp.insapp.models.EventSearchResults;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.NotificationUser;
@@ -64,7 +65,7 @@ public interface Client {
     Call<Event> getEventFromId(@Path("id") String id);
 
     @POST("event/{id}/participant/{userId}/status/{status}")
-    Call<Event> addParticipant(@Path("id") String id, @Path("userId") String userId, @Path("status") String status);
+    Call<EventInteraction> addParticipant(@Path("id") String id, @Path("userId") String userId, @Path("status") String status);
 
     @POST("event/{id}/comment")
     Call<Event> commentEvent(@Path("id") String id, @Body Comment comment);

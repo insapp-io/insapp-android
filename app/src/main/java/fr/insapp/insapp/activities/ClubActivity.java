@@ -1,7 +1,9 @@
 package fr.insapp.insapp.activities;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -208,6 +210,15 @@ public class ClubActivity extends AppCompatActivity {
         }
         else {
             tabLayout.setTabTextColors(0xff5e5e5e, fgColor);
+        }
+
+        // recent apps system UI
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final String title = getString(R.string.app_name);
+            final Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+
+            setTaskDescription(new ActivityManager.TaskDescription(title, icon, bgColor));
         }
     }
 

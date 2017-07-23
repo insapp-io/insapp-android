@@ -232,21 +232,21 @@ public class EventActivity extends AppCompatActivity {
                 floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
                 floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_close_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_red));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fabRed));
                 break;
 
             case MAYBE:
                 floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
                 floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_question_mark_black));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_orange));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fabOrange));
                 break;
 
             case YES:
                 floatingActionMenu.setMenuButtonColorNormal(ContextCompat.getColor(getApplicationContext(), R.color.white));
                 floatingActionMenu.setMenuButtonColorPressed(ContextCompat.getColor(getApplicationContext(), R.color.white));
                 floatingActionMenu.getMenuIconView().setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_check_black_24dp));
-                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_green));
+                floatingActionMenu.getMenuIconView().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fabGreen));
                 break;
 
             default:
@@ -293,7 +293,7 @@ public class EventActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable doubleTick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_check_black_24dp);
-            doubleTick.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_green), PorterDuff.Mode.SRC_ATOP);
+            doubleTick.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fabGreen), PorterDuff.Mode.SRC_ATOP);
             floatingActionButton1.setImageDrawable(doubleTick);
         }
 
@@ -377,7 +377,7 @@ public class EventActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable tick = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_question_mark_black);
-            tick.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_orange), PorterDuff.Mode.SRC_ATOP);
+            tick.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fabOrange), PorterDuff.Mode.SRC_ATOP);
             floatingActionButton2.setImageDrawable(tick);
         }
 
@@ -431,7 +431,7 @@ public class EventActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Drawable close = ContextCompat.getDrawable(EventActivity.this, R.drawable.ic_close_black_24dp);
-            close.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fab_red), PorterDuff.Mode.SRC_ATOP);
+            close.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.fabRed), PorterDuff.Mode.SRC_ATOP);
             floatingActionButton3.setImageDrawable(close);
         }
 
@@ -590,7 +590,7 @@ public class EventActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent_black));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparentBlack));
         }
 
         // recent apps system UI

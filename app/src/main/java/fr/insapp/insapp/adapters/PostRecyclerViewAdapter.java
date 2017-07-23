@@ -2,9 +2,13 @@ package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,8 @@ import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +42,7 @@ import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.RatioImageView;
 import fr.insapp.insapp.utility.Utils;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import retrofit2.Call;
@@ -140,6 +147,8 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                     .into(holder.getImageView());
         }
         else {
+            holder.getPlaceholderImageView().setImageSize(post.getImageSize());
+
             Glide
                     .with(context)
                     .load(ServiceGenerator.CDN_URL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -234,6 +243,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         private TextView titleTextView;
         private TextView contentTextView;
         private ImageView imageView;
+        private RatioImageView placeholderImageView;
         private LikeButton likeButton;
         private TextView likeCounterTextView;
         private ImageButton commentButton;
@@ -252,9 +262,11 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
             if (layout == R.layout.row_post) {
                 this.imageView = (ImageView) view.findViewById(R.id.thumbnail_post);
+                this.placeholderImageView = null;
             }
             else {
                 this.imageView = (ImageView) view.findViewById(R.id.image);
+                this.placeholderImageView = (RatioImageView) view.findViewById(R.id.placeholder);
             }
 
             if (layout != R.layout.row_post) {
@@ -289,6 +301,10 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
         public ImageView getImageView() {
             return imageView;
+        }
+
+        public RatioImageView getPlaceholderImageView() {
+            return placeholderImageView;
         }
 
         public LikeButton getLikeButton() {

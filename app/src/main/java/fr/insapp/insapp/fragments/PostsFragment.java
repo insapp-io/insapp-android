@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -36,6 +37,8 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private PostRecyclerViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private ProgressBar progressBar;
 
     private static final int WRITE_COMMENT_REQUEST = 1;
 
@@ -86,6 +89,10 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        // progress bar
+
+        this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+
         // swipe refresh layout
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_posts);
@@ -122,6 +129,8 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -131,6 +140,8 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

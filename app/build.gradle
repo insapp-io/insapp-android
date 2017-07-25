@@ -39,13 +39,10 @@ dependencies {
     compile "com.android.support:preference-v14:$SUPPORT_LIB_VER"
     compile "com.android.support:customtabs:$SUPPORT_LIB_VER"
 
+    compile "com.google.firebase:firebase-core:$GOOGLE_LIB_VER"
     compile "com.google.firebase:firebase-messaging:$GOOGLE_LIB_VER"
 
-    compile "com.google.android.gms:play-services-maps:$GOOGLE_LIB_VER"
-    compile "com.google.android.gms:play-services-location:$GOOGLE_LIB_VER"
-    compile "com.google.android.gms:play-services-places:$GOOGLE_LIB_VER"
     compile "com.google.android.gms:play-services-vision:$GOOGLE_LIB_VER"
-    compile "com.google.android.gms:play-services-gcm:$GOOGLE_LIB_VER"
 
     compile "de.hdodenhof:circleimageview:2.1.0"
     compile "com.github.jd-alexander:LikeButton:0.2.0"

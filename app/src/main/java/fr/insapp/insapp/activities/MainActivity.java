@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import java.lang.reflect.Field;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
+import fr.insapp.insapp.BuildConfig;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
 import fr.insapp.insapp.fragments.ClubsFragment;
@@ -36,7 +37,7 @@ import fr.insapp.insapp.notifications.FirebaseService;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final boolean dev = true;
+    public static final boolean dev = BuildConfig.DEBUG;
 
     public static CustomTabsConnection customTabsConnection;
 

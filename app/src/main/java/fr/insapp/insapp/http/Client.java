@@ -10,6 +10,7 @@ import fr.insapp.insapp.models.EventInteraction;
 import fr.insapp.insapp.models.EventSearchResults;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.NotificationUser;
+import fr.insapp.insapp.models.Notifications;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.PostSearchResults;
@@ -126,7 +127,7 @@ public interface Client {
     Call<NotificationUser> registerNotification(@Body NotificationUser notificationUser);
 
     @GET("notification/{userId}")
-    Call<List<Notification>> getNotificationsForUser(@Path("userId") String userId);
+    Call<Notifications> getNotificationsForUser(@Path("userId") String userId);
 
     /*
      * SEARCH

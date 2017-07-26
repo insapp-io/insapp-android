@@ -24,6 +24,7 @@ import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.Notifications;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import retrofit2.Call;
@@ -79,13 +80,17 @@ public class NotificationsFragment extends Fragment {
 
     private void generateNotifications() {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        Call<List<Notification>> call = ServiceGenerator.create().getNotificationsForUser(gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class).getId());
-        call.enqueue(new Callback<List<Notification>>() {
+        Call<Notifications> call = ServiceGenerator.create().getNotificationsForUser(gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class).getId());
+        call.enqueue(new Callback<Notifications>() {
             @Override
-            public void onResponse(@NonNull Call<List<Notification>> call, @NonNull Response<List<Notification>> response) {
+            public void onResponse(@NonNull Call<Notifications> call, @NonNull Response<Notifications> response) {
                 if (response.isSuccessful()) {
-                    for (final Notification notification : response.body()) {
-                        adapter.addItem(notification);
+                    final List<Notification> notifications = response.body().getNotifications();
+
+                    if (notifications != null) {
+                        for (final Notification notification : notifications) {
+                            adapter.addItem(notification);
+                        }
                     }
                 }
                 else {
@@ -94,7 +99,7 @@ public class NotificationsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Notification>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Notifications> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
             }
         });

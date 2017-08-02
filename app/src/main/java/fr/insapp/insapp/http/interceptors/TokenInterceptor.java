@@ -34,17 +34,19 @@ public class TokenInterceptor implements Interceptor {
         Request request = chain.request();
 
         SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
-        SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
-
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
         // if user is stored, register firebase token
 
-        if (FirebaseService.SHOULD_REGISTER_TOKEN && gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
-            FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
+        if (FirebaseService.SHOULD_REGISTER_TOKEN) {
+            SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+            SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
 
-            FirebaseService.SHOULD_REGISTER_TOKEN = false;
+            if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
+                FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
+
+                FirebaseService.SHOULD_REGISTER_TOKEN = false;
+            }
         }
 
         // add session token in a query parameter

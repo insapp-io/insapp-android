@@ -13,8 +13,10 @@ import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
+import fr.insapp.insapp.notifications.FirebaseService;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -30,10 +32,24 @@ public class TokenInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        SharedPreferences preferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+
+        SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+        SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+        SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
 
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        SessionCredentials sessionCredentials = gson.fromJson(preferences.getString("session", ""), SessionCredentials.class);
+
+        // if user is stored, register firebase token
+
+        if (FirebaseService.SHOULD_REGISTER_TOKEN && gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
+            FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
+
+            FirebaseService.SHOULD_REGISTER_TOKEN = false;
+        }
+
+        // add session token in a query parameter
+
+        SessionCredentials sessionCredentials = gson.fromJson(credentialsPreferences.getString("session", ""), SessionCredentials.class);
 
         if (sessionCredentials != null) {
             final String sessionToken = sessionCredentials.getSessionToken().getToken();
@@ -49,7 +65,7 @@ public class TokenInterceptor implements Interceptor {
             // does the token need to be refreshed ? (unauthorized)
 
             case 401:
-                LoginCredentials loginCredentials = new Gson().fromJson(preferences.getString("login", ""), LoginCredentials.class);
+                LoginCredentials loginCredentials = new Gson().fromJson(credentialsPreferences.getString("login", ""), LoginCredentials.class);
 
                 Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
                 retrofit2.Response<SessionCredentials> res = call.execute();

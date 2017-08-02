@@ -26,7 +26,9 @@ import retrofit2.Response;
 
 public class FirebaseService extends FirebaseInstanceIdService {
 
-    public final static String TAG = "Firebase";
+    public final static String TAG = "FA";
+
+    public static boolean SHOULD_REGISTER_TOKEN = false;
 
     @Override
     public void onTokenRefresh() {
@@ -36,6 +38,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
         firebaseCredentialsPreferences.edit().putString("token", refreshedToken).apply();
 
         Log.d(FirebaseService.TAG, "Refreshed token: " + refreshedToken);
+        FirebaseService.SHOULD_REGISTER_TOKEN = true;
     }
 
     public static void registerToken(String token) {

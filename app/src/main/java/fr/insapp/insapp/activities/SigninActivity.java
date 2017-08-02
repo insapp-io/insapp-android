@@ -90,8 +90,6 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<SessionCredentials> call, @NonNull Response<SessionCredentials> response) {
                 if (response.isSuccessful()) {
-                    FirebaseService.registerToken(getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE).getString("token", ""));
-
                     startActivity(new Intent(SigninActivity.this, MainActivity.class));
                     finish();
                 }

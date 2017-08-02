@@ -16,6 +16,7 @@ import java.io.IOException;
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.notifications.FirebaseService;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

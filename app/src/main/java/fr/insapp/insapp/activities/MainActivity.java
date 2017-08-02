@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         // Firebase
 
         Log.d(FirebaseService.TAG, "Token: " + FirebaseInstanceId.getInstance().getToken());
+        FirebaseService.SHOULD_REGISTER_TOKEN = true;
 
         // toolbar
 

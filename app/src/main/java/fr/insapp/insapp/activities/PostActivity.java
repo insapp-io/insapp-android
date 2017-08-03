@@ -28,7 +28,6 @@ import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
@@ -43,8 +42,6 @@ import retrofit2.Response;
  */
 
 public class PostActivity extends AppCompatActivity {
-
-    public static final int NOTIFICATION_MESSAGE = 10;
 
     private CommentRecyclerViewAdapter adapter;
 
@@ -61,8 +58,6 @@ public class PostActivity extends AppCompatActivity {
     // comment
 
     private CircleImageView userAvatarCircleImageView;
-
-    private Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,43 +90,7 @@ public class PostActivity extends AppCompatActivity {
             }
         }
 
-        // if we come from an android notification
-
-        if (this.post == null) {
-            notification = intent.getParcelableExtra("notification");
-            onActivityResult(NOTIFICATION_MESSAGE, RESULT_OK, null);
-        }
-        else {
-            generateActivity();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == NOTIFICATION_MESSAGE) {
-            if (resultCode == RESULT_OK) {
-                Call<Post> call = ServiceGenerator.create().getPostFromId(notification.getContent());
-                call.enqueue(new Callback<Post>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
-                        if (response.isSuccessful()) {
-                            post = response.body();
-                            generateActivity();
-                        }
-                        else {
-                            Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                        Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }
+        generateActivity();
     }
 
     private void generateActivity() {

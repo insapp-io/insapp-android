@@ -61,7 +61,6 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.EventInteraction;
-import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
@@ -95,8 +94,6 @@ public class EventActivity extends AppCompatActivity {
 
     private int bgColor;
     private int fgColor;
-
-    private Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,14 +187,7 @@ public class EventActivity extends AppCompatActivity {
 
         this.appBarLayout = (AppBarLayout) findViewById(R.id.appbar_event);
 
-        // if we come from an android notification
-
-        if (this.event == null) {
-            notification = intent.getParcelableExtra("notification");
-        }
-        else {
-            generateEvent();
-        }
+        generateEvent();
     }
 
     private void setupViewPager(ViewPager viewPager, int swipeColor) {
@@ -253,32 +243,6 @@ public class EventActivity extends AppCompatActivity {
                 break;
         }
 
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        /*
-        if (requestCode == PostActivity.NOTIFICATION_MESSAGE) {
-            if (resultCode == RESULT_OK) {
-
-                HttpGet request = new HttpGet(new AsyncResponse() {
-                    @Override
-                    public void processFinish(String output) {
-                        try {
-                            event = new Event(new JSONObject(output));
-
-                            generateEvent();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                request.execute(HttpGet.ROOTEVENT + "/" + notification.getContent() + "?token=" + HttpGet.sessionCredentials.getSessionToken());
-            }
-        }
-        */
     }
 
     public void generateEvent() {

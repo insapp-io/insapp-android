@@ -4,19 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
-import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.notifications.FirebaseService;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -39,10 +32,14 @@ public class JsonInterceptor implements Interceptor {
         String json = response.body().string();
 
         if (request.url().toString().contains("signin/user")) {
-            credentialsPreferences.edit().putString("login", json).apply();
+            if (isJsonValid(json)) {
+                credentialsPreferences.edit().putString("login", json).apply();
+            }
         }
         else if (request.url().toString().contains("login/user")) {
-            credentialsPreferences.edit().putString("session", json).apply();
+            if (isJsonValid(json)) {
+                credentialsPreferences.edit().putString("session", json).apply();
+            }
 
             // retrieve user data from server
 
@@ -84,5 +81,18 @@ public class JsonInterceptor implements Interceptor {
         }
 
         return response.newBuilder().body(ResponseBody.create(response.body().contentType(), json)).build();
+    }
+
+    private boolean isJsonValid(String json) {
+        try {
+            new JSONObject(json);
+        }
+        catch (JSONException ex) {
+            ex.printStackTrace();
+
+            return false;
+        }
+
+        return true;
     }
 }

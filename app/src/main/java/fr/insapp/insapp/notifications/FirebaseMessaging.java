@@ -5,12 +5,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -23,7 +26,13 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.activities.PostActivity;
+import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.Post;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by thomas on 18/07/2017.
@@ -37,61 +46,104 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             Log.d(FirebaseService.TAG, "Data: " + remoteMessage.getData());
-        }
-
-        if (remoteMessage.getNotification() != null) {
-            Log.d(FirebaseService.TAG, "Body: " + remoteMessage.getNotification().getBody());
 
             SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
             if (defaultSharedPreferences.getBoolean("notifications", true)) {
-                sendNotification(getRandomNotificationId(), remoteMessage.getNotification().getBody(), remoteMessage.getData());
+                prepareNotification(getRandomNotificationId(), remoteMessage.getData());
             }
         }
     }
 
-    private void sendNotification(int notificationId, String body, Map<String, String> data) {
-        Notification notification = Notification.create(data);
+    private void prepareNotification(final int notificationId, Map<String, String> data) {
+        final Notification notification = Notification.create(data);
 
         if (notification != null) {
-            PendingIntent pendingIntent;
-
             switch (notification.getType()) {
                 case "tag":
                 case "post":
-                    pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, PostActivity.class)
-                            .putExtra("notification", notification)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
+                    Call<Post> call1 = ServiceGenerator.create().getPostFromId(notification.getContent());
+                    call1.enqueue(new Callback<Post>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                            if (response.isSuccessful()) {
+                                notification.setPost(response.body());
+
+                                final PendingIntent pendingIntent = PendingIntent.getActivity(App.getAppContext(), 0, new Intent(App.getAppContext(), PostActivity.class)
+                                        .putExtra("post", notification.getPost())
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                final String title = notification.getPost().getTitle();
+
+                                sendNotification(notificationId, title, notification, pendingIntent);
+                            }
+                            else {
+                                Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                            Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     break;
 
                 case "event":
-                    pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventActivity.class)
-                            .putExtra("notification", notification)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
+                    Call<Event> call2 = ServiceGenerator.create().getEventFromId(notification.getContent());
+                    call2.enqueue(new Callback<Event>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                            if (response.isSuccessful()) {
+                                notification.setEvent(response.body());
+
+                                final PendingIntent pendingIntent = PendingIntent.getActivity(App.getAppContext(), 0, new Intent(App.getAppContext(), EventActivity.class)
+                                        .putExtra("event", notification.getEvent())
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                final String title = notification.getEvent().getName();
+
+                                sendNotification(notificationId, title, notification, pendingIntent);
+                            }
+                            else {
+                                Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                            Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     break;
 
                 default:
-                    pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, IntroActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                    final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, IntroActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                    final String title = getResources().getString(R.string.app_name);
+
+                    sendNotification(notificationId, title, notification, pendingIntent);
                     break;
             }
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(getResources().getString(R.string.app_name))
-                    .setContentText(body)
-                    .setAutoCancel(true)
-                    .setLights(ContextCompat.getColor(App.getAppContext(), R.color.colorPrimary), 500, 1000)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setContentIntent(pendingIntent);
-
-            builder.setDefaults(android.app.Notification.DEFAULT_SOUND | android.app.Notification.DEFAULT_VIBRATE);
-
-            PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "Lock");
-            wakeLock.acquire();
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationId, builder.build());
         }
+    }
+
+    private void sendNotification(int notificationId, String title, Notification notification, PendingIntent pendingIntent) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(notification.getMessage())
+                .setAutoCancel(true)
+                .setLights(Color.RED, 500, 1000)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent);
+
+        builder.setDefaults(android.app.Notification.DEFAULT_SOUND | android.app.Notification.DEFAULT_VIBRATE);
+
+        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "Lock");
+        wakeLock.acquire();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId, builder.build());
     }
 
     private int getRandomNotificationId() {

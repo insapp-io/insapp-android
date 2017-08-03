@@ -51,14 +51,21 @@ public class NotificationsFragment extends Fragment {
         adapter.setOnItemClickListener(new NotificationRecyclerViewAdapter.OnNotificationItemClickListener() {
             @Override
             public void onNotificationItemClick(Notification notification) {
-                if (notification.getType().equals("tag")) {
-                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()).putExtra("taggedCommentID", notification.getComment().getId()));
-                }
-                else if (notification.getType().equals("post")) {
-                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()));
-                }
-                else if (notification.getType().equals("event")) {
-                    startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", notification.getEvent()));
+                switch (notification.getType()) {
+                    case "tag":
+                        startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()).putExtra("taggedCommentID", notification.getComment().getId()));
+                        break;
+
+                    case "post":
+                        startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()));
+                        break;
+
+                    case "event":
+                        startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", notification.getEvent()));
+                        break;
+
+                    default:
+                        break;
                 }
             }
         });
@@ -91,51 +98,7 @@ public class NotificationsFragment extends Fragment {
 
                     if (notifications != null) {
                         for (final Notification notification : notifications) {
-                            switch (notification.getType()) {
-                                case "tag":
-                                case "post":
-                                    Call<Post> call1 = ServiceGenerator.create().getPostFromId(notification.getContent());
-                                    call1.enqueue(new Callback<Post>() {
-                                        @Override
-                                        public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
-                                            if (response.isSuccessful()) {
-                                                notification.setPost(response.body());
-                                            }
-                                            else {
-                                                Toast.makeText(getContext(), "NotificationsFragment tag/post", Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                                            Toast.makeText(getContext(), "NotificationsFragment tag/post", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                                    break;
-
-                                case "event":
-                                    Call<Event> call2 = ServiceGenerator.create().getEventFromId(notification.getContent());
-                                    call2.enqueue(new Callback<Event>() {
-                                        @Override
-                                        public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
-                                            if (response.isSuccessful()) {
-                                                notification.setEvent(response.body());
-                                            }
-                                            else {
-                                                Toast.makeText(getContext(), "NotificationsFragment event", Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
-                                            Toast.makeText(getContext(), "NotificationsFragment event", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                            notification.generateContent();
 
                             adapter.addItem(notification);
                         }

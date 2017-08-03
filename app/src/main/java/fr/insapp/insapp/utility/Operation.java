@@ -1,10 +1,10 @@
 package fr.insapp.insapp.utility;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by Antoine on 24/09/2016.
@@ -12,22 +12,21 @@ import java.util.TimeZone;
 
 public class Operation {
 
-    public static Date stringToDate(String format, String dateInString, boolean timeZoneUTC){
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
-        formatter.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
+    public static Date parseMongoDate(String mongoDate) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
 
-        Date date = null;
         try {
-            date = formatter.parse(dateInString);
+            return df.parse(mongoDate);
         }
         catch (ParseException ex) {
             ex.printStackTrace();
         }
-        return date;
+
+        return null;
     }
 
     public static String displayedDate(Date date){
-        Date atm = Calendar.getInstance().getTime();
+        final Date atm = Calendar.getInstance().getTime();
 
         final long diff = atm.getTime() - date.getTime();
         final long diffMinutes = diff / (60 * 1000) % 60;
@@ -43,7 +42,6 @@ public class Operation {
             // at least 1 day
             return Long.toString(diffInDays) + "j";
         }
-
 
         if (diffHours >= 1) {
             // at least 1 hour

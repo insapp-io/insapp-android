@@ -1,7 +1,10 @@
 package fr.insapp.insapp.models;
 
+import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +17,12 @@ import java.util.Map;
 
 import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.annotations.SerializedName;
+import fr.insapp.insapp.App;
+import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.utility.Operation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Antoine on 10/10/2016.
@@ -35,6 +44,7 @@ public abstract class Notification implements Parcelable {
     @SerializedName("content")
     abstract String content();
 
+    @Nullable
     @SerializedName("comment")
     abstract Comment comment();
 
@@ -44,6 +54,7 @@ public abstract class Notification implements Parcelable {
     @SerializedName("seen")
     abstract boolean seen();
 
+    @Nullable
     @SerializedName("date")
     abstract Date date();
 
@@ -63,26 +74,36 @@ public abstract class Notification implements Parcelable {
 
         try {
             JSONObject jsonComment = new JSONObject(data.get("comment"));
-            JSONArray jsonTags = new JSONArray(jsonComment.getJSONArray("tags"));
+            JSONArray jsonTags = null;
+
+            if (!jsonComment.isNull("tags")) {
+                jsonTags = jsonComment.getJSONArray("tags");
+            }
 
             List<Tag> tags = new ArrayList<>();
 
-            for (int i = 0; i < jsonTags.length(); ++i) {
-                JSONObject jsonTag = jsonTags.getJSONObject(i);
+            if (jsonTags != null) {
+                for (int i = 0; i < jsonTags.length(); ++i) {
+                    JSONObject jsonTag = jsonTags.getJSONObject(i);
 
-                tags.add(Tag.create(
-                        jsonTag.getString("ID"),
-                        jsonTag.getString("user"),
-                        jsonTag.getString("name")
-                ));
+                    tags.add(Tag.create(
+                            jsonTag.getString("ID"),
+                            jsonTag.getString("user"),
+                            jsonTag.getString("name")
+                    ));
+                }
             }
 
-            Comment comment = Comment.create(
-                    jsonComment.getString("ID"),
-                    jsonComment.getString("user"),
-                    jsonComment.getString("content"),
-                    new Date(jsonComment.getString("date")),
-                    tags);
+            Comment comment = null;
+
+            if (!jsonComment.getString("ID").equals("")) {
+                comment = Comment.create(
+                        jsonComment.getString("ID"),
+                        jsonComment.getString("user"),
+                        jsonComment.getString("content"),
+                        Operation.parseMongoDate(jsonComment.getString("date")),
+                        tags);
+            }
 
             notification = Notification.create(
                     data.get("ID"),
@@ -92,7 +113,7 @@ public abstract class Notification implements Parcelable {
                     comment,
                     data.get("message"),
                     Boolean.parseBoolean(data.get("seen")),
-                    new Date(data.get("date")),
+                    Operation.parseMongoDate(data.get("date")),
                     data.get("type"));
         }
         catch (JSONException ex) {
@@ -100,6 +121,54 @@ public abstract class Notification implements Parcelable {
         }
 
         return notification;
+    }
+
+    public void generateContent() {
+        switch (type()) {
+            case "tag":
+            case "post":
+                Call<Post> call1 = ServiceGenerator.create().getPostFromId(getContent());
+                call1.enqueue(new Callback<Post>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                        if (response.isSuccessful()) {
+                            setPost(response.body());
+                        }
+                        else {
+                            Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                        Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
+                    }
+                });
+                break;
+
+            case "event":
+                Call<Event> call2 = ServiceGenerator.create().getEventFromId(getContent());
+                call2.enqueue(new Callback<Event>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                        if (response.isSuccessful()) {
+                            setEvent(response.body());
+                        }
+                        else {
+                            Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                        Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
+                    }
+                });
+                break;
+
+            default:
+                break;
+        }
     }
 
     public String getId() {

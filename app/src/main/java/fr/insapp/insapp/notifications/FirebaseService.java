@@ -55,6 +55,9 @@ public class FirebaseService extends FirebaseInstanceIdService {
                     if (!response.isSuccessful()) {
                         Toast.makeText(App.getAppContext(), "FirebaseService", Toast.LENGTH_LONG).show();
                     }
+                    else {
+                        Log.d(FirebaseService.TAG, "Firebase token successfully registered on server");
+                    }
                 }
 
                 @Override

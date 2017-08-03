@@ -23,8 +23,10 @@ import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Notifications;
+import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import retrofit2.Call;
@@ -89,6 +91,52 @@ public class NotificationsFragment extends Fragment {
 
                     if (notifications != null) {
                         for (final Notification notification : notifications) {
+                            switch (notification.getType()) {
+                                case "tag":
+                                case "post":
+                                    Call<Post> call1 = ServiceGenerator.create().getPostFromId(notification.getContent());
+                                    call1.enqueue(new Callback<Post>() {
+                                        @Override
+                                        public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                                            if (response.isSuccessful()) {
+                                                notification.setPost(response.body());
+                                            }
+                                            else {
+                                                Toast.makeText(getContext(), "NotificationsFragment tag/post", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                                            Toast.makeText(getContext(), "NotificationsFragment tag/post", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    break;
+
+                                case "event":
+                                    Call<Event> call2 = ServiceGenerator.create().getEventFromId(notification.getContent());
+                                    call2.enqueue(new Callback<Event>() {
+                                        @Override
+                                        public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                                            if (response.isSuccessful()) {
+                                                notification.setEvent(response.body());
+                                            }
+                                            else {
+                                                Toast.makeText(getContext(), "NotificationsFragment event", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                                            Toast.makeText(getContext(), "NotificationsFragment event", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
                             adapter.addItem(notification);
                         }
                     }

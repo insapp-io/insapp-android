@@ -51,7 +51,6 @@ public abstract class Notification implements Parcelable {
     abstract String type();
 
     private transient Post post;
-    private transient Club club;
     private transient User user;
     private transient Event event;
 
@@ -145,14 +144,6 @@ public abstract class Notification implements Parcelable {
 
     public void setPost(Post post) {
         this.post = post;
-    }
-
-    public Club getClub() {
-        return club;
-    }
-
-    public void setClub(Club club) {
-        this.club = club;
     }
 
     public User getUser() {

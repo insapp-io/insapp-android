@@ -34,6 +34,6 @@ We encourage you to contribute to this project either by [_creating a PR_](https
 
 ## License
 
-> Copyright (C) 2017 Thomas Bouvier & Antoine Crochet
+> Copyright (c) 2017 Thomas Bouvier & Antoine Crochet
 > Licensed under the [MIT](https://en.wikipedia.org/wiki/MIT_License) license.  
 > See the [LICENSE](https://github.com/tomatrocho/insapp-android/blob/master/LICENSE) file for the whole license text.

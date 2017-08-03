@@ -75,77 +75,15 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
         holder.text.setText(notification.getMessage());
         holder.date.setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(notification.getDate())));
 
-        if (notification.getType().equals("tag") || notification.getType().equals("post")) {
-            Call<Post> call = ServiceGenerator.create().getPostFromId(notification.getId());
-            call.enqueue(new Callback<Post>() {
-                @Override
-                public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
-                    if (response.isSuccessful()) {
-                        final Post post = response.body();
-                        notification.setPost(post);
+        // avatars
 
-                        Glide
-                                .with(context)
-                                .load(ServiceGenerator.CDN_URL + post.getImage())
-                                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(holder.thumbnail);
-                    }
-                    else {
-                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
-        else if (notification.getType().equals("post") || notification.getType().equals("event")) {
-            Call<Club> call = ServiceGenerator.create().getClubFromId(notification.getSender());
-            call.enqueue(new Callback<Club>() {
-                @Override
-                public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
-                    if (response.isSuccessful()) {
-                        final Club club = response.body();
-                        notification.setClub(club);
-
-                        Glide
-                                .with(context)
-                                .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                                .into(holder.avatar_notification);
-
-                        holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                            }
-                        });
-                    }
-                    else {
-                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
-                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
-        else if (notification.getType().equals("tag")) {
+        if (notification.getType().equals("tag")) {
             Call<User> call = ServiceGenerator.create().getUserFromId(notification.getSender());
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                     if (response.isSuccessful()) {
                         final User user = response.body();
-                        notification.setUser(user);
-
-                        // get the drawable of avatar
 
                         final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                         Glide.with(context).load(id).into(holder.avatar_notification);
@@ -167,7 +105,67 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                 }
             });
+        }
 
+        else if (notification.getType().equals("post") || notification.getType().equals("event")) {
+            Call<Club> call = ServiceGenerator.create().getClubFromId(notification.getSender());
+            call.enqueue(new Callback<Club>() {
+                @Override
+                public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
+                    if (response.isSuccessful()) {
+                        final Club club = response.body();
+
+                        Glide
+                                .with(context)
+                                .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                                .crossFade()
+                                .into(holder.avatar_notification);
+
+                        holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                            }
+                        });
+                    } else {
+                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
+                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        // thumbnails
+
+        if (notification.getType().equals("tag") || notification.getType().equals("post")) {
+            Call<Post> call = ServiceGenerator.create().getPostFromId(notification.getContent());
+            call.enqueue(new Callback<Post>() {
+                @Override
+                public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                    if (response.isSuccessful()) {
+                        final Post post = response.body();
+
+                        Glide
+                                .with(context)
+                                .load(ServiceGenerator.CDN_URL + post.getImage())
+                                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(holder.thumbnail);
+                    }
+                    else {
+                        Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                    Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
         else if (notification.getType().equals("event")) {
@@ -177,12 +175,12 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                 public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                     if (response.isSuccessful()) {
                         final Event event = response.body();
-                        notification.setEvent(event);
 
                         Glide
                                 .with(context)
                                 .load(ServiceGenerator.CDN_URL + event.getImage())
                                 .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(holder.thumbnail);
                     }
                     else {

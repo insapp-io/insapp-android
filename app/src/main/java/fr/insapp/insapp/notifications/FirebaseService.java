@@ -38,7 +38,16 @@ public class FirebaseService extends FirebaseInstanceIdService {
         firebaseCredentialsPreferences.edit().putString("token", refreshedToken).apply();
 
         Log.d(FirebaseService.TAG, "Refreshed token: " + refreshedToken);
-        FirebaseService.SHOULD_REGISTER_TOKEN = true;
+
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+
+        if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
+            FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
+        }
+        else {
+            FirebaseService.SHOULD_REGISTER_TOKEN = true;
+        }
     }
 
     public static void registerToken(String token) {

@@ -118,7 +118,7 @@ public class NotificationsFragment extends Fragment {
                 if (response.isSuccessful()) {
                     final Notifications notifications = response.body();
 
-                    if (notifications != null) {
+                    if (notifications.getNotifications() != null) {
                         for (final Notification notification : notifications.getNotifications()) {
                             notification.generateContent();
 

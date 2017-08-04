@@ -33,19 +33,19 @@ public class TokenInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
-        SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
         // if user is stored, register firebase token
 
         if (FirebaseService.SHOULD_REGISTER_TOKEN) {
-            SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-            SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
+            final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+            final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
 
             if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
-                FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
-
                 FirebaseService.SHOULD_REGISTER_TOKEN = false;
+
+                FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
             }
         }
 

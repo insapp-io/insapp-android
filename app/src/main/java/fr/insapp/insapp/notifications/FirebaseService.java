@@ -32,15 +32,15 @@ public class FirebaseService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
         SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
         firebaseCredentialsPreferences.edit().putString("token", refreshedToken).apply();
 
         Log.d(FirebaseService.TAG, "Refreshed token: " + refreshedToken);
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
 
         if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
             FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
@@ -51,29 +51,31 @@ public class FirebaseService extends FirebaseInstanceIdService {
     }
 
     public static void registerToken(String token) {
-        if (token != null) {
-            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-            final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 
-            NotificationUser notificationUser = new NotificationUser(null, user.getId(), token, "android");
+        NotificationUser notificationUser = new NotificationUser(null, user.getId(), token, "android");
 
-            Call<NotificationUser> call = ServiceGenerator.create().registerNotification(notificationUser);
-            call.enqueue(new Callback<NotificationUser>() {
-                @Override
-                public void onResponse(@NonNull Call<NotificationUser> call, @NonNull Response<NotificationUser> response) {
-                    if (!response.isSuccessful()) {
-                        Toast.makeText(App.getAppContext(), "FirebaseService", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(FirebaseService.TAG, "Firebase token successfully registered on server");
-                    }
+        Call<NotificationUser> call = ServiceGenerator.create().registerNotification(notificationUser);
+        call.enqueue(new Callback<NotificationUser>() {
+            @Override
+            public void onResponse(@NonNull Call<NotificationUser> call, @NonNull Response<NotificationUser> response) {
+                if (response.isSuccessful()) {
+                    Log.d(FirebaseService.TAG, "Firebase token successfully registered on server");
                 }
-
-                @Override
-                public void onFailure(@NonNull Call<NotificationUser> call, @NonNull Throwable t) {
+                else {
                     Toast.makeText(App.getAppContext(), "FirebaseService", Toast.LENGTH_LONG).show();
+
+                    FirebaseService.SHOULD_REGISTER_TOKEN = true;
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<NotificationUser> call, @NonNull Throwable t) {
+                Toast.makeText(App.getAppContext(), "FirebaseService", Toast.LENGTH_LONG).show();
+
+                FirebaseService.SHOULD_REGISTER_TOKEN = true;
+            }
+        });
     }
 }

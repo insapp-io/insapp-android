@@ -129,10 +129,14 @@
         </activity>
 
         <activity
-            android:name=".activities.BarcodeDetectorActivity">
+            android:name=".activities.BarcodeDetectorActivity"
+            android:parentActivityName=".activities.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.SettingsActivity" />
             <meta-data
                 android:name="com.google.android.gms.vision.DEPENDENCIES"
-                android:value="barcode"/>
+                android:value="barcode" />
         </activity>
 
         <service

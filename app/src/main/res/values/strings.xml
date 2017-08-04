@@ -43,7 +43,12 @@
     <string name="settings_notifications_summary">Une notification est envoyée lorsqu\'une association ajoute une news ou un évènement</string>
     <string name="settings_calendar">Ajouter les évènements au calendrier</string>
     <string name="settings_calendar_summary">Les évènements auxquels tu participes sont ajoutés à ton calendrier</string>
-    <string name="settings_disclaimer">Insapp décline toutes responsabilités en cas de refus ou de dysfonctionnement technique lors de la présentation du code barre Amicaliste</string>
+    <string name="settings_barcode_add">Ajouter votre carte amicaliste</string>
+    <string name="settings_barcode_disclaimer">Non renseigné</string>
+    <string name="settings_barcode_input">Saisie manuelle</string>
+    <string name="settings_barcode_input_summary">Saisissez les chiffres figurant sous le code barre de votre carte amicaliste</string>
+    <string name="settings_barcode_camera">Caméra</string>
+    <string name="settings_barcode_camera_summary">Scannez le code barre de votre carte amicaliste</string>
 
     <string name="report">Signaler</string>
     <string name="delete_account">Supprimer mon compte</string>

@@ -28,6 +28,18 @@ import retrofit2.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    public static final String ID = "SETTINGS_FRAGMENT";
+
+    public static SettingsFragment newInstance(String id) {
+        SettingsFragment fragment = new SettingsFragment();
+
+        Bundle args = new Bundle();
+        args.putString(SettingsFragment.ID, id);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
@@ -50,7 +62,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         updatePreferenceSummary(findPreference(key));
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
 
         final User updatedUser = User.create(

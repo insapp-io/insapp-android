@@ -44,25 +44,26 @@
         android:title="@string/settings_amicaliste">
 
         <android.support.v7.preference.PreferenceScreen
-            android:key="carteAmicaliste"
-            android:title="Ajouter votre carte amicaliste"
-            android:summary="@string/settings_disclaimer"
+            android:key="barcode_preferences"
+            android:title="@string/settings_barcode_add"
+            android:summary="@string/settings_barcode_disclaimer"
             android:persistent="false">
 
             <android.support.v7.preference.EditTextPreference
-                android:title="Code barre"
+                android:title="@string/settings_barcode_input"
                 android:key="barcode"
                 android:maxLength="9"
                 android:inputType="number"
-                android:summary="Numéro code barre"
+                android:summary="@string/settings_barcode_input_summary"
                 android:dialogLayout="@layout/pref_dialog_edittext_fix" />
 
             <android.support.v7.preference.PreferenceScreen
                 android:key="key"
-                android:title="Camera"
-                android:summary="Scanner votre code barre avec la caméra">
-                <intent android:targetPackage="fr.insapp.insapp"
-                    android:targetClass="fr.insapp.insapp.BarcodeDetectorActivity" />
+                android:title="@string/settings_barcode_camera"
+                android:summary="@string/settings_barcode_camera_summary">
+                <intent
+                    android:targetPackage="fr.insapp.insapp"
+                    android:targetClass="fr.insapp.insapp.activities.BarcodeDetectorActivity" />
             </android.support.v7.preference.PreferenceScreen>
 
         </android.support.v7.preference.PreferenceScreen>

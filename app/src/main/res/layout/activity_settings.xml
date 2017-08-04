@@ -14,6 +14,7 @@
         android:theme="@style/ToolbarStyle" />
 
     <fragment
+        android:id="@+id/settings_fragment"
         android:name="fr.insapp.insapp.fragments.SettingsFragment"
         android:tag="fr.insapp.insapp.fragments.SettingsFragment"
         android:layout_width="match_parent"

@@ -61,6 +61,8 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.EventInteraction;
+import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.Notifications;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
@@ -100,11 +102,7 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        Intent intent = getIntent();
-        this.event = intent.getParcelableExtra("event");
-
         this.relativeLayout = (RelativeLayout) findViewById(R.id.event_info);
-
         this.headerImageView = (ImageView) findViewById(R.id.header_image_event);
         this.clubImageView = (ImageView) findViewById(R.id.event_club_icon);
         this.clubTextView = (TextView) findViewById(R.id.event_club_text);
@@ -112,6 +110,35 @@ public class EventActivity extends AppCompatActivity {
         this.participantsTextView = (TextView) findViewById(R.id.event_participants_text);
         this.dateImageView = (ImageView) findViewById(R.id.event_date_icon);
         this.dateTextView = (TextView) findViewById(R.id.event_date_text);
+
+        // event
+
+        Intent intent = getIntent();
+        this.event = intent.getParcelableExtra("event");
+
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+
+        // mark notification as seen
+
+        if (intent.getParcelableExtra("notification") != null) {
+            final Notification notification = intent.getParcelableExtra("notification");
+
+            Call<Notifications> call = ServiceGenerator.create().markNotificationAsSeen(user.getId(), notification.getId());
+            call.enqueue(new Callback<Notifications>() {
+                @Override
+                public void onResponse(@NonNull Call<Notifications> call, @NonNull Response<Notifications> response) {
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Notifications> call, @NonNull Throwable t) {
+                    Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
         final LinearLayout participantsLayout = (LinearLayout) findViewById(R.id.event_participants_layout);
         participantsLayout.setOnClickListener(new View.OnClickListener() {
@@ -167,8 +194,7 @@ public class EventActivity extends AppCompatActivity {
 
         // floating action menu
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        this.status = event.getStatusForUser(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId());
+        this.status = event.getStatusForUser(user.getId());
 
         // fab style
 

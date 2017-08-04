@@ -70,6 +70,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
                                 final PendingIntent pendingIntent = PendingIntent.getActivity(App.getAppContext(), 0, new Intent(App.getAppContext(), PostActivity.class)
                                         .putExtra("post", notification.getPost())
+                                        .putExtra("notification", notification)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
 
                                 final String title = notification.getPost().getTitle();
@@ -98,6 +99,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
                                 final PendingIntent pendingIntent = PendingIntent.getActivity(App.getAppContext(), 0, new Intent(App.getAppContext(), EventActivity.class)
                                         .putExtra("event", notification.getEvent())
+                                        .putExtra("notification", notification)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), PendingIntent.FLAG_UPDATE_CURRENT);
 
                                 final String title = notification.getEvent().getName();

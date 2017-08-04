@@ -28,6 +28,8 @@ import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.listeners.PostCommentLongClickListener;
 import fr.insapp.insapp.models.Club;
+import fr.insapp.insapp.models.Notification;
+import fr.insapp.insapp.models.Notifications;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
@@ -74,6 +76,30 @@ public class PostActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         this.post = intent.getParcelableExtra("post");
+
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+
+        // mark notification as seen
+
+        if (intent.getParcelableExtra("notification") != null) {
+            final Notification notification = intent.getParcelableExtra("notification");
+
+            Call<Notifications> call = ServiceGenerator.create().markNotificationAsSeen(user.getId(), notification.getId());
+            call.enqueue(new Callback<Notifications>() {
+                @Override
+                public void onResponse(@NonNull Call<Notifications> call, @NonNull Response<Notifications> response) {
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Notifications> call, @NonNull Throwable t) {
+                    Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
         // toolbar
 

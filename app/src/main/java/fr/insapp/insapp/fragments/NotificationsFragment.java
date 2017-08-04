@@ -15,20 +15,15 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
-
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
-import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Notifications;
-import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.models.credentials.SessionCredentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +62,31 @@ public class NotificationsFragment extends Fragment {
                     default:
                         break;
                 }
+
+                // mark notification as seen
+
+                final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+                final User user = gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
+
+                Call<Notifications> call = ServiceGenerator.create().markNotificationAsSeen(user.getId(), notification.getId());
+                call.enqueue(new Callback<Notifications>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Notifications> call, @NonNull Response<Notifications> response) {
+                        if (response.isSuccessful()) {
+                            final Notifications notifications = response.body();
+
+                            adapter.setItems(notifications.getNotifications());
+                        }
+                        else {
+                            Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Notifications> call, @NonNull Throwable t) {
+                        Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
@@ -88,16 +108,18 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void generateNotifications() {
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        Call<Notifications> call = ServiceGenerator.create().getNotificationsForUser(gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class).getId());
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        final User user = gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
+
+        Call<Notifications> call = ServiceGenerator.create().getNotificationsForUser(user.getId());
         call.enqueue(new Callback<Notifications>() {
             @Override
             public void onResponse(@NonNull Call<Notifications> call, @NonNull Response<Notifications> response) {
                 if (response.isSuccessful()) {
-                    final List<Notification> notifications = response.body().getNotifications();
+                    final Notifications notifications = response.body();
 
                     if (notifications != null) {
-                        for (final Notification notification : notifications) {
+                        for (final Notification notification : notifications.getNotifications()) {
                             notification.generateContent();
 
                             adapter.addItem(notification);

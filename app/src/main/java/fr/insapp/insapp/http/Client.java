@@ -129,6 +129,9 @@ public interface Client {
     @GET("notification/{userId}")
     Call<Notifications> getNotificationsForUser(@Path("userId") String userId);
 
+    @DELETE("notification/{userId}/{id}")
+    Call<Notifications> markNotificationAsSeen(@Path("userId") String userId, @Path("id") String id);
+
     /*
      * SEARCH
      */

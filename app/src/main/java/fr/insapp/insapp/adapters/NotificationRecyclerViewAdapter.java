@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.activities.ProfileActivity;
-import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
@@ -55,6 +55,11 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
     public void setOnItemClickListener(OnNotificationItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setItems(List<Notification> notifications) {
+        this.notifications = notifications;
+        this.notifyDataSetChanged();
     }
 
     public void addItem(Notification notification) {

@@ -51,6 +51,7 @@
     <string name="settings_barcode_camera_summary">Scannez le code barre de votre carte amicaliste à l\'aide de la caméra</string>
     <string name="barcode_scan">Scannez le code barre</string>
     <string name="barcode_success">Code barre validé</string>
+    <string name="barcode">Ma carte amicaliste</string>
 
     <string name="report">Signaler</string>
     <string name="delete_account">Supprimer mon compte</string>

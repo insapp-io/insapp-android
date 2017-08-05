@@ -1,5 +1,6 @@
 package fr.insapp.insapp.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -38,6 +38,7 @@ import java.util.Map;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
@@ -57,6 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EventRecyclerViewAdapter adapter;
 
     private User user;
+    private boolean isOwner = false;
 
     private static final int EVENT_REQUEST = 2;
 
@@ -80,6 +82,8 @@ public class ProfileActivity extends AppCompatActivity {
         if (this.user == null) {
             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
             this.user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+
+            this.isOwner = true;
         }
 
         // toolbar
@@ -140,44 +144,41 @@ public class ProfileActivity extends AppCompatActivity {
         Linkify.addLinks(emailTextView, Linkify.EMAIL_ADDRESSES);
         emailTextView.setLinkTextColor(Color.parseColor("#ffffff"));
 
+        // barcode
+
+        generateBarcode();
+
+        //  events
+
         generateEvents();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
+    private void generateBarcode() {
         ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);
-        if (this.user == null) {
-            generateEvents();
 
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String barcode_data = preferences.getString("barcode", "");
+        if (isOwner) {
+            final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+            final String barcodeData = userPreferences.getString("barcode", "");
 
-            if (!barcode_data.equals("")) {
-                ((TextView) findViewById(R.id.barcodeText)).setText(barcode_data);
-
-                // barcode image
+            if (!barcodeData.equals("")) {
+                ((TextView) findViewById(R.id.barcodeText)).setText(barcodeData);
 
                 Bitmap bitmap;
 
                 try {
-                    bitmap = encodeAsBitmap(barcode_data, BarcodeFormat.CODE_128, 700, 300);
+                    bitmap = encodeAsBitmap(barcodeData, BarcodeFormat.CODE_128, 700, 300);
                     barcodeImageView.setImageBitmap(bitmap);
                 }
                 catch (WriterException ex) {
                     ex.printStackTrace();
                 }
             }
-            else {
-                barcodeImageView.setVisibility(View.GONE);
-                findViewById(R.id.titleBarCode).setVisibility(View.GONE);
-            }
+
+            return;
         }
-        else {
-            barcodeImageView.setVisibility(View.GONE);
-            findViewById(R.id.titleBarCode).setVisibility(View.GONE);
-        }
+
+        barcodeImageView.setVisibility(View.GONE);
+        findViewById(R.id.title_barcode).setVisibility(View.GONE);
     }
 
     @Override

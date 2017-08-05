@@ -1,19 +1,22 @@
 package fr.insapp.insapp.activities;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseArray;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
@@ -23,17 +26,13 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
-import fr.insapp.insapp.utility.VisionApiFocusFix;
 
 public class BarcodeDetectorActivity extends AppCompatActivity {
 
     private SurfaceView cameraView;
     private String barcode = "";
-
-
-    // permission request codes need to be < 256
-    private static final int RC_HANDLE_CAMERA_PERM = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,55 +44,38 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Scanner votre carte");
 
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    onBackPressed();
-
-                }
-            });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                final Drawable upArrow = ContextCompat.getDrawable(BarcodeDetectorActivity.this, R.drawable.abc_ic_ab_back_material);
+                upArrow.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+                getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            }
         }
 
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
 
-        BarcodeDetector barcodeDetector =
-                new BarcodeDetector.Builder(this)
-                        .setBarcodeFormats(Barcode.ALL_FORMATS)
-                        .build();
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
 
-        final CameraSource cameraSource = new CameraSource
-                .Builder(this, barcodeDetector)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
-                //.setAutoFocusEnabled(true)
-                .build();
-
+        final CameraSource cameraSource = new CameraSource.Builder(this, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).build();
 
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                if (ActivityCompat.checkSelfPermission(App.getAppContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
                 try {
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-                        Toast.makeText(getApplicationContext(), "La permisson pour utiliser la caméra n'a pas été accordée !", Toast.LENGTH_LONG).show();
-                        requestCameraPermission();
-
-                        return;
-                    }
-                    else
                     cameraSource.start(cameraView.getHolder());
-
-                    System.out.println(VisionApiFocusFix.cameraFocus(cameraSource, Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE));
-                    //cameraFocus(cameraSource, Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-                } catch (IOException ie) {
-                    Log.e("CAMERA SOURCE", ie.getMessage());
+                }
+                catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
             }
 
             @Override
@@ -105,6 +87,7 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
+
             }
 
             @Override
@@ -112,22 +95,22 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
                 if (barcodes.size() != 0) {
-
-                    if(!barcodes.valueAt(0).displayValue.equals(barcode)) {
+                    if (!barcodes.valueAt(0).displayValue.equals(barcode)) {
                         barcode = barcodes.valueAt(0).displayValue;
+
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(getApplicationContext(), "Code barre validé !", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), getString(R.string.barcode_success), Toast.LENGTH_LONG).show();
                             }
                         });
 
-                        SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
-                        preferences.putString("barcode", barcode);
-                        preferences.apply();
+                        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+                        userPreferences.edit().putString("barcode", barcode).apply();
 
-                        Intent secondeActivite = new Intent(BarcodeDetectorActivity.this, SettingsActivity.class);
-                        secondeActivite.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(secondeActivite);
+                        final Intent intent = new Intent(BarcodeDetectorActivity.this, SettingsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
                         finish();
                     }
                 }
@@ -135,18 +118,15 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
-     */
-    private void requestCameraPermission() {
-        final String[] permissions = new String[]{android.Manifest.permission.CAMERA};
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
 
-        //if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-        //        android.Manifest.permission.CAMERA)) {
-            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
-        //    return;
-        //}
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

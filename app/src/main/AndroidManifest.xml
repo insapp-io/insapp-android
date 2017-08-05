@@ -130,6 +130,7 @@
 
         <activity
             android:name=".activities.BarcodeDetectorActivity"
+            android:label="@string/barcode_scan"
             android:parentActivityName=".activities.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

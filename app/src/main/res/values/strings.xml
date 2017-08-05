@@ -42,13 +42,15 @@
     <string name="settings_notifications">Activer les notifications</string>
     <string name="settings_notifications_summary">Une notification est envoyée lorsqu\'une association ajoute une news ou un évènement</string>
     <string name="settings_calendar">Ajouter les évènements au calendrier</string>
-    <string name="settings_calendar_summary">Les évènements auxquels tu participes sont ajoutés à ton calendrier</string>
+    <string name="settings_calendar_summary">Les évènements auxquels vous participez sont ajoutés au calendrier</string>
     <string name="settings_barcode_add">Ajouter votre carte amicaliste</string>
     <string name="settings_barcode_disclaimer">Non renseigné</string>
     <string name="settings_barcode_input">Saisie manuelle</string>
     <string name="settings_barcode_input_summary">Saisissez les chiffres figurant sous le code barre de votre carte amicaliste</string>
     <string name="settings_barcode_camera">Caméra</string>
-    <string name="settings_barcode_camera_summary">Scannez le code barre de votre carte amicaliste</string>
+    <string name="settings_barcode_camera_summary">Scannez le code barre de votre carte amicaliste à l\'aide de la caméra</string>
+    <string name="barcode_scan">Scannez le code barre</string>
+    <string name="barcode_success">Code barre validé</string>
 
     <string name="report">Signaler</string>
     <string name="delete_account">Supprimer mon compte</string>

@@ -25,8 +25,8 @@ public class JsonInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
-        SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
-        SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+        final SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
 
         Response response = chain.proceed(request);
         String json = response.body().string();
@@ -48,8 +48,8 @@ public class JsonInterceptor implements Interceptor {
 
                 userPreferences.edit().putString("user", userJson.toString()).apply();
 
-                SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
-                SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+                final SharedPreferences.Editor editor = defaultSharedPreferences.edit();
 
                 editor.putString("name", userJson.getString("name"));
                 editor.putString("description", userJson.getString("description"));

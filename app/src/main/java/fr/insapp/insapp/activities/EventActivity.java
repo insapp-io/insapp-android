@@ -116,6 +116,8 @@ public class EventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.event = intent.getParcelableExtra("event");
 
+        System.out.println(event);
+
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 

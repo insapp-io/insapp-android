@@ -81,9 +81,7 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(graphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
-                Snackbar.LENGTH_LONG)
-                .show();
+        Snackbar.make(graphicOverlay, "Cliquez sur le code barre à enregistrer", Snackbar.LENGTH_LONG).show();
     }
 
     private void createCameraSource() {

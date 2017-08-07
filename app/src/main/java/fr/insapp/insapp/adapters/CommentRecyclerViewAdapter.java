@@ -165,6 +165,10 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
 
     @Override
     public int getItemCount() {
+        if (comments == null) {
+            return 0;
+        }
+
         return comments.size();
     }
 

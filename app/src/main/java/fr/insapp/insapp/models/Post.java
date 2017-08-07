@@ -31,9 +31,11 @@ public abstract class Post implements Parcelable {
     @SerializedName("date")
     abstract Date date();
 
+    @Nullable
     @SerializedName("likes")
     abstract List<String> likes();
 
+    @Nullable
     @SerializedName("comments")
     abstract List<Comment> comments();
 
@@ -48,6 +50,7 @@ public abstract class Post implements Parcelable {
     @SerializedName("image")
     abstract String image();
 
+    @Nullable
     @SerializedName("imageSize")
     abstract ImageSize imageSize();
 

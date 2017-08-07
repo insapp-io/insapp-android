@@ -123,54 +123,6 @@ public abstract class Notification implements Parcelable {
         return notification;
     }
 
-    public void generateContent() {
-        switch (type()) {
-            case "tag":
-            case "post":
-                Call<Post> call1 = ServiceGenerator.create().getPostFromId(getContent());
-                call1.enqueue(new Callback<Post>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
-                        if (response.isSuccessful()) {
-                            setPost(response.body());
-                        }
-                        else {
-                            Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                        Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
-                    }
-                });
-                break;
-
-            case "event":
-                Call<Event> call2 = ServiceGenerator.create().getEventFromId(getContent());
-                call2.enqueue(new Callback<Event>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
-                        if (response.isSuccessful()) {
-                            setEvent(response.body());
-                        }
-                        else {
-                            Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
-                        Toast.makeText(App.getAppContext(), "Notification", Toast.LENGTH_LONG).show();
-                    }
-                });
-                break;
-
-            default:
-                break;
-        }
-    }
-
     public String getId() {
         return id();
     }

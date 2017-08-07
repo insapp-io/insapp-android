@@ -174,12 +174,11 @@ public class ProfileActivity extends AppCompatActivity {
                     ex.printStackTrace();
                 }
             }
-
-            return;
+            else {
+                barcodeImageView.setVisibility(View.GONE);
+                findViewById(R.id.title_barcode).setVisibility(View.GONE);
+            }
         }
-
-        barcodeImageView.setVisibility(View.GONE);
-        findViewById(R.id.title_barcode).setVisibility(View.GONE);
     }
 
     @Override

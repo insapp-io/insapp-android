@@ -16,13 +16,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Notifications;
+import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,15 +51,67 @@ public class NotificationsFragment extends Fragment {
             public void onNotificationItemClick(Notification notification) {
                 switch (notification.getType()) {
                     case "tag":
-                        startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()).putExtra("taggedCommentID", notification.getComment().getId()));
+                        Call<Post> call1 = ServiceGenerator.create().getPostFromId(notification.getContent());
+                        call1.enqueue(new Callback<Post>() {
+                            @Override
+                            public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                                if (response.isSuccessful()) {
+                                    // .putExtra("taggedCommentID", notification.getComment().getId())
+                                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", response.body()));
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                         break;
 
                     case "post":
-                        startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", notification.getPost()));
+                        Call<Post> call2 = ServiceGenerator.create().getPostFromId(notification.getContent());
+                        call2.enqueue(new Callback<Post>() {
+                            @Override
+                            public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
+                                if (response.isSuccessful()) {
+                                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", response.body()));
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
+                                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                         break;
 
                     case "event":
-                        startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", notification.getEvent()));
+                        Call<Event> call3 = ServiceGenerator.create().getEventFromId(notification.getContent());
+                        call3.enqueue(new Callback<Event>() {
+                            @Override
+                            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                                if (response.isSuccessful()) {
+                                    startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", response.body()));
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
+                                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                         break;
 
                     default:
@@ -73,9 +128,7 @@ public class NotificationsFragment extends Fragment {
                     @Override
                     public void onResponse(@NonNull Call<Notifications> call, @NonNull Response<Notifications> response) {
                         if (response.isSuccessful()) {
-                            final Notifications notifications = response.body();
 
-                            adapter.setItems(notifications.getNotifications());
                         }
                         else {
                             Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
@@ -120,8 +173,6 @@ public class NotificationsFragment extends Fragment {
 
                     if (notifications.getNotifications() != null) {
                         for (final Notification notification : notifications.getNotifications()) {
-                            notification.generateContent();
-
                             adapter.addItem(notification);
                         }
                     }

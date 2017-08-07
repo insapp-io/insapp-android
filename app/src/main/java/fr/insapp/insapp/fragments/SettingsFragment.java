@@ -9,13 +9,14 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceGroup;
-import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.User;
@@ -46,6 +47,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         addPreferencesFromResource(R.xml.preferences);
 
         initSummary(getPreferenceScreen());
+
+        final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+        final String barcodeData = defaultSharedPreferences.getString("barcode", "");
+
+        if (!barcodeData.equals("")) {
+            findPreference("barcode_preferences").setSummary(barcodeData);
+        }
     }
 
     @Override

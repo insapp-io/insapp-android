@@ -10,13 +10,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.preference.PreferenceScreen;
-import android.widget.BaseAdapter;
 
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.BarcodeDetectorActivity;
 import fr.insapp.insapp.activities.SettingsActivity;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by thomas on 04/08/2017.
@@ -42,6 +42,8 @@ public class BarcodeSettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
+        // barcode input from camera
+
         Preference barcodeCamera = findPreference("barcode_camera");
 
         barcodeCamera.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -59,6 +61,8 @@ public class BarcodeSettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        // barcode input from dialog
+
         Preference barcodeDialog = findPreference("barcode_dialog");
 
         barcodeDialog.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -69,9 +73,9 @@ public class BarcodeSettingsFragment extends PreferenceFragmentCompat {
                 defaultSharedPreferences.putString("barcode", (String) newValue);
                 defaultSharedPreferences.apply();
 
-                final Intent intent = new Intent(getContext(), SettingsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                final Intent next = new Intent(getContext(), SettingsActivity.class);
+                next.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(next);
 
                 return true;
             }

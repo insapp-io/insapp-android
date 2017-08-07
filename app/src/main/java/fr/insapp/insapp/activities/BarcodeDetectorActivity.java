@@ -254,21 +254,15 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
         }
 
         if (best != null) {
-            /*
-            final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-            userPreferences.edit().putString("barcode", best.rawValue).apply();
-            */
-
             final SharedPreferences.Editor defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit();
 
+            defaultSharedPreferences.putString("barcode_camera", best.rawValue);
             defaultSharedPreferences.putString("barcode", best.rawValue);
             defaultSharedPreferences.apply();
 
-            final Intent intent = new Intent(BarcodeDetectorActivity.this, SettingsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-
-            finish();
+            final Intent next = new Intent(BarcodeDetectorActivity.this, SettingsActivity.class);
+            next.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(next);
 
             return true;
         }

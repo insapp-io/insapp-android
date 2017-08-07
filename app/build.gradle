@@ -45,7 +45,7 @@ dependencies {
     compile "com.google.firebase:firebase-core:$GOOGLE_LIB_VER"
     compile "com.google.firebase:firebase-messaging:$GOOGLE_LIB_VER"
 
-    compile "com.google.android.gms:play-services-vision:$GOOGLE_LIB_VER"
+    compile "com.google.android.gms:play-services:$GOOGLE_LIB_VER"
 
     compile "de.hdodenhof:circleimageview:2.1.0"
     compile "com.github.jd-alexander:LikeButton:0.2.0"
@@ -62,6 +62,7 @@ dependencies {
     annotationProcessor "me.tatarka:auto-parcel-gson-processor:0.1"
 
     testCompile "junit:junit:4.12"
+    compile 'junit:junit:4.12'
 }
 
 apply plugin: "com.google.gms.google-services"

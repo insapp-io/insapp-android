@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.http.ServiceGenerator;
 
 /**
  * Created by thomas on 13/12/2016.
@@ -27,7 +28,7 @@ public class CreditsActivity extends AppCompatActivity {
         }
 
         WebView webView = (WebView) findViewById(R.id.webview_credits);
-        webView.loadUrl("https://insapp.fr/api/v1/credit");
+        webView.loadUrl(ServiceGenerator.ROOT_URL + "credit");
     }
 
     @Override

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_barcode_detector"
     android:layout_width="match_parent"
@@ -14,12 +15,15 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ToolbarStyle"/>
 
-    <SurfaceView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/camera_view"
+    <fr.insapp.insapp.barcode.camera.CameraSourcePreview
+        android:id="@+id/preview"
         android:layout_below="@id/toolbar_barcode"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fr.insapp.insapp.barcode.camera.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </fr.insapp.insapp.barcode.camera.CameraSourcePreview>
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.http.ServiceGenerator;
 
 public class LegalConditionsActivity extends AppCompatActivity {
 
@@ -23,7 +24,7 @@ public class LegalConditionsActivity extends AppCompatActivity {
         }
 
         WebView webView = (WebView) findViewById(R.id.webview_conditions);
-        webView.loadUrl("https://insapp.fr/api/v1/legal");
+        webView.loadUrl(ServiceGenerator.ROOT_URL + "legal");
     }
 
     @Override

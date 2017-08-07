@@ -179,6 +179,10 @@ public class ProfileActivity extends AppCompatActivity {
                 findViewById(R.id.title_barcode).setVisibility(View.GONE);
             }
         }
+        else {
+            barcodeImageView.setVisibility(View.GONE);
+            findViewById(R.id.title_barcode).setVisibility(View.GONE);
+        }
     }
 
     @Override

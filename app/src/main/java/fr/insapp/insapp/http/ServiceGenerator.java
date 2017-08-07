@@ -36,22 +36,11 @@ public class ServiceGenerator {
     private static JsonInterceptor jsonInterceptor = new JsonInterceptor();
     private static TokenInterceptor tokenInterceptor = new TokenInterceptor();
 
+    private static Client client;
+
     public static <S> S createService(Class<S> serviceClass, TypeAdapter... adapters) {
-        Retrofit.Builder builder;
-
-        if (adapters.length > 0) {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-
-            for (TypeAdapter adapter : adapters) {
-                gsonBuilder.registerTypeAdapter(adapter.getType(), adapter.getDeserializer());
-            }
-
-            builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()));
-        }
-        else {
-            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-            builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson));
-        }
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson));
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -65,6 +54,10 @@ public class ServiceGenerator {
     }
 
     public static Client create() {
-        return ServiceGenerator.createService(Client.class);
+        if (ServiceGenerator.client == null) {
+            ServiceGenerator.client = ServiceGenerator.createService(Client.class);
+        }
+
+        return ServiceGenerator.client;
     }
 }

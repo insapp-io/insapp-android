@@ -1,7 +1,5 @@
 # Insapp
-Android version of insapp, material friendly.
-
-iOS version : [https://github.com/fthomasmorel/insapp-iOS](https://github.com/fthomasmorel/insapp-iOS), architecture : [https://github.com/fthomasmorel/Insapp](https://github.com/fthomasmorel/Insapp)
+Android version of insapp, material friendly. Related repositories : [iOS version](https://github.com/fthomasmorel/insapp-iOS), [backend](https://github.com/tomatrocho/insapp-go).
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
       alt="Download from Google Play" 
@@ -15,16 +13,19 @@ Insapp is a project aiming at helping associations from INSA Rennes to communica
 <img src="/screenshots/3.png?raw=true" width="200">
 <img src="/screenshots/4.png?raw=true" width="200">
 <img src="/screenshots/5.png?raw=true" width="200">
+<img src="/screenshots/6.png?raw=true" width="200">
+<img src="/screenshots/7.png?raw=true" width="200">
 
 You can find us on [Facebook](https://www.facebook.com/insapp.crew/).
 
-## Open-source libraries
+## Notable open-source libraries
 
 - [**Retrofit**](https://github.com/square/retrofit) for constructing the REST API
 - [**AutoParcelGson**](https://github.com/evant/auto-parcel-gson) for automatic Parcelable generation
 - [**Glide**](https://github.com/bumptech/glide) for loading images
 - [**CircularImageView**](https://github.com/hdodenhof/CircleImageView) for round images
 - [**AppIntro**](https://github.com/apl-devs/AppIntro) for cool intro
+- [**Android Vision API**](https://github.com/googlesamples/android-vision) for scanning barcodes
 - **Android Support Libraries**
 
 ## Contribution

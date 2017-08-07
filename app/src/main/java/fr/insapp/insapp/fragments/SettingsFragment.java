@@ -9,6 +9,7 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceGroup;
+import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -43,17 +44,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
-
-        /*
-        final Preference chimeMaster = findPreference("barcode");
-        chimeMaster.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newVal) {
-                ((EditTextPreference) preference).setText((String) newVal);
-                return true;
-            }
-        });
-        */
 
         initSummary(getPreferenceScreen());
     }

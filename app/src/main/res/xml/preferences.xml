@@ -50,6 +50,7 @@
             android:persistent="false">
 
             <android.support.v7.preference.EditTextPreference
+                android:key="barcode_dialog"
                 android:title="@string/settings_barcode_input"
                 android:maxLength="9"
                 android:inputType="number"

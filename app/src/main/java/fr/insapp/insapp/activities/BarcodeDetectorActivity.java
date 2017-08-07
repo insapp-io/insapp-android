@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -253,8 +254,15 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
         }
 
         if (best != null) {
+            /*
             final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
             userPreferences.edit().putString("barcode", best.rawValue).apply();
+            */
+
+            final SharedPreferences.Editor defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit();
+
+            defaultSharedPreferences.putString("barcode", best.rawValue);
+            defaultSharedPreferences.apply();
 
             final Intent intent = new Intent(BarcodeDetectorActivity.this, SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

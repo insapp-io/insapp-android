@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -157,8 +158,8 @@ public class ProfileActivity extends AppCompatActivity {
         ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);
 
         if (isOwner) {
-            final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-            final String barcodeData = userPreferences.getString("barcode", "");
+            final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+            final String barcodeData = defaultSharedPreferences.getString("barcode", "");
 
             if (!barcodeData.equals("")) {
                 ((TextView) findViewById(R.id.barcodeText)).setText(barcodeData);

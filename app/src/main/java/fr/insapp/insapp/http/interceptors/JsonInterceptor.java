@@ -45,20 +45,24 @@ public class JsonInterceptor implements Interceptor {
             // retrieve user data from server
 
             try {
-                final JSONObject userJson = new JSONObject(json).getJSONObject("user");
+                final JSONObject jsonObject = new JSONObject(json);
 
-                userPreferences.edit().putString("user", userJson.toString()).apply();
+                if (jsonObject.has("user")) {
+                    final JSONObject userJson = jsonObject.getJSONObject("user");
 
-                final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
-                final SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+                    userPreferences.edit().putString("user", userJson.toString()).apply();
 
-                editor.putString("name", userJson.getString("name"));
-                editor.putString("description", userJson.getString("description"));
-                editor.putString("email", userJson.getString("email"));
-                editor.putString("class", userJson.getString("promotion"));
-                editor.putString("sex", userJson.getString("gender"));
+                    final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+                    final SharedPreferences.Editor editor = defaultSharedPreferences.edit();
 
-                editor.apply();
+                    editor.putString("name", userJson.getString("name"));
+                    editor.putString("description", userJson.getString("description"));
+                    editor.putString("email", userJson.getString("email"));
+                    editor.putString("class", userJson.getString("promotion"));
+                    editor.putString("sex", userJson.getString("gender"));
+
+                    editor.apply();
+                }
             }
             catch (JSONException ex) {
                 ex.printStackTrace();

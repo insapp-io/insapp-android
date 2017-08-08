@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -189,8 +190,7 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        if (this.user.getId().equals(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
+        if (isOwner) {
             menu.getItem(0).setTitle(R.string.delete_account);
         }
 
@@ -207,9 +207,7 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.action_report:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
 
-                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-
-                if (!this.user.getId().equals(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
+                if (!isOwner) {
                     alertDialogBuilder.setTitle(getString(R.string.report_user_action));
                     alertDialogBuilder
                             .setMessage(R.string.report_user_are_you_sure)
@@ -241,6 +239,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
                 }
+
                 else {
                     alertDialogBuilder.setTitle(getString(R.string.delete_account_action));
                     alertDialogBuilder
@@ -255,8 +254,9 @@ public class ProfileActivity extends AppCompatActivity {
                                         @Override
                                         public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                                             if (response.isSuccessful()) {
-                                                getSharedPreferences("Credentials", MODE_PRIVATE).edit().clear().apply();
-                                                getSharedPreferences("User", MODE_PRIVATE).edit().clear().apply();
+                                                getSharedPreferences("Credentials", Context.MODE_PRIVATE).edit().clear().apply();
+                                                getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply();
+                                                PreferenceManager.getDefaultSharedPreferences(ProfileActivity.this).edit().clear().apply();
 
                                                 Intent activity = new Intent(ProfileActivity.this, IntroActivity.class);
                                                 activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

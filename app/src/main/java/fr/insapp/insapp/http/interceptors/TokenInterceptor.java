@@ -3,6 +3,7 @@ package fr.insapp.insapp.http.interceptors;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,9 +73,15 @@ public class TokenInterceptor implements Interceptor {
                 Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
                 retrofit2.Response<SessionCredentials> res = call.execute();
 
+                // if the user has a new auth token, disconnect him from the current device
+
                 if (res.code() == 404) {
-                    Context context = App.getAppContext();
+                    final Context context = App.getAppContext();
                     context.startActivity(new Intent(context, IntroActivity.class));
+
+                    App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).edit().clear().apply();
+                    App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply();
+                    PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
 
                     return response;
                 }

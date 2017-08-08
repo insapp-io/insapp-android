@@ -70,7 +70,12 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         SpannableString spannableString = new SpannableString(str);
 
         for (final Tag tag : comment.getTags()) {
-            final int posStart = str.indexOf(tag.getName());
+            int posStart = str.indexOf(tag.getName());
+
+            if (posStart < 0) {
+                posStart = 0;
+            }
+
             final int posEnd = posStart + tag.getName().length();
 
             ClickableSpan span = new ClickableSpan() {

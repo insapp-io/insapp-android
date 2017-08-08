@@ -114,15 +114,6 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
 
-        try {
-            Field cursorDrawable = TextView.class.getDeclaredField("mCursorDrawableRes");
-            cursorDrawable.setAccessible(true);
-            cursorDrawable.set(searchView, R.drawable.cursor);
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
         return super.onCreateOptionsMenu(menu);
     }
 

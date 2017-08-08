@@ -5,17 +5,19 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -130,16 +132,40 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     }
 
     private void sendNotification(int notificationId, String title, Notification notification, PendingIntent pendingIntent) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(notification.getMessage())
-                .setAutoCancel(true)
-                .setLights(Color.RED, 500, 1000)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setContentIntent(pendingIntent);
+        NotificationCompat.Builder builder;
 
-        builder.setDefaults(android.app.Notification.DEFAULT_SOUND | android.app.Notification.DEFAULT_VIBRATE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            RemoteViews remoteViews = new RemoteViews(App.getAppContext().getPackageName(), R.layout.custom_notification);
+
+            remoteViews.setTextViewText(R.id.notification_title, title);
+            remoteViews.setTextViewText(R.id.notification_content, notification.getMessage());
+            remoteViews.setImageViewBitmap(R.id.notification_image, BitmapFactory.decodeResource(getResources(), R.drawable.avatar_default_large));
+
+            builder = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setCustomContentView(remoteViews)
+                    .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                    .setAutoCancel(true)
+                    .setLights(Color.RED, 500, 1000)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setColor(ContextCompat.getColor(App.getAppContext(), R.color.colorPrimary))
+                    .setContentIntent(pendingIntent);
+
+            builder.setDefaults(android.app.Notification.DEFAULT_SOUND | android.app.Notification.DEFAULT_VIBRATE);
+        }
+        else {
+            builder = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(title)
+                    .setContentText(notification.getMessage())
+                    .setAutoCancel(true)
+                    .setLights(Color.RED, 500, 1000)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setColor(ContextCompat.getColor(App.getAppContext(), R.color.colorPrimary))
+                    .setContentIntent(pendingIntent);
+
+            builder.setDefaults(android.app.Notification.DEFAULT_SOUND | android.app.Notification.DEFAULT_VIBRATE);
+        }
 
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "Lock");

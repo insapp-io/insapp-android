@@ -18,6 +18,7 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.notifications.FirebaseService;
+import fr.insapp.insapp.utility.Utils;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -35,17 +36,17 @@ public class TokenInterceptor implements Interceptor {
         Request request = chain.request();
 
         final SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
+        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
         // if user is stored, register firebase token
 
         if (FirebaseService.SHOULD_REGISTER_TOKEN) {
-            final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-            final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
-
             if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
                 FirebaseService.SHOULD_REGISTER_TOKEN = false;
 
+                final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
                 FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
             }
         }
@@ -73,22 +74,20 @@ public class TokenInterceptor implements Interceptor {
                 Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
                 retrofit2.Response<SessionCredentials> res = call.execute();
 
-                // if the user has a new auth token, disconnect him from the current device
+                // if the user has a new auth token, disconnect him from current device
 
                 if (res.code() == 404) {
                     final Context context = App.getAppContext();
                     context.startActivity(new Intent(context, IntroActivity.class));
 
-                    App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).edit().clear().apply();
-                    App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply();
-                    PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
+                    gson.fromJson(userPreferences.getString("user", ""), User.class).clearData();
 
                     return response;
                 }
 
-                SessionCredentials refreshedSessionCredentials = res.body();
+                final SessionCredentials refreshedSessionCredentials = res.body();
 
-                HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
+                final HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
                 request = request.newBuilder().url(url).build();
 
                 return chain.proceed(request);

@@ -50,7 +50,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
         }
     }
 
-    public static void registerToken(String token) {
+    public static void registerToken(final String token) {
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 
@@ -61,7 +61,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
             @Override
             public void onResponse(@NonNull Call<NotificationUser> call, @NonNull Response<NotificationUser> response) {
                 if (response.isSuccessful()) {
-                    Log.d(FirebaseService.TAG, "Firebase token successfully registered on server");
+                    Log.d(FirebaseService.TAG, "Firebase token successfully registered on server: " + token);
                 }
                 else {
                     Toast.makeText(App.getAppContext(), "FirebaseService", Toast.LENGTH_LONG).show();

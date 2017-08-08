@@ -1,12 +1,23 @@
 package fr.insapp.insapp.models;
 
+import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
 import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.annotations.SerializedName;
+import fr.insapp.insapp.App;
+import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.notifications.FirebaseService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Antoine on 19/09/2016.
@@ -49,6 +60,33 @@ public abstract class User implements Parcelable {
 
     public static User create(String id, String name, String username, String description, String email, boolean emailPublic, String promotion, String gender, List<String> events, List<String> postsLiked) {
         return new AutoParcelGson_User(id, name, username, description, email, emailPublic, promotion, gender, events, postsLiked);
+    }
+
+    public void clearData() {
+        NotificationUser notificationUser = new NotificationUser(null, id(), "", "android");
+
+        Call<NotificationUser> call = ServiceGenerator.create().registerNotification(notificationUser);
+        call.enqueue(new Callback<NotificationUser>() {
+            @Override
+            public void onResponse(@NonNull Call<NotificationUser> call, @NonNull Response<NotificationUser> response) {
+                if (response.isSuccessful()) {
+                    Log.d(FirebaseService.TAG, "Firebase token successfully unregistered on server");
+                }
+                else {
+                    Toast.makeText(App.getAppContext(), "User", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<NotificationUser> call, @NonNull Throwable t) {
+                Toast.makeText(App.getAppContext(), "User", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).edit().clear().apply();
+        App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply();
+
+        PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit().clear().apply();
     }
 
     public String getId() {

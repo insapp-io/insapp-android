@@ -8,10 +8,24 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
+import android.support.v7.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import fr.insapp.insapp.App;
+import fr.insapp.insapp.activities.ProfileActivity;
+import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.models.NotificationUser;
+import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.notifications.FirebaseService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Utils {
 

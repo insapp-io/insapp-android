@@ -2,6 +2,7 @@ package fr.insapp.insapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,6 +16,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
@@ -91,6 +93,14 @@ public class SigninActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<SessionCredentials> call, @NonNull Response<SessionCredentials> response) {
                 if (response.isSuccessful()) {
                     startActivity(new Intent(SigninActivity.this, MainActivity.class));
+
+                    // if a firebase token is already registered in preferences from previous user
+
+                    final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
+                    if (firebaseCredentialsPreferences.contains("token")) {
+                        FirebaseService.SHOULD_REGISTER_TOKEN = true;
+                    }
+
                     finish();
                 }
                 else {

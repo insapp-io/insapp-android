@@ -8,38 +8,26 @@ import android.os.Bundle;
 import android.support.customtabs.CustomTabsClient;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.lang.reflect.Field;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.BuildConfig;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
-import fr.insapp.insapp.fragments.BarcodeSettingsFragment;
 import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
-import fr.insapp.insapp.fragments.SettingsFragment;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.notifications.FirebaseService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,10 +39,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Firebase
-
-        Log.d(FirebaseService.TAG, "Token: " + FirebaseInstanceId.getInstance().getToken());
 
         // toolbar
 

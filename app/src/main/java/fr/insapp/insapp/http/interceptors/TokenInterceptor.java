@@ -53,7 +53,7 @@ public class TokenInterceptor implements Interceptor {
 
         SessionCredentials sessionCredentials = gson.fromJson(credentialsPreferences.getString("session", ""), SessionCredentials.class);
 
-        if (sessionCredentials != null) {
+        if (sessionCredentials != null && sessionCredentials.getSessionToken() != null) {
             final String sessionToken = sessionCredentials.getSessionToken().getToken();
 
             HttpUrl url = request.url().newBuilder().addQueryParameter("token", sessionToken).build();
@@ -85,12 +85,6 @@ public class TokenInterceptor implements Interceptor {
                 request = request.newBuilder().url(url).build();
 
                 return chain.proceed(request);
-
-            // did the user log in somewhere else ?
-
-            case 404:
-                Context context = App.getAppContext();
-                context.startActivity(new Intent(context, IntroActivity.class));
 
             default:
                 return response;

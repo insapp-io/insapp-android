@@ -36,6 +36,7 @@ public class JsonInterceptor implements Interceptor {
                 credentialsPreferences.edit().putString("login", json).apply();
             }
         }
+
         else if (request.url().toString().contains("login/user")) {
             if (isJsonValid(json)) {
                 credentialsPreferences.edit().putString("session", json).apply();

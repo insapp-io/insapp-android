@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
@@ -18,6 +17,8 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.NotificationTarget;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -30,9 +31,12 @@ import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
+import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.Operation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,7 +82,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
                                 final String title = notification.getPost().getTitle();
 
-                                sendNotification(notificationId, title, notification, pendingIntent);
+                                buildNotification(notificationId, title, notification, pendingIntent);
                             }
                             else {
                                 Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
@@ -107,7 +111,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
                                 final String title = notification.getEvent().getName();
 
-                                sendNotification(notificationId, title, notification, pendingIntent);
+                                buildNotification(notificationId, title, notification, pendingIntent);
                             }
                             else {
                                 Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
@@ -125,13 +129,13 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                     final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, IntroActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
                     final String title = getResources().getString(R.string.app_name);
 
-                    sendNotification(notificationId, title, notification, pendingIntent);
+                    buildNotification(notificationId, title, notification, pendingIntent);
                     break;
             }
         }
     }
 
-    private void sendNotification(int notificationId, String title, Notification notification, PendingIntent pendingIntent) {
+    private void buildNotification(int notificationId, String title, Notification notification, PendingIntent pendingIntent) {
         NotificationCompat.Builder builder;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -139,7 +143,6 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
             remoteViews.setTextViewText(R.id.notification_title, title);
             remoteViews.setTextViewText(R.id.notification_content, notification.getMessage());
-            remoteViews.setImageViewBitmap(R.id.notification_image, BitmapFactory.decodeResource(getResources(), R.drawable.avatar_default_large));
 
             builder = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(this)
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -152,6 +155,100 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent);
 
             builder.setDefaults(android.app.Notification.DEFAULT_SOUND | android.app.Notification.DEFAULT_VIBRATE);
+
+            final android.app.Notification builtNotification = builder.build();
+
+            final NotificationTarget notificationTarget = new NotificationTarget(
+                    App.getAppContext(),
+                    remoteViews,
+                    R.id.notification_image,
+                    builtNotification,
+                    notificationId
+            );
+
+            switch (notification.getType()) {
+                case "tag":
+                    Call<User> call1 = ServiceGenerator.create().getUserFromId(notification.getSender());
+                    call1.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                            if (response.isSuccessful()) {
+                                final User user = response.body();
+
+                                final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", App.getAppContext().getPackageName());
+                                Glide
+                                        .with(App.getAppContext())
+                                        .load(id)
+                                        .asBitmap()
+                                        .into(notificationTarget);
+                            }
+                            else {
+                                Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                            Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    break;
+
+                case "post":
+                    Call<Club> call2 = ServiceGenerator.create().getClubFromId(notification.getPost().getAssociation());
+                    call2.enqueue(new Callback<Club>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
+                            if (response.isSuccessful()) {
+                                final Club club = response.body();
+
+                                Glide
+                                        .with(App.getAppContext())
+                                        .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                                        .asBitmap()
+                                        .into(notificationTarget);
+                            }
+                            else {
+                                Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
+                            Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    break;
+
+                case "event":
+                    Call<Club> call3 = ServiceGenerator.create().getClubFromId(notification.getEvent().getAssociation());
+                    call3.enqueue(new Callback<Club>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Club> call, @NonNull Response<Club> response) {
+                            if (response.isSuccessful()) {
+                                final Club club = response.body();
+
+                                Glide
+                                        .with(App.getAppContext())
+                                        .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                                        .asBitmap()
+                                        .into(notificationTarget);
+                            }
+                            else {
+                                Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<Club> call, @NonNull Throwable t) {
+                            Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    break;
+
+                default:
+                    break;
+            }
         }
         else {
             builder = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(this)
@@ -165,14 +262,18 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent);
 
             builder.setDefaults(android.app.Notification.DEFAULT_SOUND | android.app.Notification.DEFAULT_VIBRATE);
-        }
 
+            sendNotification(notificationId, builder.build());
+        }
+    }
+
+    private void sendNotification(int notificationId, android.app.Notification builtNotification) {
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "Lock");
         wakeLock.acquire();
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationId, builder.build());
+        notificationManager.notify(notificationId, builtNotification);
     }
 
     private int getRandomNotificationId() {

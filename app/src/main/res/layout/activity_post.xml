@@ -51,25 +51,34 @@
                 android:layout_below="@id/post_title"
                 android:layout_toEndOf="@+id/post_club_avatar" />
 
-            <com.like.LikeButton
-                android:id="@+id/post_like_button"
-                app:icon_type="heart"
-                app:icon_size="18dp"
-                android:layout_gravity="center_vertical"
-                app:circle_start_color="@color/colorPrimary"
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_alignBottom="@+id/post_date"
-                android:layout_alignParentEnd="true" />
+                android:orientation="horizontal"
+                android:layout_marginTop="-6dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true">
 
-            <TextView
-                android:id="@+id/post_like_counter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_toEndOf="@+id/post_like_button" />
+                <com.like.LikeButton
+                    android:id="@+id/post_like_button"
+                    app:icon_type="heart"
+                    app:icon_size="18dp"
+                    android:layout_gravity="center_vertical"
+                    app:circle_start_color="@color/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp" />
+
+                <TextView
+                    android:id="@+id/post_like_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginEnd="22dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/post_text"

@@ -25,8 +25,6 @@ import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
-import java.util.Locale;
-
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
@@ -131,7 +129,7 @@ public class PostActivity extends AppCompatActivity {
         // like button
 
         likeButton.setLiked(post.isPostLikedBy(user.getId()));
-        likeCounterTextView.setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));
+        likeCounterTextView.setText(post.getLikes().size() + "");
 
         likeButton.setOnLikeListener(new OnLikeListener() {
              @Override
@@ -141,7 +139,7 @@ public class PostActivity extends AppCompatActivity {
                      @Override
                      public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
                          if (response.isSuccessful()) {
-
+                             likeCounterTextView.setText(Integer.valueOf((String) likeCounterTextView.getText()) + 1 + "");
                          } else {
                              Toast.makeText(PostActivity.this, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                          }
@@ -161,7 +159,11 @@ public class PostActivity extends AppCompatActivity {
                      @Override
                      public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
                          if (response.isSuccessful()) {
+                             likeCounterTextView.setText(Integer.valueOf((String) likeCounterTextView.getText()) - 1 + "");
 
+                             if (Integer.valueOf((String) likeCounterTextView.getText()) < 0) {
+                                 likeCounterTextView.setText("0");
+                             }
                          } else {
                              Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                          }

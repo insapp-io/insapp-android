@@ -14,10 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -34,6 +36,7 @@ import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.RatioImageView;
 import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,10 +59,9 @@ public class PostActivity extends AppCompatActivity {
     private TextView titleTextView;
     private TextView descriptionTextView;
     private TextView dateTextView;
-
-    // comment
-
     private CircleImageView userAvatarCircleImageView;
+    private ImageView imageView;
+    private RatioImageView placeholderImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class PostActivity extends AppCompatActivity {
         this.descriptionTextView = (TextView) findViewById(R.id.post_text);
         this.dateTextView = (TextView) findViewById(R.id.post_date);
         this.userAvatarCircleImageView = (CircleImageView) findViewById(R.id.comment_post_username_avatar);
+        this.imageView = (ImageView) findViewById(R.id.post_image);
+        this.placeholderImageView = (RatioImageView) findViewById(R.id.post_placeholder);
 
         // post
 
@@ -194,6 +198,16 @@ public class PostActivity extends AppCompatActivity {
                 .load(id)
                 .crossFade()
                 .into(userAvatarCircleImageView);
+
+        // image
+
+        placeholderImageView.setImageSize(post.getImageSize());
+
+        Glide
+                .with(PostActivity.this)
+                .load(ServiceGenerator.CDN_URL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
+                .crossFade()
+                .into(imageView);
     }
 
     @Override

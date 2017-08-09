@@ -31,12 +31,10 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="8dp">
+                    android:padding="16dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/post_club_avatar"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginStart="14dp"
                         android:layout_marginEnd="6dp"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
@@ -61,21 +59,9 @@
                         android:layout_toEndOf="@+id/post_club_avatar" />
 
                     <TextView
-                        android:textColor="#7f7f7f"
-                        android:textSize="13sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="14dp"
-                        android:id="@+id/date_post"
-                        android:layout_alignBaseline="@+id/post_title"
-                        android:layout_alignParentEnd="true" />
-
-                    <TextView
                         android:id="@+id/post_text"
                         android:textSize="15sp"
                         android:layout_marginTop="14dp"
-                        android:layout_marginBottom="14dp"
-                        android:layout_marginStart="14dp"
                         android:layout_marginEnd="14dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -83,6 +69,24 @@
                         android:lineSpacingExtra="3dp"
                         android:layout_below="@+id/post_club_avatar"
                         android:layout_alignParentStart="true" />
+
+                    <fr.insapp.insapp.utility.RatioImageView
+                        android:id="@+id/post_placeholder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="14dp"
+                        android:layout_below="@id/post_text"
+                        android:background="@color/lightGray" />
+
+                    <ImageView
+                        android:id="@+id/post_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_below="@id/post_text"
+                        android:layout_alignParentEnd="true"
+                        android:scaleType="fitStart"
+                        android:adjustViewBounds="true" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 

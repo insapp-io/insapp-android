@@ -98,7 +98,7 @@ public class SigninActivity extends AppCompatActivity {
 
                     final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
                     if (firebaseCredentialsPreferences.contains("userid") && firebaseCredentialsPreferences.contains("token")) {
-                        FirebaseService.SHOULD_REGISTER_PREVIOUS_TOKEN = true;
+                        FirebaseService.SHOULD_REGISTER_TOKEN = true;
                     }
 
                     finish();

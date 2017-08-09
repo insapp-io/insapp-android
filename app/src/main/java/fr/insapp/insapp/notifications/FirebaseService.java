@@ -30,8 +30,6 @@ public class FirebaseService extends FirebaseInstanceIdService {
 
     public static boolean SHOULD_REGISTER_TOKEN = false;
 
-    public static boolean SHOULD_REGISTER_PREVIOUS_TOKEN = false;
-
     @Override
     public void onTokenRefresh() {
         final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -41,29 +39,12 @@ public class FirebaseService extends FirebaseInstanceIdService {
 
         Log.d(FirebaseService.TAG, "Refreshed token: " + refreshedToken);
 
-        /*
-        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-        */
-
-        /*
-        if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
-            FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""), false);
-        }
-        else {
-        */
-            FirebaseService.SHOULD_REGISTER_TOKEN = true;
-        /*
-        }
-        */
+        FirebaseService.SHOULD_REGISTER_TOKEN = true;
     }
 
-    public static void registerToken(final String token, final boolean renewal) {
+    public static void registerToken(final String token) {
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
-
-        SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
-        firebaseCredentialsPreferences.edit().putString("userid", user.getId()).apply();
 
         final NotificationUser notificationUser = new NotificationUser(null, user.getId(), token, "android");
 
@@ -77,12 +58,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
                 else {
                     Toast.makeText(App.getAppContext(), "FirebaseService", Toast.LENGTH_LONG).show();
 
-                    if (renewal) {
-                        FirebaseService.SHOULD_REGISTER_PREVIOUS_TOKEN = true;
-                    }
-                    else {
-                        FirebaseService.SHOULD_REGISTER_TOKEN = true;
-                    }
+                    FirebaseService.SHOULD_REGISTER_TOKEN = true;
                 }
             }
 
@@ -90,12 +66,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
             public void onFailure(@NonNull Call<NotificationUser> call, @NonNull Throwable t) {
                 Toast.makeText(App.getAppContext(), "FirebaseService", Toast.LENGTH_LONG).show();
 
-                if (renewal) {
-                    FirebaseService.SHOULD_REGISTER_PREVIOUS_TOKEN = true;
-                }
-                else {
-                    FirebaseService.SHOULD_REGISTER_TOKEN = true;
-                }
+                FirebaseService.SHOULD_REGISTER_TOKEN = true;
             }
         });
     }

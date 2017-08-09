@@ -2,13 +2,9 @@ package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
-import android.util.AttributeSet;
-import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +20,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -22,6 +22,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
+
+import java.util.Locale;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -33,6 +37,7 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Notifications;
 import fr.insapp.insapp.models.Post;
+import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Operation;
@@ -57,6 +62,8 @@ public class PostActivity extends AppCompatActivity {
 
     private CircleImageView clubAvatarCircleImageView;
     private TextView titleTextView;
+    private LikeButton likeButton;
+    private TextView likeCounterTextView;
     private TextView descriptionTextView;
     private TextView dateTextView;
     private CircleImageView userAvatarCircleImageView;
@@ -70,6 +77,8 @@ public class PostActivity extends AppCompatActivity {
 
         this.clubAvatarCircleImageView = (CircleImageView) findViewById(R.id.post_club_avatar);
         this.titleTextView = (TextView) findViewById(R.id.post_title);
+        this.likeButton = (LikeButton) findViewById(R.id.post_like_button);
+        this.likeCounterTextView = (TextView) findViewById(R.id.post_like_counter);
         this.descriptionTextView = (TextView) findViewById(R.id.post_text);
         this.dateTextView = (TextView) findViewById(R.id.post_date);
         this.userAvatarCircleImageView = (CircleImageView) findViewById(R.id.comment_post_username_avatar);
@@ -107,7 +116,7 @@ public class PostActivity extends AppCompatActivity {
 
         // toolbar
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_post);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.post_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -119,6 +128,53 @@ public class PostActivity extends AppCompatActivity {
                 getSupportActionBar().setHomeAsUpIndicator(upArrow);
             }
         }
+
+        // like button
+
+        likeButton.setLiked(post.isPostLikedBy(user.getId()));
+        likeCounterTextView.setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));
+
+        likeButton.setOnLikeListener(new OnLikeListener() {
+             @Override
+             public void liked(LikeButton likeButton) {
+                 Call<PostInteraction> call = ServiceGenerator.create().likePost(post.getId(), user.getId());
+                 call.enqueue(new Callback<PostInteraction>() {
+                     @Override
+                     public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
+                         if (response.isSuccessful()) {
+
+                         } else {
+                             Toast.makeText(PostActivity.this, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                         }
+                     }
+
+                     @Override
+                     public void onFailure(@NonNull Call<PostInteraction> call, @NonNull Throwable t) {
+                         Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+                     }
+                 });
+             }
+
+             @Override
+             public void unLiked(LikeButton likeButton) {
+                 Call<PostInteraction> call = ServiceGenerator.create().dislikePost(post.getId(), user.getId());
+                 call.enqueue(new Callback<PostInteraction>() {
+                     @Override
+                     public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
+                         if (response.isSuccessful()) {
+
+                         } else {
+                             Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+                         }
+                     }
+
+                     @Override
+                     public void onFailure(@NonNull Call<PostInteraction> call, @NonNull Throwable t) {
+                         Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
+                     }
+                 });
+             }
+        });
 
         generateActivity();
     }

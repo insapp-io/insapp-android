@@ -1,145 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/post_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ToolbarStyle" />
 
         <RelativeLayout
+            android:id="@+id/post_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusableInTouchMode="true">
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_post"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:minHeight="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                android:theme="@style/ToolbarStyle" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/post_club_avatar"
+                android:layout_marginEnd="6dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:civ_border_width="0dp" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardview_post_1"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/post_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/toolbar_post">
+                android:layout_marginStart="10dp"
+                android:textColor="#3e3e3e"
+                android:textSize="16sp"
+                android:layout_alignTop="@+id/post_club_avatar"
+                android:layout_toEndOf="@+id/post_club_avatar" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp">
+            <TextView
+                android:id="@+id/post_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_below="@id/post_title"
+                android:layout_toEndOf="@+id/post_club_avatar" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/post_club_avatar"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        app:civ_border_width="0dp" />
+            <com.like.LikeButton
+                android:id="@+id/post_like_button"
+                app:icon_type="heart"
+                app:icon_size="18dp"
+                android:layout_gravity="center_vertical"
+                app:circle_start_color="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_alignBottom="@+id/post_date"
+                android:layout_alignParentEnd="true" />
 
-                    <TextView
-                        android:id="@+id/post_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:textColor="#3e3e3e"
-                        android:textSize="16sp"
-                        android:layout_alignTop="@+id/post_club_avatar"
-                        android:layout_toEndOf="@+id/post_club_avatar" />
+            <TextView
+                android:id="@+id/post_like_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_toEndOf="@+id/post_like_button" />
 
-                    <TextView
-                        android:id="@+id/post_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_below="@id/post_title"
-                        android:layout_toEndOf="@+id/post_club_avatar" />
+            <TextView
+                android:id="@+id/post_text"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="14dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#7f7f7f"
+                android:lineSpacingExtra="3dp"
+                android:layout_below="@+id/post_club_avatar"
+                android:layout_alignParentStart="true" />
 
-                    <TextView
-                        android:id="@+id/post_text"
-                        android:textSize="15sp"
-                        android:layout_marginTop="14dp"
-                        android:layout_marginEnd="14dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#7f7f7f"
-                        android:lineSpacingExtra="3dp"
-                        android:layout_below="@+id/post_club_avatar"
-                        android:layout_alignParentStart="true" />
-
-                    <fr.insapp.insapp.utility.RatioImageView
-                        android:id="@+id/post_placeholder"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="14dp"
-                        android:layout_below="@id/post_text"
-                        android:background="@color/lightGray" />
-
-                    <ImageView
-                        android:id="@+id/post_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:layout_below="@id/post_text"
-                        android:layout_alignParentEnd="true"
-                        android:scaleType="fitStart"
-                        android:adjustViewBounds="true" />
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardview_post_2"
+            <fr.insapp.insapp.utility.RatioImageView
+                android:id="@+id/post_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:background="@color/white"
-                android:layout_below="@id/cardview_post_1">
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/post_text"
+                android:background="@color/lightGray" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:id="@+id/comment_post"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="10dp">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/comment_post_username_avatar"
-                            android:layout_marginTop="6dp"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="6dp"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            app:civ_border_width="0dp" />
-
-                        <fr.insapp.insapp.utility.CommentEditText
-                            android:id="@+id/comment_post_input"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:textSize="15sp"
-                            android:layout_toEndOf="@id/comment_post_username_avatar"
-                            android:inputType="text"
-                            android:dropDownWidth="200dp"
-                            android:background="@android:color/transparent"
-                            android:layout_marginTop="16dp"
-                            android:imeOptions="actionSend"
-                            android:hint="@string/write_comment_action" />
-                    </RelativeLayout>
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerview_comments_post"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/post_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/post_text"
+                android:layout_alignParentEnd="true"
+                android:scaleType="fitStart"
+                android:adjustViewBounds="true" />
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.design.widget.CoordinatorLayout>
+
+        <RelativeLayout
+            android:id="@+id/comment_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:padding="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/comment_post_username_avatar"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="6dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:civ_border_width="0dp" />
+
+            <fr.insapp.insapp.utility.CommentEditText
+                android:id="@+id/comment_post_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textSize="15sp"
+                android:layout_toEndOf="@id/comment_post_username_avatar"
+                android:inputType="text"
+                android:dropDownWidth="200dp"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="16dp"
+                android:imeOptions="actionSend"
+                android:hint="@string/write_comment_action" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_comments_post"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

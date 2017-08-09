@@ -25,7 +25,7 @@ import fr.insapp.insapp.listeners.EventCommentLongClickListener;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
-import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -83,7 +83,7 @@ public class CommentsEventFragment extends Fragment {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 
-        final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getContext().getPackageName());
+        final int id = getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getContext().getPackageName());
         Glide
                 .with(getContext())
                 .load(id)

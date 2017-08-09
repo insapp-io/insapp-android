@@ -36,7 +36,7 @@ import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -175,7 +175,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                             if (response.isSuccessful()) {
                                 final User user = response.body();
 
-                                final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", App.getAppContext().getPackageName());
+                                final int id = getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", App.getAppContext().getPackageName());
                                 Glide
                                         .with(App.getAppContext())
                                         .load(id)

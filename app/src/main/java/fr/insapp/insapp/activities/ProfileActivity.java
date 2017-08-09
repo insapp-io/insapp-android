@@ -44,7 +44,7 @@ import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -121,7 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // fill the main layout
 
-        final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
+        final int id = getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         final Drawable drawable = ContextCompat.getDrawable(ProfileActivity.this, id);
 
         avatarCircleImageView.setImageDrawable(drawable);

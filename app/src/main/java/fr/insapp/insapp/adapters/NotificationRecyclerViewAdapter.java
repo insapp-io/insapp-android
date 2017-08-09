@@ -28,7 +28,7 @@ import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,7 +78,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
         final Notification notification = notifications.get(position);
 
         holder.text.setText(notification.getMessage());
-        holder.date.setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(notification.getDate())));
+        holder.date.setText(Utils.displayedDate(notification.getDate()));
 
         // avatars
 
@@ -90,7 +90,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final User user = response.body();
 
-                        final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                        final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                         Glide.with(context).load(id).into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {

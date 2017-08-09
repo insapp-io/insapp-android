@@ -91,7 +91,12 @@
     <string name="events_next_week">La semaine prochaine</string>
     <string name="events_later">Plus tard</string>
 
-    <string name="ago">il y a %1$s</string>
+    <string name="ago">il y a</string>
+    <string name="ago_week">sem.</string>
+    <string name="ago_day">j.</string>
+    <string name="ago_hour">h.</string>
+    <string name="ago_minute">min.</string>
+    <string name="ago_now">à l\'instant</string>
     <string name="tag">\@%1$s</string>
 
     <string name="event_participants">Participants</string>

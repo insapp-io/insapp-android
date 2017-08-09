@@ -20,13 +20,13 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.insapp.insapp.activities.ProfileActivity;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.activities.ProfileActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Tag;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -114,7 +114,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         holder.contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
         holder.contentTextView.setEnabled(true);
 
-        holder.dateTextView.setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(comment.getDate())));
+        holder.dateTextView.setText(Utils.displayedDate(comment.getDate()));
 
         // user
 
@@ -125,7 +125,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                 if (response.isSuccessful()) {
                     final User user = response.body();
 
-                    final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                    final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                     Glide
                             .with(context)
                             .load(id)

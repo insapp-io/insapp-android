@@ -35,7 +35,6 @@ import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.RatioImageView;
 import fr.insapp.insapp.utility.Utils;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -90,7 +89,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         final Post post = posts.get(position);
 
         holder.getTitleTextView().setText(post.getTitle());
-        holder.getDateTextView().setText(String.format(context.getResources().getString(R.string.ago), Operation.displayedDate(post.getDate())));
+        holder.getDateTextView().setText(Utils.displayedDate(post.getDate()));
 
         // available layouts are row_post, post or post_with_avatars
 

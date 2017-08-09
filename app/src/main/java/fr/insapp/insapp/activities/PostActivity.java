@@ -40,7 +40,6 @@ import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
-import fr.insapp.insapp.utility.Operation;
 import fr.insapp.insapp.utility.RatioImageView;
 import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
@@ -215,7 +214,7 @@ public class PostActivity extends AppCompatActivity {
 
         this.titleTextView.setText(post.getTitle());
         this.descriptionTextView.setText(post.getDescription());
-        this.dateTextView.setText(String.format(getResources().getString(R.string.ago), Operation.displayedDate(post.getDate())));
+        this.dateTextView.setText(Utils.displayedDate(post.getDate()));
 
         // view links contained in description
 
@@ -248,7 +247,7 @@ public class PostActivity extends AppCompatActivity {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
 
-        final int id = getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
+        final int id = getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         Glide
                 .with(PostActivity.this)
                 .load(id)

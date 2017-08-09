@@ -20,7 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thomas on 10/12/2016.
@@ -66,7 +66,7 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
         if (user != null) {
             // get the drawable of avatar
 
-            final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+            final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
 
             Glide
                     .with(context)

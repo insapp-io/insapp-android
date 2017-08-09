@@ -1,10 +1,7 @@
 package fr.insapp.insapp.models;
 
-import android.os.Handler;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,12 +14,7 @@ import java.util.Map;
 
 import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.annotations.SerializedName;
-import fr.insapp.insapp.App;
-import fr.insapp.insapp.http.ServiceGenerator;
-import fr.insapp.insapp.utility.Operation;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by Antoine on 10/10/2016.
@@ -101,7 +93,7 @@ public abstract class Notification implements Parcelable {
                         jsonComment.getString("ID"),
                         jsonComment.getString("user"),
                         jsonComment.getString("content"),
-                        Operation.parseMongoDate(jsonComment.getString("date")),
+                        Utils.parseMongoDate(jsonComment.getString("date")),
                         tags);
             }
 
@@ -113,7 +105,7 @@ public abstract class Notification implements Parcelable {
                     comment,
                     data.get("message"),
                     Boolean.parseBoolean(data.get("seen")),
-                    Operation.parseMongoDate(data.get("date")),
+                    Utils.parseMongoDate(data.get("date")),
                     data.get("type"));
         }
         catch (JSONException ex) {

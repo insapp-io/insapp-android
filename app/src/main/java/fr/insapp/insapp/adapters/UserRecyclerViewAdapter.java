@@ -16,7 +16,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.User;
-import fr.insapp.insapp.utility.Operation;
+import fr.insapp.insapp.utility.Utils;
 
 /**
  * Created by thomas on 24/02/2017.
@@ -61,7 +61,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
 
         // get the drawable of avatarCircleImageView
 
-        final int id = context.getResources().getIdentifier(Operation.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+        final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         Glide
                 .with(context)
                 .load(id)

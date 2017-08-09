@@ -63,26 +63,6 @@ public abstract class User implements Parcelable {
     }
 
     public void clearData() {
-        NotificationUser notificationUser = new NotificationUser(null, id(), "", "android");
-
-        Call<NotificationUser> call = ServiceGenerator.create().registerNotification(notificationUser);
-        call.enqueue(new Callback<NotificationUser>() {
-            @Override
-            public void onResponse(@NonNull Call<NotificationUser> call, @NonNull Response<NotificationUser> response) {
-                if (response.isSuccessful()) {
-                    Log.d(FirebaseService.TAG, "Firebase token successfully unregistered on server");
-                }
-                else {
-                    Toast.makeText(App.getAppContext(), "User", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<NotificationUser> call, @NonNull Throwable t) {
-                Toast.makeText(App.getAppContext(), "User", Toast.LENGTH_LONG).show();
-            }
-        });
-
         App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).edit().clear().apply();
         App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply();
 

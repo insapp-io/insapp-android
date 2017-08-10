@@ -66,9 +66,9 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         this.notifyDataSetChanged();
     }
 
-    public void updateEvent(int id, Event event) {
-        this.events.set(id, event);
-        this.notifyItemChanged(id);
+    public void updateEvent(int position, Event event) {
+        events.set(position, event);
+        notifyItemChanged(position);
     }
 
     public void removeItem(String eventId) {

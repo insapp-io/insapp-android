@@ -134,13 +134,16 @@ public class PostActivity extends AppCompatActivity {
         likeButton.setOnLikeListener(new OnLikeListener() {
              @Override
              public void liked(LikeButton likeButton) {
+                 likeCounterTextView.setText(Integer.valueOf((String) likeCounterTextView.getText()) + 1 + "");
+
                  Call<PostInteraction> call = ServiceGenerator.create().likePost(post.getId(), user.getId());
                  call.enqueue(new Callback<PostInteraction>() {
                      @Override
                      public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
                          if (response.isSuccessful()) {
-                             likeCounterTextView.setText(Integer.valueOf((String) likeCounterTextView.getText()) + 1 + "");
-                         } else {
+                             post = response.body().getPost();
+                         }
+                         else {
                              Toast.makeText(PostActivity.this, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                          }
                      }
@@ -154,17 +157,20 @@ public class PostActivity extends AppCompatActivity {
 
              @Override
              public void unLiked(LikeButton likeButton) {
+                 likeCounterTextView.setText(Integer.valueOf((String) likeCounterTextView.getText()) - 1 + "");
+
+                 if (Integer.valueOf((String) likeCounterTextView.getText()) < 0) {
+                     likeCounterTextView.setText("0");
+                 }
+
                  Call<PostInteraction> call = ServiceGenerator.create().dislikePost(post.getId(), user.getId());
                  call.enqueue(new Callback<PostInteraction>() {
                      @Override
                      public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
                          if (response.isSuccessful()) {
-                             likeCounterTextView.setText(Integer.valueOf((String) likeCounterTextView.getText()) - 1 + "");
-
-                             if (Integer.valueOf((String) likeCounterTextView.getText()) < 0) {
-                                 likeCounterTextView.setText("0");
-                             }
-                         } else {
+                             post = response.body().getPost();
+                         }
+                         else {
                              Toast.makeText(PostActivity.this, "PostActivity", Toast.LENGTH_LONG).show();
                          }
                      }

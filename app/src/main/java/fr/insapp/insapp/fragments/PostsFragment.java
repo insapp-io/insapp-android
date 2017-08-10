@@ -25,6 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by thomas on 27/10/2016.
  */
@@ -40,7 +43,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private ProgressBar progressBar;
 
-    private static final int WRITE_COMMENT_REQUEST = 1;
+    private static final int POST_REQUEST = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
             @Override
             public void onPostItemClick(Post post) {
-                startActivityForResult(new Intent(getActivity(), PostActivity.class).putExtra("post", post), WRITE_COMMENT_REQUEST);
+                startActivityForResult(new Intent(getActivity(), PostActivity.class).putExtra("post", post), POST_REQUEST);
             }
         });
 
@@ -146,6 +149,30 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == POST_REQUEST) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    final Post post = intent.getParcelableExtra("post");
+
+                    for (int i = 0; i < adapter.getItemCount(); i++) {
+                        if (adapter.getPosts().get(i).getId().equals(post.getId())) {
+                            adapter.updatePost(i, post);
+                        }
+                    }
+
+                    break;
+
+                case RESULT_CANCELED:
+                default:
+                    break;
+            }
+        }
     }
 
     @Override

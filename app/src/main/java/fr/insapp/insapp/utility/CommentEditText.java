@@ -73,6 +73,8 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                     final String username = "@" + user.getUsername();
                     if (username.equals(itemString)) {
                         userId = user.getId();
+
+                        break;
                     }
                 }
 
@@ -106,6 +108,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                                 public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
                                     if (response.isSuccessful()) {
                                         commentAdapter.setComments(response.body().getComments());
+                                        tags.clear();
 
                                         Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
                                     }
@@ -128,6 +131,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                                 public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                                     if (response.isSuccessful()) {
                                         commentAdapter.setComments(response.body().getComments());
+                                        tags.clear();
 
                                         Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
                                     }
@@ -150,9 +154,5 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                 return false;
             }
         });
-    }
-
-    public List<Tag> getTags() {
-        return tags;
     }
 }

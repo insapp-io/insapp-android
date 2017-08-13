@@ -58,7 +58,7 @@ public class CommentsEventFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comments_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_comments, container, false);
 
         CircleImageView circleImageView = (CircleImageView) view.findViewById(R.id.comment_event_username_avatar);
 

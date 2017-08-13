@@ -20,9 +20,6 @@ public class AboutFragment extends Fragment {
 
     private Event event;
 
-    private int bgColor;
-    private int fgColor;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,15 +29,12 @@ public class AboutFragment extends Fragment {
         final Bundle bundle = getArguments();
         if (bundle != null) {
             this.event = bundle.getParcelable("event");
-
-            this.bgColor = bundle.getInt("bg_color");
-            this.fgColor = bundle.getInt("fg_color");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_about, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_about, container, false);
 
         // description
 

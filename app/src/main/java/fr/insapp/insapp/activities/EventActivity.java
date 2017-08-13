@@ -306,6 +306,7 @@ public class EventActivity extends AppCompatActivity {
                                     refreshFloatingActionButtons();
 
                                     event = response.body().getEvent();
+                                    refreshAttendeesTextView();
 
                                     // if first time user join an event
 
@@ -390,6 +391,7 @@ public class EventActivity extends AppCompatActivity {
                                     refreshFloatingActionButtons();
 
                                     event = response.body().getEvent();
+                                    refreshAttendeesTextView();
                                 }
                                 else {
                                     Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
@@ -444,6 +446,7 @@ public class EventActivity extends AppCompatActivity {
                                     refreshFloatingActionButtons();
 
                                     event = response.body().getEvent();
+                                    refreshAttendeesTextView();
                                 }
                                 else {
                                     Toast.makeText(EventActivity.this, "EventActivity", Toast.LENGTH_LONG).show();
@@ -566,11 +569,13 @@ public class EventActivity extends AppCompatActivity {
         final int diffInDays = (int) ((event.getDateEnd().getTime() - event.getDateStart().getTime()) / (1000 * 60 * 60 * 24));
         if (diffInDays < 1 && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
             String day = format.format(event.getDateStart());
+
             dateTextView.setText(day.replaceFirst(".", (day.charAt(0) + "").toUpperCase()) + " de " + format_hours_minutes.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateEnd()));
         }
         else {
             String start = format.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateStart());
             String end = format.format(event.getDateEnd()) + " à " + format_hours_minutes.format(event.getDateEnd());
+
             dateTextView.setText("Du " + start.replaceFirst(".", (start.charAt(0) + "").toUpperCase()) + " au " + end.replaceFirst(".", (end.charAt(0) + "").toUpperCase()));
         }
 

@@ -82,7 +82,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
         // avatars
 
-        if (notification.getType().equals("tag")) {
+        if (notification.getType().equals("tag") || notification.getType().equals("eventTag")) {
             Call<User> call = ServiceGenerator.create().getUserFromId(notification.getSender());
             call.enqueue(new Callback<User>() {
                 @Override
@@ -157,7 +157,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         Glide
                                 .with(context)
                                 .load(ServiceGenerator.CDN_URL + post.getImage())
-                                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
+                                .centerCrop()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(holder.thumbnail);
                     }
@@ -173,7 +173,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
             });
         }
 
-        else if (notification.getType().equals("event")) {
+        else if (notification.getType().equals("eventTag") || notification.getType().equals("event")) {
             Call<Event> call = ServiceGenerator.create().getEventFromId(notification.getContent());
             call.enqueue(new Callback<Event>() {
                 @Override

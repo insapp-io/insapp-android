@@ -28,7 +28,6 @@ import java.util.Random;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
-import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
@@ -96,6 +95,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                     });
                     break;
 
+                case "eventTag":
                 case "event":
                     Call<Event> call2 = ServiceGenerator.create().getEventFromId(notification.getContent());
                     call2.enqueue(new Callback<Event>() {
@@ -126,10 +126,6 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                     break;
 
                 default:
-                    final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, IntroActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                    final String title = getResources().getString(R.string.app_name);
-
-                    buildNotification(notificationId, title, notification, pendingIntent);
                     break;
             }
         }
@@ -167,6 +163,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             );
 
             switch (notification.getType()) {
+                case "eventTag":
                 case "tag":
                     Call<User> call1 = ServiceGenerator.create().getUserFromId(notification.getSender());
                     call1.enqueue(new Callback<User>() {

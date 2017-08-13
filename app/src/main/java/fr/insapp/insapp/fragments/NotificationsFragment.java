@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
-import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.PostActivity;
@@ -51,12 +50,12 @@ public class NotificationsFragment extends Fragment {
             public void onNotificationItemClick(Notification notification) {
                 switch (notification.getType()) {
                     case "tag":
+                    case "post":
                         Call<Post> call1 = ServiceGenerator.create().getPostFromId(notification.getContent());
                         call1.enqueue(new Callback<Post>() {
                             @Override
                             public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
                                 if (response.isSuccessful()) {
-                                    // .putExtra("taggedCommentID", notification.getComment().getId())
                                     startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", response.body()));
                                 }
                                 else {
@@ -72,30 +71,10 @@ public class NotificationsFragment extends Fragment {
 
                         break;
 
-                    case "post":
-                        Call<Post> call2 = ServiceGenerator.create().getPostFromId(notification.getContent());
-                        call2.enqueue(new Callback<Post>() {
-                            @Override
-                            public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
-                                if (response.isSuccessful()) {
-                                    startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", response.body()));
-                                }
-                                else {
-                                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                        break;
-
+                    case "eventTag":
                     case "event":
-                        Call<Event> call3 = ServiceGenerator.create().getEventFromId(notification.getContent());
-                        call3.enqueue(new Callback<Event>() {
+                        Call<Event> call2 = ServiceGenerator.create().getEventFromId(notification.getContent());
+                        call2.enqueue(new Callback<Event>() {
                             @Override
                             public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                                 if (response.isSuccessful()) {

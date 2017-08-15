@@ -141,7 +141,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             remoteViews.setTextViewText(R.id.notification_content, notification.getMessage());
 
             builder = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_stat_notify)
                     .setCustomContentView(remoteViews)
                     .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                     .setAutoCancel(true)

@@ -53,10 +53,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d(FirebaseService.TAG, "Data: " + remoteMessage.getData());
 
-            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
-            if (defaultSharedPreferences.getBoolean("notifications", true)) {
-                prepareNotification(getRandomNotificationId(), remoteMessage.getData());
-            }
+            prepareNotification(getRandomNotificationId(), remoteMessage.getData());
         }
     }
 
@@ -64,6 +61,11 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         final Notification notification = Notification.create(data);
 
         if (notification != null) {
+            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+            if (!defaultSharedPreferences.getBoolean("notifications", true) && (notification.getType().equals("post") || notification.getType().equals("event"))) {
+                return;
+            }
+
             switch (notification.getType()) {
                 case "tag":
                 case "post":

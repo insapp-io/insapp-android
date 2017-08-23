@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -15,8 +14,6 @@ import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.BarcodeDetectorActivity;
 import fr.insapp.insapp.activities.SettingsActivity;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by thomas on 04/08/2017.
@@ -51,7 +48,7 @@ public class BarcodeSettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, BarcodeSettingsFragment.CAMERA_PERMISSION_REQUEST);
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, BarcodeSettingsFragment.CAMERA_PERMISSION_REQUEST);
                 }
                 else {
                     startActivity(new Intent(getContext(), BarcodeDetectorActivity.class));

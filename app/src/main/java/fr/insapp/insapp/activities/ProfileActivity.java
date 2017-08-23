@@ -158,14 +158,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void generateBarcode() {
-        ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode);
+        ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode_image);
 
         if (isOwner) {
             final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
             final String barcodeData = defaultSharedPreferences.getString("barcode", "");
 
             if (!barcodeData.equals("")) {
-                ((TextView) findViewById(R.id.barcodeText)).setText(barcodeData);
+                ((TextView) findViewById(R.id.barcode_value)).setText(barcodeData);
 
                 Bitmap bitmap;
 
@@ -178,13 +178,13 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
             else {
-                barcodeImageView.setVisibility(View.GONE);
-                findViewById(R.id.title_barcode).setVisibility(View.GONE);
+                findViewById(R.id.barcode_amicaliste_title).setVisibility(View.GONE);
+                findViewById(R.id.barcode).setVisibility(View.GONE);
             }
         }
         else {
-            barcodeImageView.setVisibility(View.GONE);
-            findViewById(R.id.title_barcode).setVisibility(View.GONE);
+            findViewById(R.id.barcode_amicaliste_title).setVisibility(View.GONE);
+            findViewById(R.id.barcode).setVisibility(View.GONE);
         }
     }
 

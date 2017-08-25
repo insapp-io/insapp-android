@@ -122,7 +122,7 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
 
         CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedPreviewSize(1600, 1024)
+                .setRequestedPreviewSize(1024, 768)
                 .setRequestedFps(60.0f);
 
         cameraSource = builder.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE).build();

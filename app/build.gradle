@@ -1,14 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "fr.insapp.insapp"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 15
-        versionName "2.1"
+        versionCode 16
+        versionName "3.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,7 +32,7 @@ ext {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -41,27 +45,24 @@ dependencies {
     compile "com.android.support:preference-v7:$SUPPORT_LIB_VER"
     compile "com.android.support:preference-v14:$SUPPORT_LIB_VER"
     compile "com.android.support:customtabs:$SUPPORT_LIB_VER"
-
     compile "com.google.firebase:firebase-core:$GOOGLE_LIB_VER"
     compile "com.google.firebase:firebase-messaging:$GOOGLE_LIB_VER"
-
     compile "com.google.android.gms:play-services-vision:$GOOGLE_LIB_VER"
 
-    compile "de.hdodenhof:circleimageview:2.1.0"
-    compile "com.github.jd-alexander:LikeButton:0.2.0"
-    compile "com.github.paolorotolo:appintro:4.1.0"
-    compile "com.github.bumptech.glide:glide:3.7.0"
-    compile "jp.wasabeef:glide-transformations:2.0.1"
-    compile "com.github.clans:fab:1.6.4"
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.github.jd-alexander:LikeButton:0.2.0'
+    compile 'com.github.paolorotolo:appintro:4.1.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.github.clans:fab:1.6.4'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    compile 'me.tatarka:auto-parcel-gson:0.1'
 
-    compile "com.squareup.retrofit2:retrofit:2.3.0"
-    compile "com.squareup.retrofit2:converter-gson:2.1.0"
-    compile "com.squareup.okhttp3:logging-interceptor:3.8.0"
-
-    compile "me.tatarka:auto-parcel-gson:0.1"
     annotationProcessor "me.tatarka:auto-parcel-gson-processor:0.1"
 
-    testCompile "junit:junit:4.12"
+    testCompile 'junit:junit:4.12'
     compile 'junit:junit:4.12'
 }
 

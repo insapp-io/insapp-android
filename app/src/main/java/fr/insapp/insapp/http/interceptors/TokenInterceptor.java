@@ -63,15 +63,25 @@ public class TokenInterceptor implements Interceptor {
                 LoginCredentials loginCredentials = new Gson().fromJson(credentialsPreferences.getString("login", ""), LoginCredentials.class);
 
                 Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
-                retrofit2.Response<SessionCredentials> res = call.execute();
+                retrofit2.Response<SessionCredentials> res;
+
+                try {
+                    res = call.execute();
+                }
+
+                // if an exception was raised
+
+                catch (IllegalArgumentException ex) {
+                    disconnect(gson, userPreferences);
+                    ex.printStackTrace();
+
+                    return response;
+                }
 
                 // if the user has a new auth token, disconnect him from current device
 
                 if (res.code() == 404) {
-                    final Context context = App.getAppContext();
-                    context.startActivity(new Intent(context, IntroActivity.class));
-
-                    gson.fromJson(userPreferences.getString("user", ""), User.class).clearData();
+                    disconnect(gson, userPreferences);
 
                     return response;
                 }
@@ -101,5 +111,12 @@ public class TokenInterceptor implements Interceptor {
                 FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
             }
         }
+    }
+
+    private void disconnect(Gson gson, SharedPreferences userPreferences) {
+        final Context context = App.getAppContext();
+        context.startActivity(new Intent(context, IntroActivity.class));
+
+        gson.fromJson(userPreferences.getString("user", ""), User.class).clearData();
     }
 }

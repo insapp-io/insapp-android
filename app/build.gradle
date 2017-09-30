@@ -16,11 +16,11 @@ repositories {
 
 android {
     signingConfigs {
-        release {
-            keyAlias 'Insapp'
-            keyPassword 'nous19950320'
-            storeFile file('C:/Users/Thomas/Desktop/keyStore.jks')
-            storePassword 'nous19950320'
+        config {
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
         }
     }
     compileSdkVersion 25
@@ -29,8 +29,8 @@ android {
         applicationId "fr.insapp.insapp"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 18
-        versionName "3.0.2"
+        versionCode 19
+        versionName "3.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,7 +40,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
         }
     }
 }

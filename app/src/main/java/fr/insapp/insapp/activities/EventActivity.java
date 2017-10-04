@@ -40,6 +40,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
@@ -118,6 +120,15 @@ public class EventActivity extends AppCompatActivity {
 
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+
+        // Answers
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentId(event.getId())
+                .putContentName(event.getName())
+                .putContentType("Event")
+                .putCustomAttribute("Attendees count", event.getAttendees() == null ? 0 : event.getAttendees().size())
+                .putCustomAttribute("Interested count", event.getMaybe() == null ? 0 : event.getMaybe().size()));
 
         // mark notification as seen
 

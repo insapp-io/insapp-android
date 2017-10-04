@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.BarcodeFormat;
@@ -89,6 +91,12 @@ public class ProfileActivity extends AppCompatActivity {
         else if (this.user.getId().equals(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
             this.isOwner = true;
         }
+
+        // Answers
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentId(user.getId())
+                .putContentName(user.getUsername()));
 
         // toolbar
 

@@ -12,6 +12,9 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.SearchEvent;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -55,6 +58,11 @@ public class SearchActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             this.query = intent.getStringExtra(SearchManager.QUERY);
         }
+
+        // Answers
+
+        Answers.getInstance().logSearch(new SearchEvent()
+            .putQuery(query));
 
         // toolbar
 

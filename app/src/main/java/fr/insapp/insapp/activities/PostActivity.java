@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
@@ -72,6 +74,8 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        // building ui
+
         this.clubAvatarCircleImageView = (CircleImageView) findViewById(R.id.post_club_avatar);
         this.titleTextView = (TextView) findViewById(R.id.post_title);
         this.likeButton = (LikeButton) findViewById(R.id.post_like_button);
@@ -89,6 +93,15 @@ public class PostActivity extends AppCompatActivity {
 
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+
+        // Answers
+
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentId(post.getId())
+                .putContentName(post.getTitle())
+                .putContentType("Post")
+                .putCustomAttribute("Favorites count", post.getLikes().size())
+                .putCustomAttribute("Comments count", post.getComments().size()));
 
         // mark notification as seen
 

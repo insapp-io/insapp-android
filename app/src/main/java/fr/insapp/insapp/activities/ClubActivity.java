@@ -29,6 +29,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
@@ -55,11 +57,19 @@ public class ClubActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
 
+        // club
+
         Intent intent = getIntent();
         this.club = intent.getParcelableExtra("club");
 
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
+        // Answers
 
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentId(club.getId())
+                .putContentName(club.getName())
+                .putContentType("Club"));
+
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.club_profile);
         final TextView nameTextView = (TextView) findViewById(R.id.club_name);
         final TextView descriptionTextView = (TextView) findViewById(R.id.club_description_text);
         final CircleImageView iconImageView = (CircleImageView) findViewById(R.id.club_avatar);

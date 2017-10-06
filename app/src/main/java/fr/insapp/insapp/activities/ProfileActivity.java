@@ -309,24 +309,25 @@ public class ProfileActivity extends AppCompatActivity {
     private void generateEvents() {
         clearEvents();
 
-        for (final String eventId : user.getEvents()) {
-            Call<Event> call = ServiceGenerator.create().getEventFromId(eventId);
-            call.enqueue(new Callback<Event>() {
-                @Override
-                public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
-                    if (response.isSuccessful()) {
-                        addEventToAdapter(response.body());
+        if (user.getEvents() != null) {
+            for (final String eventId : user.getEvents()) {
+                Call<Event> call = ServiceGenerator.create().getEventFromId(eventId);
+                call.enqueue(new Callback<Event>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
+                        if (response.isSuccessful()) {
+                            addEventToAdapter(response.body());
+                        } else {
+                            Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
+                        }
                     }
-                    else {
+
+                    @Override
+                    public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
                         Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
                     }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
-                    Toast.makeText(ProfileActivity.this, "ProfileActivity", Toast.LENGTH_LONG).show();
-                }
-            });
+                });
+            }
         }
     }
 

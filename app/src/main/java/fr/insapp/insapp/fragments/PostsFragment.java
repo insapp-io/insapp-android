@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.PostActivity;
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter;
@@ -126,7 +127,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
                 }
                 else {
-                    Toast.makeText(getActivity(), "PostsFragment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(App.getAppContext(), "PostsFragment", Toast.LENGTH_LONG).show();
                 }
 
                 if (swipeRefreshLayout != null) {
@@ -140,7 +141,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
-                Toast.makeText(getActivity(), "PostsFragment", Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getAppContext(), "PostsFragment", Toast.LENGTH_LONG).show();
 
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);

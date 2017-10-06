@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
@@ -204,7 +205,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             @Override
             public void onFailure(@NonNull Call<List<Event>> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "EventsFragment", Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show();
 
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);

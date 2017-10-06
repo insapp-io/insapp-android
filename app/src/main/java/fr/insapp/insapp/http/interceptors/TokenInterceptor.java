@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -40,7 +41,7 @@ public class TokenInterceptor implements Interceptor {
 
         // if user is stored, register firebase token
 
-        handleFirebaseTokenRegistration();
+        handleFirebaseTokenRegistration(gson, userPreferences);
 
         // add session token in a query parameter
 
@@ -72,8 +73,10 @@ public class TokenInterceptor implements Interceptor {
                 // if an exception was raised
 
                 catch (IllegalArgumentException ex) {
-                    disconnect(gson, userPreferences);
+                    Crashlytics.logException(ex);
                     ex.printStackTrace();
+
+                    disconnect(gson, userPreferences);
 
                     return response;
                 }
@@ -98,10 +101,7 @@ public class TokenInterceptor implements Interceptor {
         }
     }
 
-    private void handleFirebaseTokenRegistration() {
-        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-
-        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
+    private void handleFirebaseTokenRegistration(Gson gson, SharedPreferences userPreferences) {
         final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
 
         if (FirebaseService.SHOULD_REGISTER_TOKEN) {
@@ -114,9 +114,15 @@ public class TokenInterceptor implements Interceptor {
     }
 
     private void disconnect(Gson gson, SharedPreferences userPreferences) {
-        final Context context = App.getAppContext();
-        context.startActivity(new Intent(context, IntroActivity.class));
+        final User user = gson.fromJson(userPreferences.getString("user", ""), User.class);
+        if (user != null) {
+            user.clearData();
+        }
 
-        gson.fromJson(userPreferences.getString("user", ""), User.class).clearData();
+        final Context context = App.getAppContext();
+
+        final Intent intent = new Intent(context, IntroActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

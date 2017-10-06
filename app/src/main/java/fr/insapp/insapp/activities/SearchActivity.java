@@ -120,7 +120,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerEvents = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewEvents.setLayoutManager(layoutManagerEvents);
 
-        this.adapterEvents = new EventRecyclerViewAdapter(this, R.layout.row_event_with_avatars);
+        this.adapterEvents = new EventRecyclerViewAdapter(this, false, R.layout.row_event_with_avatars);
         adapterEvents.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

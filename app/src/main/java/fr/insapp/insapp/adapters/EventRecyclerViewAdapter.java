@@ -41,6 +41,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
     protected List<Event> events;
 
+    private boolean past;
     private int layout;
 
     private OnEventItemClickListener listener;
@@ -49,9 +50,10 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         void onEventItemClick(Event event);
     }
 
-    public EventRecyclerViewAdapter(Context context, int layout) {
-        this.context = context;
+    public EventRecyclerViewAdapter(Context context, boolean past, int layout) {
         this.events = new ArrayList<>();
+        this.context = context;
+        this.past = past;
         this.layout = layout;
     }
 
@@ -61,7 +63,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
     public void addItem(Event event) {
         this.events.add(event);
-        Collections.sort(events, new EventComparator());
+        Collections.sort(events, new EventComparator(past));
 
         this.notifyDataSetChanged();
     }

@@ -62,7 +62,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
         // adapters
 
-        this.adapterFuture = new EventRecyclerViewAdapter(getContext(), layout);
+        this.adapterFuture = new EventRecyclerViewAdapter(getContext(), false, layout);
         adapterFuture.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -70,7 +70,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
             }
         });
 
-        this.adapterPast = new EventRecyclerViewAdapter(getContext(), layout);
+        this.adapterPast = new EventRecyclerViewAdapter(getContext(), true, layout);
         adapterPast.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

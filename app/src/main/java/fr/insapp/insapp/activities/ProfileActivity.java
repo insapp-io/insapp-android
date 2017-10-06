@@ -110,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // adapter
 
-        this.adapter = new EventRecyclerViewAdapter(this, R.layout.row_event_with_avatars);
+        this.adapter = new EventRecyclerViewAdapter(this, false, R.layout.row_event_with_avatars);
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

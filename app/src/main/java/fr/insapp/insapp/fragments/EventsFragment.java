@@ -62,7 +62,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // adapters
 
-        this.adapterNow = new EventRecyclerViewAdapter(getContext(), layout);
+        this.adapterNow = new EventRecyclerViewAdapter(getContext(), false, layout);
         adapterNow.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -70,7 +70,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterToday = new EventRecyclerViewAdapter(getContext(), layout);
+        this.adapterToday = new EventRecyclerViewAdapter(getContext(), false, layout);
         adapterToday.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -78,7 +78,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterWeek = new EventRecyclerViewAdapter(getContext(), layout);
+        this.adapterWeek = new EventRecyclerViewAdapter(getContext(), false, layout);
         adapterWeek.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -86,7 +86,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterNextWeek = new EventRecyclerViewAdapter(getContext(), layout);
+        this.adapterNextWeek = new EventRecyclerViewAdapter(getContext(), false, layout);
         adapterNextWeek.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -94,7 +94,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterLater = new EventRecyclerViewAdapter(getContext(), layout);
+        this.adapterLater = new EventRecyclerViewAdapter(getContext(), false, layout);
         adapterLater.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

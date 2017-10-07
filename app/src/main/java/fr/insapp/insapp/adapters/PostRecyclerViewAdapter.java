@@ -246,6 +246,8 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         private PostViewHolder(View view) {
             super(view);
 
+            // R.layout.row_post || R.layout.post_with_avatar
+
             if (layout != R.layout.post) {
                 this.avatarCircleImageView = (CircleImageView) view.findViewById(R.id.avatar_club_post);
             }
@@ -253,16 +255,18 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
             this.titleTextView = (TextView) view.findViewById(R.id.name_post);
             this.dateTextView = (TextView) view.findViewById(R.id.date_post);
 
+            // R.layout.row_post
+
             if (layout == R.layout.row_post) {
                 this.imageView = (ImageView) view.findViewById(R.id.thumbnail_post);
                 this.placeholderImageView = null;
             }
+
+            // R.layout.post || R.layout.post_with_avatar
+
             else {
                 this.imageView = (ImageView) view.findViewById(R.id.image);
                 this.placeholderImageView = (RatioImageView) view.findViewById(R.id.placeholder);
-            }
-
-            if (layout != R.layout.row_post) {
                 this.contentTextView = (TextView) view.findViewById(R.id.post_text);
                 this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
                 this.likeCounterTextView = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
@@ -272,6 +276,14 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         }
 
         private void bind(final Post post, final OnPostItemClickListener listener) {
+
+            // hide image if necessary
+
+            if (post.getImageSize() == null || post.getImage().isEmpty()) {
+                placeholderImageView.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+            }
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

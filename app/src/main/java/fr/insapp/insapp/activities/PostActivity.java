@@ -103,6 +103,13 @@ public class PostActivity extends AppCompatActivity {
                 .putCustomAttribute("Favorites count", post.getLikes().size())
                 .putCustomAttribute("Comments count", post.getComments().size()));
 
+        // hide image if necessary
+
+        if (post.getImageSize() == null || post.getImage().isEmpty()) {
+            placeholderImageView.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
+        }
+
         // mark notification as seen
 
         if (intent.getParcelableExtra("notification") != null) {
@@ -277,13 +284,15 @@ public class PostActivity extends AppCompatActivity {
 
         // image
 
-        placeholderImageView.setImageSize(post.getImageSize());
+        if (post.getImageSize() != null && !post.getImage().isEmpty()) {
+            placeholderImageView.setImageSize(post.getImageSize());
 
-        Glide
-                .with(PostActivity.this)
-                .load(ServiceGenerator.CDN_URL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
-                .into(imageView);
+            Glide
+                    .with(PostActivity.this)
+                    .load(ServiceGenerator.CDN_URL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .crossFade()
+                    .into(imageView);
+        }
     }
 
     @Override

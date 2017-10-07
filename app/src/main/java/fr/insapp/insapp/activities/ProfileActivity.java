@@ -96,7 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentId(user.getId())
-                .putContentName(user.getUsername()));
+                .putContentName(user.getUsername())
+                .putContentType("User"));
 
         // toolbar
 

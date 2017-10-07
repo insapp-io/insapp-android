@@ -57,12 +57,11 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             this.query = intent.getStringExtra(SearchManager.QUERY);
+
+            // Answers
+
+            Answers.getInstance().logSearch(new SearchEvent().putQuery(query));
         }
-
-        // Answers
-
-        Answers.getInstance().logSearch(new SearchEvent()
-            .putQuery(query));
 
         // toolbar
 

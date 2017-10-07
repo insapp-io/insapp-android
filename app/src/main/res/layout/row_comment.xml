@@ -4,12 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
-    android:padding="10dp">
+    android:paddingBottom="10dp" >
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/username_avatar"
         android:layout_marginTop="12dp"
-        android:layout_marginStart="4dp"
         android:layout_marginEnd="6dp"
         android:layout_width="40dp"
         android:layout_height="40dp"

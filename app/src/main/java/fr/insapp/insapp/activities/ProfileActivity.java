@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.google.gson.Gson;
@@ -111,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // adapter
 
-        this.adapter = new EventRecyclerViewAdapter(this, false, R.layout.row_event_with_avatars);
+        this.adapter = new EventRecyclerViewAdapter(this, Glide.with(this), false, R.layout.row_event_with_avatars);
         adapter.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

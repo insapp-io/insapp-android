@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.google.gson.Gson;
@@ -48,6 +48,8 @@ import retrofit2.Response;
 
 public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecyclerViewAdapter.PostViewHolder> {
 
+    private RequestManager requestManager;
+
     private List<Post> posts;
 
     private int layout;
@@ -58,8 +60,9 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         void onPostItemClick(Post post);
     }
 
-    public PostRecyclerViewAdapter(Context context, int layout) {
+    public PostRecyclerViewAdapter(Context context, RequestManager requestManager, int layout) {
         this.context = context;
+        this.requestManager = requestManager;
         this.posts = new ArrayList<>();
         this.layout = layout;
     }
@@ -104,8 +107,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                     if (response.isSuccessful()) {
                         final Club club = response.body();
 
-                        Glide
-                                .with(context)
+                        requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                 .crossFade()
                                 .into(holder.getAvatarCircleImageView());
@@ -132,8 +134,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         }
 
         if (layout == R.layout.row_post) {
-            Glide
-                    .with(context)
+            requestManager
                     .load(ServiceGenerator.CDN_URL + post.getImage())
                     .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
                     .crossFade()
@@ -142,8 +143,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         else {
             holder.getPlaceholderImageView().setImageSize(post.getImageSize());
 
-            Glide
-                    .with(context)
+            requestManager
                     .load(ServiceGenerator.CDN_URL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
                     .crossFade()
                     .into(holder.getImageView());

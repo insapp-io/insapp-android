@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
@@ -39,6 +39,8 @@ import retrofit2.Response;
 
 public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyclerViewAdapter.EventViewHolder> {
 
+    private RequestManager requestManager;
+
     protected List<Event> events;
 
     private boolean past;
@@ -50,9 +52,10 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         void onEventItemClick(Event event);
     }
 
-    public EventRecyclerViewAdapter(Context context, boolean past, int layout) {
+    public EventRecyclerViewAdapter(Context context, RequestManager requestManager, boolean past, int layout) {
         this.events = new ArrayList<>();
         this.context = context;
+        this.requestManager = requestManager;
         this.past = past;
         this.layout = layout;
     }
@@ -102,8 +105,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
                     if (response.isSuccessful()) {
                         final Club club = response.body();
 
-                        Glide
-                                .with(context)
+                        requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                 .crossFade()
                                 .into(holder.avatar);
@@ -127,7 +129,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
             });
         }
 
-        Glide.with(context)
+        requestManager
                 .load(ServiceGenerator.CDN_URL + event.getImage())
                 .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

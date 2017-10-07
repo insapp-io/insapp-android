@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -44,7 +45,7 @@ public class NotificationsFragment extends Fragment {
 
         // adapter
 
-        this.adapter = new NotificationRecyclerViewAdapter(getContext());
+        this.adapter = new NotificationRecyclerViewAdapter(getContext(), Glide.with(this));
         adapter.setOnItemClickListener(new NotificationRecyclerViewAdapter.OnNotificationItemClickListener() {
             @Override
             public void onNotificationItemClick(Notification notification) {

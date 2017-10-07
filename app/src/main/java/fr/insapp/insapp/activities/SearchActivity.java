@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SearchEvent;
 
@@ -72,6 +74,8 @@ public class SearchActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        final RequestManager requestManager = Glide.with(this);
+
         // clubs recycler view
 
         RecyclerView recyclerViewClubs = (RecyclerView) findViewById(R.id.recyclerview_search_clubs);
@@ -81,7 +85,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerClubs = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewClubs.setLayoutManager(layoutManagerClubs);
 
-        this.adapterClubs = new ClubRecyclerViewAdapter(this, false);
+        this.adapterClubs = new ClubRecyclerViewAdapter(this, requestManager, false);
         adapterClubs.setOnItemClickListener(new ClubRecyclerViewAdapter.OnClubItemClickListener() {
             @Override
             public void onClubItemClick(Club club) {
@@ -100,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerPosts = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewPosts.setLayoutManager(layoutManagerPosts);
 
-        this.adapterPosts = new PostRecyclerViewAdapter(this, R.layout.row_post);
+        this.adapterPosts = new PostRecyclerViewAdapter(this, requestManager, R.layout.row_post);
         adapterPosts.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
             @Override
             public void onPostItemClick(Post post) {
@@ -119,7 +123,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerEvents = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewEvents.setLayoutManager(layoutManagerEvents);
 
-        this.adapterEvents = new EventRecyclerViewAdapter(this, false, R.layout.row_event_with_avatars);
+        this.adapterEvents = new EventRecyclerViewAdapter(this, requestManager, false, R.layout.row_event_with_avatars);
         adapterEvents.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -137,7 +141,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManagerUsers = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewUsers.setLayoutManager(layoutManagerUsers);
 
-        this.adapterUsers = new UserRecyclerViewAdapter(this, false);
+        this.adapterUsers = new UserRecyclerViewAdapter(this, requestManager, false);
         adapterUsers.setOnItemClickListener(new UserRecyclerViewAdapter.OnUserItemClickListener() {
             @Override
             public void onUserItemClick(User user) {

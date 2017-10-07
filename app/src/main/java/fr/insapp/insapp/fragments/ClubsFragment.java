@@ -11,19 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
-import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by thomas on 27/10/2016.
@@ -37,7 +36,7 @@ public class ClubsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.adapter = new ClubRecyclerViewAdapter(getContext(), true);
+        this.adapter = new ClubRecyclerViewAdapter(getContext(), Glide.with(this), true);
         adapter.setOnItemClickListener(new ClubRecyclerViewAdapter.OnClubItemClickListener() {
             @Override
             public void onClubItemClick(Club club) {

@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +66,9 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // adapters
 
-        this.adapterNow = new EventRecyclerViewAdapter(getContext(), false, layout);
+        final RequestManager requestManager = Glide.with(this);
+
+        this.adapterNow = new EventRecyclerViewAdapter(getContext(), requestManager, false, layout);
         adapterNow.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -71,7 +76,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterToday = new EventRecyclerViewAdapter(getContext(), false, layout);
+        this.adapterToday = new EventRecyclerViewAdapter(getContext(), requestManager, false, layout);
         adapterToday.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -79,7 +84,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterWeek = new EventRecyclerViewAdapter(getContext(), false, layout);
+        this.adapterWeek = new EventRecyclerViewAdapter(getContext(), requestManager, false, layout);
         adapterWeek.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -87,7 +92,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterNextWeek = new EventRecyclerViewAdapter(getContext(), false, layout);
+        this.adapterNextWeek = new EventRecyclerViewAdapter(getContext(), requestManager, false, layout);
         adapterNextWeek.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -95,7 +100,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        this.adapterLater = new EventRecyclerViewAdapter(getContext(), false, layout);
+        this.adapterLater = new EventRecyclerViewAdapter(getContext(), requestManager, false, layout);
         adapterLater.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

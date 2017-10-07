@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import fr.insapp.insapp.App;
@@ -61,7 +63,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         // adapter
 
-        this.adapter = new PostRecyclerViewAdapter(getContext(), layout);
+        this.adapter = new PostRecyclerViewAdapter(getContext(), Glide.with(this), layout);
         adapter.setOnItemClickListener(new PostRecyclerViewAdapter.OnPostItemClickListener() {
             @Override
             public void onPostItemClick(Post post) {

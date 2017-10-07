@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
@@ -40,6 +40,8 @@ import retrofit2.Response;
 
 public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<NotificationRecyclerViewAdapter.NotificationViewHolder> {
 
+    private RequestManager requestManager;
+
     protected List<Notification> notifications;
 
     protected OnNotificationItemClickListener listener;
@@ -48,8 +50,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
         void onNotificationItemClick(Notification notification);
     }
 
-    public NotificationRecyclerViewAdapter(Context context) {
+    public NotificationRecyclerViewAdapter(Context context, RequestManager requestManager) {
         this.context = context;
+        this.requestManager = requestManager;
         this.notifications = new ArrayList<>();
     }
 
@@ -91,7 +94,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         final User user = response.body();
 
                         final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-                        Glide.with(context).load(id).into(holder.avatar_notification);
+                        requestManager
+                                .load(id)
+                                .into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -120,8 +125,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final Club club = response.body();
 
-                        Glide
-                                .with(context)
+                        requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                 .crossFade()
                                 .into(holder.avatar_notification);
@@ -154,8 +158,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final Post post = response.body();
 
-                        Glide
-                                .with(context)
+                        requestManager
                                 .load(ServiceGenerator.CDN_URL + post.getImage())
                                 .centerCrop()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -181,8 +184,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final Event event = response.body();
 
-                        Glide
-                                .with(context)
+                        requestManager
                                 .load(ServiceGenerator.CDN_URL + event.getImage())
                                 .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)

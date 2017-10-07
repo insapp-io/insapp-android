@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -62,7 +65,9 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
         // adapters
 
-        this.adapterFuture = new EventRecyclerViewAdapter(getContext(), false, layout);
+        final RequestManager requestManager = Glide.with(this);
+
+        this.adapterFuture = new EventRecyclerViewAdapter(getContext(), requestManager, false, layout);
         adapterFuture.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {
@@ -70,7 +75,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
             }
         });
 
-        this.adapterPast = new EventRecyclerViewAdapter(getContext(), true, layout);
+        this.adapterPast = new EventRecyclerViewAdapter(getContext(), requestManager, true, layout);
         adapterPast.setOnItemClickListener(new EventRecyclerViewAdapter.OnEventItemClickListener() {
             @Override
             public void onEventItemClick(Event event) {

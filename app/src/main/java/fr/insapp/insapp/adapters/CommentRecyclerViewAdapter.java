@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import java.util.List;
 
@@ -37,6 +37,8 @@ import retrofit2.Response;
 
 public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentRecyclerViewAdapter.CommentViewHolder> {
 
+    private RequestManager requestManager;
+
     private List<Comment> comments;
 
     private OnCommentItemLongClickListener listener;
@@ -45,8 +47,9 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         void onCommentItemLongClick(Comment comment);
     }
 
-    public CommentRecyclerViewAdapter(Context context, List<Comment> comments) {
+    public CommentRecyclerViewAdapter(Context context, RequestManager requestManager, List<Comment> comments) {
         this.context = context;
+        this.requestManager = requestManager;
         this.comments = comments;
     }
 
@@ -126,8 +129,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                     final User user = response.body();
 
                     final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-                    Glide
-                            .with(context)
+                    requestManager
                             .load(id)
                             .crossFade()
                             .into(holder.avatarCircleImageView);

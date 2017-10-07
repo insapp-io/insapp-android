@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,8 @@ import fr.insapp.insapp.utility.Utils;
 
 public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecyclerViewAdapter.UserViewHolder> {
 
+    private RequestManager requestManager;
+
     private boolean matchParent;
 
     protected List<User> users;
@@ -34,8 +36,9 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
         void onUserItemClick(User user);
     }
 
-    public UserRecyclerViewAdapter(Context context, boolean matchParent) {
+    public UserRecyclerViewAdapter(Context context, RequestManager requestManager, boolean matchParent) {
         this.context = context;
+        this.requestManager = requestManager;
         this.matchParent = matchParent;
         this.users = new ArrayList<>();
     }
@@ -62,8 +65,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
         // get the drawable of avatarCircleImageView
 
         final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-        Glide
-                .with(context)
+        requestManager
                 .load(id)
                 .crossFade()
                 .into(holder.avatar);

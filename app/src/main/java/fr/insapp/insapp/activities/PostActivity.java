@@ -244,7 +244,7 @@ public class PostActivity extends AppCompatActivity {
 
         // adapter
 
-        this.adapter = new CommentRecyclerViewAdapter(PostActivity.this, post.getComments());
+        this.adapter = new CommentRecyclerViewAdapter(PostActivity.this, Glide.with(this), post.getComments());
         adapter.setOnItemLongClickListener(new PostCommentLongClickListener(PostActivity.this, post, adapter));
 
         // edit comment

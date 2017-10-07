@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import fr.insapp.insapp.R;
@@ -44,7 +46,7 @@ public class AttendeesActivity extends AppCompatActivity {
             generateUsers(maybe, Event.PARTICIPATE.MAYBE);
         }
 
-        this.adapter = new AttendeeRecyclerViewAdapter(this, true);
+        this.adapter = new AttendeeRecyclerViewAdapter(this, Glide.with(this), true);
         adapter.setOnItemClickListener(new AttendeeRecyclerViewAdapter.OnUserItemClickListener() {
             @Override
             public void onUserItemClick(User user) {

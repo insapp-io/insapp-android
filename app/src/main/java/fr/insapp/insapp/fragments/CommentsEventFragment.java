@@ -52,7 +52,7 @@ public class CommentsEventFragment extends Fragment {
 
         // adapter
 
-        this.adapter = new CommentRecyclerViewAdapter(getContext(), event.getComments());
+        this.adapter = new CommentRecyclerViewAdapter(getContext(), Glide.with(this), event.getComments());
         adapter.setOnItemLongClickListener(new EventCommentLongClickListener(getContext(), event, adapter));
     }
 

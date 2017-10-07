@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -28,6 +28,8 @@ import fr.insapp.insapp.utility.Utils;
 
 public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<AttendeeRecyclerViewAdapter.UserViewHolder> {
 
+    private RequestManager requestManager;
+
     private boolean matchParent;
 
     private Map<User, Event.PARTICIPATE> users;
@@ -38,8 +40,9 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
         void onUserItemClick(User user);
     }
 
-    public AttendeeRecyclerViewAdapter(Context context, boolean matchParent) {
+    public AttendeeRecyclerViewAdapter(Context context, RequestManager requestManager, boolean matchParent) {
         this.context = context;
+        this.requestManager = requestManager;
         this.matchParent = matchParent;
         this.users = new LinkedHashMap<>();
     }
@@ -67,9 +70,7 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
             // get the drawable of avatar
 
             final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-
-            Glide
-                    .with(context)
+            requestManager
                     .load(id)
                     .crossFade()
                     .into(holder.avatar);

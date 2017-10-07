@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
@@ -25,6 +25,8 @@ import fr.insapp.insapp.models.Club;
 
 public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecyclerViewAdapter.ClubViewHolder> {
 
+    private RequestManager requestManager;
+
     private boolean matchParent;
 
     protected List<Club> clubs;
@@ -35,8 +37,9 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
         void onClubItemClick(Club club);
     }
 
-    public ClubRecyclerViewAdapter(Context context, boolean matchParent) {
+    public ClubRecyclerViewAdapter(Context context, RequestManager requestManager, boolean matchParent) {
         this.context = context;
+        this.requestManager = requestManager;
         this.matchParent = matchParent;
         this.clubs = new ArrayList<>();
     }
@@ -64,8 +67,7 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
 
         // glide
 
-        Glide
-                .with(context)
+        requestManager
                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

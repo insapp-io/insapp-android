@@ -29,8 +29,8 @@ android {
         applicationId "fr.insapp.insapp"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 19
-        versionName "3.0.3"
+        versionCode 20
+        versionName "3.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

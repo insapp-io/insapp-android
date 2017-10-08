@@ -131,7 +131,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        this.unbindService(MainActivity.customTabsConnection);
-        MainActivity.customTabsConnection = null;
+        if (MainActivity.customTabsConnection != null) {
+            this.unbindService(MainActivity.customTabsConnection);
+            MainActivity.customTabsConnection = null;
+        }
     }
 }

@@ -242,7 +242,7 @@ public class EventActivity extends AppCompatActivity {
         Bundle bundle2 = new Bundle();
         bundle2.putParcelable("event", event);
         commentsEventFragment.setArguments(bundle2);
-        adapter.addFragment(commentsEventFragment, getResources().getString(R.string.comments));
+        adapter.addFragment(commentsEventFragment, String.format(getResources().getString(R.string.x_comments), event.getComments().size()));
 
         viewPager.setAdapter(adapter);
     }
@@ -579,15 +579,25 @@ public class EventActivity extends AppCompatActivity {
 
         final int diffInDays = (int) ((event.getDateEnd().getTime() - event.getDateStart().getTime()) / (1000 * 60 * 60 * 24));
         if (diffInDays < 1 && event.getDateStart().getMonth() == event.getDateEnd().getMonth()) {
-            String day = format.format(event.getDateStart());
+            final String day = format.format(event.getDateStart());
 
-            dateTextView.setText(day.replaceFirst(".", (day.charAt(0) + "").toUpperCase()) + " de " + format_hours_minutes.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateEnd()));
+            dateTextView.setText(String.format(getResources().getString(R.string.event_date_inf),
+                    day.replaceFirst(".", (day.charAt(0) + "").toUpperCase()),
+                    format_hours_minutes.format(event.getDateStart()),
+                    format_hours_minutes.format(event.getDateEnd())));
         }
         else {
-            String start = format.format(event.getDateStart()) + " à " + format_hours_minutes.format(event.getDateStart());
-            String end = format.format(event.getDateEnd()) + " à " + format_hours_minutes.format(event.getDateEnd());
+            final String start = String.format(getResources().getString(R.string.event_date_sup_start_end),
+                    format.format(event.getDateStart()),
+                    format_hours_minutes.format(event.getDateStart()));
 
-            dateTextView.setText("Du " + start.replaceFirst(".", (start.charAt(0) + "").toUpperCase()) + " au " + end.replaceFirst(".", (end.charAt(0) + "").toUpperCase()));
+            final String end = String.format(getResources().getString(R.string.event_date_sup_start_end),
+                    format.format(event.getDateEnd()),
+                    format_hours_minutes.format(event.getDateEnd()));
+
+            dateTextView.setText(String.format(getResources().getString(R.string.event_date_sup),
+                    start.replaceFirst(".", (start.charAt(0) + "").toUpperCase()),
+                    end.replaceFirst(".", (end.charAt(0) + "").toUpperCase())));
         }
 
         dateTextView.setTextColor(fgColor);

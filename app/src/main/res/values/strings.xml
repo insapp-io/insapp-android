@@ -82,6 +82,7 @@
     <string name="notifications">Notifications</string>
     <string name="about">À propos</string>
     <string name="comments">Commentaires</string>
+    <string name="x_comments">Commentaires (%1$d)</string>
 
     <string name="events_now">En ce moment</string>
     <string name="events_future">À venir</string>
@@ -90,6 +91,10 @@
     <string name="events_week">Cette semaine</string>
     <string name="events_next_week">La semaine prochaine</string>
     <string name="events_later">Plus tard</string>
+
+    <string name="event_date_inf">%1$s de %2$s à %3$s</string>
+    <string name="event_date_sup_start_end">%1$s à %2$s</string>
+    <string name="event_date_sup">Du %1$s au %2$s</string>
 
     <string name="ago">il y a</string>
     <string name="ago_week">sem.</string>

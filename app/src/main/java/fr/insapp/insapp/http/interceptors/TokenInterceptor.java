@@ -1,7 +1,6 @@
 package fr.insapp.insapp.http.interceptors;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.crashlytics.android.Crashlytics;
@@ -12,7 +11,6 @@ import java.io.IOException;
 
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
-import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
@@ -77,23 +75,25 @@ public class TokenInterceptor implements Interceptor {
                     Crashlytics.logException(ex);
                     ex.printStackTrace();
 
-                    disconnect(userPreferences);
+                    Utils.clearAndDisconnect();
 
                     return response;
                 }
 
-                // if the user has a new auth token, disconnect him from current device
+                // if the user has a new auth token, clearAndDisconnect him from current device
 
                 if (res.code() == 404) {
-                    disconnect(userPreferences);
+                    Utils.clearAndDisconnect();
 
                     return response;
                 }
 
                 final SessionCredentials refreshedSessionCredentials = res.body();
 
-                final HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
-                request = request.newBuilder().url(url).build();
+                if (refreshedSessionCredentials != null) {
+                    final HttpUrl url = request.url().newBuilder().setQueryParameter("token", refreshedSessionCredentials.getSessionToken().getToken()).build();
+                    request = request.newBuilder().url(url).build();
+                }
 
                 return chain.proceed(request);
 
@@ -112,18 +112,5 @@ public class TokenInterceptor implements Interceptor {
                 FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
             }
         }
-    }
-
-    private void disconnect(SharedPreferences userPreferences) {
-        final User user = Utils.getUser();
-        if (user != null) {
-            user.clearData();
-        }
-
-        final Context context = App.getAppContext();
-
-        final Intent intent = new Intent(context, IntroActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 }

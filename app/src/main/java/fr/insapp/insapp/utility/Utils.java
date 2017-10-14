@@ -1,6 +1,7 @@
 package fr.insapp.insapp.utility;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import java.util.Date;
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.activities.IntroActivity;
 import fr.insapp.insapp.models.User;
 
 public class Utils {
@@ -32,7 +34,30 @@ public class Utils {
     private static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
     public static User getUser() {
-        return gson.fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
+
+        if (user == null) {
+            disconnect();
+        }
+
+        return user;
+    }
+
+    public static void clearAndDisconnect() {
+        final User user = Utils.getUser();
+        if (user != null) {
+            user.clearData();
+        }
+
+        disconnect();
+    }
+
+    private static void disconnect() {
+        final Context context = App.getAppContext();
+
+        final Intent intent = new Intent(context, IntroActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     public static void convertToLinkSpan(Context context, TextView textView) {

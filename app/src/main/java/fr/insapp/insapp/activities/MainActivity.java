@@ -3,19 +3,34 @@ package fr.insapp.insapp.activities;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsClient;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.BuildConfig;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
@@ -60,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
         MainActivity.customTabsConnection = new CustomTabsConnection();
         CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", customTabsConnection);
+
+        // Huawei protected apps
+
+        ifHuaweiAlert();
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -130,5 +149,89 @@ public class MainActivity extends AppCompatActivity {
             this.unbindService(MainActivity.customTabsConnection);
             MainActivity.customTabsConnection = null;
         }
+    }
+
+    private void ifHuaweiAlert() {
+        if (!Build.MANUFACTURER.equalsIgnoreCase("huawei")) {
+            final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+
+            if (!defaultSharedPreferences.getBoolean("protected_apps", false)) {
+                final SharedPreferences.Editor editor = defaultSharedPreferences.edit();
+
+                Intent intent = new Intent();
+                intent.setClassName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity");
+
+                if (isCallable(intent)) {
+                    final AppCompatCheckBox dontShowAgain = new AppCompatCheckBox(this);
+                    dontShowAgain.setText(getString(R.string.protected_apps_skip));
+                    dontShowAgain.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            editor.putBoolean("protected_apps", isChecked);
+                            editor.apply();
+                        }
+                    });
+
+                    new AlertDialog.Builder(this)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle(getString(R.string.protected_apps_dialog_title))
+                            .setMessage(String.format(getString(R.string.protected_apps_dialog_message), getString(R.string.app_name)))
+                            .setView(dontShowAgain)
+                            .setPositiveButton(getString(R.string.protected_apps_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    huaweiProtectedApps();
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel_button, null)
+                            .show();
+                }
+                else {
+                    editor.putBoolean("protected_apps", true);
+                    editor.apply();
+                }
+            }
+        }
+    }
+
+    private boolean isCallable(Intent intent) {
+        final List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        return list.size() > 0;
+    }
+
+    private void huaweiProtectedApps() {
+        try {
+            Runtime.getRuntime().exec("am start -n com.huawei.systemmanager/.optimize.process.ProtectActivity --user " + getUserSerial());
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private String getUserSerial() {
+        //noinspection ResourceType
+        Object userManager = getSystemService("user");
+
+        if (null == userManager) {
+            return "";
+        }
+
+        try {
+            Method myUserHandleMethod = android.os.Process.class.getMethod("myUserHandle", (Class<?>[]) null);
+            Object myUserHandle = myUserHandleMethod.invoke(android.os.Process.class, (Object[]) null);
+            Method getSerialNumberForUser = userManager.getClass().getMethod("getSerialNumberForUser", myUserHandle.getClass());
+            Long userSerial = (Long) getSerialNumberForUser.invoke(userManager, myUserHandle);
+
+            if (userSerial != null) {
+                return String.valueOf(userSerial);
+            }
+            else {
+                return "";
+            }
+        } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+
+        return "";
     }
 }

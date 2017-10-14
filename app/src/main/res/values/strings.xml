@@ -120,6 +120,10 @@
     <string name="search_results">Résultats</string>
 
     <string name="settings">Paramètres</string>
+    <string name="protected_apps_button">Applications protégées</string>
+    <string name="protected_apps_dialog_title">Applications protégées Huawei</string>
+    <string name="protected_apps_dialog_message">%s doit être autorisée dans les "Applications protégées" du téléphone pour fonctionner correctement.</string>
+    <string name="protected_apps_skip">Ne plus afficher ce message, j\'ai bien autorisé %s dans les "Applications protégées"</string>
 
     <string name="profile">Profil</string>
 </resources>

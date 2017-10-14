@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 
 /**
@@ -22,7 +23,7 @@ public class IntroNotificationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_intro_notifications, container, false);
 
-        final SharedPreferences.Editor defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+        final SharedPreferences.Editor defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit();
 
         CheckBox checkbox = (CheckBox) rootView.findViewById(R.id.checkbox_enable_notifications);
         checkbox.setChecked(true);

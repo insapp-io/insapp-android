@@ -6,21 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Post;
-import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by thomas on 25/02/2017.
@@ -45,9 +39,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
 
         // delete comment
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-
-        if (gson.fromJson(context.getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId().equals(comment.getUser())) {
+        if (Utils.getUser().getId().equals(comment.getUser())) {
             alertDialogBuilder.setTitle(context.getResources().getString(R.string.delete_comment_action));
             alertDialogBuilder
                     .setMessage(R.string.delete_comment_are_you_sure)

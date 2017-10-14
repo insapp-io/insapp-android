@@ -22,12 +22,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
@@ -91,8 +88,7 @@ public class PostActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.post = intent.getParcelableExtra("post");
 
-        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = Utils.getUser();
 
         // Answers
 
@@ -272,8 +268,7 @@ public class PostActivity extends AppCompatActivity {
 
         // retrieve the avatar of the user
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = Utils.getUser();
 
         final int id = getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getPackageName());
         Glide

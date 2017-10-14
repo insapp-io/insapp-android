@@ -44,8 +44,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +51,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
@@ -118,8 +115,7 @@ public class EventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.event = intent.getParcelableExtra("event");
 
-        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = Utils.getUser();
 
         // Answers
 
@@ -283,8 +279,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void generateEvent() {
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = Utils.getUser();
 
         // fab 1: participate
 

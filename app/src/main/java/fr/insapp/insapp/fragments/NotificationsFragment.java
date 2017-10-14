@@ -1,6 +1,5 @@
 package fr.insapp.insapp.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,10 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.PostActivity;
@@ -27,6 +23,7 @@ import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Notifications;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -100,8 +97,7 @@ public class NotificationsFragment extends Fragment {
 
                 // mark notification as seen
 
-                final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-                final User user = gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
+                final User user = Utils.getUser();
 
                 Call<Notifications> call = ServiceGenerator.create().markNotificationAsSeen(user.getId(), notification.getId());
                 call.enqueue(new Callback<Notifications>() {
@@ -141,8 +137,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void generateNotifications() {
-        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final User user = gson.fromJson(getContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = Utils.getUser();
 
         Call<Notifications> call = ServiceGenerator.create().getNotificationsForUser(user.getId());
         call.enqueue(new Callback<Notifications>() {

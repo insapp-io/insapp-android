@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="fr.insapp.insapp">
 
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

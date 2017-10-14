@@ -85,11 +85,11 @@ public class ProfileActivity extends AppCompatActivity {
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
         if (this.user == null) {
-            this.user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+            this.user = Utils.getUser();
 
             this.isOwner = true;
         }
-        else if (this.user.getId().equals(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId())) {
+        else if (this.user.getId().equals(Utils.getUser().getId())) {
             this.isOwner = true;
         }
 
@@ -261,7 +261,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialogAlert, int id) {
                                     Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
-                                    Call<Void> call = ServiceGenerator.create().deleteUser(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getId());
+                                    Call<Void> call = ServiceGenerator.create().deleteUser(Utils.getUser().getId());
                                     call.enqueue(new Callback<Void>() {
                                         @Override
                                         public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
@@ -352,8 +352,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     for (int i = 0; i < adapter.getItemCount(); ++i) {
                         if (adapter.getEvents().get(i).getId().equals(event.getId())) {
-                            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-                            final User user = gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+                            final User user = Utils.getUser();
 
                             for (final String eventId : user.getEvents()) {
                                 if (eventId.equals(event.getId())) {

@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
@@ -34,7 +31,6 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
-import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.RatioImageView;
 import fr.insapp.insapp.utility.Utils;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -159,8 +155,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
             // like button
 
-            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-            final String userId = gson.fromJson(context.getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class).getId();
+            final String userId = Utils.getUser().getId();
 
             holder.getLikeButton().setLiked(post.isPostLikedBy(userId));
 

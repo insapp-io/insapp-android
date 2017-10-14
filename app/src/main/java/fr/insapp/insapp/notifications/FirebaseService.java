@@ -8,14 +8,12 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.NotificationUser;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,8 +41,7 @@ public class FirebaseService extends FirebaseInstanceIdService {
     }
 
     public static void registerToken(final String token) {
-        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = Utils.getUser();
 
         final NotificationUser notificationUser = new NotificationUser(null, user.getId(), token, "android");
 

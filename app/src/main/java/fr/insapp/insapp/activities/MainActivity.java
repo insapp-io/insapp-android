@@ -16,10 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.BuildConfig;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.ViewPagerAdapter;
@@ -27,7 +23,7 @@ import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
-import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.utility.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-            getSupportActionBar().setTitle(gson.fromJson(getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class).getUsername());
+            getSupportActionBar().setTitle(Utils.getUser().getUsername());
         }
 
         // view pager

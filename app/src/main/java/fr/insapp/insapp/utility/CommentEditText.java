@@ -12,13 +12,9 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.AutoCompleterAdapter;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
@@ -31,8 +27,6 @@ import fr.insapp.insapp.models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by thomas on 27/02/2017.
@@ -96,8 +90,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                     getText().clear();
 
                     if (!content.isEmpty()) {
-                        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-                        final User user = gson.fromJson(getContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+                        final User user = Utils.getUser();
 
                         final Comment comment = Comment.create(null, user.getId(), content, null, tags);
 

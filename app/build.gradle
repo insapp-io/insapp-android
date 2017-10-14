@@ -80,7 +80,7 @@ dependencies {
     annotationProcessor "me.tatarka:auto-parcel-gson-processor:0.1"
     testCompile 'junit:junit:4.12'
     compile 'junit:junit:4.12'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
     }
 }

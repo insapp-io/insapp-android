@@ -10,13 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
@@ -26,8 +23,6 @@ import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Utils;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by thomas on 25/02/2017.
@@ -80,8 +75,7 @@ public class CommentsEventFragment extends Fragment {
 
         // retrieve the avatar of the user
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        final User user = gson.fromJson(getContext().getSharedPreferences("User", MODE_PRIVATE).getString("user", ""), User.class);
+        final User user = Utils.getUser();
 
         final int id = getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", getContext().getPackageName());
         Glide

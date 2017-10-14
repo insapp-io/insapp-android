@@ -13,16 +13,27 @@ import android.text.SpannableString;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.models.User;
 
 public class Utils {
+
+    private static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
+
+    public static User getUser() {
+        return gson.fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
+    }
 
     public static void convertToLinkSpan(Context context, TextView textView) {
         Spannable s = new SpannableString(textView.getText());

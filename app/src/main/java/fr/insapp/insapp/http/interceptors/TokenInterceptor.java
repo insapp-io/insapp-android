@@ -18,6 +18,7 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
 import fr.insapp.insapp.notifications.FirebaseService;
+import fr.insapp.insapp.utility.Utils;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -76,7 +77,7 @@ public class TokenInterceptor implements Interceptor {
                     Crashlytics.logException(ex);
                     ex.printStackTrace();
 
-                    disconnect(gson, userPreferences);
+                    disconnect(userPreferences);
 
                     return response;
                 }
@@ -84,7 +85,7 @@ public class TokenInterceptor implements Interceptor {
                 // if the user has a new auth token, disconnect him from current device
 
                 if (res.code() == 404) {
-                    disconnect(gson, userPreferences);
+                    disconnect(userPreferences);
 
                     return response;
                 }
@@ -113,8 +114,8 @@ public class TokenInterceptor implements Interceptor {
         }
     }
 
-    private void disconnect(Gson gson, SharedPreferences userPreferences) {
-        final User user = gson.fromJson(userPreferences.getString("user", ""), User.class);
+    private void disconnect(SharedPreferences userPreferences) {
+        final User user = Utils.getUser();
         if (user != null) {
             user.clearData();
         }

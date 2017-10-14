@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ifHuaweiAlert() {
-        if (!Build.MANUFACTURER.equalsIgnoreCase("huawei")) {
+        if (Build.MANUFACTURER.equalsIgnoreCase("huawei")) {
             final SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
 
             if (!defaultSharedPreferences.getBoolean("protected_apps", false)) {
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (isCallable(intent)) {
                     final AppCompatCheckBox dontShowAgain = new AppCompatCheckBox(this);
-                    dontShowAgain.setText(getString(R.string.protected_apps_skip));
+                    dontShowAgain.setText(String.format(getString(R.string.protected_apps_skip), getString(R.string.app_name)));
                     dontShowAgain.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

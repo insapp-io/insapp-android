@@ -5,6 +5,7 @@
     <string name="negative_button">Non</string>
     <string name="publish_button">Publier</string>
     <string name="cancel_button">Annuler</string>
+    <string name="close_button">Fermer</string>
 
     <string name="participate_yes">J\'y vais</string>
     <string name="participate_maybe">Peut-être</string>
@@ -122,8 +123,8 @@
     <string name="settings">Paramètres</string>
     <string name="protected_apps_button">Applications protégées</string>
     <string name="protected_apps_dialog_title">Applications protégées Huawei</string>
-    <string name="protected_apps_dialog_message">%s doit être autorisée dans les "Applications protégées" du téléphone pour fonctionner correctement.</string>
-    <string name="protected_apps_skip">Ne plus afficher ce message, j\'ai bien autorisé %s dans les "Applications protégées"</string>
+    <string name="protected_apps_dialog_message">%s doit être autorisée dans les Applications protégées du téléphone pour fonctionner correctement.</string>
+    <string name="protected_apps_skip">Ne plus afficher ce message</string>
 
     <string name="profile">Profil</string>
 </resources>

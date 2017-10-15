@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (isCallable(intent)) {
                     final AppCompatCheckBox dontShowAgain = new AppCompatCheckBox(this);
-                    dontShowAgain.setText(String.format(getString(R.string.protected_apps_skip), getString(R.string.app_name)));
+                    dontShowAgain.setText(getString(R.string.protected_apps_skip));
                     dontShowAgain.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                     new AlertDialog.Builder(this)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle(getString(R.string.protected_apps_dialog_title))
                             .setMessage(String.format(getString(R.string.protected_apps_dialog_message), getString(R.string.app_name)))
                             .setView(dontShowAgain)
@@ -182,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                                     huaweiProtectedApps();
                                 }
                             })
-                            .setNegativeButton(R.string.cancel_button, null)
+                            .setNegativeButton(R.string.close_button, null)
                             .show();
                 }
                 else {

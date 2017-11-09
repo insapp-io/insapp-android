@@ -101,7 +101,11 @@ public class CommentsEventFragment extends Fragment {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                ((EventActivity) getActivity()).getFloatingActionMenu().showMenu(true);
+                                final EventActivity eventActivity = (EventActivity) getActivity();
+
+                                if (eventActivity != null) {
+                                    eventActivity.getFloatingActionMenu().showMenu(true);
+                                }
                             }
                         }, 500);
                     }

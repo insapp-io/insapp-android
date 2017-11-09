@@ -12,6 +12,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    google()
 }
 
 android {
@@ -24,7 +25,7 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "fr.insapp.insapp"
         minSdkVersion 19
@@ -46,8 +47,9 @@ android {
 }
 
 ext {
-    SUPPORT_LIB_VER = '25.3.1'
+    SUPPORT_LIB_VER = '25.4.0'
     GOOGLE_LIB_VER = '11.0.2'
+    FIREBASE_LIB_VER = '11.6.0'
 }
 
 dependencies {
@@ -63,9 +65,10 @@ dependencies {
     compile "com.android.support:preference-v7:$SUPPORT_LIB_VER"
     compile "com.android.support:preference-v14:$SUPPORT_LIB_VER"
     compile "com.android.support:customtabs:$SUPPORT_LIB_VER"
-    compile "com.google.firebase:firebase-core:$GOOGLE_LIB_VER"
-    compile "com.google.firebase:firebase-messaging:$GOOGLE_LIB_VER"
-    compile "com.google.android.gms:play-services-vision:$GOOGLE_LIB_VER"
+
+    compile "com.google.firebase:firebase-core:$FIREBASE_LIB_VER"
+    compile "com.google.firebase:firebase-messaging:$FIREBASE_LIB_VER"
+    compile "com.google.android.gms:play-services-vision:$FIREBASE_LIB_VER"
 
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
@@ -80,7 +83,7 @@ dependencies {
     annotationProcessor "me.tatarka:auto-parcel-gson-processor:0.1"
     testCompile 'junit:junit:4.12'
     compile 'junit:junit:4.12'
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true;
     }
 }

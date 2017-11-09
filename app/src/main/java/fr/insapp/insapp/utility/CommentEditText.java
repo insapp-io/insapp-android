@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.adapters.AutoCompleterAdapter;
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter;
@@ -103,16 +104,16 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                                         commentAdapter.setComments(response.body().getComments());
                                         tags.clear();
 
-                                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(App.getAppContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
                                     }
                                     else {
-                                        Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(App.getAppContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                                    Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(App.getAppContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
@@ -126,16 +127,16 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                                         commentAdapter.setComments(response.body().getComments());
                                         tags.clear();
 
-                                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(App.getAppContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
                                     }
                                     else {
-                                        Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(App.getAppContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
-                                    Toast.makeText(getContext(), "CommentEditText", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(App.getAppContext(), "CommentEditText", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }

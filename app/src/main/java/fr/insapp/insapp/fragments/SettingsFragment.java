@@ -75,13 +75,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
             }
         });
     }

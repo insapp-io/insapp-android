@@ -18,6 +18,7 @@ import com.bumptech.glide.RequestManager;
 import java.util.Calendar;
 import java.util.Date;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter;
@@ -135,7 +136,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
                         addEventToAdapter(response.body());
                     }
                     else {
-                        Toast.makeText(getContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
+                        Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
                     }
 
                     if (swipeRefreshLayout != null) {
@@ -145,7 +146,7 @@ public class EventsClubFragment extends Fragment implements SwipeRefreshLayout.O
 
                 @Override
                 public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
-                    Toast.makeText(getContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show();
 
                     if (swipeRefreshLayout != null) {
                         swipeRefreshLayout.setRefreshing(false);

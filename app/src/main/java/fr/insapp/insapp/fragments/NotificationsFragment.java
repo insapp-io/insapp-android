@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.EventActivity;
 import fr.insapp.insapp.activities.PostActivity;
@@ -57,13 +58,13 @@ public class NotificationsFragment extends Fragment {
                                     startActivity(new Intent(getContext(), PostActivity.class).putExtra("post", response.body()));
                                 }
                                 else {
-                                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
                                 }
                             }
 
                             @Override
                             public void onFailure(@NonNull Call<Post> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                                Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -79,13 +80,13 @@ public class NotificationsFragment extends Fragment {
                                     startActivity(new Intent(getContext(), EventActivity.class).putExtra("event", response.body()));
                                 }
                                 else {
-                                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
                                 }
                             }
 
                             @Override
                             public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                                Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -107,13 +108,13 @@ public class NotificationsFragment extends Fragment {
 
                         }
                         else {
-                            Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                            Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<Notifications> call, @NonNull Throwable t) {
-                        Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                        Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -153,13 +154,13 @@ public class NotificationsFragment extends Fragment {
                     }
                 }
                 else {
-                    Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Notifications> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show();
             }
         });
     }

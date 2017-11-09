@@ -200,7 +200,7 @@ public class EventsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     }
                 }
                 else {
-                    Toast.makeText(getContext(), "EventsFragment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show();
                 }
 
                 if (swipeRefreshLayout != null) {

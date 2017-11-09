@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter;
@@ -78,13 +79,13 @@ public class ClubsFragment extends Fragment {
                     }
                 }
                 else {
-                    Toast.makeText(getContext(), "ClubsFragment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(App.getAppContext(), "ClubsFragment", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Club>> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "ClubsFragment", Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getAppContext(), "ClubsFragment", Toast.LENGTH_LONG).show();
             }
         });
     }

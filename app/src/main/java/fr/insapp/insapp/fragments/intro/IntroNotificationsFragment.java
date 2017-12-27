@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
+import fr.insapp.insapp.notifications.FirebaseMessaging;
 
 /**
  * Created by thomas on 03/12/2016.
@@ -31,11 +32,18 @@ public class IntroNotificationsFragment extends Fragment {
         defaultSharedPreferences.putBoolean("notifications", true);
         defaultSharedPreferences.apply();
 
+        FirebaseMessaging.subscribeToTopics();
+
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 defaultSharedPreferences.putBoolean("notifications", b);
                 defaultSharedPreferences.apply();
+
+                if (b)
+                    FirebaseMessaging.subscribeToTopics();
+                else
+                    FirebaseMessaging.unsubscribeFromTopics();
             }
         });
 

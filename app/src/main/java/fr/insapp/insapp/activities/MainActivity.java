@@ -38,6 +38,8 @@ import fr.insapp.insapp.fragments.ClubsFragment;
 import fr.insapp.insapp.fragments.EventsFragment;
 import fr.insapp.insapp.fragments.NotificationsFragment;
 import fr.insapp.insapp.fragments.PostsFragment;
+import fr.insapp.insapp.notifications.FirebaseMessaging;
+import fr.insapp.insapp.utility.CustomTabsConnection;
 import fr.insapp.insapp.utility.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,6 +81,14 @@ public class MainActivity extends AppCompatActivity {
         // Huawei protected apps
 
         ifHuaweiAlert();
+
+        // topic notifications
+
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext());
+        if (defaultSharedPreferences.getBoolean("notifications", true))
+            FirebaseMessaging.subscribeToTopics();
+        else
+            FirebaseMessaging.unsubscribeFromTopics();
     }
 
     private void setupViewPager(ViewPager viewPager) {

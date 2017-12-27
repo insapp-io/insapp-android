@@ -1,11 +1,9 @@
-package fr.insapp.insapp.activities;
+package fr.insapp.insapp.utility;
 
 import android.content.ComponentName;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.customtabs.CustomTabsSession;
-
-import fr.insapp.insapp.App;
 
 /**
  * Created by thomas on 09/02/2017.

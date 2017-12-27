@@ -6,36 +6,36 @@
         android:title="@string/settings_profile">
 
         <android.support.v7.preference.EditTextPreference
-            android:title="@string/settings_name"
             android:key="name"
+            android:title="@string/settings_name"
             android:summary="@string/settings_name_summary"
             android:dialogLayout="@layout/pref_dialog_edittext_fix" />
 
         <android.support.v7.preference.ListPreference
-            android:title="@string/settings_sex"
             android:key="sex"
+            android:title="@string/settings_sex"
             android:summary="@string/settings_sex_summary"
             android:defaultValue="unknown"
             android:entries="@array/listArraySex"
             android:entryValues="@array/listValuesSex" />
 
         <android.support.v7.preference.ListPreference
-            android:title="@string/settings_class"
             android:key="class"
+            android:title="@string/settings_class"
             android:summary="@string/settings_class_summary"
             android:defaultValue="unknown"
             android:entries="@array/listArrayClass"
             android:entryValues="@array/listValuesClass" />
 
         <android.support.v7.preference.EditTextPreference
-            android:title="@string/settings_mail"
             android:key="email"
+            android:title="@string/settings_mail"
             android:summary="@string/settings_mail_summary"
             android:dialogLayout="@layout/pref_dialog_edittext_fix" />
 
         <android.support.v7.preference.EditTextPreference
-            android:title="@string/settings_description"
             android:key="description"
+            android:title="@string/settings_description"
             android:summary="@string/settings_description_summary"
             android:dialogLayout="@layout/pref_dialog_edittext_fix" />
     </android.support.v7.preference.PreferenceCategory>
@@ -69,16 +69,16 @@
         android:title="@string/settings_options">
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="notifications"
             android:title="@string/settings_notifications"
-            android:defaultValue="true"
             android:summary="@string/settings_notifications_summary"
-            android:key="notifications" />
+            android:defaultValue="true" />
 
         <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="calendar"
             android:title="@string/settings_calendar"
-            android:defaultValue="false"
             android:summary="@string/settings_calendar_summary"
-            android:key="calendar" />
+            android:defaultValue="false" />
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

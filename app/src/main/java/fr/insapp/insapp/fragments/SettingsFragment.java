@@ -15,6 +15,7 @@ import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.User;
+import fr.insapp.insapp.notifications.FirebaseMessaging;
 import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,34 +57,60 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         updatePreferenceSummary(findPreference(key));
 
-        final User user = Utils.getUser();
+        switch (key) {
+            case "name":
+            case "sex":
+            case "class":
+            case "email":
+            case "description":
 
-        final User updatedUser = User.create(
-                user.getId(),
-                sharedPreferences.getString("name", ""),
-                user.getUsername(),
-                sharedPreferences.getString("description", ""),
-                sharedPreferences.getString("email", ""),
-                user.isEmailPublic(),
-                sharedPreferences.getString("class", ""),
-                sharedPreferences.getString("sex", ""),
-                user.getEvents(),
-                user.getPostsLiked());
+                // user change
 
-        Call<User> call = ServiceGenerator.create().updateUser(user.getId(), updatedUser);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
-                }
-            }
+                final User user = Utils.getUser();
 
-            @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
-            }
-        });
+                final User updatedUser = User.create(
+                        user.getId(),
+                        sharedPreferences.getString("name", ""),
+                        user.getUsername(),
+                        sharedPreferences.getString("description", ""),
+                        sharedPreferences.getString("email", ""),
+                        user.isEmailPublic(),
+                        sharedPreferences.getString("class", ""),
+                        sharedPreferences.getString("sex", ""),
+                        user.getEvents(),
+                        user.getPostsLiked());
+
+                Call<User> call = ServiceGenerator.create().updateUser(user.getId(), updatedUser);
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                        if (!response.isSuccessful()) {
+                            Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                        Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                break;
+
+            case "notifications":
+
+                // notification change
+
+                if (sharedPreferences.getBoolean("notifications", true))
+                    FirebaseMessaging.subscribeToTopics();
+                else
+                    FirebaseMessaging.unsubscribeFromTopics();
+
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void initSummary(Preference preference) {

@@ -49,7 +49,7 @@ android {
 ext {
     SUPPORT_LIB_VER = '25.4.0'
     GOOGLE_LIB_VER = '11.0.2'
-    FIREBASE_LIB_VER = '11.6.0'
+    FIREBASE_LIB_VER = '11.8.0'
 }
 
 dependencies {

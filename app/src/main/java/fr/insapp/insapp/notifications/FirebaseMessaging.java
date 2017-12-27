@@ -46,6 +46,16 @@ import retrofit2.Response;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
 
+    public static void subscribeToTopics() {
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("news");
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("events");
+    }
+
+    public static void unsubscribeFromTopics() {
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic("events");
+    }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(FirebaseService.TAG, "From: " + remoteMessage.getFrom());

@@ -57,10 +57,15 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            try {
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-            getSupportActionBar().setTitle(Utils.getUser().getUsername());
+                getSupportActionBar().setTitle(Utils.getUser().getUsername());
+            }
+            catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
         }
 
         // view pager

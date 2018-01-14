@@ -33,11 +33,12 @@ public class Utils {
 
     private static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
-    public static User getUser() {
+    public static User getUser() throws NullPointerException {
         final User user = gson.fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User.class);
 
         if (user == null) {
             disconnect();
+            throw new NullPointerException();
         }
 
         return user;

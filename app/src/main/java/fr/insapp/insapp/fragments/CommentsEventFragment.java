@@ -24,6 +24,8 @@ import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.CommentEditText;
 import fr.insapp.insapp.utility.Utils;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Created by thomas on 25/02/2017.
  */
@@ -81,7 +83,7 @@ public class CommentsEventFragment extends Fragment {
         Glide
                 .with(getContext())
                 .load(id)
-                .crossFade()
+                .transition(withCrossFade())
                 .into(circleImageView);
 
         // animation on focus

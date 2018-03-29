@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.like.LikeButton;
@@ -42,6 +41,8 @@ import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by thomas on 12/11/2016.
@@ -213,7 +214,7 @@ public class PostActivity extends AppCompatActivity {
                     Glide
                             .with(PostActivity.this)
                             .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                            .crossFade()
+                            .transition(withCrossFade())
                             .into(clubAvatarCircleImageView);
 
                     // listener
@@ -274,7 +275,7 @@ public class PostActivity extends AppCompatActivity {
         Glide
                 .with(PostActivity.this)
                 .load(id)
-                .crossFade()
+                .transition(withCrossFade())
                 .into(userAvatarCircleImageView);
 
         // image
@@ -284,8 +285,8 @@ public class PostActivity extends AppCompatActivity {
 
             Glide
                     .with(PostActivity.this)
-                    .load(ServiceGenerator.CDN_URL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
+                    .load(ServiceGenerator.CDN_URL + post.getImage())
+                    .transition(withCrossFade())
                     .into(imageView);
         }
     }

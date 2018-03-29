@@ -18,6 +18,8 @@ import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Created by thomas on 24/02/2017.
  */
@@ -67,7 +69,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
         final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         requestManager
                 .load(id)
-                .crossFade()
+                .transition(withCrossFade())
                 .into(holder.avatar);
 
         holder.name.setText(user.getName());

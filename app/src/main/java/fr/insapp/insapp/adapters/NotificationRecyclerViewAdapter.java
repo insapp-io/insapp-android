@@ -12,8 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,11 @@ import fr.insapp.insapp.models.Notification;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by thomas on 11/12/2016.
@@ -127,7 +129,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
                         requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                                .crossFade()
+                                .transition(withCrossFade())
                                 .into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
@@ -160,8 +162,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
                         requestManager
                                 .load(ServiceGenerator.CDN_URL + post.getImage())
-                                .centerCrop()
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .apply(new RequestOptions().centerCrop())
                                 .into(holder.thumbnail);
                     }
                     else {
@@ -186,8 +187,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
                         requestManager
                                 .load(ServiceGenerator.CDN_URL + event.getImage())
-                                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
                                 .into(holder.thumbnail);
                     }
                     else {

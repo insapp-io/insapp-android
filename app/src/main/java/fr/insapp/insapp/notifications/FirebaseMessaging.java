@@ -168,8 +168,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
             final NotificationTarget notificationTarget = new NotificationTarget(
                     App.getAppContext(),
-                    remoteViews,
                     R.id.notification_image,
+                    remoteViews,
                     builtNotification,
                     notificationId
             );
@@ -187,8 +187,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                                 final int id = getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", App.getAppContext().getPackageName());
                                 Glide
                                         .with(App.getAppContext())
-                                        .load(id)
                                         .asBitmap()
+                                        .load(id)
                                         .into(notificationTarget);
                             }
                             else {
@@ -213,8 +213,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
                                 Glide
                                         .with(App.getAppContext())
-                                        .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                         .asBitmap()
+                                        .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                         .into(notificationTarget);
                             }
                             else {
@@ -239,8 +239,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
                                 Glide
                                         .with(App.getAppContext())
-                                        .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                         .asBitmap()
+                                        .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
                                         .into(notificationTarget);
                             }
                             else {

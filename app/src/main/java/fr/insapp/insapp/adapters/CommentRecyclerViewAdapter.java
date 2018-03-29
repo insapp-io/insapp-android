@@ -31,6 +31,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Created by thomas on 18/11/2016.
  */
@@ -131,7 +133,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                     final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                     requestManager
                             .load(id)
-                            .crossFade()
+                            .transition(withCrossFade())
                             .into(holder.avatarCircleImageView);
 
                     holder.usernameTextView.setText(String.format(context.getResources().getString(R.string.tag), user.getUsername()));

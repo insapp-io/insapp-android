@@ -12,8 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,10 +29,11 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.EventComparator;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by thomas on 18/11/2016.
@@ -107,7 +109,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
                         requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                                .crossFade()
+                                .transition(withCrossFade())
                                 .into(holder.avatar);
 
                         holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -131,8 +133,7 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
         requestManager
                 .load(ServiceGenerator.CDN_URL + event.getImage())
-                .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
                 .into(holder.thumbnail);
 
         holder.name.setText(event.getName());

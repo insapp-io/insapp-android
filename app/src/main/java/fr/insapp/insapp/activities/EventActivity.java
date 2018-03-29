@@ -38,8 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.github.clans.fab.FloatingActionButton;
@@ -478,6 +476,7 @@ public class EventActivity extends AppCompatActivity {
 
         refreshFloatingActionButtons();
 
+        /*
         Glide
                 .with(this)
                 .load(ServiceGenerator.CDN_URL + event.getImage())
@@ -490,6 +489,12 @@ public class EventActivity extends AppCompatActivity {
                         headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
                     }
                 });
+        */
+
+        Glide
+                .with(this)
+                .load(ServiceGenerator.CDN_URL + event.getImage())
+                .into(headerImageView);
 
         relativeLayout.setBackgroundColor(bgColor);
 

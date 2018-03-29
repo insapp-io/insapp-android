@@ -27,8 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 
@@ -144,10 +142,9 @@ public class ClubActivity extends AppCompatActivity {
         Glide
                 .with(this)
                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                .crossFade()
                 .into(iconImageView);
 
-
+        /*
         Glide
                 .with(this)
                 .load(ServiceGenerator.CDN_URL + club.getCover())
@@ -160,6 +157,12 @@ public class ClubActivity extends AppCompatActivity {
                         headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
                     }
                 });
+        */
+
+        Glide
+                .with(this)
+                .load(ServiceGenerator.CDN_URL + club.getCover())
+                .into(headerImageView);
 
         // links
 

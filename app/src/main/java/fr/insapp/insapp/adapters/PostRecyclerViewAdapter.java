@@ -14,8 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -33,10 +34,11 @@ import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
 import fr.insapp.insapp.utility.RatioImageView;
 import fr.insapp.insapp.utility.Utils;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by thomas on 19/11/2016.
@@ -105,7 +107,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
                         requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                                .crossFade()
+                                .transition(withCrossFade())
                                 .into(holder.getAvatarCircleImageView());
 
                         // listener
@@ -132,16 +134,16 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         if (layout == R.layout.row_post) {
             requestManager
                     .load(ServiceGenerator.CDN_URL + post.getImage())
-                    .bitmapTransform(new CenterCrop(context), new RoundedCornersTransformation(context, 8, 0))
-                    .crossFade()
+                    .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
+                    .transition(withCrossFade())
                     .into(holder.getImageView());
         }
         else {
             holder.getPlaceholderImageView().setImageSize(post.getImageSize());
 
             requestManager
-                    .load(ServiceGenerator.CDN_URL + post.getImage()).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
+                    .load(ServiceGenerator.CDN_URL + post.getImage())
+                    .transition(withCrossFade())
                     .into(holder.getImageView());
 
             holder.getContentTextView().setText(post.getDescription());

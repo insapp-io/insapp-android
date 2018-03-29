@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by thomas on 30/10/2016.
@@ -69,8 +70,7 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
 
         requestManager
                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(withCrossFade())
                 .into(holder.avatar);
 
         holder.bind(club, listener);

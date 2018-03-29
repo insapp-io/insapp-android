@@ -72,15 +72,14 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:$FIREBASE_LIB_VER"
     implementation "com.google.android.gms:play-services-vision:$FIREBASE_LIB_VER"
 
-    implementation 'de.hdodenhof:circleimageview:2.1.0'
-    implementation 'com.github.jd-alexander:LikeButton:0.2.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
     implementation 'com.github.apl-devs:appintro:v4.2.3'
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
-    implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.github.clans:fab:1.6.4'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     implementation 'me.tatarka:auto-parcel-gson:0.1'
     annotationProcessor "me.tatarka:auto-parcel-gson-processor:0.1"

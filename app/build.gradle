@@ -8,11 +8,13 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     google()
+    mavenCentral()
 }
 
 android {
@@ -86,6 +88,7 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true;
     }
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 apply plugin: "com.google.gms.google-services"

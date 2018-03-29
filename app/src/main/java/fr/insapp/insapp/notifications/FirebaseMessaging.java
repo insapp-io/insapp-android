@@ -10,8 +10,8 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -152,7 +152,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             remoteViews.setTextViewText(R.id.notification_title, title);
             remoteViews.setTextViewText(R.id.notification_content, notification.getMessage());
 
-            builder = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(this)
+            builder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.ic_stat_notify)
                     .setCustomContentView(remoteViews)
                     .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
@@ -260,7 +260,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             }
         }
         else {
-            builder = (android.support.v7.app.NotificationCompat.Builder) new NotificationCompat.Builder(this)
+            builder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(title)
                     .setContentText(notification.getMessage())

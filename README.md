@@ -1,5 +1,5 @@
 # Insapp
-Android version of insapp, material friendly. Related repositories : [iOS version](https://github.com/fthomasmorel/insapp-iOS), [backend](https://github.com/tomatrocho/insapp-go).
+Android version of insapp, material friendly. Related repositories : [iOS version](https://github.com/fthomasmorel/insapp-iOS), [backend](https://github.com/tomatrocho/insapp-server).
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
       alt="Download from Google Play" 
@@ -35,6 +35,6 @@ We encourage you to contribute to this project either by [_creating a PR_](https
 
 ## License
 
-> Copyright (c) 2017 Thomas Bouvier & Antoine Crochet
+> Copyright (c) 2018 Thomas Bouvier & Antoine Crochet
 > Licensed under the [MIT](https://en.wikipedia.org/wiki/MIT_License) license.  
 > See the [LICENSE](https://github.com/tomatrocho/insapp-android/blob/master/LICENSE) file for the whole license text.

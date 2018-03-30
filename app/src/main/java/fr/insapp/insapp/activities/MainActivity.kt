@@ -8,17 +8,14 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.customtabs.CustomTabsClient
-import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.AppCompatCheckBox
 import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import fr.insapp.insapp.App
 import fr.insapp.insapp.BuildConfig
 import fr.insapp.insapp.R
@@ -30,13 +27,14 @@ import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.notifications.FirebaseMessaging
 import fr.insapp.insapp.utility.CustomTabsConnection
 import fr.insapp.insapp.utility.Utils
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        @JvmField val dev = BuildConfig.DEBUG
+        const val dev = BuildConfig.DEBUG
 
         @JvmField var customTabsConnection: CustomTabsConnection? = null
     }
@@ -65,24 +63,17 @@ class MainActivity : AppCompatActivity() {
 
         // toolbar
 
-        val toolbar = findViewById<View>(R.id.toolbar_main) as Toolbar
-        try {
-            setSupportActionBar(toolbar)
-            supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-            supportActionBar!!.setTitle(Utils.getUser().username)
-        } catch (ex: NullPointerException) {
-            ex.printStackTrace()
-        }
+        setSupportActionBar(toolbar_main)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setTitle(Utils.getUser().username)
 
         // view pager
 
-        val viewPager = findViewById<View>(R.id.viewpager) as ViewPager
-        setupViewPager(viewPager)
+        setupViewPager(viewpager)
 
         // tab layout
 
-        val tabLayout = findViewById<View>(R.id.tabs) as TabLayout
-        tabLayout.setupWithViewPager(viewPager)
+        tabs.setupWithViewPager(viewpager)
 
         // custom tabs optimization
 
@@ -96,10 +87,11 @@ class MainActivity : AppCompatActivity() {
         // topic notifications
 
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
-        if (defaultSharedPreferences.getBoolean("notifications", true))
+        if (defaultSharedPreferences.getBoolean("notifications", true)) {
             FirebaseMessaging.subscribeToTopics()
-        else
+        } else {
             FirebaseMessaging.unsubscribeFromTopics()
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

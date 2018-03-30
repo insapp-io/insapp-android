@@ -2,13 +2,10 @@ package fr.insapp.insapp.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.view.View
-import android.webkit.WebView
-
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
+import kotlinx.android.synthetic.main.activity_legal_conditions.*
 
 /**
  * Created by thomas on 13/12/2016.
@@ -20,13 +17,11 @@ class LegalConditionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_legal_conditions)
 
-        val toolbar = findViewById<View>(R.id.toolbar_conditions) as Toolbar
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setHomeButtonEnabled(true)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(toolbar_conditions)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val webView = findViewById<View>(R.id.webview_conditions) as WebView
-        webView.loadUrl(ServiceGenerator.ROOT_URL + "legal")
+        webview_conditions.loadUrl(ServiceGenerator.ROOT_URL + "legal")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

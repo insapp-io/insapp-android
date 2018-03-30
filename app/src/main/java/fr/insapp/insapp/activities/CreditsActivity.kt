@@ -2,13 +2,10 @@ package fr.insapp.insapp.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.view.View
-import android.webkit.WebView
-
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
+import kotlinx.android.synthetic.main.activity_credits.*
 
 /**
  * Created by thomas on 13/12/2016.
@@ -20,13 +17,11 @@ class CreditsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credits)
 
-        val toolbar = findViewById<View>(R.id.toolbar_credits) as Toolbar
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setHomeButtonEnabled(true)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        val webView = findViewById<View>(R.id.webview_credits) as WebView
-        webView.loadUrl(ServiceGenerator.ROOT_URL + "credit")
+        setSupportActionBar(toolbar_credits)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        
+        webview_credits.loadUrl(ServiceGenerator.ROOT_URL + "credit")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

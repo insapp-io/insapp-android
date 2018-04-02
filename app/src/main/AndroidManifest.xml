@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-            android:name=".activities.SigninActivity"
+            android:name=".activities.SignInActivity"
             android:label="@string/login"
             android:parentActivityName=".activities.IntroActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">

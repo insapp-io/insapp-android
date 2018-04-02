@@ -159,10 +159,10 @@ class PostActivity : AppCompatActivity() {
                     club = response.body()
 
                     Glide
-                            .with(this@PostActivity)
-                            .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
-                            .transition(withCrossFade())
-                            .into(post_club_avatar)
+                        .with(this@PostActivity)
+                        .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
+                        .transition(withCrossFade())
+                        .into(post_club_avatar)
 
                     // listener
 

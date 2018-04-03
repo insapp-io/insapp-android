@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setTitle(Utils.getUser().username)
+        supportActionBar?.title = Utils.getUser().username
 
         // view pager
 

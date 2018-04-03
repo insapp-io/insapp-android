@@ -98,8 +98,8 @@ class EventActivity : AppCompatActivity() {
         event_participants_layout.setOnClickListener {
             val intent = Intent(this@EventActivity, AttendeesActivity::class.java)
 
-            intent.putExtra("attendees", event!!.attendees as ArrayList<String>)
-            intent.putExtra("maybe", event!!.maybe as ArrayList<String>)
+            intent.putExtra("attendees", event!!.attendees as? ArrayList<String>)
+            intent.putExtra("maybe", event!!.maybe as? ArrayList<String>)
 
             startActivity(intent)
         }

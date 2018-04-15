@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        const val dev = BuildConfig.DEBUG
+        @JvmField val dev = BuildConfig.DEBUG
 
         @JvmField var customTabsConnection: CustomTabsConnection? = null
     }

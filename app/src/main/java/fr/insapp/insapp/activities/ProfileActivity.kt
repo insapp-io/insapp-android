@@ -118,12 +118,9 @@ class ProfileActivity : AppCompatActivity() {
         Linkify.addLinks(profile_email, Linkify.EMAIL_ADDRESSES)
         profile_email.setLinkTextColor(Color.parseColor("#ffffff"))
 
-        // barcode
+        // data generation
 
         generateBarcode()
-
-        //  events
-
         generateEvents()
     }
 

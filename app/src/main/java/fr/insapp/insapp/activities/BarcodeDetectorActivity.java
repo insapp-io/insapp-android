@@ -175,11 +175,11 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                return true;
+            finish();
+            return true;
 
             default:
-                return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -231,25 +231,25 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
         Barcode best = null;
         float bestDistance = Float.MAX_VALUE;
         for (BarcodeGraphic graphic : graphicOverlay.getGraphics()) {
-            Barcode barcode = graphic.getBarcode();
+        Barcode barcode = graphic.getBarcode();
 
-            if (barcode.getBoundingBox().contains((int) x, (int) y)) {
+        if (barcode.getBoundingBox().contains((int) x, (int) y)) {
 
-                // exact hit, no need to keep looking
+            // exact hit, no need to keep looking
 
-                best = barcode;
-                break;
-            }
-
-            float dx = x - barcode.getBoundingBox().centerX();
-            float dy = y - barcode.getBoundingBox().centerY();
-            float distance = (dx * dx) + (dy * dy);  // actually squared distance
-
-            if (distance < bestDistance) {
-                best = barcode;
-                bestDistance = distance;
-            }
+            best = barcode;
+            break;
         }
+
+        float dx = x - barcode.getBoundingBox().centerX();
+        float dy = y - barcode.getBoundingBox().centerY();
+        float distance = (dx * dx) + (dy * dy);  // actually squared distance
+
+        if (distance < bestDistance) {
+            best = barcode;
+            bestDistance = distance;
+        }
+    }
 
         if (best != null) {
             final SharedPreferences.Editor defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit();

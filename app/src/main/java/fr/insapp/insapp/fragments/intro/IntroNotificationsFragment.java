@@ -32,7 +32,7 @@ public class IntroNotificationsFragment extends Fragment {
         defaultSharedPreferences.putBoolean("notifications", true);
         defaultSharedPreferences.apply();
 
-        FirebaseMessaging.subscribeToTopics();
+        FirebaseMessaging.Companion.subscribeToTopics();
 
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -41,9 +41,9 @@ public class IntroNotificationsFragment extends Fragment {
                 defaultSharedPreferences.apply();
 
                 if (b)
-                    FirebaseMessaging.subscribeToTopics();
+                    FirebaseMessaging.Companion.subscribeToTopics();
                 else
-                    FirebaseMessaging.unsubscribeFromTopics();
+                    FirebaseMessaging.Companion.unsubscribeFromTopics();
             }
         });
 

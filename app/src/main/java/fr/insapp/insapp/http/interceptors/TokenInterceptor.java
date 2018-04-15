@@ -105,11 +105,11 @@ public class TokenInterceptor implements Interceptor {
     private void handleFirebaseTokenRegistration(Gson gson, SharedPreferences userPreferences) {
         final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
 
-        if (FirebaseService.SHOULD_REGISTER_TOKEN) {
+        if (FirebaseService.Companion.getSHOULD_REGISTER_TOKEN()) {
             if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
-                FirebaseService.SHOULD_REGISTER_TOKEN = false;
+                FirebaseService.Companion.setSHOULD_REGISTER_TOKEN(false);
 
-                FirebaseService.registerToken(firebaseCredentialsPreferences.getString("token", ""));
+                FirebaseService.Companion.registerToken(firebaseCredentialsPreferences.getString("token", ""));
             }
         }
     }

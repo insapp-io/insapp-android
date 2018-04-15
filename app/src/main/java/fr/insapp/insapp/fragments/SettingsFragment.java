@@ -102,9 +102,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 // notification change
 
                 if (sharedPreferences.getBoolean("notifications", true))
-                    FirebaseMessaging.subscribeToTopics();
+                    FirebaseMessaging.Companion.subscribeToTopics();
                 else
-                    FirebaseMessaging.unsubscribeFromTopics();
+                    FirebaseMessaging.Companion.unsubscribeFromTopics();
 
                 break;
 

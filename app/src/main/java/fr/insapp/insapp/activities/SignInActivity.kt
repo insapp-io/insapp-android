@@ -42,7 +42,7 @@ class SignInActivity : AppCompatActivity() {
 
         webview_conditions.loadUrl(CAS_URL)
         webview_conditions.webViewClient = object : WebViewClient() {
-            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap) {
+            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 val id = url.lastIndexOf("?ticket=")
                 if (url.contains("?ticket=")) {
                     val ticket = url.substring(id + "?ticket=".length, url.length)

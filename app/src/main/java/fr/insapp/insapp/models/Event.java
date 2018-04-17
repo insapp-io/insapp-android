@@ -73,7 +73,7 @@ public abstract class Event implements Parcelable, Comparable<Event> {
         UNDEFINED
     }
 
-    static Event create(String id, String name, String association, String description, List<String> attendees, List<String> maybe, List<String> notgoing, List<Comment> comments, String status, Date dateStart, Date dateEnd, String image, List<String> promotions, List<String> plateforms, String bgColor, String fgColor) {
+    public static Event create(String id, String name, String association, String description, List<String> attendees, List<String> maybe, List<String> notgoing, List<Comment> comments, String status, Date dateStart, Date dateEnd, String image, List<String> promotions, List<String> plateforms, String bgColor, String fgColor) {
         return new AutoParcelGson_Event(id, name, association, description, attendees, maybe, notgoing, comments, status, dateStart, dateEnd, image, promotions, plateforms, bgColor, fgColor);
     }
 

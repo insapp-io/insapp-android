@@ -11,7 +11,6 @@ import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.Parcelable
 import android.provider.CalendarContract
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
@@ -49,7 +48,7 @@ import java.util.*
 
 class EventActivity : AppCompatActivity() {
 
-    private var event: Event? = null
+    private lateinit var event: Event
 
     private var status: Event.PARTICIPATE = Event.PARTICIPATE.UNDEFINED
 
@@ -60,25 +59,45 @@ class EventActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
 
+        val user = Utils.getUser()
+
         // event
 
-        val intent = intent
-        this.event = intent.getParcelableExtra("event")
-
-        val user = Utils.getUser()
+        if (intent.getParcelableExtra<Post>("event") != null) {
+            this.event = intent.getParcelableExtra("event")
+        } else
+            // notification
+            this.event = Event.create(
+                intent.getStringExtra("ID"),
+                intent.getStringExtra("name"),
+                intent.getStringExtra("association"),
+                intent.getStringExtra("description"),
+                intent.getStringArrayListExtra("participants"),
+                intent.getStringArrayListExtra("maybe"),
+                intent.getStringArrayListExtra("notgoing"),
+                intent.getParcelableArrayListExtra("comments"),
+                intent.getStringExtra("status"),
+                Utils.parseMongoDate(intent.getStringExtra("dateStart")),
+                Utils.parseMongoDate(intent.getStringExtra("dateEnd")),
+                intent.getStringExtra("image"),
+                intent.getStringArrayListExtra("promotions"),
+                intent.getStringArrayListExtra("plateforms"),
+                intent.getStringExtra("bgColor"),
+                intent.getStringExtra("fgColor")
+        )
 
         // Answers
 
         Answers.getInstance().logContentView(ContentViewEvent()
-                .putContentId(event!!.id)
-                .putContentName(event!!.name)
+                .putContentId(event.id)
+                .putContentName(event.name)
                 .putContentType("Event")
-                .putCustomAttribute("Attendees count", if (event!!.attendees == null) 0 else event!!.attendees.size)
-                .putCustomAttribute("Interested count", if (event!!.maybe == null) 0 else event!!.maybe.size))
+                .putCustomAttribute("Attendees count", if (event.attendees == null) 0 else event!!.attendees.size)
+                .putCustomAttribute("Interested count", if (event.maybe == null) 0 else event!!.maybe.size))
 
         // mark notification as seen
 
-        if (intent.getParcelableExtra<Parcelable>("notification") != null) {
+        if (intent.getParcelableExtra<Notification>("notification") != null) {
             val notification = intent.getParcelableExtra<Notification>("notification")
 
             val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
@@ -96,12 +115,12 @@ class EventActivity : AppCompatActivity() {
         }
 
         event_participants_layout.setOnClickListener {
-            val intent = Intent(this@EventActivity, AttendeesActivity::class.java)
+            val newIntent = Intent(this@EventActivity, AttendeesActivity::class.java)
 
-            intent.putExtra("attendees", event!!.attendees as? ArrayList<String>)
-            intent.putExtra("maybe", event!!.maybe as? ArrayList<String>)
+            newIntent.putExtra("attendees", event.attendees as? ArrayList<String>)
+            newIntent.putExtra("maybe", event.maybe as? ArrayList<String>)
 
-            startActivity(intent)
+            startActivity(newIntent)
         }
 
         // toolbar
@@ -112,8 +131,8 @@ class EventActivity : AppCompatActivity() {
 
         // dynamic color
 
-        this.bgColor = Color.parseColor("#" + event!!.bgColor)
-        this.fgColor = Color.parseColor("#" + event!!.fgColor)
+        this.bgColor = Color.parseColor("#" + event.bgColor)
+        this.fgColor = Color.parseColor("#" + event.fgColor)
 
         // view pager
 
@@ -138,7 +157,7 @@ class EventActivity : AppCompatActivity() {
 
         // floating action menu
 
-        this.status = event!!.getStatusForUser(user.id)
+        this.status = event.getStatusForUser(user.id)
 
         // fab style
 
@@ -148,7 +167,7 @@ class EventActivity : AppCompatActivity() {
         // hide fab is event is past
 
         val atm = Calendar.getInstance().time
-        if (event!!.dateEnd.time < atm.time) {
+        if (event.dateEnd.time < atm.time) {
             fab_participate_event?.visibility = View.GONE
         }
 
@@ -224,7 +243,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_1_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.NO, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event!!.id, user.id, "going")
+                    val call = ServiceGenerator.create().addParticipant(event.id, user.id, "going")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
@@ -287,7 +306,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_2_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.NO, Event.PARTICIPATE.YES, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event!!.id, user.id, "maybe")
+                    val call = ServiceGenerator.create().addParticipant(event.id, user.id, "maybe")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
@@ -328,7 +347,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_3_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.YES, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event!!.id, user.id, "notgoing")
+                    val call = ServiceGenerator.create().addParticipant(event.id, user.id, "notgoing")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
@@ -374,7 +393,7 @@ class EventActivity : AppCompatActivity() {
 
         Glide
             .with(this)
-            .load(ServiceGenerator.CDN_URL + event!!.image)
+            .load(ServiceGenerator.CDN_URL + event.image)
             .into(header_image_event)
 
         event_info?.setBackgroundColor(bgColor)
@@ -391,7 +410,7 @@ class EventActivity : AppCompatActivity() {
                 }
 
                 if (scrollRange + verticalOffset == 0) {
-                    collapsing_toolbar_event.title = event!!.name
+                    collapsing_toolbar_event.title = event.name
                     isShow = true
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -420,7 +439,7 @@ class EventActivity : AppCompatActivity() {
 
         event_club_icon?.setColorFilter(fgColor)
 
-        val call = ServiceGenerator.create().getClubFromId(event!!.association)
+        val call = ServiceGenerator.create().getClubFromId(event.association)
         call.enqueue(object : Callback<Club> {
             override fun onResponse(call: Call<Club>, response: Response<Club>) {
                 if (response.isSuccessful) {
@@ -451,22 +470,22 @@ class EventActivity : AppCompatActivity() {
         val format = SimpleDateFormat("EEEE dd/MM", Locale.FRANCE)
         val formatHoursMinutes = SimpleDateFormat("HH:mm", Locale.FRANCE)
 
-        val diffInDays = ((event!!.dateEnd.time - event!!.dateStart.time) / (1000 * 60 * 60 * 24)).toInt()
-        if (diffInDays < 1 && event!!.dateStart.month == event!!.dateEnd.month) {
-            val day = format.format(event!!.dateStart)
+        val diffInDays = ((event.dateEnd.time - event.dateStart.time) / (1000 * 60 * 60 * 24)).toInt()
+        if (diffInDays < 1 && event.dateStart.month == event.dateEnd.month) {
+            val day = format.format(event.dateStart)
 
             event_date_text?.text = String.format(resources.getString(R.string.event_date_inf),
                     day.replaceFirst(".".toRegex(), (day[0] + "").toUpperCase()),
-                    formatHoursMinutes.format(event!!.dateStart),
-                    formatHoursMinutes.format(event!!.dateEnd))
+                    formatHoursMinutes.format(event.dateStart),
+                    formatHoursMinutes.format(event.dateEnd))
         } else {
             val start = String.format(resources.getString(R.string.event_date_sup_start_end),
-                    format.format(event!!.dateStart),
-                    formatHoursMinutes.format(event!!.dateStart))
+                    format.format(event.dateStart),
+                    formatHoursMinutes.format(event.dateStart))
 
             val end = String.format(resources.getString(R.string.event_date_sup_start_end),
-                    format.format(event!!.dateEnd),
-                    formatHoursMinutes.format(event!!.dateEnd))
+                    format.format(event.dateEnd),
+                    formatHoursMinutes.format(event.dateEnd))
 
             event_date_text?.text = String.format(resources.getString(R.string.event_date_sup),
                     start.replaceFirst(".".toRegex(), (start[0] + "").toUpperCase()),
@@ -518,8 +537,8 @@ class EventActivity : AppCompatActivity() {
     }
 
     fun refreshAttendeesTextView() {
-        val nbParticipants = if (event!!.attendees == null) 0 else event!!.attendees.size
-        val nbInterested = if (event!!.maybe == null) 0 else event!!.maybe.size
+        val nbParticipants = if (event.attendees == null) 0 else event.attendees.size
+        val nbInterested = if (event.maybe == null) 0 else event.maybe.size
 
         when (nbParticipants) {
             0 -> when (nbInterested) {
@@ -572,11 +591,11 @@ class EventActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_EDIT)
         intent.type = "vnd.android.cursor.item/event"
 
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event!!.dateStart.time)
-        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event!!.dateEnd.time)
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.dateStart.time)
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.dateEnd.time)
         intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-        intent.putExtra(CalendarContract.Events.TITLE, event!!.name)
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, event!!.description)
+        intent.putExtra(CalendarContract.Events.TITLE, event.name)
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, event.description)
 
         startActivity(intent)
     }

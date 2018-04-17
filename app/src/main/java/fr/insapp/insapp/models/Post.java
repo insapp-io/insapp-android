@@ -57,15 +57,15 @@ public abstract class Post implements Parcelable {
     @SerializedName("nonotification")
     abstract boolean noNotification();
 
-    static Post create(String id, String title, String association, String description, Date date, List<String> likes, List<Comment> comments, List<String> promotions, List<String> plateforms, String image, ImageSize imageSize, boolean noNotification) {
+    public static Post create(String id, String title, String association, String description, Date date, List<String> likes, List<Comment> comments, List<String> promotions, List<String> plateforms, String image, ImageSize imageSize, boolean noNotification) {
         return new AutoParcelGson_Post(id, title, association, description, date, likes, comments, promotions, plateforms, image, imageSize, noNotification);
     }
 
     public boolean isPostLikedBy(String userID) {
-        for (String idUser : likes()) {
-            if (idUser.equals(userID))
-                return true;
-        }
+        if (likes() != null)
+            for (String idUser : likes())
+                if (idUser.equals(userID))
+                    return true;
 
         return false;
     }

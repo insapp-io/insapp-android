@@ -92,8 +92,8 @@ class EventActivity : AppCompatActivity() {
                 .putContentId(event.id)
                 .putContentName(event.name)
                 .putContentType("Event")
-                .putCustomAttribute("Attendees count", if (event.attendees == null) 0 else event!!.attendees.size)
-                .putCustomAttribute("Interested count", if (event.maybe == null) 0 else event!!.maybe.size))
+                .putCustomAttribute("Attendees count", if (event.attendees == null) 0 else event.attendees.size)
+                .putCustomAttribute("Interested count", if (event.maybe == null) 0 else event.maybe.size))
 
         // mark notification as seen
 
@@ -136,12 +136,12 @@ class EventActivity : AppCompatActivity() {
 
         // view pager
 
-        setupViewPager(viewpager_event, bgColor)
+        setupViewPager(viewpager_event)
 
         if (fgColor != -0x1) {
-            setupViewPager(viewpager_event, fgColor)
+            setupViewPager(viewpager_event)
         } else {
-            setupViewPager(viewpager_event, bgColor)
+            setupViewPager(viewpager_event)
         }
 
         // tab layout
@@ -174,7 +174,7 @@ class EventActivity : AppCompatActivity() {
         generateEvent()
     }
 
-    private fun setupViewPager(viewPager: ViewPager, swipeColor: Int) {
+    private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
 
         val aboutFragment = AboutFragment()
@@ -189,7 +189,7 @@ class EventActivity : AppCompatActivity() {
         val bundle2 = Bundle()
         bundle2.putParcelable("event", event)
         commentsEventFragment.arguments = bundle2
-        adapter.addFragment(commentsEventFragment, String.format(resources.getString(R.string.x_comments), event!!.comments.size))
+        adapter.addFragment(commentsEventFragment, String.format(resources.getString(R.string.x_comments), event.comments.size))
 
         viewPager.adapter = adapter
     }
@@ -378,17 +378,17 @@ class EventActivity : AppCompatActivity() {
 
         /*
         Glide
-                .with(this)
-                .load(ServiceGenerator.CDN_URL + event.getImage())
-                .asBitmap()
-                .into(new BitmapImageViewTarget(headerImageView) {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                        super.onResourceReady(bitmap, anim);
+            .with(this)
+            .load(ServiceGenerator.CDN_URL + event.getImage())
+            .asBitmap()
+            .into(new BitmapImageViewTarget(headerImageView) {
+                @Override
+                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                    super.onResourceReady(bitmap, anim);
 
-                        headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
-                    }
-                });
+                    headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
+                }
+            });
         */
 
         Glide
@@ -469,9 +469,15 @@ class EventActivity : AppCompatActivity() {
 
         val format = SimpleDateFormat("EEEE dd/MM", Locale.FRANCE)
         val formatHoursMinutes = SimpleDateFormat("HH:mm", Locale.FRANCE)
-
         val diffInDays = ((event.dateEnd.time - event.dateStart.time) / (1000 * 60 * 60 * 24)).toInt()
-        if (diffInDays < 1 && event.dateStart.month == event.dateEnd.month) {
+
+        val calendar = Calendar.getInstance()
+        calendar.time = event.dateStart
+        val dateStartMonth = calendar.get(Calendar.MONTH)
+        calendar.time = event.dateStart
+        val dateEndMonth = calendar.get(Calendar.MONTH)
+
+        if (diffInDays < 1 && dateStartMonth == dateEndMonth) {
             val day = format.format(event.dateStart)
 
             event_date_text?.text = String.format(resources.getString(R.string.event_date_inf),

@@ -2,14 +2,16 @@ package fr.insapp.insapp.notifications
 
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.media.RingtoneManager
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import java.util.*
 
@@ -27,21 +29,31 @@ class FirebaseMessaging : FirebaseMessagingService() {
 
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(FirebaseService.TAG, "Data: " + remoteMessage.data)
+
+            val notification = remoteMessage.notification
+            sendNotification(notification?.title, notification?.body, notification?.clickAction, remoteMessage.data)
         }
     }
 
-    private fun sendNotification(title: String, body: String) {
+    private fun sendNotification(title: String?, body: String?, clickAction: String?, data: Map<String, String>?) {
+        val intent = Intent(clickAction)
+        data?.forEach { key, value -> intent.putExtra(key, value) }
+
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
         val manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager;
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, "channel");
 
         builder
                 .setDefaults(Notification.DEFAULT_ALL)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.drawable.ic_stat_notify)
                 .setAutoCancel(true)
                 .setLights(Color.RED, 500, 1000)
-                .setColor(ContextCompat.getColor(App.getAppContext(), R.color.colorPrimary))
+                .setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                 .setContentTitle(title)
                 .setContentText(body)
+                .setContentIntent(pendingIntent);
 
         manager.notify(randomNotificationId, builder.build());
     }

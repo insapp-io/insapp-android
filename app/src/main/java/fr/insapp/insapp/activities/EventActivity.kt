@@ -61,30 +61,60 @@ class EventActivity : AppCompatActivity() {
 
         val user = Utils.getUser()
 
+        // toolbar
+
+        setSupportActionBar(toolbar_event)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         // event
 
-        if (intent.getParcelableExtra<Post>("event") != null) {
+        if (intent.getParcelableExtra<Event>("event") != null) {
+            // coming from navigation
+
             this.event = intent.getParcelableExtra("event")
-        } else
-            // notification
-            this.event = Event.create(
-                intent.getStringExtra("ID"),
-                intent.getStringExtra("name"),
-                intent.getStringExtra("association"),
-                intent.getStringExtra("description"),
-                intent.getStringArrayListExtra("participants"),
-                intent.getStringArrayListExtra("maybe"),
-                intent.getStringArrayListExtra("notgoing"),
-                intent.getParcelableArrayListExtra("comments"),
-                intent.getStringExtra("status"),
-                Utils.parseMongoDate(intent.getStringExtra("dateStart")),
-                Utils.parseMongoDate(intent.getStringExtra("dateEnd")),
-                intent.getStringExtra("image"),
-                intent.getStringArrayListExtra("promotions"),
-                intent.getStringArrayListExtra("plateforms"),
-                intent.getStringExtra("bgColor"),
-                intent.getStringExtra("fgColor")
-        )
+            generateActivity()
+
+            // mark notification as seen
+
+            if (intent.getParcelableExtra<Notification>("notification") != null) {
+                val notification = intent.getParcelableExtra<Notification>("notification")
+
+                val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                call.enqueue(object : Callback<Notifications> {
+                    override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
+                        if (!response.isSuccessful) {
+                            Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Notifications>, t: Throwable) {
+                        Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                    }
+                })
+            }
+        } else {
+            // coming from notification
+
+            val call = ServiceGenerator.create().getEventFromId(intent.getStringExtra("ID"))
+            call.enqueue(object : Callback<Event> {
+                override fun onResponse(call: Call<Event>, response: Response<Event>) {
+                    if (response.isSuccessful) {
+                        event = response.body()!!
+                        generateActivity()
+                    } else
+                        Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onFailure(call: Call<Event>, t: Throwable) {
+                    Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                }
+            })
+        }
+    }
+
+    private fun generateActivity() {
+        val user = Utils.getUser()
 
         // Answers
 
@@ -95,25 +125,6 @@ class EventActivity : AppCompatActivity() {
                 .putCustomAttribute("Attendees count", if (event.attendees == null) 0 else event.attendees.size)
                 .putCustomAttribute("Interested count", if (event.maybe == null) 0 else event.maybe.size))
 
-        // mark notification as seen
-
-        if (intent.getParcelableExtra<Notification>("notification") != null) {
-            val notification = intent.getParcelableExtra<Notification>("notification")
-
-            val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
-            call.enqueue(object : Callback<Notifications> {
-                override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                    if (!response.isSuccessful) {
-                        Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                    Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
-                }
-            })
-        }
-
         event_participants_layout.setOnClickListener {
             val newIntent = Intent(this@EventActivity, AttendeesActivity::class.java)
 
@@ -122,12 +133,6 @@ class EventActivity : AppCompatActivity() {
 
             startActivity(newIntent)
         }
-
-        // toolbar
-
-        setSupportActionBar(toolbar_event)
-        supportActionBar?.setHomeButtonEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // dynamic color
 

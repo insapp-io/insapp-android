@@ -2,10 +2,7 @@ package fr.insapp.insapp.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.PorterDuff
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.util.Linkify
@@ -46,27 +43,61 @@ class PostActivity : AppCompatActivity() {
 
         val user = Utils.getUser()
 
+        // toolbar
+
+        setSupportActionBar(post_toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         // post
 
         if (intent.getParcelableExtra<Post>("post") != null) {
-            // normal click
+            // coming from navigation
+
             this.post = intent.getParcelableExtra("post")
-        } else
-            // notification
-            this.post = Post.create(
-                intent.getStringExtra("ID"),
-                intent.getStringExtra("title"),
-                intent.getStringExtra("association"),
-                intent.getStringExtra("description"),
-                Utils.parseMongoDate(intent.getStringExtra("date")),
-                intent.getStringArrayListExtra("likes"),
-                intent.getParcelableArrayListExtra("comments"),
-                intent.getStringArrayListExtra("promotions"),
-                intent.getStringArrayListExtra("plateforms"),
-                intent.getStringExtra("image"),
-                intent.getParcelableExtra("imageSize"),
-                intent.getStringExtra("nonotification").toBoolean()
-        )
+            generateActivity()
+
+            // mark notification as seen
+
+            if (intent.getParcelableExtra<Notification>("notification") != null) {
+                val notification = intent.getParcelableExtra<Notification>("notification")
+
+                val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                call.enqueue(object : Callback<Notifications> {
+                    override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
+                        if (!response.isSuccessful) {
+                            Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<Notifications>, t: Throwable) {
+                        Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                    }
+                })
+            }
+        } else {
+            // coming from notification
+
+            val call = ServiceGenerator.create().getPostFromId(intent.getStringExtra("ID"))
+            call.enqueue(object : Callback<Post> {
+                override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                    if (response.isSuccessful) {
+                        post = response.body()!!
+                        generateActivity()
+                    }
+                    else
+                        Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onFailure(call: Call<Post>, t: Throwable) {
+                    Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                }
+            })
+        }
+    }
+
+    private fun generateActivity() {
+        val user = Utils.getUser()
 
         // Answers
 
@@ -82,37 +113,6 @@ class PostActivity : AppCompatActivity() {
         if (post.imageSize == null || post.image.isEmpty()) {
             post_placeholder?.visibility = View.GONE
             post_image?.visibility = View.GONE
-        }
-
-        // mark notification as seen
-
-        if (intent.getParcelableExtra<Notification>("notification") != null) {
-            val notification = intent.getParcelableExtra<Notification>("notification")
-
-            val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
-            call.enqueue(object : Callback<Notifications> {
-                override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                    if (!response.isSuccessful) {
-                        Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                    Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
-                }
-            })
-        }
-
-        // toolbar
-
-        setSupportActionBar(post_toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val upArrow = ContextCompat.getDrawable(this@PostActivity, R.drawable.abc_ic_ab_back_material)
-            upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
-            supportActionBar?.setHomeAsUpIndicator(upArrow)
         }
 
         // like button
@@ -164,10 +164,6 @@ class PostActivity : AppCompatActivity() {
             }
         })
 
-        generateActivity()
-    }
-
-    private fun generateActivity() {
         val call = ServiceGenerator.create().getClubFromId(post.association)
         call.enqueue(object : Callback<Club> {
             override fun onResponse(call: Call<Club>, response: Response<Club>) {
@@ -205,7 +201,7 @@ class PostActivity : AppCompatActivity() {
         // adapter
 
         this.adapter = CommentRecyclerViewAdapter(this@PostActivity, Glide.with(this), post.comments)
-        adapter!!.setOnItemLongClickListener(PostCommentLongClickListener(this@PostActivity, post, adapter))
+        adapter.setOnItemLongClickListener(PostCommentLongClickListener(this@PostActivity, post, adapter))
 
         // edit comment
 
@@ -222,8 +218,6 @@ class PostActivity : AppCompatActivity() {
         recyclerview_comments_post.adapter = adapter
 
         // retrieve the avatar of the user
-
-        val user = Utils.getUser()
 
         val id = resources.getIdentifier(Utils.drawableProfileName(user.promotion, user.gender), "drawable", packageName)
         Glide

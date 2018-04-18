@@ -36,7 +36,7 @@
                     android:layout_height="156dp"
                     android:scaleType="centerCrop"
                     android:background="#ff7f7f7f"
-                    android:fitsSystemWindows="true"/>
+                    android:fitsSystemWindows="true" />
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar

@@ -105,8 +105,8 @@ class PostActivity : AppCompatActivity() {
                 .putContentId(post.id)
                 .putContentName(post.title)
                 .putContentType("Post")
-                .putCustomAttribute("Favorites count", post.likes.size)
-                .putCustomAttribute("Comments count", post.comments.size))
+                .putCustomAttribute("Favorites count", post.likes?.size ?: 0)
+                .putCustomAttribute("Comments count", post.comments?.size ?: 0))
 
         // hide image if necessary
 
@@ -118,7 +118,7 @@ class PostActivity : AppCompatActivity() {
         // like button
 
         post_like_button?.isLiked = post.isPostLikedBy(user.id)
-        post_like_counter?.text = post.likes.size.toString()
+        post_like_counter?.text = post.likes?.size?.toString() ?: "0"
 
         post_like_button?.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {

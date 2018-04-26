@@ -17,21 +17,27 @@ import kotlinx.android.synthetic.main.fragment_intro_events.*
 
 class IntroEventsFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_intro_events, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
-
-        checkbox_enable_calendar.isChecked = false
-
         defaultSharedPreferences.putBoolean("calendar", false)
         defaultSharedPreferences.apply()
+    }
 
-        checkbox_enable_calendar.setOnCheckedChangeListener { _, b ->
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_intro_events, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        checkbox_enable_calendar?.isChecked = false
+
+        checkbox_enable_calendar?.setOnCheckedChangeListener { _, b ->
+            val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
             defaultSharedPreferences.putBoolean("calendar", b)
             defaultSharedPreferences.apply()
         }
-
-        return rootView
     }
 }

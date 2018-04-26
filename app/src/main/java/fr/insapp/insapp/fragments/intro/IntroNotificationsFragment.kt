@@ -2,11 +2,9 @@ package fr.insapp.insapp.fragments.intro
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.notifications.FirebaseMessaging
@@ -18,19 +16,27 @@ import kotlinx.android.synthetic.main.fragment_intro_notifications.*
 
 class IntroNotificationsFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_intro_notifications, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
-
-        checkbox_enable_notifications.isChecked = true
-
+        val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
         defaultSharedPreferences.putBoolean("notifications", true)
         defaultSharedPreferences.apply()
 
         FirebaseMessaging.subscribeToTopics()
+    }
 
-        checkbox_enable_notifications.setOnCheckedChangeListener { _, b ->
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_intro_notifications, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        checkbox_enable_notifications?.isChecked = true
+
+        checkbox_enable_notifications?.setOnCheckedChangeListener { _, b ->
+            val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
             defaultSharedPreferences.putBoolean("notifications", b)
             defaultSharedPreferences.apply()
 
@@ -39,7 +45,5 @@ class IntroNotificationsFragment : Fragment() {
             else
                 FirebaseMessaging.unsubscribeFromTopics()
         }
-
-        return rootView
     }
 }

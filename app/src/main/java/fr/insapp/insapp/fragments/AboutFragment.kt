@@ -30,12 +30,14 @@ class AboutFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_event_about, container, false)
+        return inflater.inflate(R.layout.fragment_event_about, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         event_description.text = event!!.description
         Linkify.addLinks(event_description, Linkify.ALL)
         Utils.convertToLinkSpan(context, event_description)
-
-        return view
     }
 }

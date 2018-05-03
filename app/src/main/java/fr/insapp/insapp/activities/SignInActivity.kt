@@ -5,12 +5,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.Settings
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.webkit.CookieManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 
 import fr.insapp.insapp.App
@@ -37,12 +36,16 @@ class SignInActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        //refresh_webpage.setOnRefreshListener(this)
+
         val cookieManager = CookieManager.getInstance()
         cookieManager.removeSessionCookie()
 
         webview_conditions.loadUrl(CAS_URL)
         webview_conditions.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+                progress_bar.visibility = View.VISIBLE
+
                 val id = url.lastIndexOf("?ticket=")
                 if (url.contains("?ticket=")) {
                     val ticket = url.substring(id + "?ticket=".length, url.length)
@@ -53,6 +56,17 @@ class SignInActivity : AppCompatActivity() {
                     signin(ticket)
                     webview_conditions.visibility = View.INVISIBLE
                 }
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                progress_bar.visibility = View.GONE
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                // TODO : Gérer l'affichage
+                //progress_bar.visibility = View.GONE
             }
         }
     }
@@ -101,4 +115,5 @@ class SignInActivity : AppCompatActivity() {
             }
         })
     }
+
 }

@@ -136,6 +136,8 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun generateEvents() {
         clearEvents()
 
+        progress_bar.visibility = View.VISIBLE
+
         val call = ServiceGenerator.create().futureEvents
         call.enqueue(object : Callback<List<Event>> {
             override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
@@ -143,16 +145,21 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     val events = response.body()
                     val atm = Calendar.getInstance().time
 
-                    for (event in events!!) {
-                        if (event.dateEnd.time > atm.time) {
-                            if (filter_club_id != null) {
-                                if (filter_club_id == event.association) {
+                    if(events!!.isNotEmpty()){
+                        no_event.visibility = View.GONE
+                        for (event in events!!) {
+                            if (event.dateEnd.time > atm.time) {
+                                if (filter_club_id != null) {
+                                    if (filter_club_id == event.association) {
+                                        addEventToAdapter(event)
+                                    }
+                                } else {
                                     addEventToAdapter(event)
                                 }
-                            } else {
-                                addEventToAdapter(event)
                             }
                         }
+                    } else {
+                        no_event.visibility = View.VISIBLE
                     }
                 } else {
                     Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
@@ -164,7 +171,9 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
 
             override fun onFailure(call: Call<List<Event>>, t: Throwable) {
-                Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
+                Toast.makeText(App.getAppContext(), "EventsFragment - Veuillez vérifier votre connection internet", Toast.LENGTH_LONG).show()
+
+                progress_bar.visibility = View.INVISIBLE
 
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout!!.isRefreshing = false

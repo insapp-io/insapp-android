@@ -13,9 +13,24 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ToolbarStyle" />
 
+    <FrameLayout
+        android:id="@+id/layout_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
     <WebView
         android:id="@+id/webview_conditions"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
     </WebView>
+
 </LinearLayout>

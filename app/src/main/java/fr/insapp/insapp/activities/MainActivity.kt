@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         // Huawei protected apps
 
-        ifHuaweiAlert()
+        //ifHuaweiAlert()
 
         // topic notifications
 

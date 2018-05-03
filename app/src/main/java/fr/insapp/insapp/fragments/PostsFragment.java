@@ -106,8 +106,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         if (filter_club_id != null) {
             swipeRefreshLayout.setColorSchemeColors(swipeColor);
-        }
-        else {
+        } else {
             swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         }
 
@@ -143,13 +142,15 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
-                Toast.makeText(App.getAppContext(), "PostsFragment", Toast.LENGTH_LONG).show();
+                Toast.makeText(App.getAppContext(), "PostsFragment - Veuillez vérifier votre connection internet", Toast.LENGTH_LONG).show();
 
                 if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
 
-                progressBar.setVisibility(View.GONE);
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
     }

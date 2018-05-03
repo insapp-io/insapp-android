@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_no_network"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    tools:context=".fragments.NoNetwokFragment">
+
+    <ImageView
+        android:id="@+id/insa_server"
+        android:layout_width="match_parent"
+        android:layout_height="161dp"
+        android:src="@drawable/server" />
+
+    <ImageView
+        android:id="@+id/no_network"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:src="@drawable/wifi" />
+
+    <ImageView
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="134dp"
+        android:src="@drawable/intro_clubs" />
+
+    <TextView
+        android:id="@+id/text_no_network"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:text="Impossible de joindre les serveurs."
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/text_no_network_2"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:text="Veuillez vérifier votre connection à internet."
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+</LinearLayout>

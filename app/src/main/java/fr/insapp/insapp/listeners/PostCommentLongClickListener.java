@@ -39,7 +39,7 @@ public class PostCommentLongClickListener implements CommentRecyclerViewAdapter.
 
         // delete comment
 
-        if (Utils.getUser().getId().equals(comment.getUser())) {
+        if (Utils.INSTANCE.getUser().getId().equals(comment.getUser())) {
             alertDialogBuilder.setTitle(context.getResources().getString(R.string.delete_comment_action));
             alertDialogBuilder
                     .setMessage(R.string.delete_comment_are_you_sure)

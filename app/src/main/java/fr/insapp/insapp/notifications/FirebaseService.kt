@@ -37,9 +37,9 @@ class FirebaseService : FirebaseInstanceIdService() {
         var SHOULD_REGISTER_TOKEN = false
 
         fun registerToken(token: String) {
-            val user = Utils.getUser()
+            val user = Utils.user
 
-            val notificationUser = NotificationUser(null, user.id, token, "android")
+            val notificationUser = NotificationUser(null, user?.id, token, "android")
 
             val call = ServiceGenerator.create().registerNotification(notificationUser)
             call.enqueue(object : Callback<NotificationUser> {

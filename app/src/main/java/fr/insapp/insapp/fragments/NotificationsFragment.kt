@@ -82,9 +82,9 @@ class NotificationsFragment : Fragment() {
 
             // mark notification as seen
 
-            val user = Utils.getUser()
+            val user = Utils.user
 
-            val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+            val call = ServiceGenerator.create().markNotificationAsSeen(user?.id, notification.id)
             call.enqueue(object : Callback<Notifications> {
                 override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                     if (response.isSuccessful) {
@@ -118,9 +118,9 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun generateNotifications() {
-        val user = Utils.getUser()
+        val user = Utils.user
 
-        val call = ServiceGenerator.create().getNotificationsForUser(user.id)
+        val call = ServiceGenerator.create().getNotificationsForUser(user?.id)
         call.enqueue(object : Callback<Notifications> {
             override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                 if (response.isSuccessful) {

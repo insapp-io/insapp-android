@@ -66,7 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
                 // user change
 
-                final User user = Utils.getUser();
+                final User user = Utils.INSTANCE.getUser();
 
                 final User updatedUser = User.create(
                         user.getId(),

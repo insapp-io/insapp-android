@@ -57,9 +57,9 @@ class ProfileActivity : AppCompatActivity() {
         this.user = intent.getParcelableExtra("user")
 
         if (this.user == null) {
-            this.user = Utils.getUser()
+            this.user = Utils.user
             this.isOwner = true
-        } else if (this.user!!.id == Utils.getUser().id) {
+        } else if (this.user!!.id == Utils.user?.id) {
             this.isOwner = true
         }
 
@@ -199,7 +199,7 @@ class ProfileActivity : AppCompatActivity() {
                             .setMessage(R.string.delete_account_are_you_sure)
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.create().deleteUser(Utils.getUser().id)
+                                val call = ServiceGenerator.create().deleteUser(Utils.user?.id)
                                 call.enqueue(object : Callback<Void> {
                                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                         if (response.isSuccessful) {
@@ -279,12 +279,14 @@ class ProfileActivity : AppCompatActivity() {
 
                     for (i in 0 until adapter!!.itemCount) {
                         if (adapter!!.events[i].id == event.id) {
-                            val user = Utils.getUser()
+                            val user = Utils.user
 
-                            for (eventId in user.events) {
-                                if (eventId == event.id) {
-                                    adapter!!.updateEvent(i, event)
-                                    break
+                            if (user?.events != null) {
+                                for (eventId in user.events) {
+                                    if (eventId == event.id) {
+                                        adapter!!.updateEvent(i, event)
+                                        break
+                                    }
                                 }
                             }
 

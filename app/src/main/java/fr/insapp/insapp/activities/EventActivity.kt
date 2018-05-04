@@ -59,7 +59,7 @@ class EventActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event)
 
-        val user = Utils.getUser()
+        val user = Utils.user
 
         // toolbar
 
@@ -80,7 +80,7 @@ class EventActivity : AppCompatActivity() {
             if (intent.getParcelableExtra<Notification>("notification") != null) {
                 val notification = intent.getParcelableExtra<Notification>("notification")
 
-                val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                val call = ServiceGenerator.create().markNotificationAsSeen(user?.id, notification.id)
                 call.enqueue(object : Callback<Notifications> {
                     override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                         if (!response.isSuccessful) {
@@ -114,7 +114,7 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun generateActivity() {
-        val user = Utils.getUser()
+        val user = Utils.user
 
         // Answers
 
@@ -162,7 +162,7 @@ class EventActivity : AppCompatActivity() {
 
         // floating action menu
 
-        this.status = event.getStatusForUser(user.id)
+        this.status = event.getStatusForUser(user?.id)
 
         // fab style
 
@@ -232,7 +232,7 @@ class EventActivity : AppCompatActivity() {
     }
 
     private fun generateEvent() {
-        val user = Utils.getUser()
+        val user = Utils.user
 
         // fab 1: participate
 
@@ -248,7 +248,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_1_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.NO, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event.id, user.id, "going")
+                    val call = ServiceGenerator.create().addParticipant(event.id, user?.id, "going")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
@@ -311,7 +311,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_2_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.NO, Event.PARTICIPATE.YES, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event.id, user.id, "maybe")
+                    val call = ServiceGenerator.create().addParticipant(event.id, user?.id, "maybe")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
@@ -352,7 +352,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_3_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.YES, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event.id, user.id, "notgoing")
+                    val call = ServiceGenerator.create().addParticipant(event.id, user?.id, "notgoing")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {

@@ -51,7 +51,7 @@ android {
 
 ext {
     SUPPORT_LIB_VER = '27.1.1'
-    FIREBASE_LIB_VER = '15.0.0'
+    FIREBASE_LIB_VER = '12.0.1'
 }
 
 dependencies {
@@ -69,7 +69,6 @@ dependencies {
     implementation "com.android.support:customtabs:$SUPPORT_LIB_VER"
 
     implementation "com.google.android.gms:play-services-vision:$FIREBASE_LIB_VER"
-    implementation "com.google.firebase:firebase-core:$FIREBASE_LIB_VER"
     implementation "com.google.firebase:firebase-messaging:$FIREBASE_LIB_VER"
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'

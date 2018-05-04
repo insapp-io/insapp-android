@@ -75,7 +75,7 @@ public class TokenInterceptor implements Interceptor {
                     Crashlytics.logException(ex);
                     ex.printStackTrace();
 
-                    Utils.clearAndDisconnect();
+                    Utils.INSTANCE.clearAndDisconnect();
 
                     return response;
                 }
@@ -83,7 +83,7 @@ public class TokenInterceptor implements Interceptor {
                 // if the user has a new auth token, clearAndDisconnect him from current device
 
                 if (res.code() == 404) {
-                    Utils.clearAndDisconnect();
+                    Utils.INSTANCE.clearAndDisconnect();
 
                     return response;
                 }

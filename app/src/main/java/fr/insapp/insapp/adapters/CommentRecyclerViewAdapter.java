@@ -119,7 +119,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         holder.contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
         holder.contentTextView.setEnabled(true);
 
-        holder.dateTextView.setText(Utils.displayedDate(comment.getDate()));
+        holder.dateTextView.setText(Utils.INSTANCE.displayedDate(comment.getDate()));
 
         // user
 
@@ -130,7 +130,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                 if (response.isSuccessful()) {
                     final User user = response.body();
 
-                    final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                    final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                     requestManager
                             .load(id)
                             .transition(withCrossFade())

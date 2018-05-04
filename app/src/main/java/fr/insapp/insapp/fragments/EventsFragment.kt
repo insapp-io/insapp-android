@@ -145,9 +145,9 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     val events = response.body()
                     val atm = Calendar.getInstance().time
 
-                    if(events!!.isNotEmpty()){
+                    if (events!!.isNotEmpty()) {
                         no_event.visibility = View.GONE
-                        for (event in events!!) {
+                        for (event in events) {
                             if (event.dateEnd.time > atm.time) {
                                 if (filter_club_id != null) {
                                     if (filter_club_id == event.association) {

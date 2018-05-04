@@ -91,7 +91,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                     getText().clear();
 
                     if (!content.isEmpty()) {
-                        final User user = Utils.getUser();
+                        final User user = Utils.INSTANCE.getUser();
 
                         final Comment comment = Comment.create(null, user.getId(), content, null, tags);
 

@@ -90,7 +90,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         final Post post = posts.get(position);
 
         holder.getTitleTextView().setText(post.getTitle());
-        holder.getDateTextView().setText(Utils.displayedDate(post.getDate()));
+        holder.getDateTextView().setText(Utils.INSTANCE.displayedDate(post.getDate()));
 
         // available layouts are row_post, post or post_with_avatars
 
@@ -153,11 +153,11 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
             // description links
 
             Linkify.addLinks(holder.getContentTextView(), Linkify.ALL);
-            Utils.convertToLinkSpan(context, holder.getContentTextView());
+            Utils.INSTANCE.convertToLinkSpan(context, holder.getContentTextView());
 
             // like button
 
-            final String userId = Utils.getUser().getId();
+            final String userId = Utils.INSTANCE.getUser().getId();
 
             holder.getLikeButton().setLiked(post.isPostLikedBy(userId));
 

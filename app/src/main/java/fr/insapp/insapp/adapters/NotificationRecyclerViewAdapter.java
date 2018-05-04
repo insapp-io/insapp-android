@@ -83,7 +83,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
         final Notification notification = notifications.get(position);
 
         holder.text.setText(notification.getMessage());
-        holder.date.setText(Utils.displayedDate(notification.getDate()));
+        holder.date.setText(Utils.INSTANCE.displayedDate(notification.getDate()));
 
         // avatars
 
@@ -95,7 +95,7 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final User user = response.body();
 
-                        final int id = context.getResources().getIdentifier(Utils.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                        final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                         requestManager
                                 .load(id)
                                 .into(holder.avatar_notification);

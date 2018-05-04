@@ -67,9 +67,9 @@ class CommentsEventFragment : Fragment() {
 
         // retrieve the avatar of the user
 
-        val user = Utils.getUser()
+        val user = Utils.user
 
-        val id = resources.getIdentifier(Utils.drawableProfileName(user.promotion, user.gender), "drawable", context!!.packageName)
+        val id = resources.getIdentifier(Utils.drawableProfileName(user?.promotion, user?.gender), "drawable", context!!.packageName)
         Glide
             .with(context!!)
             .load(id)

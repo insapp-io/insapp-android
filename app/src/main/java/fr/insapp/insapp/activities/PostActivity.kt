@@ -41,7 +41,7 @@ class PostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)
 
-        val user = Utils.getUser()
+        val user = Utils.user
 
         // toolbar
 
@@ -62,7 +62,7 @@ class PostActivity : AppCompatActivity() {
             if (intent.getParcelableExtra<Notification>("notification") != null) {
                 val notification = intent.getParcelableExtra<Notification>("notification")
 
-                val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                val call = ServiceGenerator.create().markNotificationAsSeen(user?.id, notification.id)
                 call.enqueue(object : Callback<Notifications> {
                     override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                         if (!response.isSuccessful) {
@@ -97,7 +97,7 @@ class PostActivity : AppCompatActivity() {
     }
 
     private fun generateActivity() {
-        val user = Utils.getUser()
+        val user = Utils.user
 
         // Answers
 
@@ -117,14 +117,14 @@ class PostActivity : AppCompatActivity() {
 
         // like button
 
-        post_like_button?.isLiked = post.isPostLikedBy(user.id)
+        post_like_button?.isLiked = post.isPostLikedBy(user?.id)
         post_like_counter?.text = post.likes?.size?.toString() ?: "0"
 
         post_like_button?.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {
                 post_like_counter?.text = (Integer.valueOf(post_like_counter?.text as String) + 1).toString()
 
-                val call = ServiceGenerator.create().likePost(post.id, user.id)
+                val call = ServiceGenerator.create().likePost(post.id, user?.id)
                 call.enqueue(object : Callback<PostInteraction> {
                     override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
                         if (response.isSuccessful) {
@@ -147,7 +147,7 @@ class PostActivity : AppCompatActivity() {
                     post_like_counter?.text = "0"
                 }
 
-                val call = ServiceGenerator.create().dislikePost(post.id, user.id)
+                val call = ServiceGenerator.create().dislikePost(post.id, user?.id)
                 call.enqueue(object : Callback<PostInteraction> {
                     override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
                         if (response.isSuccessful) {
@@ -219,7 +219,7 @@ class PostActivity : AppCompatActivity() {
 
         // retrieve the avatar of the user
 
-        val id = resources.getIdentifier(Utils.drawableProfileName(user.promotion, user.gender), "drawable", packageName)
+        val id = resources.getIdentifier(Utils.drawableProfileName(user?.promotion, user?.gender), "drawable", packageName)
         Glide
             .with(this@PostActivity)
             .load(id)

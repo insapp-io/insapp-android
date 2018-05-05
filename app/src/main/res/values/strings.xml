@@ -92,7 +92,7 @@
     <string name="events_week">Cette semaine</string>
     <string name="events_next_week">La semaine prochaine</string>
     <string name="events_later">Plus tard</string>
-    <string name="event_nothing_1">Mais que font les associations ?!</string>
+    <string name="event_nothing_1">Mais que font les associations ?</string>
     <string name="event_nothing_2">Il n\'y a pas d\'event déclaré.</string>
 
     <string name="event_date_inf">%1$s de %2$s à %3$s</string>

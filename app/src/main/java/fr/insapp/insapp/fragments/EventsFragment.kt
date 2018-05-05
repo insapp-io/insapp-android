@@ -146,7 +146,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     val atm = Calendar.getInstance().time
 
                     if (events!!.isNotEmpty()) {
-                        no_event.visibility = View.GONE
+                        no_event?.visibility = View.GONE
                         for (event in events) {
                             if (event.dateEnd.time > atm.time) {
                                 if (filter_club_id != null) {
@@ -159,7 +159,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                             }
                         }
                     } else {
-                        no_event.visibility = View.VISIBLE
+                        no_event?.visibility = View.VISIBLE
                     }
                 } else {
                     Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()

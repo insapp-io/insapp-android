@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -66,11 +65,9 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                final Drawable upArrow = ContextCompat.getDrawable(BarcodeDetectorActivity.this, R.drawable.abc_ic_ab_back_material);
-                upArrow.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
-                getSupportActionBar().setHomeAsUpIndicator(upArrow);
-            }
+            final Drawable upArrow = ContextCompat.getDrawable(BarcodeDetectorActivity.this, R.drawable.abc_ic_ab_back_material);
+            upArrow.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
 
         cameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);

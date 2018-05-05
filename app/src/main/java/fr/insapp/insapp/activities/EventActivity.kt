@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.CalendarContract
@@ -239,11 +238,9 @@ class EventActivity : AppCompatActivity() {
         fab_item_1_event?.setLabelColors(bgColor, bgColor, -0x66000001)
         fab_item_1_event?.setLabelTextColor(fgColor)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val doubleTick = ContextCompat.getDrawable(this@EventActivity, R.drawable.ic_check_black_24dp)
-            doubleTick!!.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabGreen), PorterDuff.Mode.SRC_ATOP)
-            fab_item_1_event?.setImageDrawable(doubleTick)
-        }
+        val doubleTick = ContextCompat.getDrawable(this@EventActivity, R.drawable.ic_check_black_24dp)
+        doubleTick?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabGreen), PorterDuff.Mode.SRC_ATOP)
+        fab_item_1_event?.setImageDrawable(doubleTick)
 
         fab_item_1_event?.setOnClickListener {
             when (status) {
@@ -302,11 +299,9 @@ class EventActivity : AppCompatActivity() {
         fab_item_2_event?.setLabelColors(bgColor, bgColor, -0x66000001)
         fab_item_2_event?.setLabelTextColor(fgColor)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val tick = ContextCompat.getDrawable(this@EventActivity, R.drawable.ic_question_mark_black)
-            tick!!.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabOrange), PorterDuff.Mode.SRC_ATOP)
-            fab_item_2_event?.setImageDrawable(tick)
-        }
+        val tick = ContextCompat.getDrawable(this@EventActivity, R.drawable.ic_question_mark_black)
+        tick?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabOrange), PorterDuff.Mode.SRC_ATOP)
+        fab_item_2_event?.setImageDrawable(tick)
 
         fab_item_2_event?.setOnClickListener {
             when (status) {
@@ -343,11 +338,9 @@ class EventActivity : AppCompatActivity() {
         fab_item_3_event?.setLabelColors(bgColor, bgColor, -0x66000001)
         fab_item_3_event?.setLabelTextColor(fgColor)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val close = ContextCompat.getDrawable(this@EventActivity, R.drawable.ic_close_black_24dp)
-            close!!.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabRed), PorterDuff.Mode.SRC_ATOP)
-            fab_item_3_event?.setImageDrawable(close)
-        }
+        val close = ContextCompat.getDrawable(this@EventActivity, R.drawable.ic_close_black_24dp)
+        close?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabRed), PorterDuff.Mode.SRC_ATOP)
+        fab_item_3_event?.setImageDrawable(close)
 
         fab_item_3_event?.setOnClickListener {
             when (status) {
@@ -418,20 +411,16 @@ class EventActivity : AppCompatActivity() {
                     collapsing_toolbar_event.title = event.name
                     isShow = true
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        val upArrow = ContextCompat.getDrawable(this@EventActivity, R.drawable.abc_ic_ab_back_material)
-                        upArrow!!.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
-                        supportActionBar?.setHomeAsUpIndicator(upArrow)
-                    }
+                    val upArrow = ContextCompat.getDrawable(this@EventActivity, R.drawable.abc_ic_ab_back_material)
+                    upArrow?.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
+                    supportActionBar?.setHomeAsUpIndicator(upArrow)
                 } else if (isShow) {
                     collapsing_toolbar_event.title = " "
                     isShow = false
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        val upArrow = ContextCompat.getDrawable(this@EventActivity, R.drawable.abc_ic_ab_back_material)
-                        upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
-                        supportActionBar?.setHomeAsUpIndicator(upArrow)
-                    }
+                    val upArrow = ContextCompat.getDrawable(this@EventActivity, R.drawable.abc_ic_ab_back_material)
+                    upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
+                    supportActionBar?.setHomeAsUpIndicator(upArrow)
                 }
             }
         })
@@ -505,21 +494,11 @@ class EventActivity : AppCompatActivity() {
 
         event_date_text?.setTextColor(fgColor)
 
-        // transparent status bar
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            window.statusBarColor = ContextCompat.getColor(this, R.color.transparentBlack)
-        }
-
         // recent apps system UI
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val title = getString(R.string.app_name)
-            val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-
-            setTaskDescription(ActivityManager.TaskDescription(title, icon, bgColor))
-        }
+        val title = getString(R.string.app_name)
+        val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+        setTaskDescription(ActivityManager.TaskDescription(title, icon, bgColor))
     }
 
     override fun finish() {

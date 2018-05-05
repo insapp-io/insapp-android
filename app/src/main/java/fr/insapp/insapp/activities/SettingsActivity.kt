@@ -1,7 +1,6 @@
 package fr.insapp.insapp.activities
 
 import android.graphics.PorterDuff
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -31,11 +30,9 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val upArrow = ContextCompat.getDrawable(this@SettingsActivity, R.drawable.abc_ic_ab_back_material)
-            upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
-            supportActionBar?.setHomeAsUpIndicator(upArrow)
-        }
+        val upArrow = ContextCompat.getDrawable(this@SettingsActivity, R.drawable.abc_ic_ab_back_material)
+        upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
+        supportActionBar?.setHomeAsUpIndicator(upArrow)
 
         // handling nested preferences screen
 

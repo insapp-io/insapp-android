@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
@@ -14,7 +13,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.text.util.Linkify
 import android.view.MenuItem
-import android.view.View
 import com.bumptech.glide.Glide
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
@@ -80,20 +78,16 @@ class ClubActivity : AppCompatActivity() {
                     collapsing_toolbar_club.title = club!!.name
                     isShow = true
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        val upArrow = ContextCompat.getDrawable(this@ClubActivity, R.drawable.abc_ic_ab_back_material)
-                        upArrow!!.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
-                        supportActionBar!!.setHomeAsUpIndicator(upArrow)
-                    }
+                    val upArrow = ContextCompat.getDrawable(this@ClubActivity, R.drawable.abc_ic_ab_back_material)
+                    upArrow?.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
+                    supportActionBar?.setHomeAsUpIndicator(upArrow)
                 } else if (isShow) {
                     collapsing_toolbar_club.title = " "
                     isShow = false
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        val upArrow = ContextCompat.getDrawable(this@ClubActivity, R.drawable.abc_ic_ab_back_material)
-                        upArrow!!.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
-                        supportActionBar!!.setHomeAsUpIndicator(upArrow)
-                    }
+                    val upArrow = ContextCompat.getDrawable(this@ClubActivity, R.drawable.abc_ic_ab_back_material)
+                    upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
+                    supportActionBar?.setHomeAsUpIndicator(upArrow)
                 }
             }
         })
@@ -145,26 +139,16 @@ class ClubActivity : AppCompatActivity() {
 
         // send a mail
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val email = ContextCompat.getDrawable(this@ClubActivity, R.drawable.ic_email_black_24dp)
+        val email = ContextCompat.getDrawable(this@ClubActivity, R.drawable.ic_email_black_24dp)
 
-            if (fgColor != -0x1) {
-                email!!.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
-            } else {
-                email!!.setColorFilter(bgColor, PorterDuff.Mode.SRC_ATOP)
-            }
-
-            club_contact.setCompoundDrawablesWithIntrinsicBounds(email, null, null, null)
+        if (fgColor != -0x1) {
+            email?.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
+        } else {
+            email?.setColorFilter(bgColor, PorterDuff.Mode.SRC_ATOP)
         }
 
+        club_contact.setCompoundDrawablesWithIntrinsicBounds(email, null, null, null)
         club_contact.setOnClickListener { sendEmail() }
-
-        // transparent status bar
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            window.statusBarColor = ContextCompat.getColor(this, R.color.transparentBlack)
-        }
 
         // view pager
 
@@ -189,12 +173,9 @@ class ClubActivity : AppCompatActivity() {
 
         // recent apps system UI
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val title = getString(R.string.app_name)
-            val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-
-            setTaskDescription(ActivityManager.TaskDescription(title, icon, bgColor))
-        }
+        val title = getString(R.string.app_name)
+        val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+        setTaskDescription(ActivityManager.TaskDescription(title, icon, bgColor))
     }
 
     private fun setupViewPager(viewPager: ViewPager, swipeColor: Int) {

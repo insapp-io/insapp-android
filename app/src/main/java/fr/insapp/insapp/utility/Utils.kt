@@ -2,7 +2,6 @@ package fr.insapp.insapp.utility
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
 import android.text.SpannableString
 import android.text.style.URLSpan
 import android.widget.TextView
@@ -60,17 +59,6 @@ object Utils {
         }
 
         textView.text = s
-    }
-
-    fun darkenBitmap(bitmap: Bitmap): Bitmap {
-        val canvas = Canvas(bitmap)
-        val paint = Paint(Color.RED)
-        val filter = LightingColorFilter(-0x454546, 0x00000000)
-
-        paint.colorFilter = filter
-        canvas.drawBitmap(bitmap, Matrix(), paint)
-
-        return bitmap
     }
 
     fun parseMongoDate(mongoDate: String): Date? {

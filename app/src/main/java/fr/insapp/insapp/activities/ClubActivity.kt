@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.text.util.Linkify
 import android.view.MenuItem
-import com.bumptech.glide.Glide
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import fr.insapp.insapp.R
@@ -22,6 +21,7 @@ import fr.insapp.insapp.fragments.EventsClubFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.utility.GlideApp
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_club.*
 
@@ -107,27 +107,12 @@ class ClubActivity : AppCompatActivity() {
 
         collapsing_toolbar_club.setCollapsedTitleTextColor(fgColor)
 
-        Glide
+        GlideApp
             .with(this)
             .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
             .into(club_avatar)
 
-        /*
-        Glide
-                .with(this)
-                .load(ServiceGenerator.CDN_URL + club.getCover())
-                .asBitmap()
-                .into(new BitmapImageViewTarget(headerImageView) {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                        super.onResourceReady(bitmap, anim);
-
-                        headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
-                    }
-                });
-        */
-
-        Glide
+        GlideApp
             .with(this)
             .load(ServiceGenerator.CDN_URL + club!!.cover)
             .into(header_image_club)

@@ -23,12 +23,15 @@
         <item name="alertDialogTheme">@style/AppAlertDialogTheme</item>
     </style>
 
-    <style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
+    <style name="InsappMaterialTheme.TransparentTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 
+    <style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
     </style>
 
     <style name="AppAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-
     </style>
 
     <style name="AppAlertDialogContent" parent="Theme.AppCompat.Light">

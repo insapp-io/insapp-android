@@ -10,8 +10,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +20,7 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.SearchTerms;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.UserSearchResults;
+import fr.insapp.insapp.utility.GlideApp;
 import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 
@@ -65,7 +64,7 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
         // get the drawable of avatar
 
         final int id = resources.getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-        Glide.with(context).load(id).into(((CircleImageView) convertView.findViewById(R.id.dropdown_avatar)));
+        GlideApp.with(context).load(id).into(((CircleImageView) convertView.findViewById(R.id.dropdown_avatar)));
 
         return convertView;
     }

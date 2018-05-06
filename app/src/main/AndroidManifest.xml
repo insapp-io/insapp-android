@@ -107,6 +107,7 @@
 
         <activity
             android:name=".activities.ClubActivity"
+            android:theme="@style/InsappMaterialTheme.TransparentTheme"
             android:parentActivityName=".activities.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <meta-data
@@ -130,6 +131,7 @@
 
         <activity
             android:name=".activities.EventActivity"
+            android:theme="@style/InsappMaterialTheme.TransparentTheme"
             android:parentActivityName=".activities.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <meta-data

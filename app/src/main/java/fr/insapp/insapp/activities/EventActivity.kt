@@ -23,7 +23,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import fr.insapp.insapp.App
@@ -33,6 +32,8 @@ import fr.insapp.insapp.fragments.AboutFragment
 import fr.insapp.insapp.fragments.CommentsEventFragment
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.*
+import fr.insapp.insapp.utility.DarkenTransformation
+import fr.insapp.insapp.utility.GlideApp
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_event.*
 import retrofit2.Call
@@ -374,24 +375,10 @@ class EventActivity : AppCompatActivity() {
 
         refreshFloatingActionButtons()
 
-        /*
-        Glide
-            .with(this)
-            .load(ServiceGenerator.CDN_URL + event.getImage())
-            .asBitmap()
-            .into(new BitmapImageViewTarget(headerImageView) {
-                @Override
-                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                    super.onResourceReady(bitmap, anim);
-
-                    headerImageView.setImageBitmap(Utils.darkenBitmap(bitmap));
-                }
-            });
-        */
-
-        Glide
+        GlideApp
             .with(this)
             .load(ServiceGenerator.CDN_URL + event.image)
+            .transform(DarkenTransformation())
             .into(header_image_event)
 
         event_info?.setBackgroundColor(bgColor)

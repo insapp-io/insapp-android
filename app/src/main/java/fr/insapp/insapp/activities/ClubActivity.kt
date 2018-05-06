@@ -21,6 +21,7 @@ import fr.insapp.insapp.fragments.EventsClubFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.utility.DarkenTransformation
 import fr.insapp.insapp.utility.GlideApp
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_club.*
@@ -115,6 +116,7 @@ class ClubActivity : AppCompatActivity() {
         GlideApp
             .with(this)
             .load(ServiceGenerator.CDN_URL + club!!.cover)
+            .transform(DarkenTransformation())
             .into(header_image_club)
 
         // links

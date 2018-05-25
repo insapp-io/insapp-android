@@ -20,12 +20,12 @@ import fr.insapp.insapp.App
 import fr.insapp.insapp.BuildConfig
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.ViewPagerAdapter
+import fr.insapp.insapp.components.CustomTabsConnection
 import fr.insapp.insapp.fragments.ClubsFragment
 import fr.insapp.insapp.fragments.EventsFragment
 import fr.insapp.insapp.fragments.NotificationsFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.notifications.FirebaseMessaging
-import fr.insapp.insapp.utility.CustomTabsConnection
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException

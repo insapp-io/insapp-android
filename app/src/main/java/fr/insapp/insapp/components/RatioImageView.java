@@ -1,4 +1,4 @@
-package fr.insapp.insapp.utility;
+package fr.insapp.insapp.components;
 
 import android.content.Context;
 import android.content.res.TypedArray;

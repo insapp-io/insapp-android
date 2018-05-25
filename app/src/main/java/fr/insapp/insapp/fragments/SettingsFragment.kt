@@ -119,7 +119,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     companion object {
 
-        val ID = "SETTINGS_FRAGMENT"
+        const val ID = "SETTINGS_FRAGMENT"
 
         fun newInstance(id: String): SettingsFragment {
             val fragment = SettingsFragment()

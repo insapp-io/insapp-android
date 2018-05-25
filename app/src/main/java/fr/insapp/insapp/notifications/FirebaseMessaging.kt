@@ -25,9 +25,9 @@ class FirebaseMessaging : FirebaseMessagingService() {
         get() = Random().nextInt(9999 - 1000) + 1000
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        Log.d(FirebaseService.TAG, "From: " + remoteMessage!!.from!!)
+        Log.d(FirebaseService.TAG, "From: " + remoteMessage?.from)
 
-        if (remoteMessage.data.isNotEmpty()) {
+        if (remoteMessage?.data?.isNotEmpty() == true) {
             Log.d(FirebaseService.TAG, "Data: " + remoteMessage.data)
 
             val notification = remoteMessage.notification

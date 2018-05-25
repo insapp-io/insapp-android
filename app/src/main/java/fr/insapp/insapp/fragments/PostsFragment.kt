@@ -52,8 +52,6 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         this.adapter = PostRecyclerViewAdapter(context, Glide.with(this), layout)
         adapter!!.setOnItemClickListener { post -> startActivityForResult(Intent(activity, PostActivity::class.java).putExtra("post", post), POST_REQUEST) }
-
-        generatePosts()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -87,6 +85,8 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         } else {
             refresh_posts.setColorSchemeResources(R.color.colorPrimary)
         }
+
+        generatePosts()
     }
 
     private fun generatePosts() {

@@ -31,7 +31,7 @@
         android:textColor="#7f7f7f"
         android:lineSpacingExtra="3dp" />
 
-    <fr.insapp.insapp.utility.RatioImageView
+    <fr.insapp.insapp.components.RatioImageView
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

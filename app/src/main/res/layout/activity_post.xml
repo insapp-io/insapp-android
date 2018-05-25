@@ -92,7 +92,7 @@
                 android:layout_below="@+id/post_club_avatar"
                 android:layout_alignParentStart="true" />
 
-            <fr.insapp.insapp.utility.RatioImageView
+            <fr.insapp.insapp.components.RatioImageView
                 android:id="@+id/post_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -125,7 +125,7 @@
                 android:layout_height="40dp"
                 app:civ_border_width="0dp" />
 
-            <fr.insapp.insapp.utility.CommentEditText
+            <fr.insapp.insapp.components.CommentEditText
                 android:id="@+id/comment_post_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

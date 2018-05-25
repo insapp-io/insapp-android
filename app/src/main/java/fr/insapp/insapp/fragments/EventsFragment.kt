@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +39,6 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var adapterWeek: EventRecyclerViewAdapter? = null
     private var adapterNextWeek: EventRecyclerViewAdapter? = null
     private var adapterLater: EventRecyclerViewAdapter? = null
-
-    private var swipeRefreshLayout: SwipeRefreshLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,6 +136,9 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         clearEvents()
 
         progress_bar.visibility = View.VISIBLE
+        if (refresh_events != null) {
+            refresh_events!!.isRefreshing = true
+        }
 
         val call = ServiceGenerator.create().futureEvents
         call.enqueue(object : Callback<List<Event>> {
@@ -165,19 +167,12 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
                 }
 
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout!!.isRefreshing = false
-                }
+                stopLoadingIndicators()
             }
 
             override fun onFailure(call: Call<List<Event>>, t: Throwable) {
                 Toast.makeText(App.getAppContext(), "EventsFragment - Veuillez vérifier votre connection internet", Toast.LENGTH_LONG).show()
-
-                progress_bar.visibility = View.INVISIBLE
-
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout!!.isRefreshing = false
-                }
+                stopLoadingIndicators()
             }
         })
     }
@@ -249,6 +244,13 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         adapterLater!!.addItem(event)
         events_later_layout.visibility = View.VISIBLE
+    }
+
+    private fun stopLoadingIndicators(){
+        progress_bar.visibility = View.INVISIBLE
+        if (refresh_events != null) {
+            refresh_events!!.isRefreshing = false
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {

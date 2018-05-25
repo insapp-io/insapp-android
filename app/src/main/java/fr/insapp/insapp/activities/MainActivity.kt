@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private val userSerial: String
         get() {
-            val userManager = getSystemService("user") ?: return ""
+            val userManager = getSystemService(Context.USER_SERVICE) ?: return ""
 
             try {
                 val myUserHandleMethod = Process::class.java.getMethod("myUserHandle", null)
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         // Huawei protected apps
 
-        //ifHuaweiAlert()
+        ifHuaweiAlert()
 
         // topic notifications
 
@@ -156,8 +156,7 @@ class MainActivity : AppCompatActivity() {
             if (!defaultSharedPreferences.getBoolean("protected_apps", false)) {
                 val editor = defaultSharedPreferences.edit()
 
-                val intent = Intent()
-                intent.setClassName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")
+                val intent = Intent().setClassName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")
 
                 if (isCallable(intent)) {
                     val dontShowAgain = AppCompatCheckBox(this)
@@ -167,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                         editor.apply()
                     }
 
-                    AlertDialog.Builder(this)
+                    AlertDialog.Builder(this, R.style.InsappMaterialTheme_AlertDialogTheme)
                             .setTitle(getString(R.string.protected_apps_dialog_title))
                             .setMessage(String.format(getString(R.string.protected_apps_dialog_message), getString(R.string.app_name)))
                             .setView(dontShowAgain)

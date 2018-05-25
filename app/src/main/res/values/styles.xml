@@ -3,24 +3,21 @@
     <style name="InsappMaterialTheme" parent="InsappMaterialTheme.Base"></style>
 
     <!-- Base application theme -->
-
     <style name="InsappMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="android:itemTextAppearance">@style/MenuItem</item>
         <item name="android:itemBackground">@android:color/white</item>
 
         <!-- Theme for the preferences -->
-
         <item name="preferenceTheme">@style/AppPreferenceTheme</item>
 
         <!-- Theme for all Alert Dialogs (e.g. from DialogPreference) -->
-
-        <item name="alertDialogTheme">@style/AppAlertDialogTheme</item>
+        <item name="alertDialogTheme">@style/InsappMaterialTheme.AlertDialogTheme</item>
     </style>
 
     <style name="InsappMaterialTheme.TransparentTheme">
@@ -31,7 +28,8 @@
     <style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
     </style>
 
-    <style name="AppAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="InsappMaterialTheme.AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="AppAlertDialogContent" parent="Theme.AppCompat.Light">

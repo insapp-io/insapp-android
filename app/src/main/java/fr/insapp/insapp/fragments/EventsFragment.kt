@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -171,7 +170,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
 
             override fun onFailure(call: Call<List<Event>>, t: Throwable) {
-                Toast.makeText(App.getAppContext(), "EventsFragment - Veuillez vérifier votre connection internet", Toast.LENGTH_LONG).show()
+                Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
                 stopLoadingIndicators()
             }
         })
@@ -248,9 +247,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun stopLoadingIndicators(){
         progress_bar.visibility = View.INVISIBLE
-        if (refresh_events != null) {
-            refresh_events!!.isRefreshing = false
-        }
+        refresh_events?.isRefreshing = false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -306,6 +303,6 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
 
-        private val EVENT_REQUEST = 2
+        private const val EVENT_REQUEST = 2
     }
 }

@@ -27,21 +27,37 @@ class LegalConditionsActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        container.visibility = View.VISIBLE
+        progress_bar.visibility = View.VISIBLE
+        no_network.visibility = View.GONE
+        webview_conditions.visibility = View.GONE
+
         webview_conditions.loadUrl(ServiceGenerator.ROOT_URL + "legal")
         webview_conditions.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                layout_progress_bar.visibility = View.VISIBLE
+                container.visibility = View.VISIBLE
+                progress_bar.visibility = View.VISIBLE
+                no_network.visibility = View.GONE
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                layout_progress_bar.visibility = View.GONE
+                if (url == "about:blank"){ // Il y a eu une erreur
+                    container.visibility = View.VISIBLE
+                    progress_bar.visibility = View.GONE
+                    no_network.visibility = View.VISIBLE
+                    webview_conditions.visibility = View.GONE
+                } else {
+                    container.visibility = View.GONE
+                    progress_bar.visibility = View.GONE
+                    no_network.visibility = View.GONE
+                    webview_conditions.visibility = View.VISIBLE
+                }
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                webview_conditions.loadUrl("about:blank")
                 super.onReceivedError(view, request, error)
-                // TODO : Gérer l'affichage
-                //progress_bar.visibility = View.GONE
             }
         }
     }

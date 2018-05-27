@@ -1,45 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_no_network"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    tools:context=".fragments.NoNetwokFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_weight="1" />
 
     <ImageView
         android:id="@+id/insa_server"
         android:layout_width="match_parent"
-        android:layout_height="161dp"
+        android:layout_height="100dp"
+        android:layout_weight="2"
         android:src="@drawable/server" />
 
     <ImageView
         android:id="@+id/no_network"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="100dp"
+        android:layout_weight="2"
         android:src="@drawable/wifi" />
 
     <ImageView
         android:id="@+id/phone"
         android:layout_width="match_parent"
-        android:layout_height="134dp"
+        android:layout_height="100dp"
+        android:layout_weight="2"
         android:src="@drawable/intro_clubs" />
 
     <TextView
         android:id="@+id/text_no_network"
         android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:text="Impossible de joindre les serveurs."
+        android:layout_height="wrap_content"
+        android:text="@string/can_not_join_server"
         android:textAlignment="center"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/text_no_network_2"
         android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:text="Veuillez vérifier votre connection à internet."
+        android:layout_height="wrap_content"
+        android:text="@string/check_internet_connection"
         android:textAlignment="center"
         android:textSize="18sp" />
 

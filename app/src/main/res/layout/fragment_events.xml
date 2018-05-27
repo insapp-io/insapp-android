@@ -223,6 +223,12 @@
 
         </RelativeLayout>
 
+        <include
+            android:id="@+id/no_network"
+            layout="@layout/no_netwok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
     </FrameLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

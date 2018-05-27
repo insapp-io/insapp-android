@@ -130,4 +130,8 @@
 
     <string name="profile">Profil</string>
 
+    <string name="can_not_join_server">Impossible de joindre le serveur de l\'Insapp.</string>
+    <string name="check_internet_connection">Veuillez vérifier votre connexion internet.</string>
+    <string name="connectivity_issue">Erreur de connexion</string>
+
 </resources>

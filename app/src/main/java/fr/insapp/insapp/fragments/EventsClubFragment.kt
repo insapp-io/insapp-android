@@ -110,13 +110,13 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show()
                     }
 
-                    refresh_events_club.isRefreshing = false
+                    refresh_events_club?.isRefreshing = false
                 }
 
                 override fun onFailure(call: Call<Event>, t: Throwable) {
                     Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show()
 
-                    refresh_events_club.isRefreshing = false
+                    refresh_events_club?.isRefreshing = false
                 }
             })
         }

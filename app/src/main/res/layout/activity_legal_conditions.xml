@@ -14,16 +14,23 @@
         android:theme="@style/ToolbarStyle" />
 
     <FrameLayout
-        android:id="@+id/layout_progress_bar"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ProgressBar
             android:id="@+id/progress_bar"
             style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
+
+        <include
+            android:id="@+id/no_network"
+            layout="@layout/no_netwok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
     </FrameLayout>
 
     <WebView

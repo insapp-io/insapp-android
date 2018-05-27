@@ -14,9 +14,9 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 repositories {
+    mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
     google()
-    mavenCentral()
 }
 
 android {

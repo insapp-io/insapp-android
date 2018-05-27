@@ -3,6 +3,7 @@ package fr.insapp.insapp.activities
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebResourceError
@@ -26,22 +27,38 @@ class CreditsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar_credits)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        
+
+        container.visibility = View.VISIBLE
+        progress_bar.visibility = View.VISIBLE
+        no_network.visibility = View.GONE
+        webview_credits.visibility = View.GONE
+
         webview_credits.loadUrl(ServiceGenerator.ROOT_URL + "credit")
         webview_credits.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                layout_progress_bar.visibility = View.VISIBLE
+                container.visibility = View.VISIBLE
+                progress_bar.visibility = View.VISIBLE
+                no_network.visibility = View.GONE
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                layout_progress_bar.visibility = View.GONE
+                if (url == "about:blank"){ // Il y a eu une erreur
+                    container.visibility = View.VISIBLE
+                    progress_bar.visibility = View.GONE
+                    no_network.visibility = View.VISIBLE
+                    webview_credits.visibility = View.GONE
+                } else {
+                    container.visibility = View.GONE
+                    progress_bar.visibility = View.GONE
+                    no_network.visibility = View.GONE
+                    webview_credits.visibility = View.VISIBLE
+                }
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                webview_credits.loadUrl("about:blank")
                 super.onReceivedError(view, request, error)
-                // TODO : Gérer l'affichage
-                //progress_bar.visibility = View.GONE
             }
         }
     }

@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -90,6 +91,8 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun generatePosts() {
+        no_network?.visibility = View.GONE
+
         val call = ServiceGenerator.create().latestPosts
         call.enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
@@ -102,18 +105,27 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         }
                     }
                 } else {
-                    Toast.makeText(App.getAppContext(), "PostsFragment", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(App.getAppContext(), "PostsFragment", Toast.LENGTH_LONG).show()
+                    if (adapter!!.posts.isEmpty()) {
+                        no_network?.visibility = View.VISIBLE
+                    }else{
+                        Snackbar.make(refresh_posts, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                    }
                 }
 
-                refresh_posts.isRefreshing = false
-                progress_bar.visibility = View.GONE
+                refresh_posts?.isRefreshing = false
+                progress_bar?.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                Toast.makeText(App.getAppContext(), "PostsFragment - Veuillez vérifier votre connexion internet", Toast.LENGTH_LONG).show()
-
-                refresh_posts.isRefreshing = false
-                progress_bar.visibility = View.GONE
+                //Toast.makeText(App.getAppContext(), "PostsFragment - Veuillez vérifier votre connexion internet", Toast.LENGTH_LONG).show()
+                if (adapter!!.posts.isEmpty()) {
+                    no_network?.visibility = View.VISIBLE
+                }else{
+                    Snackbar.make(refresh_posts, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                }
+                refresh_posts?.isRefreshing = false
+                progress_bar?.visibility = View.GONE
             }
         })
     }
@@ -146,7 +158,6 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     companion object {
-
         private val POST_REQUEST = 3
     }
 }

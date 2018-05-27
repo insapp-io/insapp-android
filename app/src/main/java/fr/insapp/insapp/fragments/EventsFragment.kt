@@ -134,10 +134,11 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun generateEvents() {
         clearEvents()
 
-        progress_bar.visibility = View.VISIBLE
-        if (refresh_events != null) {
-            refresh_events!!.isRefreshing = true
-        }
+        progress_bar?.visibility = View.VISIBLE
+        refresh_events?.isRefreshing = true
+
+        no_network?.visibility = View.INVISIBLE
+        no_event?.visibility = View.INVISIBLE
 
         val call = ServiceGenerator.create().futureEvents
         call.enqueue(object : Callback<List<Event>> {
@@ -163,15 +164,18 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         no_event?.visibility = View.VISIBLE
                     }
                 } else {
-                    Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
+                    no_network?.visibility = View.VISIBLE
                 }
 
                 stopLoadingIndicators()
             }
 
             override fun onFailure(call: Call<List<Event>>, t: Throwable) {
-                Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
+                //Toast.makeText(App.getAppContext(), "EventsFragment - Veuillez vérifier votre connection internet", Toast.LENGTH_LONG).show()
                 stopLoadingIndicators()
+                no_network?.visibility = View.VISIBLE
+                no_event?.visibility = View.INVISIBLE
             }
         })
     }

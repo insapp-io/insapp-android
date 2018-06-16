@@ -10,6 +10,8 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.answers.CustomEvent
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import kotlinx.android.synthetic.main.activity_credits.*
@@ -53,6 +55,7 @@ class CreditsActivity : AppCompatActivity() {
                     progress_bar.visibility = View.GONE
                     no_network.visibility = View.GONE
                     webview_credits.visibility = View.VISIBLE
+                    Answers.getInstance().logCustom(CustomEvent("Read Credits"))
                 }
             }
 

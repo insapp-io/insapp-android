@@ -62,30 +62,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // toolbar
-
         setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.title = Utils.user?.username
 
         // view pager
-
         setupViewPager(viewpager)
 
         // tab layout
-
         tabs.setupWithViewPager(viewpager)
 
         // custom tabs optimization
-
         MainActivity.customTabsConnection = CustomTabsConnection()
         CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", customTabsConnection)
 
-        // Huawei protected apps
+        //display correct fragment for shortcuts
+        val fragmentId = intent.getIntExtra("FRAGMENT_ID", 0)
+        viewpager.currentItem = fragmentId
 
+        // Huawei protected apps
         ifHuaweiAlert()
 
         // topic notifications
-
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
         if (defaultSharedPreferences.getBoolean("notifications", true)) {
             FirebaseMessaging.subscribeToTopics()

@@ -134,4 +134,15 @@
     <string name="check_internet_connection">Veuillez vérifier votre connexion internet.</string>
     <string name="connectivity_issue">Erreur de connexion</string>
 
+    <string name="shortcut_notification">Notifications</string>
+    <string name="shortcut_notification_long">Notifications</string>
+    <string name="shortcut_notification_disabled">Raccourci désactivé</string>
+
+    <string name="shortcut_events">Évenements</string>
+    <string name="shortcut_events_long">Évenements</string>
+    <string name="shortcut_events_disabled">Raccourci désactivé</string>
+
+    <string name="shortcut_profil">Profil</string>
+    <string name="shortcut_profil_long">Profil</string>
+    <string name="shortcut_profil_disabled">Raccourci désactivé</string>
 </resources>

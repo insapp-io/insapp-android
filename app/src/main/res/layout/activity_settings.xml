@@ -8,8 +8,8 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_settings"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:minHeight="?attr/actionBarSize"
+        android:layout_height="?android:attr/actionBarSize"
+        android:minHeight="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:theme="@style/ToolbarStyle" />
 

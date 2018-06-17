@@ -20,16 +20,7 @@
         <item name="alertDialogTheme">@style/InsappMaterialTheme.AlertDialogTheme</item>
     </style>
 
-    <style name="InsappMaterialTheme.TransparentTheme">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
     <style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
-    </style>
-
-    <style name="InsappMaterialTheme.AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="AppAlertDialogContent" parent="Theme.AppCompat.Light">

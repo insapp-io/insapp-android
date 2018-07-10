@@ -23,10 +23,8 @@ public class ServiceGenerator {
 
     static {
         if (MainActivity.dev) {
-            // TODO : Dès que l'api pour le debug est disponible, remettre les bonnes adresses de debug.
-            ROOT_URL = "https://insapp.fr/api/v1/";
-            //ROOT_URL = "https://dev.insapp.fr/api/v1/";
-            CDN_URL = "https://insapp.fr/cdn/";
+            ROOT_URL = "https://insapp.insa-rennes.fr/api/v1/";
+            CDN_URL = "https://insapp.insa-rennes.fr/cdn/";
         }
         else {
             ROOT_URL = "https://insapp.fr/api/v1/";

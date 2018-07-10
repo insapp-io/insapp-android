@@ -58,9 +58,11 @@ class ClubsFragment : Fragment() {
                 if (response.isSuccessful) {
                     val clubs = response.body()
 
-                    for (club in clubs!!) {
-                        if (!club.profilePicture.isEmpty() && !club.cover.isEmpty()) {
-                            adapter!!.addItem(club)
+                    if (clubs != null) {
+                        for (club in clubs) {
+                            if (!club.profilePicture.isEmpty() && !club.cover.isEmpty()) {
+                                adapter!!.addItem(club)
+                            }
                         }
                     }
                 } else {

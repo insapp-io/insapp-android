@@ -246,7 +246,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_1_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.NO, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event.id, user?.id, "going")
+                    val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "going")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
@@ -307,7 +307,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_2_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.NO, Event.PARTICIPATE.YES, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event.id, user?.id, "maybe")
+                    val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "maybe")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
@@ -346,7 +346,7 @@ class EventActivity : AppCompatActivity() {
         fab_item_3_event?.setOnClickListener {
             when (status) {
                 Event.PARTICIPATE.YES, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addParticipant(event.id, user?.id, "notgoing")
+                    val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "notgoing")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {

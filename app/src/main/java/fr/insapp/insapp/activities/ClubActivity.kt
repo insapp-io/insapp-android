@@ -67,8 +67,8 @@ class ClubActivity : AppCompatActivity() {
         // collapsing toolbar
 
         appbar_club.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
-            internal var isShow = true
-            internal var scrollRange = -1
+            var isShow = true
+            var scrollRange = -1
 
             override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
                 if (scrollRange == -1) {

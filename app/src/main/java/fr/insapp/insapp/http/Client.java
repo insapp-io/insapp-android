@@ -49,51 +49,57 @@ public interface Client {
      * ASSOCIATIONS
      */
 
-    @GET("association")
+    @GET("associations")
     Call<List<Club>> getClubs();
 
-    @GET("association/{id}")
+    @GET("associations/{id}")
     Call<Club> getClubFromId(@Path("id") String id);
 
     /*
      * EVENTS
      */
 
-    @GET("event")
+    @GET("events")
     Call<List<Event>> getFutureEvents();
 
-    @GET("event/{id}")
+    @GET("associations/{associationId}/events")
+    Call<List<Event>> getEventsForAssociation(@Path("associationId") String associationId);
+
+    @GET("events/{id}")
     Call<Event> getEventFromId(@Path("id") String id);
 
-    @POST("event/{id}/participant/{userId}/status/{status}")
-    Call<EventInteraction> addParticipant(@Path("id") String id, @Path("userId") String userId, @Path("status") String status);
+    @POST("events/{id}/attend/{userId}/status/{status}")
+    Call<EventInteraction> addAttendee(@Path("id") String id, @Path("userId") String userId, @Path("status") String status);
 
-    @POST("event/{id}/comment")
+    @POST("events/{id}/comment")
     Call<Event> commentEvent(@Path("id") String id, @Body Comment comment);
 
-    @DELETE("event/{id}/comment/{commentId}")
+    @DELETE("events/{id}/comment/{commentId}")
     Call<Event> uncommentEvent(@Path("id") String id, @Path("commentId") String commentId);
 
     /*
      * POSTS
      */
 
-    @GET("post/{id}")
-    Call<Post> getPostFromId(@Path("id") String id);
-
-    @GET("post")
+    @GET("posts")
     Call<List<Post>> getLatestPosts();
 
-    @POST("post/{id}/like/{userId}")
+    @GET("associations/{associationId}/posts")
+    Call<List<Post>> getPostsForAssociation(@Path("associationId") String id);
+
+    @GET("posts/{id}")
+    Call<Post> getPostFromId(@Path("id") String id);
+
+    @POST("posts/{id}/like/{userId}")
     Call<PostInteraction> likePost(@Path("id") String id, @Path("userId") String userId);
 
-    @DELETE("post/{id}/like/{userId}")
+    @DELETE("posts/{id}/like/{userId}")
     Call<PostInteraction> dislikePost(@Path("id") String id, @Path("userId") String userId);
 
-    @POST("post/{id}/comment")
+    @POST("posts/{id}/comment")
     Call<Post> commentPost(@Path("id") String id, @Body Comment comment);
 
-    @DELETE("post/{id}/comment/{commentId}")
+    @DELETE("posts/{id}/comment/{commentId}")
     Call<Post> uncommentPost(@Path("id") String id, @Path("commentId") String commentId);
 
     /*
@@ -107,13 +113,13 @@ public interface Client {
      * USERS
      */
 
-    @GET("user/{id}")
+    @GET("users/{id}")
     Call<User> getUserFromId(@Path("id") String id);
 
-    @PUT("user/{id}")
+    @PUT("users/{id}")
     Call<User> updateUser(@Path("id") String id, @Body User user);
 
-    @DELETE("user/{id}")
+    @DELETE("users/{id}")
     Call<Void> deleteUser(@Path("id") String id);
 
     @PUT("report/user/{id}")
@@ -123,13 +129,13 @@ public interface Client {
      * NOTIFICATION
      */
 
-    @POST("notification")
+    @POST("notifications")
     Call<NotificationUser> registerNotification(@Body NotificationUser notificationUser);
 
-    @GET("notification/{userId}")
+    @GET("notifications/{userId}")
     Call<Notifications> getNotificationsForUser(@Path("userId") String userId);
 
-    @DELETE("notification/{userId}/{id}")
+    @DELETE("notifications/{userId}/{id}")
     Call<Notifications> markNotificationAsSeen(@Path("userId") String userId, @Path("id") String id);
 
     /*

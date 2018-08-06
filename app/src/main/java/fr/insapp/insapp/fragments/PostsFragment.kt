@@ -93,22 +93,21 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun generatePosts() {
         no_network?.visibility = View.GONE
 
-        val call = ServiceGenerator.create().latestPosts
+        val call = if (filter_club_id == null) {
+            ServiceGenerator.create().latestPosts
+        } else {
+            ServiceGenerator.create().getPostsForAssociation(filter_club_id)
+        }
+
         call.enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
                     adapter!!.posts.clear()
-
-                    for (post in response.body()!!) {
-                        if (filter_club_id == null || filter_club_id == post.association) {
-                            adapter!!.addItem(post)
-                        }
-                    }
+                    addPostsToAdapter(response.body());
                 } else {
-                    //Toast.makeText(App.getAppContext(), "PostsFragment", Toast.LENGTH_LONG).show()
                     if (adapter!!.posts.isEmpty()) {
                         no_network?.visibility = View.VISIBLE
-                    }else{
+                    } else {
                         Snackbar.make(refresh_posts, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                     }
                 }
@@ -118,16 +117,23 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                //Toast.makeText(App.getAppContext(), "PostsFragment - Veuillez vérifier votre connexion internet", Toast.LENGTH_LONG).show()
                 if (adapter!!.posts.isEmpty()) {
                     no_network?.visibility = View.VISIBLE
-                }else{
+                } else {
                     Snackbar.make(refresh_posts, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                 }
                 refresh_posts?.isRefreshing = false
                 progress_bar?.visibility = View.GONE
             }
         })
+    }
+
+    private fun addPostsToAdapter(posts: List<Post>?) {
+        if (posts != null) {
+            for (post in posts) {
+                adapter!!.addItem(post)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -158,6 +164,6 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     companion object {
-        private val POST_REQUEST = 3
+        private const val POST_REQUEST = 3
     }
 }

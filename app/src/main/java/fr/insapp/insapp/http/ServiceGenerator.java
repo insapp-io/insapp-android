@@ -38,7 +38,7 @@ public class ServiceGenerator {
 
     private static Client client;
 
-    public static <S> S createService(Class<S> serviceClass, TypeAdapter... adapters) {
+     private static <S> S createService(Class<S> serviceClass, TypeAdapter... adapters) {
         Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson));
 

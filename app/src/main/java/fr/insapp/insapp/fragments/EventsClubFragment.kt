@@ -100,37 +100,39 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun generateEvents() {
         clearEvents()
 
-        for (j in 0 until club!!.events.size) {
-            val call = ServiceGenerator.create().getEventFromId(club!!.events[j])
-            call.enqueue(object : Callback<Event> {
-                override fun onResponse(call: Call<Event>, response: Response<Event>) {
-                    if (response.isSuccessful) {
-                        addEventToAdapter(response.body()!!)
-                    } else {
-                        Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show()
-                    }
-
-                    refresh_events_club?.isRefreshing = false
-                }
-
-                override fun onFailure(call: Call<Event>, t: Throwable) {
+        val call = ServiceGenerator.create().getEventsForAssociation(club?.id)
+        call.enqueue(object : Callback<List<Event>> {
+            override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
+                if (response.isSuccessful) {
+                    addEventsToAdapter(response.body())
+                } else {
                     Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show()
-
-                    refresh_events_club?.isRefreshing = false
                 }
-            })
-        }
+
+                refresh_events_club?.isRefreshing = false
+            }
+
+            override fun onFailure(call: Call<List<Event>>, t: Throwable) {
+                Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show()
+
+                refresh_events_club?.isRefreshing = false
+            }
+        })
     }
 
-    private fun addEventToAdapter(event: Event) {
-        val atm = Calendar.getInstance().time
+    private fun addEventsToAdapter(events: List<Event>?) {
+        if (events != null) {
+            val atm = Calendar.getInstance().time
 
-        if (event.dateEnd.time > atm.time) {
-            adapterFuture!!.addItem(event)
-            events_future_layout.visibility = View.VISIBLE
-        } else {
-            adapterPast!!.addItem(event)
-            events_past_layout.visibility = View.VISIBLE
+            for (event in events) {
+                if (event.dateEnd.time > atm.time) {
+                    adapterFuture!!.addItem(event)
+                    events_future_layout.visibility = View.VISIBLE
+                } else {
+                    adapterPast!!.addItem(event)
+                    events_past_layout.visibility = View.VISIBLE
+                }
+            }
         }
     }
 

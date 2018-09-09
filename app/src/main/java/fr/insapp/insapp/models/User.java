@@ -2,22 +2,14 @@ package fr.insapp.insapp.models;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.List;
 
 import auto.parcelgson.AutoParcelGson;
 import auto.parcelgson.gson.annotations.SerializedName;
 import fr.insapp.insapp.App;
-import fr.insapp.insapp.http.ServiceGenerator;
-import fr.insapp.insapp.notifications.FirebaseService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Antoine on 19/09/2016.

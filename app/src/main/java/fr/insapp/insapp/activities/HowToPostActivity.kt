@@ -13,29 +13,29 @@ import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
-import kotlinx.android.synthetic.main.activity_legal_conditions.*
+import kotlinx.android.synthetic.main.activity_credits.*
 
 /**
- * Created by thomas on 13/12/2016.
+ * Created by thomas on 09/09/2018.
  */
 
-class LegalConditionsActivity : AppCompatActivity() {
+class HowToPostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_legal_conditions)
+        setContentView(R.layout.activity_credits)
 
-        setSupportActionBar(toolbar_conditions)
+        setSupportActionBar(toolbar_credits)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         container?.visibility = View.VISIBLE
         progress_bar?.visibility = View.VISIBLE
         no_network?.visibility = View.GONE
-        webview_conditions?.visibility = View.GONE
+        webview_credits?.visibility = View.GONE
 
-        webview_conditions.loadUrl(ServiceGenerator.ROOT_URL + "legal")
-        webview_conditions.webViewClient = object : WebViewClient() {
+        webview_credits.loadUrl(ServiceGenerator.ROOT_URL + "how-to-post")
+        webview_credits.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 container?.visibility = View.VISIBLE
                 progress_bar?.visibility = View.VISIBLE
@@ -48,18 +48,18 @@ class LegalConditionsActivity : AppCompatActivity() {
                     container?.visibility = View.VISIBLE
                     progress_bar?.visibility = View.GONE
                     no_network?.visibility = View.VISIBLE
-                    webview_conditions?.visibility = View.GONE
+                    webview_credits?.visibility = View.GONE
                 } else {
                     container?.visibility = View.GONE
                     progress_bar?.visibility = View.GONE
                     no_network?.visibility = View.GONE
-                    webview_conditions?.visibility = View.VISIBLE
-                    Answers.getInstance().logCustom(CustomEvent("Read Legal Conditions"))
+                    webview_credits?.visibility = View.VISIBLE
+                    Answers.getInstance().logCustom(CustomEvent("Read How To Post note"))
                 }
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                webview_conditions.loadUrl("about:blank")
+                webview_credits.loadUrl("about:blank")
                 super.onReceivedError(view, request, error)
             }
         }

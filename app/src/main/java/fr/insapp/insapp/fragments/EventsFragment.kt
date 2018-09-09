@@ -10,9 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bumptech.glide.Glide
-import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter
@@ -124,11 +122,11 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         adapterNextWeek!!.events.clear()
         adapterLater!!.events.clear()
 
-        events_now_layout.visibility = View.GONE
-        events_today_layout.visibility = View.GONE
-        events_week_layout.visibility = View.GONE
-        events_next_week_layout.visibility = View.GONE
-        events_later_layout.visibility = View.GONE
+        events_now_layout?.visibility = View.GONE
+        events_today_layout?.visibility = View.GONE
+        events_week_layout?.visibility = View.GONE
+        events_next_week_layout?.visibility = View.GONE
+        events_later_layout?.visibility = View.GONE
     }
 
     private fun generateEvents() {
@@ -147,21 +145,23 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     val events = response.body()
                     val atm = Calendar.getInstance().time
 
-                    if (events!!.isNotEmpty()) {
-                        no_event?.visibility = View.GONE
-                        for (event in events) {
-                            if (event.dateEnd.time > atm.time) {
-                                if (filter_club_id != null) {
-                                    if (filter_club_id == event.association) {
+                    if (events != null) {
+                        if (events.isNotEmpty()) {
+                            no_event?.visibility = View.GONE
+                            for (event in events) {
+                                if (event.dateEnd.time > atm.time) {
+                                    if (filter_club_id != null) {
+                                        if (filter_club_id == event.association) {
+                                            addEventToAdapter(event)
+                                        }
+                                    } else {
                                         addEventToAdapter(event)
                                     }
-                                } else {
-                                    addEventToAdapter(event)
                                 }
                             }
+                        } else {
+                            no_event?.visibility = View.VISIBLE
                         }
-                    } else {
-                        no_event?.visibility = View.VISIBLE
                     }
                 } else {
                     //Toast.makeText(App.getAppContext(), "EventsFragment", Toast.LENGTH_LONG).show()
@@ -185,7 +185,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (event.dateStart.time <= now.time.time && event.dateEnd.time > now.time.time) {
             adapterNow!!.addItem(event)
-            events_now_layout.visibility = View.VISIBLE
+            events_now_layout?.visibility = View.VISIBLE
             return
         }
 
@@ -202,7 +202,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (event.dateStart.time <= tomorrow.time.time) {
             adapterToday!!.addItem(event)
-            events_today_layout.visibility = View.VISIBLE
+            events_today_layout?.visibility = View.VISIBLE
             return
         }
 
@@ -221,7 +221,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (event.dateStart.time <= week.time.time) {
             adapterWeek!!.addItem(event)
-            events_week_layout.visibility = View.VISIBLE
+            events_week_layout?.visibility = View.VISIBLE
             return
         }
 
@@ -241,16 +241,16 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if (event.dateStart.time <= nextWeek.time.time) {
             adapterNextWeek!!.addItem(event)
-            events_next_week_layout.visibility = View.VISIBLE
+            events_next_week_layout?.visibility = View.VISIBLE
             return
         }
 
         adapterLater!!.addItem(event)
-        events_later_layout.visibility = View.VISIBLE
+        events_later_layout?.visibility = View.VISIBLE
     }
 
     private fun stopLoadingIndicators(){
-        progress_bar.visibility = View.INVISIBLE
+        progress_bar?.visibility = View.INVISIBLE
         refresh_events?.isRefreshing = false
     }
 

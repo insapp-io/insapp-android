@@ -10,9 +10,17 @@ import android.media.RingtoneManager
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import fr.insapp.insapp.App
 import fr.insapp.insapp.R
+import fr.insapp.insapp.http.ServiceGenerator
+import fr.insapp.insapp.models.NotificationUser
+import fr.insapp.insapp.utility.Utils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 /**
@@ -21,14 +29,23 @@ import java.util.*
 
 class FirebaseMessaging : FirebaseMessagingService() {
 
+    override fun onNewToken(refreshedToken: String?) {
+        val firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE)
+        firebaseCredentialsPreferences.edit().putString("token", refreshedToken).apply()
+
+        Log.d(FirebaseMessaging.TAG, "Refreshed token: " + refreshedToken!!)
+
+        FirebaseMessaging.SHOULD_REGISTER_TOKEN = true
+    }
+
     private val randomNotificationId: Int
         get() = Random().nextInt(9999 - 1000) + 1000
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        Log.d(FirebaseService.TAG, "From: " + remoteMessage?.from)
+        Log.d(FirebaseMessaging.TAG, "From: " + remoteMessage?.from)
 
         if (remoteMessage?.data?.isNotEmpty() == true) {
-            Log.d(FirebaseService.TAG, "Data: " + remoteMessage.data)
+            Log.d(FirebaseMessaging.TAG, "Data: " + remoteMessage.data)
 
             val notification = remoteMessage.notification
             sendNotification(notification?.title, notification?.body, notification?.clickAction, remoteMessage.data)
@@ -136,6 +153,35 @@ class FirebaseMessaging : FirebaseMessagingService() {
     */
 
     companion object {
+
+        const val TAG = "FA"
+
+        var SHOULD_REGISTER_TOKEN = false
+
+        fun registerToken(token: String) {
+            val user = Utils.user
+
+            val notificationUser = NotificationUser(null, user?.id, token, "android")
+
+            val call = ServiceGenerator.create().registerNotification(notificationUser)
+            call.enqueue(object : Callback<NotificationUser> {
+                override fun onResponse(call: Call<NotificationUser>, response: Response<NotificationUser>) {
+                    if (response.isSuccessful) {
+                        Log.d(FirebaseMessaging.TAG, "Firebase token successfully registered on server: $token")
+                    } else {
+                        Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show()
+
+                        FirebaseMessaging.SHOULD_REGISTER_TOKEN = true
+                    }
+                }
+
+                override fun onFailure(call: Call<NotificationUser>, t: Throwable) {
+                    Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show()
+
+                    FirebaseMessaging.SHOULD_REGISTER_TOKEN = true
+                }
+            })
+        }
 
         fun subscribeToTopics() {
             com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("news")

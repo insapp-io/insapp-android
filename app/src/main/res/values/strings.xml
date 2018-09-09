@@ -93,7 +93,7 @@
     <string name="events_next_week">La semaine prochaine</string>
     <string name="events_later">Plus tard</string>
     <string name="event_nothing_1">Mais que font les associations ?</string>
-    <string name="event_nothing_2">Il n\'y a pas d\'event déclaré.</string>
+    <string name="event_nothing_2">Il n\'y a pas d\'event planifié dans les prochains jours.</string>
 
     <string name="event_date_inf">%1$s de %2$s à %3$s</string>
     <string name="event_date_sup_start_end">%1$s à %2$s</string>
@@ -107,15 +107,16 @@
     <string name="ago_now">à l\'instant</string>
     <string name="tag">\@%1$s</string>
 
-    <string name="event_participants">Participants</string>
+    <string name="event_attendees">Participants</string>
 
     <string name="add_to_calendar_action">Ajout au calendrier</string>
     <string name="add_to_calendar_are_you_sure">Voulez-vous ajouter cet évènement à votre calendrier ?</string>
 
+    <string name="how_to_post">Comment publier ?</string>
     <string name="legal_conditions">Mentions légales</string>
+    <string name="credits">Crédits</string>
 
     <string name="login">Authentification</string>
-    <string name="credits">Crédits</string>
 
     <string name="post">Post</string>
 

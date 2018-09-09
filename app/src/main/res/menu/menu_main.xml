@@ -22,6 +22,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_how_to_post"
+        android:title="@string/how_to_post"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_legal_conditions"
         android:title="@string/legal_conditions"
         app:showAsAction="never" />

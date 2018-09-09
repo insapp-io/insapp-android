@@ -127,10 +127,10 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             for (event in events) {
                 if (event.dateEnd.time > atm.time) {
                     adapterFuture!!.addItem(event)
-                    events_future_layout.visibility = View.VISIBLE
+                    events_future_layout?.visibility = View.VISIBLE
                 } else {
                     adapterPast!!.addItem(event)
-                    events_past_layout.visibility = View.VISIBLE
+                    events_past_layout?.visibility = View.VISIBLE
                 }
             }
         }
@@ -171,6 +171,6 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
 
-        private val EVENT_REQUEST = 2
+        private const val EVENT_REQUEST = 2
     }
 }

@@ -51,23 +51,9 @@
         </activity>
 
         <activity
-            android:name=".activities.LegalConditionsActivity"
-            android:label="@string/legal_conditions"
-            android:parentActivityName=".activities.IntroActivity"
+            android:name=".activities.ProfileActivity"
+            android:label="@string/profile"
             android:configChanges="orientation|keyboardHidden|screenSize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.IntroActivity" />
-        </activity>
-
-        <activity
-            android:name=".activities.CreditsActivity"
-            android:label="@string/credits"
-            android:parentActivityName=".activities.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
         </activity>
 
         <activity
@@ -81,9 +67,33 @@
         </activity>
 
         <activity
-            android:name=".activities.ProfileActivity"
-            android:label="@string/profile"
+            android:name=".activities.HowToPostActivity"
+            android:label="@string/how_to_post"
+            android:parentActivityName=".activities.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.LegalConditionsActivity"
+            android:label="@string/legal_conditions"
+            android:parentActivityName=".activities.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.CreditsActivity"
+            android:label="@string/credits"
+            android:parentActivityName=".activities.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
         </activity>
 
         <activity
@@ -149,7 +159,7 @@
 
         <activity
             android:name=".activities.AttendeesActivity"
-            android:label="@string/event_participants"
+            android:label="@string/event_attendees"
             android:parentActivityName=".activities.EventActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <meta-data
@@ -174,13 +184,6 @@
             android:name=".notifications.FirebaseMessaging">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name=".notifications.FirebaseService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 

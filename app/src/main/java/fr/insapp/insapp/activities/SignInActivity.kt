@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -18,7 +17,7 @@ import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.credentials.LoginCredentials
 import fr.insapp.insapp.models.credentials.SessionCredentials
 import fr.insapp.insapp.models.credentials.SigninCredentials
-import fr.insapp.insapp.notifications.FirebaseService
+import fr.insapp.insapp.notifications.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -101,7 +100,7 @@ class SignInActivity : AppCompatActivity() {
 
                     val firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE)
                     if (firebaseCredentialsPreferences.contains("token")) {
-                        FirebaseService.SHOULD_REGISTER_TOKEN = true
+                        FirebaseMessaging.SHOULD_REGISTER_TOKEN = true
                     }
 
                     finish()

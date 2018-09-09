@@ -15,7 +15,7 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
-import fr.insapp.insapp.notifications.FirebaseService;
+import fr.insapp.insapp.notifications.FirebaseMessaging;
 import fr.insapp.insapp.utility.Utils;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -105,11 +105,11 @@ public class TokenInterceptor implements Interceptor {
     private void handleFirebaseTokenRegistration(Gson gson, SharedPreferences userPreferences) {
         final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
 
-        if (FirebaseService.Companion.getSHOULD_REGISTER_TOKEN()) {
+        if (FirebaseMessaging.Companion.getSHOULD_REGISTER_TOKEN()) {
             if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
-                FirebaseService.Companion.setSHOULD_REGISTER_TOKEN(false);
+                FirebaseMessaging.Companion.setSHOULD_REGISTER_TOKEN(false);
 
-                FirebaseService.Companion.registerToken(firebaseCredentialsPreferences.getString("token", ""));
+                FirebaseMessaging.Companion.registerToken(firebaseCredentialsPreferences.getString("token", ""));
             }
         }
     }

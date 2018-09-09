@@ -56,14 +56,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            debuggable true
         }
     }
 }
 
 ext {
     SUPPORT_LIB_VER = '27.1.1'
-    FIREBASE_LIB_VER = '12.0.1'
 }
 
 dependencies {
@@ -80,8 +78,8 @@ dependencies {
     implementation "com.android.support:preference-v14:$SUPPORT_LIB_VER"
     implementation "com.android.support:customtabs:$SUPPORT_LIB_VER"
 
-    implementation "com.google.android.gms:play-services-vision:$FIREBASE_LIB_VER"
-    implementation "com.google.firebase:firebase-messaging:$FIREBASE_LIB_VER"
+    implementation "com.google.android.gms:play-services-vision:15.0.2"
+    implementation "com.google.firebase:firebase-messaging:17.3.1"
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.jd-alexander:LikeButton:0.2.3'
@@ -96,7 +94,7 @@ dependencies {
     kapt "me.tatarka:auto-parcel-gson-processor:0.2"
     testImplementation 'junit:junit:4.12'
     implementation 'junit:junit:4.12'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

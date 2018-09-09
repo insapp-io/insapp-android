@@ -14,8 +14,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.AppCompatCheckBox
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.InstanceIdResult
 import fr.insapp.insapp.App
 import fr.insapp.insapp.BuildConfig
 import fr.insapp.insapp.R
@@ -34,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        @JvmField val dev = BuildConfig.BUILD_VARIANT == "dev"
+        const val dev = BuildConfig.BUILD_VARIANT == "dev"
 
         @JvmField var customTabsConnection: CustomTabsConnection? = null
     }
@@ -76,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         MainActivity.customTabsConnection = CustomTabsConnection()
         CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", customTabsConnection)
 
-        //display correct fragment for shortcuts
+        // display correct fragment for shortcuts
         val fragmentId = intent.getIntExtra("FRAGMENT_ID", 0)
         viewpager.currentItem = fragmentId
 
@@ -90,6 +95,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             FirebaseMessaging.unsubscribeFromTopics()
         }
+
+        // Firebase token
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(object: OnCompleteListener<InstanceIdResult> {
+                override fun onComplete(task:Task<InstanceIdResult>) {
+                    if (!task.isSuccessful) {
+                        Log.w(FirebaseMessaging.TAG, "getInstanceId failed", task.exception)
+                        return
+                    }
+
+                    Log.d(FirebaseMessaging.TAG, "Current Firebase token: " + task.result.token)
+                }
+            })
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
@@ -129,6 +147,8 @@ class MainActivity : AppCompatActivity() {
             R.id.action_profile -> startActivity(Intent(this, ProfileActivity::class.java))
 
             R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+
+            R.id.action_how_to_post -> startActivity(Intent(this, HowToPostActivity::class.java))
 
             R.id.action_legal_conditions -> startActivity(Intent(this, LegalConditionsActivity::class.java))
 

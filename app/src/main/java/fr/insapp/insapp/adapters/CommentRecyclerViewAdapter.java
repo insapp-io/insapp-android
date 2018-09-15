@@ -12,14 +12,15 @@ import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ProfileActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
@@ -132,9 +133,10 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
 
                     final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                     requestManager
-                            .load(id)
-                            .transition(withCrossFade())
-                            .into(holder.avatarCircleImageView);
+                        .load(id)
+                        .transition(withCrossFade())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(holder.avatarImageView);
 
                     holder.usernameTextView.setText(String.format(context.getResources().getString(R.string.tag), user.getUsername()));
 
@@ -145,7 +147,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
                         }
                     };
 
-                    holder.avatarCircleImageView.setOnClickListener(listener);
+                    holder.avatarImageView.setOnClickListener(listener);
                     holder.usernameTextView.setOnClickListener(listener);
                 }
                 else {
@@ -183,7 +185,7 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView avatarCircleImageView;
+        private ImageView avatarImageView;
         private TextView usernameTextView;
         private TextView contentTextView;
         private TextView dateTextView;
@@ -191,10 +193,10 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         public CommentViewHolder(View view) {
             super(view);
 
-            this.avatarCircleImageView = (CircleImageView) view.findViewById(R.id.username_avatar);
-            this.usernameTextView = (TextView) view.findViewById(R.id.username_comment);
-            this.contentTextView = (TextView) view.findViewById(R.id.content_comment);
-            this.dateTextView = (TextView) view.findViewById(R.id.date_comment);
+            this.avatarImageView = view.findViewById(R.id.username_avatar);
+            this.usernameTextView = view.findViewById(R.id.username_comment);
+            this.contentTextView = view.findViewById(R.id.content_comment);
+            this.dateTextView = view.findViewById(R.id.date_comment);
         }
 
         public void bind(final Comment comment, final OnCommentItemLongClickListener listener) {
@@ -207,8 +209,8 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
             });
         }
 
-        public CircleImageView getAvatarCircleImageView() {
-            return avatarCircleImageView;
+        public ImageView getAvatarImageView() {
+            return avatarImageView;
         }
 
         public TextView getUsernameTextView() {

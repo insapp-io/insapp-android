@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.SearchTerms;
@@ -64,7 +64,7 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
         // get the drawable of avatar
 
         final int id = resources.getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-        GlideApp.with(context).load(id).into(((CircleImageView) convertView.findViewById(R.id.dropdown_avatar)));
+        GlideApp.with(context).load(id).into(((ImageView) convertView.findViewById(R.id.dropdown_avatar)));
 
         return convertView;
     }

@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/user_thumb_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -7,12 +6,11 @@
     android:padding="15dp"
     android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/user_avatar"
         android:layout_marginTop="12dp"
         android:layout_width="65dp"
-        android:layout_height="65dp"
-        app:civ_border_width="0dp" />
+        android:layout_height="65dp" />
 
     <TextView
         android:id="@+id/user_username"

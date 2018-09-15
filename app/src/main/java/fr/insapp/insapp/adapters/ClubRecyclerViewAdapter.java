@@ -5,15 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
@@ -70,6 +71,7 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
 
         requestManager
                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                .apply(RequestOptions.circleCropTransform())
                 .transition(withCrossFade())
                 .into(holder.avatar);
 
@@ -84,7 +86,7 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
     public List<Club> getClubs() { return clubs; }
 
     public static class ClubViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView avatar;
+        public ImageView avatar;
         public TextView name;
 
         public ClubViewHolder(View view, boolean matchParent) {
@@ -93,8 +95,8 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
             if (matchParent)
                 (view.findViewById(R.id.club_thumb_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.club_avatar);
-            this.name = (TextView) view.findViewById(R.id.club_name);
+            this.avatar = view.findViewById(R.id.club_avatar);
+            this.name = view.findViewById(R.id.club_name);
         }
 
         public void bind(final Club club, final OnClubItemClickListener listener) {

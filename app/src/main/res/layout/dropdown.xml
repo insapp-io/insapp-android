@@ -1,17 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="?android:selectableItemBackground"
     android:padding="10dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/dropdown_avatar"
         android:layout_marginEnd="6dp"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:civ_border_width="0dp" />
+        android:layout_height="40dp" />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/dropdown_textview"

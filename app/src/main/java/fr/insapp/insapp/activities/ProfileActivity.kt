@@ -66,9 +66,9 @@ class ProfileActivity : AppCompatActivity() {
         // Answers
 
         Answers.getInstance().logContentView(ContentViewEvent()
-                .putContentId(user!!.id)
-                .putContentName(user!!.username)
-                .putContentType("User"))
+            .putContentId(user!!.id)
+            .putContentName(user!!.username)
+            .putContentType("User"))
 
         // toolbar
 
@@ -94,7 +94,7 @@ class ProfileActivity : AppCompatActivity() {
         val id = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender), "drawable", packageName)
         val drawable = ContextCompat.getDrawable(this@ProfileActivity, id)
 
-        profil_avatar.setImageDrawable(drawable)
+        profile_avatar.setImageDrawable(drawable)
         profile_username.text = user!!.username
         profile_name.text = user!!.name
         profile_email.text = user!!.email

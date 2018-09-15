@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,7 +14,6 @@ import com.bumptech.glide.RequestManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
@@ -86,7 +86,7 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
     public List<User> getUsers() { return users; }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView avatar;
+        public ImageView avatar;
         public TextView name;
         public TextView username;
 
@@ -96,9 +96,9 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
             if (matchParent)
                 (view.findViewById(R.id.user_thumb_macaroon_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.user_avatar);
-            this.name = (TextView) view.findViewById(R.id.user_name);
-            this.username = (TextView) view.findViewById(R.id.user_username);
+            this.avatar = view.findViewById(R.id.user_avatar);
+            this.name = view.findViewById(R.id.user_name);
+            this.username = view.findViewById(R.id.user_username);
         }
 
         public void bind(final User user, final OnUserItemClickListener listener) {

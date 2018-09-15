@@ -19,7 +19,6 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.activities.ProfileActivity;
@@ -97,8 +96,8 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
 
                         final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
                         requestManager
-                                .load(id)
-                                .into(holder.avatar_notification);
+                            .load(id)
+                            .into(holder.avatar_notification);
 
                         holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -127,17 +126,20 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final Club club = response.body();
 
-                        requestManager
+                        if (club != null) {
+                            requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                                .apply(RequestOptions.circleCropTransform())
                                 .transition(withCrossFade())
                                 .into(holder.avatar_notification);
 
-                        holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                            }
-                        });
+                            holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                                }
+                            });
+                        }
                     } else {
                         Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                     }
@@ -161,9 +163,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         final Post post = response.body();
 
                         requestManager
-                                .load(ServiceGenerator.CDN_URL + post.getImage())
-                                .apply(new RequestOptions().centerCrop())
-                                .into(holder.thumbnail);
+                            .load(ServiceGenerator.CDN_URL + post.getImage())
+                            .apply(new RequestOptions().centerCrop())
+                            .into(holder.thumbnail);
                     }
                     else {
                         Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
@@ -186,9 +188,9 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                         final Event event = response.body();
 
                         requestManager
-                                .load(ServiceGenerator.CDN_URL + event.getImage())
-                                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
-                                .into(holder.thumbnail);
+                            .load(ServiceGenerator.CDN_URL + event.getImage())
+                            .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
+                            .into(holder.thumbnail);
                     }
                     else {
                         Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
@@ -213,16 +215,16 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
     public static class NotificationViewHolder extends RecyclerView.ViewHolder {
         public TextView text;
         public TextView date;
-        public CircleImageView avatar_notification;
+        public ImageView avatar_notification;
         public ImageView thumbnail;
 
         public NotificationViewHolder(View view) {
             super(view);
 
-            this.text = (TextView) view.findViewById(R.id.notification_text);
-            this.date = (TextView) view.findViewById(R.id.notification_date);
-            this.avatar_notification = (CircleImageView) view.findViewById(R.id.avatar_notification);
-            this.thumbnail = (ImageView) view.findViewById(R.id.thumbnail_notification);
+            this.text = view.findViewById(R.id.notification_text);
+            this.date = view.findViewById(R.id.notification_date);
+            this.avatar_notification = view.findViewById(R.id.avatar_notification);
+            this.thumbnail = view.findViewById(R.id.thumbnail_notification);
         }
 
         public void bind(final Notification notification, final OnNotificationItemClickListener listener) {

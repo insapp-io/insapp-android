@@ -26,12 +26,11 @@
             android:layout_height="match_parent"
             android:padding="16dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/post_club_avatar"
                 android:layout_marginEnd="6dp"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:civ_border_width="0dp" />
+                android:layout_height="40dp" />
 
             <TextView
                 android:id="@+id/post_title"
@@ -118,12 +117,11 @@
             android:background="?android:selectableItemBackground"
             android:padding="16dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/comment_post_username_avatar"
                 android:layout_marginEnd="6dp"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:civ_border_width="0dp" />
+                android:layout_height="40dp" />
 
             <fr.insapp.insapp.components.CommentEditText
                 android:id="@+id/comment_post_input"

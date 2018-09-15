@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.RequestOptions
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter
@@ -73,6 +74,7 @@ class CommentsEventFragment : Fragment() {
         Glide
             .with(context!!)
             .load(id)
+            .apply(RequestOptions.circleCropTransform())
             .transition(withCrossFade())
             .into(comment_event_username_avatar)
 

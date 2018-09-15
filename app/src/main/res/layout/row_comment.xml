@@ -1,18 +1,15 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
-    android:paddingBottom="10dp" >
+    android:paddingBottom="10dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/username_avatar"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="6dp"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:civ_border_width="0dp" />
+        android:layout_height="40dp" />
 
     <TextView
         android:id="@+id/username_comment"

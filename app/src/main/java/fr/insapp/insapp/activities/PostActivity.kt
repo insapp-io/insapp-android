@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.like.LikeButton
@@ -173,6 +174,7 @@ class PostActivity : AppCompatActivity() {
                     Glide
                         .with(this@PostActivity)
                         .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
+                        .apply(RequestOptions.circleCropTransform())
                         .transition(withCrossFade())
                         .into(post_club_avatar)
 
@@ -224,6 +226,7 @@ class PostActivity : AppCompatActivity() {
             .with(this@PostActivity)
             .load(id)
             .transition(withCrossFade())
+            .apply(RequestOptions.circleCropTransform())
             .into(comment_post_username_avatar)
 
         // image

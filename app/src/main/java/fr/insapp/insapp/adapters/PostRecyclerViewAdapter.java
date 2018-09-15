@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.activities.PostActivity;
@@ -105,19 +104,22 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                     if (response.isSuccessful()) {
                         final Club club = response.body();
 
-                        requestManager
+                        if (club != null) {
+                            requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                                .apply(RequestOptions.circleCropTransform())
                                 .transition(withCrossFade())
-                                .into(holder.getAvatarCircleImageView());
+                                .into(holder.getAvatarImageView());
 
-                        // listener
+                            // listener
 
-                        holder.getAvatarCircleImageView().setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                            }
-                        });
+                            holder.getAvatarImageView().setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                                }
+                            });
+                        }
                     }
                     else {
                         Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
@@ -133,18 +135,18 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
         if (layout == R.layout.row_post) {
             requestManager
-                    .load(ServiceGenerator.CDN_URL + post.getImage())
-                    .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
-                    .transition(withCrossFade())
-                    .into(holder.getImageView());
+                .load(ServiceGenerator.CDN_URL + post.getImage())
+                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
+                .transition(withCrossFade())
+                .into(holder.getImageView());
         }
         else {
             holder.getPlaceholderImageView().setImageSize(post.getImageSize());
 
             requestManager
-                    .load(ServiceGenerator.CDN_URL + post.getImage())
-                    .transition(withCrossFade())
-                    .into(holder.getImageView());
+                .load(ServiceGenerator.CDN_URL + post.getImage())
+                .transition(withCrossFade())
+                .into(holder.getImageView());
 
             holder.getContentTextView().setText(post.getDescription());
             holder.getLikeCounterTextView().setText(String.format(Locale.FRANCE, "%d", post.getLikes().size()));
@@ -229,7 +231,7 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView avatarCircleImageView;
+        private ImageView avatarImageView;
         private TextView titleTextView;
         private TextView contentTextView;
         private ImageView imageView;
@@ -246,29 +248,29 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
             // R.layout.row_post || R.layout.post_with_avatar
 
             if (layout != R.layout.post) {
-                this.avatarCircleImageView = (CircleImageView) view.findViewById(R.id.avatar_club_post);
+                this.avatarImageView = view.findViewById(R.id.avatar_club_post);
             }
 
-            this.titleTextView = (TextView) view.findViewById(R.id.name_post);
-            this.dateTextView = (TextView) view.findViewById(R.id.date_post);
+            this.titleTextView = view.findViewById(R.id.name_post);
+            this.dateTextView = view.findViewById(R.id.date_post);
 
             // R.layout.row_post
 
             if (layout == R.layout.row_post) {
-                this.imageView = (ImageView) view.findViewById(R.id.thumbnail_post);
+                this.imageView = view.findViewById(R.id.thumbnail_post);
                 this.placeholderImageView = null;
             }
 
             // R.layout.post || R.layout.post_with_avatar
 
             else {
-                this.imageView = (ImageView) view.findViewById(R.id.image);
-                this.placeholderImageView = (RatioImageView) view.findViewById(R.id.placeholder);
-                this.contentTextView = (TextView) view.findViewById(R.id.post_text);
-                this.likeButton = (LikeButton) view.findViewById(R.id.like_button);
-                this.likeCounterTextView = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
-                this.commentButton = (ImageButton) view.findViewById(R.id.comment_button);
-                this.commentCounterTextView = (TextView) view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
+                this.imageView = view.findViewById(R.id.image);
+                this.placeholderImageView = view.findViewById(R.id.placeholder);
+                this.contentTextView = view.findViewById(R.id.post_text);
+                this.likeButton = view.findViewById(R.id.like_button);
+                this.likeCounterTextView = view.findViewById(R.id.reactions).findViewById(R.id.heart_counter);
+                this.commentButton = view.findViewById(R.id.comment_button);
+                this.commentCounterTextView = view.findViewById(R.id.reactions).findViewById(R.id.comment_counter);
             }
         }
 
@@ -289,8 +291,8 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
             });
         }
 
-        public CircleImageView getAvatarCircleImageView() {
-            return avatarCircleImageView;
+        public ImageView getAvatarImageView() {
+            return avatarImageView;
         }
 
         public TextView getTitleTextView() {

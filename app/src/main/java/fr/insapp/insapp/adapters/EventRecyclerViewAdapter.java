@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.activities.ClubActivity;
 import fr.insapp.insapp.http.ServiceGenerator;
@@ -140,10 +139,10 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
 
         final int nb_participants = (event.getAttendees() == null) ? 0 : event.getAttendees().size();
         if (nb_participants <= 1) {
-            holder.participants.setText(Integer.toString(nb_participants) + " participant");
+            holder.attendees.setText(Integer.toString(nb_participants) + " participant");
         }
         else {
-            holder.participants.setText(Integer.toString(nb_participants) + " participants");
+            holder.attendees.setText(Integer.toString(nb_participants) + " participants");
         }
 
         final int diffInDays = (int) ((event.getDateEnd().getTime() - event.getDateStart().getTime()) / (1000 * 60 * 60 * 24));
@@ -175,19 +174,19 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumbnail;
         public TextView name;
-        public CircleImageView avatar;
+        public ImageView avatar;
         public TextView date;
-        public TextView participants;
+        public TextView attendees;
 
         public EventViewHolder(View view) {
             super(view);
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.avatar_club_event);
+            this.avatar = view.findViewById(R.id.avatar_club_event);
 
-            this.name = (TextView) view.findViewById(R.id.name_event);
-            this.date = (TextView) view.findViewById(R.id.date_event);
-            this.participants = (TextView) view.findViewById(R.id.going_event);
-            this.thumbnail = (ImageView) view.findViewById(R.id.thumbnail_event);
+            this.name = view.findViewById(R.id.name_event);
+            this.date = view.findViewById(R.id.date_event);
+            this.attendees = view.findViewById(R.id.going_event);
+            this.thumbnail = view.findViewById(R.id.thumbnail_event);
         }
 
         public void bind(final Event event, final OnEventItemClickListener listener) {

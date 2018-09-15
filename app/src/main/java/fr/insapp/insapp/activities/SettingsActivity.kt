@@ -11,12 +11,6 @@ import fr.insapp.insapp.R
 import fr.insapp.insapp.fragments.BarcodeSettingsFragment
 import fr.insapp.insapp.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_settings.*
-import android.support.v7.app.AppCompatDelegate
-import android.os.Build
-
-
-
-
 
 /**
  * Created by thomas on 15/12/2016.
@@ -35,9 +29,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         setSupportActionBar(toolbar_settings)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        }
+
         val upArrow = ResourcesCompat.getDrawable(resources, R.drawable.abc_ic_ab_back_material, null)
         upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
         supportActionBar?.setHomeAsUpIndicator(upArrow)

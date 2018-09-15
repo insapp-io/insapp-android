@@ -2,21 +2,21 @@ package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fr.insapp.insapp.R;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.User;
@@ -74,6 +74,7 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
             final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
             requestManager
                     .load(id)
+                    .apply(RequestOptions.circleCropTransform())
                     .transition(withCrossFade())
                     .into(holder.avatar);
 
@@ -100,8 +101,8 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
     public Map<User, Event.PARTICIPATE> getUsers() { return users; }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView avatar;
-        public CircleImageView macaroon;
+        public ImageView avatar;
+        public ImageView macaroon;
         public TextView name;
         public TextView username;
 
@@ -111,13 +112,12 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
             if (matchParent)
                 (view.findViewById(R.id.user_thumb_macaroon_layout)).getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
 
-            this.avatar = (CircleImageView) view.findViewById(R.id.user_avatar);
-            this.macaroon = (CircleImageView) view.findViewById(R.id.macaroon);
-            this.name = (TextView) view.findViewById(R.id.user_name);
-            this.username = (TextView) view.findViewById(R.id.user_username);
+            this.avatar = view.findViewById(R.id.user_avatar);
+            this.macaroon = view.findViewById(R.id.macaroon);
+            this.name = view.findViewById(R.id.user_name);
+            this.username = view.findViewById(R.id.user_username);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                macaroon.setColorFilter(0xffff9523, PorterDuff.Mode.SRC_ATOP);
+            macaroon.setColorFilter(0xffff9523, PorterDuff.Mode.SRC_ATOP);
         }
 
         public void bind(final User user, final OnUserItemClickListener listener) {

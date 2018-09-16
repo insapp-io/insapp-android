@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.widget.Toast
-
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
@@ -22,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class SignInActivity : AppCompatActivity() {
 
@@ -38,7 +38,9 @@ class SignInActivity : AppCompatActivity() {
         //refresh_webpage.setOnRefreshListener(this)
 
         val cookieManager = CookieManager.getInstance()
-        cookieManager.removeSessionCookie()
+        cookieManager.removeSessionCookies { res ->
+            Log.d("CAS", "Cookie removed: $res")
+        }
 
         webview_conditions.loadUrl(CAS_URL)
         webview_conditions.webViewClient = object : WebViewClient() {

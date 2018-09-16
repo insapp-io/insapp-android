@@ -62,15 +62,15 @@ class FirebaseMessaging : FirebaseMessagingService() {
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, "channel");
 
         builder
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setSmallIcon(R.drawable.ic_stat_notify)
-                .setAutoCancel(true)
-                .setLights(Color.RED, 500, 1000)
-                .setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
-                .setContentTitle(title)
-                .setContentText(body)
-                .setContentIntent(pendingIntent);
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            .setSmallIcon(R.drawable.ic_stat_notify)
+            .setAutoCancel(true)
+            .setLights(Color.RED, 500, 1000)
+            .setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
+            .setContentTitle(title)
+            .setContentText(body)
+            .setContentIntent(pendingIntent);
 
         manager.notify(randomNotificationId, builder.build());
     }

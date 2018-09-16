@@ -10,9 +10,8 @@
         android:shortcutDisabledMessage="@string/shortcut_events_disabled">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="fr.insapp.insapp.debug"
-            android:targetClass="fr.insapp.insapp.LauncherActivity">
-            <extra android:name="SHORTCUT" android:value="1"/>
+            android:targetClass="fr.insapp.insapp.activities.MainActivity">
+            <extra android:name="FRAGMENT_ID" android:value="1"/>
         </intent>
         <!--<categories android:name="android.shortcut.conversation"/>-->
     </shortcut>
@@ -26,9 +25,8 @@
         android:shortcutDisabledMessage="@string/shortcut_notification_disabled">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="fr.insapp.insapp.debug"
-            android:targetClass="fr.insapp.insapp.LauncherActivity">
-            <extra android:name="SHORTCUT" android:value="2"/>
+            android:targetClass="fr.insapp.insapp.activities.MainActivity">
+            <extra android:name="FRAGMENT_ID" android:value="3"/>
         </intent>
         <!--<categories android:name="android.shortcut.conversation"/>-->
     </shortcut>
@@ -42,10 +40,10 @@
         android:shortcutDisabledMessage="@string/shortcut_profil_disabled">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="fr.insapp.insapp.debug"
-            android:targetClass="fr.insapp.insapp.LauncherActivity">
-            <extra android:name="SHORTCUT" android:value="3"/>
-        </intent>
+            android:targetClass="fr.insapp.insapp.activities.MainActivity"/>
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="fr.insapp.insapp.activities.ProfileActivity"/>
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
 

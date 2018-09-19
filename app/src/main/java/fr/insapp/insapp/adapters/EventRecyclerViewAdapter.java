@@ -88,14 +88,15 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         }
     }
 
+    @NonNull
     @Override
-    public EventRecyclerViewAdapter.EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventRecyclerViewAdapter.EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new EventRecyclerViewAdapter.EventViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final EventRecyclerViewAdapter.EventViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final EventRecyclerViewAdapter.EventViewHolder holder, int position) {
         final Event event = events.get(position);
 
         if (layout == R.layout.row_event_with_avatars) {
@@ -106,17 +107,20 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
                     if (response.isSuccessful()) {
                         final Club club = response.body();
 
-                        requestManager
+                        if (club != null) {
+                            requestManager
                                 .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+                                .apply(RequestOptions.circleCropTransform())
                                 .transition(withCrossFade())
                                 .into(holder.avatar);
 
-                        holder.avatar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
-                            }
-                        });
+                            holder.avatar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    context.startActivity(new Intent(context, ClubActivity.class).putExtra("club", club));
+                                }
+                            });
+                        }
                     }
                     else {
                         Toast.makeText(context, "EventRecyclerViewAdapter", Toast.LENGTH_LONG).show();
@@ -131,18 +135,18 @@ public class EventRecyclerViewAdapter extends BaseRecyclerViewAdapter<EventRecyc
         }
 
         requestManager
-                .load(ServiceGenerator.CDN_URL + event.getImage())
-                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
-                .into(holder.thumbnail);
+            .load(ServiceGenerator.CDN_URL + event.getImage())
+            .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
+            .into(holder.thumbnail);
 
         holder.name.setText(event.getName());
 
-        final int nb_participants = (event.getAttendees() == null) ? 0 : event.getAttendees().size();
-        if (nb_participants <= 1) {
-            holder.attendees.setText(Integer.toString(nb_participants) + " participant");
+        final int nbAttendees = (event.getAttendees() == null) ? 0 : event.getAttendees().size();
+        if (nbAttendees <= 1) {
+            holder.attendees.setText(String.format(context.getString(R.string.x_attendee), nbAttendees));
         }
         else {
-            holder.attendees.setText(Integer.toString(nb_participants) + " participants");
+            holder.attendees.setText(String.format(context.getString(R.string.x_attendees), nbAttendees));
         }
 
         final int diffInDays = (int) ((event.getDateEnd().getTime() - event.getDateStart().getTime()) / (1000 * 60 * 60 * 24));

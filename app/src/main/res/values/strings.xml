@@ -11,6 +11,8 @@
     <string name="participate_maybe">Peut-être</string>
     <string name="participate_no">J\'y vais pas</string>
 
+    <string name="x_attendee">%1$d participant</string>
+    <string name="x_attendees">%1$d participants</string>
     <string name="no_attendees_no_interested">Pas de participants</string>
     <string name="no_attendees_one_interested">Pas de participants, 1 intéressé</string>
     <string name="no_attendees_x_interested">Pas de participants, %1$d intéressés</string>

@@ -71,14 +71,15 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
         this.notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public NotificationRecyclerViewAdapter.NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NotificationRecyclerViewAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_notification, parent, false);
         return new NotificationRecyclerViewAdapter.NotificationViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final NotificationRecyclerViewAdapter.NotificationViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final NotificationRecyclerViewAdapter.NotificationViewHolder holder, final int position) {
         final Notification notification = notifications.get(position);
 
         holder.text.setText(notification.getMessage());
@@ -94,17 +95,21 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final User user = response.body();
 
-                        final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
-                        requestManager
-                            .load(id)
-                            .into(holder.avatar_notification);
+                        if (user != null) {
+                            final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
+                            requestManager
+                                .load(id)
+                                .apply(RequestOptions.circleCropTransform())
+                                .transition(withCrossFade())
+                                .into(holder.avatar_notification);
 
-                        holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", user));
-                            }
-                        });
+                            holder.avatar_notification.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    context.startActivity(new Intent(context, ProfileActivity.class).putExtra("user", user));
+                                }
+                            });
+                        }
                     }
                     else {
                         Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
@@ -162,10 +167,13 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final Post post = response.body();
 
-                        requestManager
-                            .load(ServiceGenerator.CDN_URL + post.getImage())
-                            .apply(new RequestOptions().centerCrop())
-                            .into(holder.thumbnail);
+                        if (post != null) {
+                            requestManager
+                                .load(ServiceGenerator.CDN_URL + post.getImage())
+                                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
+                                .transition(withCrossFade())
+                                .into(holder.thumbnail);
+                        }
                     }
                     else {
                         Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();
@@ -187,10 +195,13 @@ public class NotificationRecyclerViewAdapter extends BaseRecyclerViewAdapter<Not
                     if (response.isSuccessful()) {
                         final Event event = response.body();
 
-                        requestManager
-                            .load(ServiceGenerator.CDN_URL + event.getImage())
-                            .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
-                            .into(holder.thumbnail);
+                        if (event != null) {
+                            requestManager
+                                .load(ServiceGenerator.CDN_URL + event.getImage())
+                                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(8)))
+                                .transition(withCrossFade())
+                                .into(holder.thumbnail);
+                        }
                     }
                     else {
                         Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show();

@@ -1,9 +1,12 @@
 # Insapp
-Android version of insapp, material friendly. Related repositories : [iOS version](https://github.com/fthomasmorel/insapp-iOS), [backend](https://github.com/tomatrocho/insapp-server).
+
+Android version of Insapp.
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
       alt="Download from Google Play" 
       height="80">](https://play.google.com/store/apps/details?id=fr.insapp.insapp)
+
+Related repositories : [iOS version](https://github.com/RobAddict/insapp-iOS), [backend](https://github.com/thomas-bouvier/insapp-server), [API](https://github.com/thomas-bouvier/insapp-go).
 
 ## What is Insapp ?
 

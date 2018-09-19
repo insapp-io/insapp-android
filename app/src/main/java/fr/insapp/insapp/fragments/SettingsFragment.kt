@@ -34,7 +34,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        updatePreferenceSummary(findPreference(key))
+        if (findPreference(key) != null) {
+            updatePreferenceSummary(findPreference(key))
+        }
 
         when (key) {
             "name", "sex", "class", "email", "description" -> {

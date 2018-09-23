@@ -78,14 +78,15 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
         notifyItemChanged(position);
     }
 
+    @NonNull
     @Override
-    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new PostViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final PostViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final PostViewHolder holder, final int position) {
         final Post post = posts.get(position);
 
         holder.getTitleTextView().setText(post.getTitle());
@@ -192,7 +193,9 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
                         @Override
                         public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
                             if (response.isSuccessful()) {
-                                updatePost(position, response.body().getPost());
+                                if (response.body() != null) {
+                                    updatePost(position, response.body().getPost());
+                                }
                             }
                             else {
                                 Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();

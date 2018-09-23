@@ -1,6 +1,7 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,23 +56,23 @@ public class UserRecyclerViewAdapter extends BaseRecyclerViewAdapter<UserRecycle
         this.notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public UserRecyclerViewAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UserRecyclerViewAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_thumb, parent, false);
         return new UserViewHolder(view, matchParent);
     }
 
     @Override
-    public void onBindViewHolder(UserRecyclerViewAdapter.UserViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserRecyclerViewAdapter.UserViewHolder holder, int position) {
         final User user = users.get(position);
-
-        // get the drawable of avatarCircleImageView
 
         final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
         requestManager
-                .load(id)
-                .transition(withCrossFade())
-                .into(holder.avatar);
+            .load(id)
+            .apply(RequestOptions.circleCropTransform())
+            .transition(withCrossFade())
+            .into(holder.avatar);
 
         holder.name.setText(user.getName());
         holder.username.setText(user.getUsername());

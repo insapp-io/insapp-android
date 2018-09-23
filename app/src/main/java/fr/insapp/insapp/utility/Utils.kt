@@ -11,8 +11,6 @@ import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.IntroActivity
 import fr.insapp.insapp.models.User
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
@@ -59,18 +57,6 @@ object Utils {
         }
 
         textView.text = s
-    }
-
-    fun parseMongoDate(mongoDate: String): Date? {
-        val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ")
-
-        try {
-            return df.parse(mongoDate)
-        } catch (ex: ParseException) {
-            ex.printStackTrace()
-        }
-
-        return null
     }
 
     fun displayedDate(date: Date): String {

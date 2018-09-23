@@ -2,6 +2,7 @@ package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +50,9 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
         return filteredUsers.get(index);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.dropdown, parent, false);
@@ -59,7 +61,9 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
         final User user = getItem(position);
         final Resources resources = context.getResources();
 
-        ((TextView) convertView.findViewById(R.id.dropdown_textview)).setText(String.format(resources.getString(R.string.tag), user.getUsername()));
+        if (user != null) {
+            ((TextView) convertView.findViewById(R.id.dropdown_textview)).setText(String.format(resources.getString(R.string.tag), user.getUsername()));
+        }
 
         // get the drawable of avatar
 
@@ -69,6 +73,7 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
         return convertView;
     }
 
+    @NonNull
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -85,7 +90,10 @@ public class AutoCompleterAdapter extends ArrayAdapter<User> implements Filterab
                     try {
                         results = call.execute().body();
 
-                        List<User> users = results.getUsers();
+                        List<User> users = null;
+                        if (results != null) {
+                            users = results.getUsers();
+                        }
                         List<User> filteredUsers = new ArrayList<>();
 
                         if (users != null) {

@@ -2,6 +2,7 @@ package fr.insapp.insapp.adapters;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,14 +59,15 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
         this.notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public AttendeeRecyclerViewAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AttendeeRecyclerViewAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_thumb_macaroon, parent, false);
         return new UserViewHolder(view, matchParent);
     }
 
     @Override
-    public void onBindViewHolder(AttendeeRecyclerViewAdapter.UserViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AttendeeRecyclerViewAdapter.UserViewHolder holder, int position) {
         final User user = getItem(position);
 
         if (user != null) {
@@ -73,10 +75,10 @@ public class AttendeeRecyclerViewAdapter extends BaseRecyclerViewAdapter<Attende
 
             final int id = context.getResources().getIdentifier(Utils.INSTANCE.drawableProfileName(user.getPromotion(), user.getGender()), "drawable", context.getPackageName());
             requestManager
-                    .load(id)
-                    .apply(RequestOptions.circleCropTransform())
-                    .transition(withCrossFade())
-                    .into(holder.avatar);
+                .load(id)
+                .apply(RequestOptions.circleCropTransform())
+                .transition(withCrossFade())
+                .into(holder.avatar);
 
             holder.name.setText(user.getName());
             holder.username.setText(user.getUsername());

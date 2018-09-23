@@ -1,6 +1,7 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,14 +56,15 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
         this.notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public ClubViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ClubViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.club_thumb, parent, false);
         return new ClubViewHolder(view, matchParent);
     }
 
     @Override
-    public void onBindViewHolder(ClubViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ClubViewHolder holder, int position) {
         final Club club = clubs.get(position);
 
         holder.name.setText(club.getName());
@@ -70,10 +72,10 @@ public class ClubRecyclerViewAdapter extends BaseRecyclerViewAdapter<ClubRecycle
         // glide
 
         requestManager
-                .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
-                .apply(RequestOptions.circleCropTransform())
-                .transition(withCrossFade())
-                .into(holder.avatar);
+            .load(ServiceGenerator.CDN_URL + club.getProfilePicture())
+            .apply(RequestOptions.circleCropTransform())
+            .transition(withCrossFade())
+            .into(holder.avatar);
 
         holder.bind(club, listener);
     }

@@ -23,18 +23,21 @@ class LauncherActivity : AppCompatActivity() {
         if (getSharedPreferences("Credentials", Context.MODE_PRIVATE).contains("login")) {
             // manage shortcuts
             val intentValue = intent.getIntExtra("SHORTCUT", 0)
-            if(intentValue == 1){ // event shortcut
-                startActivity(Intent(this@LauncherActivity, MainActivity::class.java).putExtra("FRAGMENT_ID", 1))
-                Answers.getInstance().logCustom(CustomEvent("Use event shortcut"))
-            } else if(intentValue == 2){ // notification shortcut
-                startActivity(Intent(this@LauncherActivity, MainActivity::class.java).putExtra("FRAGMENT_ID", 3))
-                Answers.getInstance().logCustom(CustomEvent("Use notification shortcut"))
-            } else if(intentValue == 3){ // profil shortcut
-                startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
-                startActivity(Intent(this, ProfileActivity::class.java))
-                Answers.getInstance().logCustom(CustomEvent("Use profil shortcut"))
-            } else {
-                startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
+            when (intentValue) {
+                1 -> { // event shortcut
+                    startActivity(Intent(this@LauncherActivity, MainActivity::class.java).putExtra("FRAGMENT_ID", 1))
+                    Answers.getInstance().logCustom(CustomEvent("Use event shortcut"))
+                }
+                2 -> { // notification shortcut
+                    startActivity(Intent(this@LauncherActivity, MainActivity::class.java).putExtra("FRAGMENT_ID", 3))
+                    Answers.getInstance().logCustom(CustomEvent("Use notification shortcut"))
+                }
+                3 -> { // profile shortcut
+                    startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    Answers.getInstance().logCustom(CustomEvent("Use profile shortcut"))
+                }
+                else -> startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
             }
         } else {
             startActivity(Intent(this@LauncherActivity, IntroActivity::class.java))

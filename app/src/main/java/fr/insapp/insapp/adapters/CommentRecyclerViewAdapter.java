@@ -60,14 +60,15 @@ public class CommentRecyclerViewAdapter extends BaseRecyclerViewAdapter<CommentR
         this.listener = listener;
     }
 
+    @NonNull
     @Override
-    public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_comment, parent, false);
         return new CommentViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final CommentViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CommentViewHolder holder, int position) {
         final Comment comment = comments.get(position);
 
         // tagging

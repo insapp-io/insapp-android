@@ -124,6 +124,7 @@
 
     <string name="search_action">Rechercher</string>
     <string name="search_results">Résultats</string>
+    <string name="search_no_results">Aucun résultat</string>
 
     <string name="settings">Paramètres</string>
     <string name="protected_apps_button">Applications protégées</string>

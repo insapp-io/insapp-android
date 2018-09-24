@@ -56,10 +56,10 @@ class FirebaseMessaging : FirebaseMessagingService() {
         val intent = Intent(clickAction)
         data?.forEach { key, value -> intent.putExtra(key, value) }
 
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
-        val manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager;
-        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, "channel");
+        val manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, "channel")
 
         builder
             .setDefaults(Notification.DEFAULT_ALL)
@@ -70,9 +70,9 @@ class FirebaseMessaging : FirebaseMessagingService() {
             .setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
             .setContentTitle(title)
             .setContentText(body)
-            .setContentIntent(pendingIntent);
+            .setContentIntent(pendingIntent)
 
-        manager.notify(randomNotificationId, builder.build());
+        manager.notify(randomNotificationId, builder.build())
     }
 
     /*

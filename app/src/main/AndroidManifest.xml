@@ -192,5 +192,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2fc035eb84a4d714ea10291b4587818c05a74a2d" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_notify" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
     </application>
 </manifest>

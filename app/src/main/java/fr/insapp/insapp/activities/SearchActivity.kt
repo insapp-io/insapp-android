@@ -119,10 +119,11 @@ class SearchActivity : AppCompatActivity() {
 
         // hide layouts
 
-        search_clubs_layout?.setVisibility(LinearLayout.GONE)
-        search_posts_layout.setVisibility(LinearLayout.GONE)
-        search_events_layout.setVisibility(LinearLayout.GONE)
-        search_users_layout.setVisibility(LinearLayout.GONE)
+        search_clubs_layout?.visibility = LinearLayout.GONE
+        search_posts_layout?.visibility  = LinearLayout.GONE
+        search_events_layout?.visibility  = LinearLayout.GONE
+        search_users_layout?.visibility = LinearLayout.GONE
+        search_no_result?.visibility = LinearLayout.GONE
 
         // search
 
@@ -148,7 +149,7 @@ class SearchActivity : AppCompatActivity() {
 
                                 if (!club.profilePicture.isEmpty() && !club.cover.isEmpty()) {
                                     adapterClubs!!.addItem(club)
-                                    search_clubs_layout.setVisibility(LinearLayout.VISIBLE)
+                                    search_clubs_layout.visibility = LinearLayout.VISIBLE
                                 }
                             }
                         }
@@ -156,7 +157,7 @@ class SearchActivity : AppCompatActivity() {
                         if (results.posts != null) {
                             for (i in 0 until results.posts.size) {
                                 adapterPosts!!.addItem(results.posts[i])
-                                search_posts_layout.setVisibility(LinearLayout.VISIBLE)
+                                search_posts_layout.visibility = LinearLayout.VISIBLE
                             }
                         }
 
@@ -168,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
 
                                 if (event.dateEnd.time > atm.time) {
                                     adapterEvents!!.addItem(event)
-                                    search_events_layout.setVisibility(LinearLayout.VISIBLE)
+                                    search_events_layout.visibility = LinearLayout.VISIBLE
                                 }
                             }
                         }
@@ -176,9 +177,14 @@ class SearchActivity : AppCompatActivity() {
                         if (results.users != null) {
                             for (i in 0 until results.users.size) {
                                 adapterUsers!!.addItem(results.users[i])
-                                search_users_layout.setVisibility(LinearLayout.VISIBLE)
+                                search_users_layout.visibility = LinearLayout.VISIBLE
                             }
                         }
+
+                        if(results.clubs == null && results.events == null && results.posts == null && results.users == null){
+                            search_no_result?.visibility = LinearLayout.VISIBLE
+                        }
+
                     } else {
                         Toast.makeText(this@SearchActivity, "SearchActivity", Toast.LENGTH_LONG).show()
                     }

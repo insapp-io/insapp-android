@@ -395,14 +395,12 @@ class EventActivity : AppCompatActivity() {
                 }
 
                 if (scrollRange + verticalOffset == 0) {
-                    collapsing_toolbar_event.title = event.name
                     isShow = true
 
                     val upArrow = ContextCompat.getDrawable(this@EventActivity, R.drawable.abc_ic_ab_back_material)
                     upArrow?.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
                     supportActionBar?.setHomeAsUpIndicator(upArrow)
                 } else if (isShow) {
-                    collapsing_toolbar_event.title = " "
                     isShow = false
 
                     val upArrow = ContextCompat.getDrawable(this@EventActivity, R.drawable.abc_ic_ab_back_material)
@@ -411,6 +409,8 @@ class EventActivity : AppCompatActivity() {
                 }
             }
         })
+
+        collapsing_toolbar_event.title = event.name
 
         collapsing_toolbar_event.setCollapsedTitleTextColor(fgColor)
         collapsing_toolbar_event.setContentScrimColor(bgColor)

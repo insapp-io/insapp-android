@@ -20,24 +20,31 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_event"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:collapsedTitleTextAppearance="@android:color/transparent"
-            app:contentScrim="@color/white">
+            app:contentScrim="@color/white"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:statusBarScrim="@android:color/transparent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
                 android:focusableInTouchMode="true">
 
                 <ImageView
                     android:id="@+id/header_image_event"
                     android:layout_width="match_parent"
-                    android:layout_height="156dp"
-                    android:scaleType="centerCrop"
+                    android:layout_height="172dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
                     android:background="#ff7f7f7f"
-                    android:focusableInTouchMode="true" />
+                    android:fitsSystemWindows="true"
+                    android:focusableInTouchMode="true"
+                    android:scaleType="centerCrop" />
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
@@ -50,77 +57,77 @@
 
         <RelativeLayout
             android:id="@+id/event_info"
-            android:padding="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
             <LinearLayout
                 android:id="@+id/event_club_layout"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/event_club_icon"
-                    android:src="@drawable/ic_adjust_black_24dp"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:layout_marginEnd="6dp" />
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_adjust_black_24dp" />
 
                 <TextView
                     android:id="@+id/event_club_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/event_participants_layout"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/event_club_layout"
                 android:layout_marginTop="4dp"
-                android:layout_below="@id/event_club_layout">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/event_participants_icon"
-                    android:src="@drawable/ic_people_black_24dp"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:layout_marginEnd="6dp" />
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_people_black_24dp" />
 
                 <TextView
                     android:id="@+id/event_participants_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/event_date_layout"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal"
-                android:layout_below="@id/event_participants_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/event_participants_layout"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/event_date_icon"
-                    android:src="@drawable/ic_access_time_black_24dp"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:layout_marginEnd="6dp" />
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_access_time_black_24dp" />
 
                 <TextView
                     android:id="@+id/event_date_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
             </LinearLayout>
         </RelativeLayout>
 

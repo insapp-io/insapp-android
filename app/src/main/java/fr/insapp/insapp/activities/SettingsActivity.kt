@@ -25,7 +25,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         setContentView(R.layout.activity_settings)
 
         // toolbar
-
         setSupportActionBar(toolbar_settings)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -35,14 +34,17 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         supportActionBar?.setHomeAsUpIndicator(upArrow)
 
         // handling nested preferences screen
-
-        if (savedInstanceState == null) {
+        // bug, avec le code suivant, toutes les fonctions dans le fragment sont exécutées 2 fois.
+        // Le fait de virer ce code n'a pas d'influence sur le comportement (qui n'est pas encore le bon)
+        // TODO : corriger les préférences imbriquées
+        /*if (savedInstanceState == null) {
+            Log.d(fr.insapp.insapp.notifications.FirebaseMessaging.TAG, "savedInstanceState == null")
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             val fragment = SettingsFragment.newInstance("General settings")
 
             fragmentTransaction.add(R.id.settings_fragment, fragment)
             fragmentTransaction.commit()
-        }
+        }*/
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

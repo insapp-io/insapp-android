@@ -1,20 +1,11 @@
 package fr.insapp.insapp.notifications
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.media.RingtoneManager
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import fr.insapp.insapp.App
-import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.NotificationUser
 import fr.insapp.insapp.utility.Utils
@@ -38,9 +29,6 @@ class FirebaseMessaging : FirebaseMessagingService() {
         FirebaseMessaging.SHOULD_REGISTER_TOKEN = true
     }
 
-    private val randomNotificationId: Int
-        get() = Random().nextInt(9999 - 1000) + 1000
-
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
         Log.d(FirebaseMessaging.TAG, "From: " + remoteMessage?.from)
 
@@ -48,31 +36,8 @@ class FirebaseMessaging : FirebaseMessagingService() {
             Log.d(FirebaseMessaging.TAG, "Data: " + remoteMessage.data)
 
             val notification = remoteMessage.notification
-            sendNotification(notification?.title, notification?.body, notification?.clickAction, remoteMessage.data)
+            NotificationUtils.sendNotification(notification?.title, notification?.body, notification?.clickAction, remoteMessage.data)
         }
-    }
-
-    private fun sendNotification(title: String?, body: String?, clickAction: String?, data: Map<String, String>?) {
-        val intent = Intent(clickAction)
-        data?.forEach { key, value -> intent.putExtra(key, value) }
-
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
-
-        val manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, "channel")
-
-        builder
-            .setDefaults(Notification.DEFAULT_ALL)
-            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setSmallIcon(R.drawable.ic_stat_notify)
-            .setAutoCancel(true)
-            .setLights(Color.RED, 500, 1000)
-            .setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
-            .setContentTitle(title)
-            .setContentText(body)
-            .setContentIntent(pendingIntent)
-
-        manager.notify(randomNotificationId, builder.build())
     }
 
     /*
@@ -154,7 +119,7 @@ class FirebaseMessaging : FirebaseMessagingService() {
 
     companion object {
 
-        const val TAG = "FA"
+        const val TAG = "FA_DEBUG"
 
         var SHOULD_REGISTER_TOKEN = false
 
@@ -183,14 +148,12 @@ class FirebaseMessaging : FirebaseMessagingService() {
             })
         }
 
-        fun subscribeToTopics() {
-            com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("news")
-            com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("events")
+        fun subscribeToTopics(channel: String) {
+            com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic(channel)
         }
 
-        fun unsubscribeFromTopics() {
-            com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic("news")
-            com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic("events")
+        fun unsubscribeFromTopics(channel: String) {
+            com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic(channel)
         }
     }
 }

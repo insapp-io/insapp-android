@@ -13,6 +13,13 @@ import fr.insapp.insapp.utility.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.app.NotificationManager
+import android.content.Context
+import android.text.TextUtils
+import android.os.Build
+import android.util.Log
+import fr.insapp.insapp.notifications.NotificationUtils
+
 
 /**
  * Created by thomas on 17/07/2017.
@@ -21,15 +28,33 @@ import retrofit2.Response
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
+        // Update notification parameters from system parameter
+        //updateNotificationChannelStatus()
+
         addPreferencesFromResource(R.xml.preferences)
 
         initSummary(preferenceScreen)
 
-        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
         val barcodeData = defaultSharedPreferences.getString("barcode", "")
 
         if (barcodeData != "") {
             findPreference("barcode_preferences").summary = barcodeData
+        }
+    }
+
+    private fun updateNotificationChannelStatus(){
+        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            for(channel in NotificationUtils.channels){
+                val channelEnable = isNotificationChannelEnabled(App.getAppContext(), channel)
+                //Log.d(FirebaseMessaging.TAG, "Test channel - $channel - $channelEnable")
+                if(channelEnable != defaultSharedPreferences.getBoolean("notifications_$channel", true)) {
+                    //Log.d(FirebaseMessaging.TAG, "L'utilisateur a changé le paramètre dans le système, update dans l'application")
+                    defaultSharedPreferences.edit().putBoolean("notifications_$channel", channelEnable).apply()
+                    //Log.d(FirebaseMessaging.TAG, defaultSharedPreferences.getBoolean("notifications_$channel", true).toString())
+                }
+            }
         }
     }
 
@@ -42,7 +67,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             "name", "sex", "class", "email", "description" -> {
 
                 // user change
-
                 val user = Utils.user
 
                 val updatedUser = User.create(
@@ -71,14 +95,24 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 })
             }
 
-            "notifications" ->
+            "notifications_news", "notifications_events", "notifications_others" -> {
 
-                // notification change
+                Log.d(FirebaseMessaging.TAG, key + " with channel " + key.removePrefix("notifications_") + " has changed and is now : " + sharedPreferences.getBoolean(key, true))
+                //setNotificationChannel(key.removePrefix("notifications_"), sharedPreferences.getBoolean(key, true))
+                /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, App.getAppContext().packageName)
+                        putExtra(Settings.EXTRA_CHANNEL_ID, (App.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).getNotificationChannel(key.removePrefix("notifications_")).id)
+                    }
+                    startActivity(intent)
+                }*/
 
-                if (sharedPreferences.getBoolean("notifications", true))
-                    FirebaseMessaging.subscribeToTopics()
-                else
-                    FirebaseMessaging.unsubscribeFromTopics()
+                if (sharedPreferences.getBoolean(key, true)) {
+                    FirebaseMessaging.subscribeToTopics(key.removePrefix("notifications_"))
+                } else {
+                    FirebaseMessaging.unsubscribeFromTopics(key.removePrefix("notifications_"))
+                }
+            }
 
             else -> {
             }
@@ -87,7 +121,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun initSummary(preference: Preference) {
         if (preference is PreferenceGroup) {
-
             for (i in 0 until preference.preferenceCount) {
                 initSummary(preference.getPreference(i))
             }
@@ -118,6 +151,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
+
+    private fun isNotificationChannelEnabled(context: Context, channelId: String): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!TextUtils.isEmpty(channelId)) {
+                val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val channel = manager.getNotificationChannel(channelId)
+                return channel.importance != NotificationManager.IMPORTANCE_NONE
+            }
+            return false
+        } else {
+            return preferenceScreen.sharedPreferences.getBoolean("notifications_$channelId",true)
+        }
+    }
+
 
     companion object {
 

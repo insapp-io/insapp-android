@@ -1,5 +1,7 @@
 package fr.insapp.insapp.activities
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.SearchManager
 import android.content.ComponentName
 import android.content.Context
@@ -31,6 +33,7 @@ import fr.insapp.insapp.fragments.EventsFragment
 import fr.insapp.insapp.fragments.NotificationsFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.notifications.FirebaseMessaging
+import fr.insapp.insapp.notifications.NotificationUtils
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
@@ -88,12 +91,20 @@ class MainActivity : AppCompatActivity() {
         // Huawei protected apps
         ifHuaweiAlert()
 
+        // notification channel (android O and more)
+        //Log.d(FirebaseMessaging.TAG, "Création des groupes de notifications.")
+        /*createNotificationChannel("news", getString(R.string.notification_news_name), getString(R.string.notification_news_description))
+        createNotificationChannel("events", getString(R.string.notification_events_name), getString(R.string.notification_events_description))
+        createNotificationChannel("others", getString(R.string.notification_others_name), getString(R.string.notification_others_description))*/
+
         // topic notifications
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
-        if (defaultSharedPreferences.getBoolean("notifications", true)) {
-            FirebaseMessaging.subscribeToTopics()
-        } else {
-            FirebaseMessaging.unsubscribeFromTopics()
+        for (channel in NotificationUtils.channels) {
+            if (defaultSharedPreferences.getBoolean("notifications_$channel", true)) {
+                FirebaseMessaging.subscribeToTopics(channel)
+            } else {
+                FirebaseMessaging.unsubscribeFromTopics(channel)
+            }
         }
 
         // Firebase token
@@ -208,6 +219,20 @@ class MainActivity : AppCompatActivity() {
             Runtime.getRuntime().exec("am start -n com.huawei.systemmanager/.optimize.process.ProtectActivity --user $userSerial")
         } catch (ex: IOException) {
             ex.printStackTrace()
+        }
+    }
+
+
+    private fun createNotificationChannel(id: String, name: String, description: String) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = description
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
         }
     }
 }

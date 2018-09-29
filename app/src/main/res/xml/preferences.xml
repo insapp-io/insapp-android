@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v7.preference.PreferenceCategory
         android:title="@string/settings_profile">
@@ -31,7 +30,7 @@
             android:key="email"
             android:title="@string/settings_mail"
             android:summary="@string/settings_mail_summary"
-            android:dialogLayout="@layout/pref_dialog_edittext_fix" />
+            android:dialogLayout="@layout/pref_dialog_edittext_fix"/>
 
         <android.support.v7.preference.EditTextPreference
             android:key="description"
@@ -66,19 +65,37 @@
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
-        android:title="@string/settings_options">
+        android:title="@string/shortcut_notification">
 
         <android.support.v7.preference.SwitchPreferenceCompat
-            android:key="notifications"
-            android:title="@string/settings_notifications"
-            android:summary="@string/settings_notifications_summary"
+            android:key="notifications_news"
+            android:title="@string/notification_news_name"
+            android:summary="@string/notification_news_description"
             android:defaultValue="true" />
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="notifications_events"
+            android:title="@string/notification_events_name"
+            android:summary="@string/notification_events_description"
+            android:defaultValue="true" />
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="notifications_others"
+            android:title="@string/notification_others_name"
+            android:summary="@string/notification_others_description"
+            android:defaultValue="true" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/shortcut_events">
 
         <android.support.v7.preference.SwitchPreferenceCompat
             android:key="calendar"
             android:title="@string/settings_calendar"
             android:summary="@string/settings_calendar_summary"
             android:defaultValue="false" />
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

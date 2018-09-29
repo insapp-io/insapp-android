@@ -149,4 +149,11 @@
     <string name="shortcut_profil">Profil</string>
     <string name="shortcut_profil_long">Profil</string>
     <string name="shortcut_profil_disabled">Raccourci désactivé</string>
+
+    <string name="notification_news_name">News</string>
+    <string name="notification_news_description">Une notification est envoyée lorsqu\'une association ajoute une news</string>
+    <string name="notification_events_name">Évènements</string>
+    <string name="notification_events_description">Une notification est envoyée lorsqu\'une association ajoute un évènement</string>
+    <string name="notification_others_name">Autres</string>
+    <string name="notification_others_description">Toutes les autres notifications</string>
 </resources>

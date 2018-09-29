@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
-import fr.insapp.insapp.notifications.FirebaseMessaging
+import fr.insapp.insapp.notifications.NotificationUtils
 import kotlinx.android.synthetic.main.fragment_intro_notifications.*
 
 /**
@@ -20,10 +20,12 @@ class IntroNotificationsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
-        defaultSharedPreferences.putBoolean("notifications", true)
+        defaultSharedPreferences.putBoolean("notifications_news", true)
+        defaultSharedPreferences.putBoolean("notifications_events", true)
+        defaultSharedPreferences.putBoolean("notifications_others", true)
         defaultSharedPreferences.apply()
 
-        FirebaseMessaging.subscribeToTopics()
+        NotificationUtils.registerAllTopics(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,13 +39,12 @@ class IntroNotificationsFragment : Fragment() {
 
         checkbox_enable_notifications?.setOnCheckedChangeListener { _, b ->
             val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
-            defaultSharedPreferences.putBoolean("notifications", b)
+            defaultSharedPreferences.putBoolean("notifications_news", b)
+            defaultSharedPreferences.putBoolean("notifications_events", b)
+            defaultSharedPreferences.putBoolean("notifications_others", b)
             defaultSharedPreferences.apply()
 
-            if (b)
-                FirebaseMessaging.subscribeToTopics()
-            else
-                FirebaseMessaging.unsubscribeFromTopics()
+            NotificationUtils.registerAllTopics(b)
         }
     }
 }

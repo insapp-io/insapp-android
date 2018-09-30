@@ -135,12 +135,12 @@
             android:id="@+id/tabs_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed"
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="2dp"
-            app:tabTextColor="#f2f2f2"
-            app:tabSelectedTextColor="@android:color/white" />
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="#f2f2f2" />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

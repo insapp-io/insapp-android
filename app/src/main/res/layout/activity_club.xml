@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:clickable="true"
+    android:fitsSystemWindows="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_club"
@@ -16,30 +19,43 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_club"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:contentScrim="@color/white"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:statusBarScrim="@android:color/transparent" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:fitsSystemWindows="true"
+                android:focusableInTouchMode="true">
 
                 <ImageView
                     android:id="@+id/header_image_club"
                     android:layout_width="match_parent"
-                    android:layout_height="156dp"
-                    android:scaleType="centerCrop"
+                    android:layout_height="172dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
                     android:background="#ff7f7f7f"
-                    app:layout_collapseMode="parallax" />
+                    android:fitsSystemWindows="true"
+                    android:focusableInTouchMode="true"
+                    android:scaleType="centerCrop" />
 
+                <!--android:clipChildren="false"
+                android:paddingBottom="6dp"-->
                 <RelativeLayout
                     android:id="@+id/club_profile"
-                    android:paddingBottom="6dp"
-                    android:clipChildren="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/header_image_club">
+                    android:layout_below="@+id/header_image_club"
+                    android:layout_alignParentBottom="true"
+                    android:fitsSystemWindows="true"
+                    android:focusableInTouchMode="true">
 
                     <RelativeLayout
                         android:id="@+id/club_info"
@@ -47,80 +63,86 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="133dp"
                         android:layout_marginTop="8dp"
+                        android:focusableInTouchMode="true"
                         android:minHeight="50dp">
 
                         <TextView
                             android:id="@+id/club_name"
-                            android:textSize="18sp"
-                            android:paddingEnd="14dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:maxLines="1" />
+                            android:focusableInTouchMode="true"
+                            android:maxLines="1"
+                            android:paddingEnd="14dp"
+                            android:textSize="18sp" />
 
                         <Button
                             android:id="@+id/club_contact"
-                            android:background="@drawable/rounded_button"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="12dp"
                             android:layout_width="50dp"
                             android:layout_height="35dp"
-                            android:elevation="2dp"
-                            android:layout_marginEnd="16dp"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true" />
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/rounded_button"
+                            android:elevation="2dp"
+                            android:focusableInTouchMode="true"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp" />
                     </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/club_description"
-                        android:layout_below="@id/club_info"
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/club_info"
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="24dp">
+                        android:focusableInTouchMode="true"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/club_description_text"
-                            android:textSize="14sp"
-                            android:linksClickable="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
+                            android:focusableInTouchMode="true"
                             android:lineSpacingExtra="3dp"
-                            android:textIsSelectable="true" />
+                            android:linksClickable="true"
+                            android:textIsSelectable="true"
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </RelativeLayout>
 
                 <ImageView
                     android:id="@+id/club_avatar"
-                    android:padding="3dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_below="@id/header_image_club"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="-50dp"
-                    android:layout_below="@id/header_image_club" />
+                    android:fitsSystemWindows="true"
+                    android:padding="3dp" />
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_club"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs_club"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabMode="fixed"
+            android:layout_height="match_parent"
+            android:layout_marginTop="-18dp"
             app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="2dp"
-            app:tabTextColor="#f2f2f2"
-            app:tabSelectedTextColor="@android:color/white" />
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="#f2f2f2" />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

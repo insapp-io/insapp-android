@@ -13,17 +13,7 @@ import android.support.v7.preference.PreferenceManager
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import java.util.*
-import android.util.Log
-import android.widget.Toast
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
-import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.NotificationUser
-import fr.insapp.insapp.utility.Utils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
+
 /**
  * Created by Pierre on 29/09/2018.
  */
@@ -44,7 +34,7 @@ class NotificationUtils {
             var channel = "others"
             if(body?.contains("news")!!){
                 channel = "news"
-            } else if(body?.contains("invite")!!){
+            } else if(body.contains("invite")){
                 channel = "events"
             }
 
@@ -55,15 +45,15 @@ class NotificationUtils {
                 val builder: NotificationCompat.Builder = NotificationCompat.Builder(App.getAppContext(), channel)
 
                 builder
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setSmallIcon(R.drawable.ic_stat_notify)
-                        .setAutoCancel(true)
-                        .setLights(Color.RED, 500, 1000)
-                        .setColor(ContextCompat.getColor(App.getAppContext(), R.color.colorPrimary))
-                        .setContentTitle(title)
-                        .setContentText(body)
-                        .setContentIntent(pendingIntent)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setSmallIcon(R.drawable.ic_stat_notify)
+                    .setAutoCancel(true)
+                    .setLights(Color.RED, 500, 1000)
+                    .setColor(ContextCompat.getColor(App.getAppContext(), R.color.colorPrimary))
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setContentIntent(pendingIntent)
 
                 manager.notify(randomNotificationId, builder.build())
             }

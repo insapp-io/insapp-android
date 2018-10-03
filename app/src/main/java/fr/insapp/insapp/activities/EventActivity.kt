@@ -489,10 +489,13 @@ class EventActivity : AppCompatActivity() {
     }
 
     override fun finish() {
-        val sendIntent = Intent()
-        sendIntent.putExtra("event", event)
-
-        setResult(Activity.RESULT_OK, sendIntent)
+        if (::event.isInitialized) {
+            val sendIntent = Intent()
+            sendIntent.putExtra("event", event)
+            setResult(Activity.RESULT_OK, sendIntent)
+        } else {
+            setResult(Activity.RESULT_CANCELED)
+        }
 
         super.finish()
     }

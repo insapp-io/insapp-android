@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.text.util.Linkify
 import android.view.MenuItem
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
@@ -38,9 +40,13 @@ class ClubActivity : AppCompatActivity() {
     private var bgColor: Int = 0
     private var fgColor: Int = 0
 
+    private lateinit var requestManager: RequestManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_club)
+
+        requestManager = Glide.with(this);
 
         // club
 
@@ -50,9 +56,9 @@ class ClubActivity : AppCompatActivity() {
         // Answers
 
         Answers.getInstance().logContentView(ContentViewEvent()
-                .putContentId(club!!.id)
-                .putContentName(club!!.name)
-                .putContentType("Club"))
+            .putContentId(club!!.id)
+            .putContentName(club!!.name)
+            .putContentType("Club"))
 
         // toolbar
 
@@ -109,17 +115,16 @@ class ClubActivity : AppCompatActivity() {
 
         collapsing_toolbar_club.setCollapsedTitleTextColor(fgColor)
 
-        GlideApp
-                .with(this)
-                .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
-                .apply(RequestOptions.circleCropTransform())
-                .into(club_avatar)
+        requestManager
+            .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
+            .apply(RequestOptions.circleCropTransform())
+            .into(club_avatar)
 
         GlideApp
-                .with(this)
-                .load(ServiceGenerator.CDN_URL + club!!.cover)
-                .transform(DarkenTransformation())
-                .into(header_image_club)
+            .with(this)
+            .load(ServiceGenerator.CDN_URL + club!!.cover)
+            .transform(DarkenTransformation())
+            .into(header_image_club)
 
         // links
 

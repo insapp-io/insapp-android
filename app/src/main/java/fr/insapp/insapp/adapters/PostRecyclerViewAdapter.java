@@ -32,6 +32,7 @@ import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.Club;
 import fr.insapp.insapp.models.Post;
 import fr.insapp.insapp.models.PostInteraction;
+import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.utility.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -160,55 +161,58 @@ public class PostRecyclerViewAdapter extends BaseRecyclerViewAdapter<PostRecycle
 
             // like button
 
-            final String userId = Utils.INSTANCE.getUser().getId();
+            User user = Utils.INSTANCE.getUser();
+            if (user != null) {
+                final String userId = user.getId();
 
-            holder.getLikeButton().setLiked(post.isPostLikedBy(userId));
+                holder.getLikeButton().setLiked(post.isPostLikedBy(userId));
 
-            holder.getLikeButton().setOnLikeListener(new OnLikeListener() {
-                @Override
-                public void liked(LikeButton likeButton) {
-                    Call<PostInteraction> call = ServiceGenerator.create().likePost(post.getId(), userId);
-                    call.enqueue(new Callback<PostInteraction>() {
-                        @Override
-                        public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
-                            if (response.isSuccessful()) {
-                                updatePost(position, response.body().getPost());
-                            }
-                            else {
-                                Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<PostInteraction> call, @NonNull Throwable t) {
-                            Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void unLiked(LikeButton likeButton) {
-                    Call<PostInteraction> call = ServiceGenerator.create().dislikePost(post.getId(), userId);
-                    call.enqueue(new Callback<PostInteraction>() {
-                        @Override
-                        public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
-                            if (response.isSuccessful()) {
-                                if (response.body() != null) {
-                                    updatePost(position, response.body().getPost());
+                holder.getLikeButton().setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        Call<PostInteraction> call = ServiceGenerator.create().likePost(post.getId(), userId);
+                        call.enqueue(new Callback<PostInteraction>() {
+                            @Override
+                            public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
+                                if (response.isSuccessful()) {
+                                    if (response.body() != null) {
+                                        updatePost(position, response.body().getPost());
+                                    }
+                                } else {
+                                    Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                                 }
                             }
-                            else {
+
+                            @Override
+                            public void onFailure(@NonNull Call<PostInteraction> call, @NonNull Throwable t) {
                                 Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
                             }
-                        }
+                        });
+                    }
 
-                        @Override
-                        public void onFailure(@NonNull Call<PostInteraction> call, @NonNull Throwable t) {
-                            Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            });
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        Call<PostInteraction> call = ServiceGenerator.create().dislikePost(post.getId(), userId);
+                        call.enqueue(new Callback<PostInteraction>() {
+                            @Override
+                            public void onResponse(@NonNull Call<PostInteraction> call, @NonNull Response<PostInteraction> response) {
+                                if (response.isSuccessful()) {
+                                    if (response.body() != null) {
+                                        updatePost(position, response.body().getPost());
+                                    }
+                                } else {
+                                    Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<PostInteraction> call, @NonNull Throwable t) {
+                                Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                });
+            }
 
             // comment button
 

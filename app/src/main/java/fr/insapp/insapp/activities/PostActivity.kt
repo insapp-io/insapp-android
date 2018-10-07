@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
@@ -38,9 +39,13 @@ class PostActivity : AppCompatActivity() {
     private lateinit var post: Post
     private var club: Club? = null
 
+    private lateinit var requestManager: RequestManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post)
+
+        requestManager = Glide.with(this);
 
         val user = Utils.user
 
@@ -103,11 +108,11 @@ class PostActivity : AppCompatActivity() {
         // Answers
 
         Answers.getInstance().logContentView(ContentViewEvent()
-                .putContentId(post.id)
-                .putContentName(post.title)
-                .putContentType("Post")
-                .putCustomAttribute("Favorites count", post.likes?.size ?: 0)
-                .putCustomAttribute("Comments count", post.comments?.size ?: 0))
+            .putContentId(post.id)
+            .putContentName(post.title)
+            .putContentType("Post")
+            .putCustomAttribute("Favorites count", post.likes?.size ?: 0)
+            .putCustomAttribute("Comments count", post.comments?.size ?: 0))
 
         // hide image if necessary
 
@@ -171,8 +176,7 @@ class PostActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     club = response.body()
 
-                    Glide
-                        .with(this@PostActivity)
+                    requestManager
                         .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
                         .apply(RequestOptions.circleCropTransform())
                         .transition(withCrossFade())
@@ -202,7 +206,7 @@ class PostActivity : AppCompatActivity() {
 
         // adapter
 
-        this.adapter = CommentRecyclerViewAdapter(this@PostActivity, Glide.with(this), post.comments)
+        this.adapter = CommentRecyclerViewAdapter(this@PostActivity, requestManager, post.comments)
         adapter.setOnItemLongClickListener(PostCommentLongClickListener(this@PostActivity, post, adapter))
 
         // edit comment
@@ -222,8 +226,7 @@ class PostActivity : AppCompatActivity() {
         // retrieve the avatar of the user
 
         val id = resources.getIdentifier(Utils.drawableProfileName(user?.promotion, user?.gender), "drawable", packageName)
-        Glide
-            .with(this@PostActivity)
+        requestManager
             .load(id)
             .transition(withCrossFade())
             .apply(RequestOptions.circleCropTransform())
@@ -234,8 +237,7 @@ class PostActivity : AppCompatActivity() {
         if (post.imageSize != null && !post.image.isEmpty()) {
             post_placeholder?.setImageSize(post.imageSize)
 
-            Glide
-                .with(this@PostActivity)
+            requestManager
                 .load(ServiceGenerator.CDN_URL + post.image)
                 .transition(withCrossFade())
                 .into(post_image)
@@ -243,10 +245,13 @@ class PostActivity : AppCompatActivity() {
     }
 
     override fun finish() {
-        val sendIntent = Intent()
-        sendIntent.putExtra("post", post)
-
-        setResult(Activity.RESULT_OK, sendIntent)
+        if (::post.isInitialized) {
+            val sendIntent = Intent()
+            sendIntent.putExtra("post", post)
+            setResult(Activity.RESULT_OK, sendIntent)
+        } else {
+            setResult(Activity.RESULT_CANCELED)
+        }
 
         super.finish()
     }

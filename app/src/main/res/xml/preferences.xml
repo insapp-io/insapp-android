@@ -79,11 +79,11 @@
             android:summary="@string/notification_events_description"
             android:defaultValue="true" />
 
-        <android.support.v7.preference.SwitchPreferenceCompat
-            android:key="notifications_others"
-            android:title="@string/notification_others_name"
-            android:summary="@string/notification_others_description"
-            android:defaultValue="true" />
+        <android.support.v7.preference.PreferenceScreen
+            android:key="notifications_system"
+            android:title="@string/notification_system_name"
+            android:summary="@string/notification_system_description">
+        </android.support.v7.preference.PreferenceScreen>
 
     </android.support.v7.preference.PreferenceCategory>
 

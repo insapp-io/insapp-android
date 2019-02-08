@@ -274,16 +274,16 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (requestCode == EVENT_REQUEST) {
             when (resultCode) {
                 Activity.RESULT_OK -> {
-                    val event = intent.getParcelableExtra<Event>("event")
+                    val event = intent?.getParcelableExtra<Event>("event")
 
                     for (i in 0 until adapter!!.itemCount) {
-                        if (adapter!!.events[i].id == event.id) {
+                        if (adapter!!.events[i].id == event!!.id) {
                             val user = Utils.user
 
                             if (user?.events != null) {

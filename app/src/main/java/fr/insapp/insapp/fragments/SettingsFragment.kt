@@ -15,6 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.text.TextUtils
 import android.os.Build
 import android.util.Log
@@ -40,6 +41,21 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         if (barcodeData != "") {
             findPreference("barcode_preferences").summary = barcodeData
+        }
+
+        val myPref = findPreference("notifications_system") as Preference
+        myPref.onPreferenceClickListener = object : Preference.OnPreferenceClickListener {
+            override fun onPreferenceClick(preference: Preference): Boolean {
+                val intent = Intent()
+                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                //for Android 5-7
+                intent.putExtra("app_package", getActivity()?.getPackageName())
+                intent.putExtra("app_uid", getActivity()?.getApplicationInfo()?.uid)
+                // for Android 8 and above
+                intent.putExtra("android.provider.extra.APP_PACKAGE", getActivity()?.getPackageName())
+                startActivity(intent)
+                return true
+            }
         }
     }
 
@@ -95,7 +111,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 })
             }
 
-            "notifications_news", "notifications_events", "notifications_others" -> {
+            "notifications_news", "notifications_events" -> {
 
                 Log.d(FirebaseMessaging.TAG, key + " with channel " + key.removePrefix("notifications_") + " has changed and is now : " + sharedPreferences.getBoolean(key, true))
                 //setNotificationChannel(key.removePrefix("notifications_"), sharedPreferences.getBoolean(key, true))

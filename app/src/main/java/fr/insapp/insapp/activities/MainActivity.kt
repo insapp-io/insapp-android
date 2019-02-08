@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    Log.d(FirebaseMessaging.TAG, "Current Firebase token: " + task.result.token)
+                    Log.d(FirebaseMessaging.TAG, "Current Firebase token: " + task.result?.token)
                 }
             })
     }

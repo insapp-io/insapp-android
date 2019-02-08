@@ -154,6 +154,6 @@
     <string name="notification_news_description">Une notification est envoyée lorsqu\'une association ajoute une news</string>
     <string name="notification_events_name">Évènements</string>
     <string name="notification_events_description">Une notification est envoyée lorsqu\'une association ajoute un évènement</string>
-    <string name="notification_others_name">Autres</string>
-    <string name="notification_others_description">Toutes les autres notifications</string>
+    <string name="notification_system_name">Paramètres système</string>
+    <string name="notification_system_description">Accéder à vos paramètres système pour plus de contrôle (vibrations, badges&#8230;)</string>
 </resources>

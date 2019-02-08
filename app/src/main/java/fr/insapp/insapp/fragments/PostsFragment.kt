@@ -11,9 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bumptech.glide.Glide
-import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.PostActivity
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter
@@ -103,7 +101,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
                     adapter!!.posts.clear()
-                    addPostsToAdapter(response.body());
+                    addPostsToAdapter(response.body())
                 } else {
                     if (adapter!!.posts.isEmpty()) {
                         no_network?.visibility = View.VISIBLE
@@ -119,7 +117,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                 if (adapter!!.posts.isEmpty()) {
                     no_network?.visibility = View.VISIBLE
-                } else {
+                } else if (refresh_posts != null){
                     Snackbar.make(refresh_posts, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                 }
                 refresh_posts?.isRefreshing = false

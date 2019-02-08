@@ -9,4 +9,11 @@
         android:id="@+id/recyclerview_clubs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <include
+        android:id="@+id/no_network"
+        layout="@layout/no_network"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 </RelativeLayout>

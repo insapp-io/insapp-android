@@ -2,6 +2,7 @@ package fr.insapp.insapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -118,6 +119,7 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun generateNotifications() {
+        no_network?.visibility = View.GONE
         val user = Utils.user
 
         val call = ServiceGenerator.create().getNotificationsForUser(user?.id)
@@ -132,12 +134,20 @@ class NotificationsFragment : Fragment() {
                         }
                     }
                 } else {
-                    Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                    if (adapter!!.itemCount == 0) {
+                        no_network?.visibility = View.VISIBLE
+                    } else if (recyclerview_notifications != null){
+                        Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                    }
                 }
             }
 
             override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                if (adapter!!.itemCount == 0) {
+                    no_network?.visibility = View.VISIBLE
+                } else if (recyclerview_notifications != null){
+                    Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                }
             }
         })
     }

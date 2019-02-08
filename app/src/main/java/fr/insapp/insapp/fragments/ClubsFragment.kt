@@ -2,14 +2,13 @@ package fr.insapp.insapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bumptech.glide.Glide
-import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.ClubActivity
 import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter
@@ -52,6 +51,7 @@ class ClubsFragment : Fragment() {
     }
 
     private fun generateClubs() {
+        no_network?.visibility = View.GONE
         val call = ServiceGenerator.create().clubs
         call.enqueue(object : Callback<List<Club>> {
             override fun onResponse(call: Call<List<Club>>, response: Response<List<Club>>) {
@@ -66,12 +66,20 @@ class ClubsFragment : Fragment() {
                         }
                     }
                 } else {
-                    Toast.makeText(App.getAppContext(), "ClubsFragment", Toast.LENGTH_LONG).show()
+                    if (adapter!!.clubs.isEmpty()) {
+                        no_network?.visibility = View.VISIBLE
+                    } else if (recyclerview_clubs != null){
+                        Snackbar.make(recyclerview_clubs, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                    }
                 }
             }
 
             override fun onFailure(call: Call<List<Club>>, t: Throwable) {
-                Toast.makeText(App.getAppContext(), "ClubsFragment", Toast.LENGTH_LONG).show()
+                if (adapter!!.clubs.isEmpty()) {
+                    no_network?.visibility = View.VISIBLE
+                } else if (recyclerview_clubs != null){
+                    Snackbar.make(recyclerview_clubs, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                }
             }
         })
     }

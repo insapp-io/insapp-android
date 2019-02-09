@@ -49,10 +49,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 val intent = Intent()
                 intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
                 //for Android 5-7
-                intent.putExtra("app_package", getActivity()?.getPackageName())
-                intent.putExtra("app_uid", getActivity()?.getApplicationInfo()?.uid)
+                intent.putExtra("app_package", activity?.packageName)
+                intent.putExtra("app_uid", activity?.applicationInfo?.uid)
                 // for Android 8 and above
-                intent.putExtra("android.provider.extra.APP_PACKAGE", getActivity()?.getPackageName())
+                intent.putExtra("android.provider.extra.APP_PACKAGE", activity?.packageName)
                 startActivity(intent)
                 return true
             }

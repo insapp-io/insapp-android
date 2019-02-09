@@ -8,7 +8,7 @@
             android:key="name"
             android:title="@string/settings_name"
             android:summary="@string/settings_name_summary"
-            android:dialogLayout="@layout/pref_dialog_edittext_fix" />
+            android:dialogLayout="@layout/pref_dialog_edittext_fix_single_line" />
 
         <android.support.v7.preference.ListPreference
             android:key="sex"

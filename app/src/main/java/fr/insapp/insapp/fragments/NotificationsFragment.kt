@@ -8,11 +8,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 
 import com.bumptech.glide.Glide
 
-import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.activities.PostActivity
@@ -49,13 +47,15 @@ class NotificationsFragment : Fragment() {
                         override fun onResponse(call: Call<Post>, response: Response<Post>) {
                             if (response.isSuccessful) {
                                 startActivity(Intent(context, PostActivity::class.java).putExtra("post", response.body()))
-                            } else {
-                                Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                            } else if (recyclerview_notifications != null){
+                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                             }
                         }
 
                         override fun onFailure(call: Call<Post>, t: Throwable) {
-                            Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                            if (recyclerview_notifications != null){
+                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                            }
                         }
                     })
                 }
@@ -66,13 +66,15 @@ class NotificationsFragment : Fragment() {
                         override fun onResponse(call: Call<Event>, response: Response<Event>) {
                             if (response.isSuccessful) {
                                 startActivity(Intent(context, EventActivity::class.java).putExtra("event", response.body()))
-                            } else {
-                                Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                            } else if (recyclerview_notifications != null){
+                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                             }
                         }
 
                         override fun onFailure(call: Call<Event>, t: Throwable) {
-                            Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                            if (recyclerview_notifications != null){
+                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                            }
                         }
                     })
                 }
@@ -91,20 +93,21 @@ class NotificationsFragment : Fragment() {
                     if (response.isSuccessful) {
 
                     } else {
-                        Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                        // Il y a déjà une snackbar qui s'ouvre
+                        //Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
                     }
                 }
 
                 override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                    Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
+                    // Il y a déjà une snackbar qui s'ouvre
+                    //Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
                 }
             })
         }
-
-        generateNotifications()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        generateNotifications()
         return inflater.inflate(R.layout.fragment_notifications, container, false)
     }
 

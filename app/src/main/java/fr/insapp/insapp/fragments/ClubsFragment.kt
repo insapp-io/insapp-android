@@ -32,11 +32,10 @@ class ClubsFragment : Fragment() {
 
         this.adapter = ClubRecyclerViewAdapter(context, Glide.with(this), true)
         adapter!!.setOnItemClickListener { club -> context!!.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", club)) }
-
-        generateClubs()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        generateClubs()
         return inflater.inflate(R.layout.fragment_clubs, container, false)
     }
 

@@ -48,4 +48,10 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
+
+    <style name="ProgressBar.White" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:indeterminateTintMode">src_atop</item>
+        <item name="android:indeterminateTint">@android:color/white</item>
+    </style>
 </resources>

@@ -43,17 +43,10 @@ class PostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post)
 
-        requestManager = Glide.with(this);
+        requestManager = Glide.with(this)
 
         val user = Utils.user
-
-        // toolbar
-
-        setSupportActionBar(post_toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         // post
 
@@ -83,6 +76,7 @@ class PostActivity : AppCompatActivity() {
             }
         } else {
             // coming from notification
+            setContentView(R.layout.loading)
 
             val call = ServiceGenerator.create().getPostFromId(intent.getStringExtra("ID"))
             call.enqueue(object : Callback<Post> {
@@ -90,19 +84,30 @@ class PostActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         post = response.body()!!
                         generateActivity()
-                    }
-                    else
+                    } else {
                         Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                    }
                 }
 
                 override fun onFailure(call: Call<Post>, t: Throwable) {
-                    Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PostActivity, R.string.check_internet_connection, Toast.LENGTH_LONG).show()
+                    // Ouvrir l'application insapp
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             })
         }
     }
 
     private fun generateActivity() {
+        setContentView(R.layout.activity_post)
+
+        // toolbar
+
+        setSupportActionBar(post_toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val user = Utils.user
 
         // Answers

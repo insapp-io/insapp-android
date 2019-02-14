@@ -57,15 +57,8 @@ class EventActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_event)
 
         val user = Utils.user
-
-        // toolbar
-
-        setSupportActionBar(toolbar_event)
-        supportActionBar?.setHomeButtonEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // event
 
@@ -73,6 +66,7 @@ class EventActivity : AppCompatActivity() {
             // coming from navigation
 
             this.event = intent.getParcelableExtra("event")
+
             generateActivity()
 
             // mark notification as seen
@@ -95,6 +89,7 @@ class EventActivity : AppCompatActivity() {
             }
         } else {
             // coming from notification
+            setContentView(R.layout.loading)
 
             val call = ServiceGenerator.create().getEventFromId(intent.getStringExtra("ID"))
             call.enqueue(object : Callback<Event> {
@@ -102,18 +97,30 @@ class EventActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         event = response.body()!!
                         generateActivity()
-                    } else
+                    } else {
                         Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                    }
                 }
 
                 override fun onFailure(call: Call<Event>, t: Throwable) {
-                    Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@EventActivity, R.string.check_internet_connection, Toast.LENGTH_LONG).show()
+                    // Ouvrir l'application insapp
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             })
         }
     }
 
     private fun generateActivity() {
+        setContentView(R.layout.activity_event)
+
+        // toolbar
+
+        setSupportActionBar(toolbar_event)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val user = Utils.user
 
         // Answers

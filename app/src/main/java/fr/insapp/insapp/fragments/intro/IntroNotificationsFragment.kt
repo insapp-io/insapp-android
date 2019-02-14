@@ -41,7 +41,6 @@ class IntroNotificationsFragment : Fragment() {
             val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
             defaultSharedPreferences.putBoolean("notifications_news", b)
             defaultSharedPreferences.putBoolean("notifications_events", b)
-            defaultSharedPreferences.putBoolean("notifications_others", b)
             defaultSharedPreferences.apply()
 
             NotificationUtils.registerAllTopics(b)

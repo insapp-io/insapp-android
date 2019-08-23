@@ -3,7 +3,7 @@ package fr.insapp.insapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 
@@ -22,8 +22,7 @@ class LauncherActivity : AppCompatActivity() {
 
         if (getSharedPreferences("Credentials", Context.MODE_PRIVATE).contains("login")) {
             // manage shortcuts
-            val intentValue = intent.getIntExtra("SHORTCUT", 0)
-            when (intentValue) {
+            when (intent.getIntExtra("SHORTCUT", 0)) {
                 1 -> { // event shortcut
                     startActivity(Intent(this@LauncherActivity, MainActivity::class.java).putExtra("FRAGMENT_ID", 1))
                     Answers.getInstance().logCustom(CustomEvent("Use event shortcut"))

@@ -3,7 +3,7 @@ package fr.insapp.insapp.utility
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by thomas on 31/01/2017.

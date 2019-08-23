@@ -1,7 +1,8 @@
 package fr.insapp.insapp.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by thomas on 01/02/2017.

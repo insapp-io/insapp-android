@@ -68,9 +68,9 @@
         android:title="@string/shortcut_notification">
 
         <android.support.v7.preference.SwitchPreferenceCompat
-            android:key="notifications_news"
-            android:title="@string/notification_news_name"
-            android:summary="@string/notification_news_description"
+            android:key="notifications_posts"
+            android:title="@string/notification_posts_name"
+            android:summary="@string/notification_posts_description"
             android:defaultValue="true" />
 
         <android.support.v7.preference.SwitchPreferenceCompat

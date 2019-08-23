@@ -1,6 +1,6 @@
 package fr.insapp.insapp.utility;
 
-import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
+import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
 /**
  * Created by thomas on 28/02/2017.

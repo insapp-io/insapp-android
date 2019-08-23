@@ -1,26 +1,24 @@
 package fr.insapp.insapp.fragments
 
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
-import android.support.v7.preference.*
+import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
+import androidx.preference.*
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.User
-import fr.insapp.insapp.notifications.FirebaseMessaging
+import fr.insapp.insapp.notifications.MyFirebaseMessagingService
 import fr.insapp.insapp.utility.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Intent
-import android.text.TextUtils
-import android.os.Build
-import android.util.Log
-import fr.insapp.insapp.notifications.NotificationUtils
-
 
 /**
  * Created by thomas on 17/07/2017.
@@ -55,21 +53,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 intent.putExtra("android.provider.extra.APP_PACKAGE", activity?.packageName)
                 startActivity(intent)
                 return true
-            }
-        }
-    }
-
-    private fun updateNotificationChannelStatus(){
-        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            for(channel in NotificationUtils.channels){
-                val channelEnable = isNotificationChannelEnabled(App.getAppContext(), channel)
-                //Log.d(FirebaseMessaging.TAG, "Test channel - $channel - $channelEnable")
-                if(channelEnable != defaultSharedPreferences.getBoolean("notifications_$channel", true)) {
-                    //Log.d(FirebaseMessaging.TAG, "L'utilisateur a changé le paramètre dans le système, update dans l'application")
-                    defaultSharedPreferences.edit().putBoolean("notifications_$channel", channelEnable).apply()
-                    //Log.d(FirebaseMessaging.TAG, defaultSharedPreferences.getBoolean("notifications_$channel", true).toString())
-                }
             }
         }
     }
@@ -111,23 +94,14 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 })
             }
 
-            "notifications_news", "notifications_events" -> {
+            "notifications_posts" -> {
+                Log.d(MyFirebaseMessagingService.TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
+                MyFirebaseMessagingService.subscribeToTopic("posts-android", sharedPreferences.getBoolean(key, true))
+            }
 
-                Log.d(FirebaseMessaging.TAG, key + " with channel " + key.removePrefix("notifications_") + " has changed and is now : " + sharedPreferences.getBoolean(key, true))
-                //setNotificationChannel(key.removePrefix("notifications_"), sharedPreferences.getBoolean(key, true))
-                /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
-                        putExtra(Settings.EXTRA_APP_PACKAGE, App.getAppContext().packageName)
-                        putExtra(Settings.EXTRA_CHANNEL_ID, (App.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).getNotificationChannel(key.removePrefix("notifications_")).id)
-                    }
-                    startActivity(intent)
-                }*/
-
-                if (sharedPreferences.getBoolean(key, true)) {
-                    FirebaseMessaging.subscribeToTopics(key.removePrefix("notifications_"))
-                } else {
-                    FirebaseMessaging.unsubscribeFromTopics(key.removePrefix("notifications_"))
-                }
+            "notifications_events" -> {
+                Log.d(MyFirebaseMessagingService.TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
+                MyFirebaseMessagingService.subscribeToTopic("events-android", sharedPreferences.getBoolean(key, true))
             }
 
             else -> {
@@ -150,7 +124,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             preference.setSummary(preference.entry)
         } else if (preference is EditTextPreference) {
 
-            if (preference.text != null && !preference.text.isEmpty()) {
+            if (preference.text != null && preference.text.isNotEmpty()) {
                 preference.setSummary(preference.text)
             }
         }
@@ -158,13 +132,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onResume() {
         super.onResume()
-
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
-
         preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
@@ -181,19 +153,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-
     companion object {
-
         const val ID = "SETTINGS_FRAGMENT"
-
-        fun newInstance(id: String): SettingsFragment {
-            val fragment = SettingsFragment()
-
-            val args = Bundle()
-            args.putString(SettingsFragment.ID, id)
-            fragment.arguments = args
-
-            return fragment
-        }
     }
 }

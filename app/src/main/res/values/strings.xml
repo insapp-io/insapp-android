@@ -78,9 +78,9 @@
     <string name="delete_account_are_you_sure">Voulez-vous vraiment supprimer votre compte ?</string>
     <string name="delete_account_success">Compte supprimé avec succès</string>
 
-    <string name="posts">News</string>
+    <string name="posts">Actualités</string>
     <string name="clubs">Associations</string>
-    <string name="events">Events</string>
+    <string name="events">Évènements</string>
     <string name="users">Utilisateurs</string>
     <string name="notifications">Notifications</string>
     <string name="about">À propos</string>
@@ -150,8 +150,8 @@
     <string name="shortcut_profil_long">Profil</string>
     <string name="shortcut_profil_disabled">Raccourci désactivé</string>
 
-    <string name="notification_news_name">News</string>
-    <string name="notification_news_description">Une notification est envoyée lorsqu\'une association ajoute une news</string>
+    <string name="notification_posts_name">Actualités</string>
+    <string name="notification_posts_description">Une notification est envoyée lorsqu\'une association ajoute une actualité</string>
     <string name="notification_events_name">Évènements</string>
     <string name="notification_events_description">Une notification est envoyée lorsqu\'une association ajoute un évènement</string>
     <string name="notification_system_name">Paramètres système</string>

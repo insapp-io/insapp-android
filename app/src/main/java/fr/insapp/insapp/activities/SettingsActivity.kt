@@ -2,14 +2,13 @@ package fr.insapp.insapp.activities
 
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceFragmentCompat
-import android.support.v7.preference.PreferenceScreen
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceScreen
 import fr.insapp.insapp.R
 import fr.insapp.insapp.fragments.BarcodeSettingsFragment
-import fr.insapp.insapp.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_settings.*
 
 /**

@@ -1,9 +1,9 @@
 package fr.insapp.insapp.components
 
 import android.content.Context
-import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.util.Log
+import androidx.appcompat.widget.AppCompatImageView
 import fr.insapp.insapp.R
 import fr.insapp.insapp.models.ImageSize
 

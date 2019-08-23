@@ -12,10 +12,8 @@ import java.io.IOException;
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.http.ServiceGenerator;
-import fr.insapp.insapp.models.User;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
 import fr.insapp.insapp.models.credentials.SessionCredentials;
-import fr.insapp.insapp.notifications.FirebaseMessaging;
 import fr.insapp.insapp.utility.Utils;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -39,8 +37,7 @@ public class TokenInterceptor implements Interceptor {
         final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
         // if user is stored, register firebase token
-
-        handleFirebaseTokenRegistration(gson, userPreferences);
+        //handleFirebaseTokenRegistration(gson, userPreferences);
 
         // add session token in a query parameter
 
@@ -99,18 +96,6 @@ public class TokenInterceptor implements Interceptor {
 
             default:
                 return response;
-        }
-    }
-
-    private void handleFirebaseTokenRegistration(Gson gson, SharedPreferences userPreferences) {
-        final SharedPreferences firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE);
-
-        if (FirebaseMessaging.Companion.getSHOULD_REGISTER_TOKEN()) {
-            if (gson.fromJson(userPreferences.getString("user", ""), User.class) != null) {
-                FirebaseMessaging.Companion.setSHOULD_REGISTER_TOKEN(false);
-
-                FirebaseMessaging.Companion.registerToken(firebaseCredentialsPreferences.getString("token", ""));
-            }
         }
     }
 }

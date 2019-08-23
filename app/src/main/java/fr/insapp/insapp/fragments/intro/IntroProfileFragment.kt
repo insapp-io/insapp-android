@@ -1,11 +1,10 @@
 package fr.insapp.insapp.fragments.intro
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import fr.insapp.insapp.R
 
 /**

@@ -2,15 +2,13 @@ package fr.insapp.insapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-
+import com.google.android.material.snackbar.Snackbar
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.activities.PostActivity

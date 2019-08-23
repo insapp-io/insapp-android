@@ -2,8 +2,9 @@ package fr.insapp.insapp.models;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v7.preference.PreferenceManager;
+
+import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import java.util.List;
 

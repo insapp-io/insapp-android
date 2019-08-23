@@ -1,14 +1,14 @@
 package fr.insapp.insapp.fragments.intro
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
-import fr.insapp.insapp.notifications.NotificationUtils
-import kotlinx.android.synthetic.main.fragment_intro_notifications.*
+import fr.insapp.insapp.notifications.MyFirebaseMessagingService
+import kotlinx.android.synthetic.main.fragment_intro_notifications.view.*
 
 /**
  * Created by thomas on 03/12/2016.
@@ -20,12 +20,15 @@ class IntroNotificationsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
-        defaultSharedPreferences.putBoolean("notifications_news", true)
+        defaultSharedPreferences.putBoolean("notifications_posts", true)
         defaultSharedPreferences.putBoolean("notifications_events", true)
-        defaultSharedPreferences.putBoolean("notifications_others", true)
         defaultSharedPreferences.apply()
 
-        NotificationUtils.registerAllTopics(true)
+        MyFirebaseMessagingService.subscribeToTopic("posts-android")
+        MyFirebaseMessagingService.subscribeToTopic("events-android")
+
+        MyFirebaseMessagingService.subscribeToTopic("posts-unknown-class")
+        MyFirebaseMessagingService.subscribeToTopic("events-unknown-class")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,15 +38,16 @@ class IntroNotificationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkbox_enable_notifications?.isChecked = true
+        view.checkbox_enable_notifications?.isChecked = true
 
-        checkbox_enable_notifications?.setOnCheckedChangeListener { _, b ->
+        view.checkbox_enable_notifications?.setOnCheckedChangeListener { _, b ->
             val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
-            defaultSharedPreferences.putBoolean("notifications_news", b)
+            defaultSharedPreferences.putBoolean("notifications_posts", b)
             defaultSharedPreferences.putBoolean("notifications_events", b)
             defaultSharedPreferences.apply()
 
-            NotificationUtils.registerAllTopics(b)
+            MyFirebaseMessagingService.subscribeToTopic("posts-android", b)
+            MyFirebaseMessagingService.subscribeToTopic("events-android", b)
         }
     }
 }

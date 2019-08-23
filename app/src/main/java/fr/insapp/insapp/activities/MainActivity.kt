@@ -9,20 +9,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.support.customtabs.CustomTabsClient
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceManager
-import android.support.v7.widget.AppCompatCheckBox
-import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.SearchView
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.preference.PreferenceManager
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.InstanceIdResult
 import fr.insapp.insapp.App
 import fr.insapp.insapp.BuildConfig
 import fr.insapp.insapp.R
@@ -32,8 +30,7 @@ import fr.insapp.insapp.fragments.ClubsFragment
 import fr.insapp.insapp.fragments.EventsFragment
 import fr.insapp.insapp.fragments.NotificationsFragment
 import fr.insapp.insapp.fragments.PostsFragment
-import fr.insapp.insapp.notifications.FirebaseMessaging
-import fr.insapp.insapp.notifications.NotificationUtils
+import fr.insapp.insapp.notifications.MyFirebaseMessagingService
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
@@ -81,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         tabs.setupWithViewPager(viewpager)
 
         // custom tabs optimization
-        MainActivity.customTabsConnection = CustomTabsConnection()
+        customTabsConnection = CustomTabsConnection()
         CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", customTabsConnection)
 
         // display correct fragment for shortcuts
@@ -91,33 +88,21 @@ class MainActivity : AppCompatActivity() {
         // Huawei protected apps
         ifHuaweiAlert()
 
-        // notification channel (android O and more)
-        //Log.d(FirebaseMessaging.TAG, "Création des groupes de notifications.")
-        /*createNotificationChannel("news", getString(R.string.notification_news_name), getString(R.string.notification_news_description))
+        // notification channels (android O and above)
+        createNotificationChannel("posts", getString(R.string.notification_posts_name), getString(R.string.notification_posts_description))
         createNotificationChannel("events", getString(R.string.notification_events_name), getString(R.string.notification_events_description))
-        createNotificationChannel("others", getString(R.string.notification_others_name), getString(R.string.notification_others_description))*/
-
-        // topic notifications
-        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
-        for (channel in NotificationUtils.channels) {
-            if (defaultSharedPreferences.getBoolean("notifications_$channel", true)) {
-                FirebaseMessaging.subscribeToTopics(channel)
-            } else {
-                FirebaseMessaging.unsubscribeFromTopics(channel)
-            }
-        }
 
         // Firebase token
         FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(object: OnCompleteListener<InstanceIdResult> {
-                override fun onComplete(task:Task<InstanceIdResult>) {
-                    if (!task.isSuccessful) {
-                        Log.w(FirebaseMessaging.TAG, "getInstanceId failed", task.exception)
-                        return
-                    }
-
-                    Log.d(FirebaseMessaging.TAG, "Current Firebase token: " + task.result?.token)
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(MyFirebaseMessagingService.TAG, "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
                 }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+                Log.d(MyFirebaseMessagingService.TAG, "Current Firebase token: $token")
             })
     }
 
@@ -172,9 +157,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        if (MainActivity.customTabsConnection != null) {
-            this.unbindService(MainActivity.customTabsConnection)
-            MainActivity.customTabsConnection = null
+        if (customTabsConnection != null) {
+            this.unbindService(customTabsConnection)
+            customTabsConnection = null
         }
     }
 
@@ -232,7 +217,7 @@ class MainActivity : AppCompatActivity() {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager!!.createNotificationChannel(channel)
+            notificationManager?.createNotificationChannel(channel)
         }
     }
 }

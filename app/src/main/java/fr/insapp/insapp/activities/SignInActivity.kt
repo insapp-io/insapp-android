@@ -1,22 +1,19 @@
 package fr.insapp.insapp.activities
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.widget.Toast
-import fr.insapp.insapp.App
+import androidx.appcompat.app.AppCompatActivity
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.credentials.LoginCredentials
 import fr.insapp.insapp.models.credentials.SessionCredentials
 import fr.insapp.insapp.models.credentials.SigninCredentials
-import fr.insapp.insapp.notifications.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -97,13 +94,6 @@ class SignInActivity : AppCompatActivity() {
             override fun onResponse(call: Call<SessionCredentials>, response: Response<SessionCredentials>) {
                 if (response.isSuccessful) {
                     startActivity(Intent(this@SignInActivity, MainActivity::class.java))
-
-                    // if a firebase token is already registered in preferences from previous user
-
-                    val firebaseCredentialsPreferences = App.getAppContext().getSharedPreferences("FirebaseCredentials", Context.MODE_PRIVATE)
-                    if (firebaseCredentialsPreferences.contains("token")) {
-                        FirebaseMessaging.SHOULD_REGISTER_TOKEN = true
-                    }
 
                     finish()
                 } else {

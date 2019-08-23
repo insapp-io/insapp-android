@@ -5,19 +5,17 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceScreen
 import fr.insapp.insapp.R
-import fr.insapp.insapp.fragments.BarcodeSettingsFragment
+import fr.insapp.insapp.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_settings.*
 
 /**
  * Created by thomas on 15/12/2016.
  *
- * Based on https://stackoverflow.com/a/36051385
+ * https://developer.android.com/guide/topics/ui/settings
  */
 
-class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,18 +30,10 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
         supportActionBar?.setHomeAsUpIndicator(upArrow)
 
-        // handling nested preferences screen
-        // bug, avec le code suivant, toutes les fonctions dans le fragment sont exécutées 2 fois.
-        // Le fait de virer ce code n'a pas d'influence sur le comportement (qui n'est pas encore le bon)
-        // TODO : corriger les préférences imbriquées
-        /*if (savedInstanceState == null) {
-            Log.d(fr.insapp.insapp.notifications.FirebaseMessaging.TAG, "savedInstanceState == null")
-            val fragmentTransaction = supportFragmentManager.beginTransaction()
-            val fragment = SettingsFragment.newInstance("General settings")
-
-            fragmentTransaction.add(R.id.settings_fragment, fragment)
-            fragmentTransaction.commit()
-        }*/
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.settings_fragment, SettingsFragment())
+            .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -58,20 +48,5 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onPreferenceStartScreen(caller: PreferenceFragmentCompat, preferenceScreen: PreferenceScreen): Boolean {
-        val transaction = supportFragmentManager.beginTransaction()
-        val fragment = BarcodeSettingsFragment.newInstance("Barcode settings")
-
-        val args = Bundle()
-        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.key)
-        fragment.arguments = args
-
-        transaction.replace(R.id.settings_fragment, fragment, preferenceScreen.key)
-        transaction.addToBackStack(null)
-        transaction.commit()
-
-        return true
     }
 }

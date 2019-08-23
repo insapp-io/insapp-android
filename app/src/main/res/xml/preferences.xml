@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settings_profile">
 
-        <android.support.v7.preference.EditTextPreference
+        <EditTextPreference
             android:key="name"
             android:title="@string/settings_name"
             android:summary="@string/settings_name_summary"
             android:dialogLayout="@layout/pref_dialog_edittext_fix_single_line" />
 
-        <android.support.v7.preference.ListPreference
+        <ListPreference
             android:key="sex"
             android:title="@string/settings_sex"
             android:summary="@string/settings_sex_summary"
@@ -18,7 +19,7 @@
             android:entries="@array/listArraySex"
             android:entryValues="@array/listValuesSex" />
 
-        <android.support.v7.preference.ListPreference
+        <ListPreference
             android:key="class"
             android:title="@string/settings_class"
             android:summary="@string/settings_class_summary"
@@ -26,76 +27,74 @@
             android:entries="@array/listArrayClass"
             android:entryValues="@array/listValuesClass" />
 
-        <android.support.v7.preference.EditTextPreference
+        <EditTextPreference
             android:key="email"
             android:title="@string/settings_mail"
             android:summary="@string/settings_mail_summary"
             android:dialogLayout="@layout/pref_dialog_edittext_fix"/>
 
-        <android.support.v7.preference.EditTextPreference
+        <EditTextPreference
             android:key="description"
             android:title="@string/settings_description"
             android:summary="@string/settings_description_summary"
             android:dialogLayout="@layout/pref_dialog_edittext_fix" />
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/settings_amicaliste">
 
-        <android.support.v7.preference.PreferenceScreen
+        <PreferenceScreen
             android:key="barcode_preferences"
             android:title="@string/settings_barcode_add"
             android:summary="@string/settings_barcode_disclaimer"
             android:persistent="false">
 
-            <android.support.v7.preference.EditTextPreference
+            <EditTextPreference
                 android:key="barcode_dialog"
                 android:title="@string/settings_barcode_input"
                 android:summary="@string/settings_barcode_input_summary"
                 android:dialogLayout="@layout/pref_dialog_edittext_fix" />
 
-            <android.support.v7.preference.PreferenceScreen
+            <PreferenceScreen
                 android:key="barcode_camera"
                 android:title="@string/settings_barcode_camera"
-                android:summary="@string/settings_barcode_camera_summary">
-            </android.support.v7.preference.PreferenceScreen>
+                android:summary="@string/settings_barcode_camera_summary" />
 
-        </android.support.v7.preference.PreferenceScreen>
+        </PreferenceScreen>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/shortcut_notification">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <SwitchPreference
             android:key="notifications_posts"
             android:title="@string/notification_posts_name"
             android:summary="@string/notification_posts_description"
             android:defaultValue="true" />
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <SwitchPreference
             android:key="notifications_events"
             android:title="@string/notification_events_name"
             android:summary="@string/notification_events_description"
             android:defaultValue="true" />
 
-        <android.support.v7.preference.PreferenceScreen
+        <PreferenceScreen
             android:key="notifications_system"
             android:title="@string/notification_system_name"
-            android:summary="@string/notification_system_description">
-        </android.support.v7.preference.PreferenceScreen>
+            android:summary="@string/notification_system_description" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <PreferenceCategory
         android:title="@string/shortcut_events">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <SwitchPreference
             android:key="calendar"
             android:title="@string/settings_calendar"
             android:summary="@string/settings_calendar_summary"
             android:defaultValue="false" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</PreferenceScreen>

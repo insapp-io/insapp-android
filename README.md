@@ -26,6 +26,6 @@ You can find us on [Facebook](https://www.facebook.com/insapp.crew/).
 - [**Retrofit**](https://github.com/square/retrofit) for constructing the REST API
 - [**AutoParcelGson**](https://github.com/evant/auto-parcel-gson) for automatic Parcelable generation
 - [**Glide**](https://github.com/bumptech/glide) for loading images
-- [**AppIntro**](https://github.com/apl-devs/AppIntro) for cool intro
+- [**AppIntro**](https://github.com/AppIntro/AppIntro) for cool intro
 - [**Android Vision API**](https://github.com/googlesamples/android-vision) for scanning barcodes
-- **Android Support Libraries**
+- [**Android X**](https://developer.android.com/jetpack/androidx)

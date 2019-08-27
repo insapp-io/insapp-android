@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="profile"
         android:title="@string/settings_profile">
 
         <EditTextPreference
             android:key="name"
             android:title="@string/settings_name"
             android:summary="@string/settings_name_summary"
-            android:dialogLayout="@layout/pref_dialog_edittext_fix_single_line" />
+            app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            android:key="sex"
-            android:title="@string/settings_sex"
-            android:summary="@string/settings_sex_summary"
+            android:key="gender"
+            android:title="@string/settings_gender"
+            android:summary="@string/settings_gender_summary"
             android:defaultValue="unknown"
-            android:entries="@array/listArraySex"
-            android:entryValues="@array/listValuesSex" />
+            android:entries="@array/listArrayGender"
+            android:entryValues="@array/listValuesGender"
+            app:useSimpleSummaryProvider="true"/>
 
         <ListPreference
             android:key="class"
@@ -25,43 +27,30 @@
             android:summary="@string/settings_class_summary"
             android:defaultValue="unknown"
             android:entries="@array/listArrayClass"
-            android:entryValues="@array/listValuesClass" />
+            android:entryValues="@array/listValuesClass"
+            app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
             android:key="email"
             android:title="@string/settings_mail"
-            android:summary="@string/settings_mail_summary"
-            android:dialogLayout="@layout/pref_dialog_edittext_fix"/>
+            app:summary="@string/settings_mail_summary"
+            app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
             android:key="description"
             android:title="@string/settings_description"
-            android:summary="@string/settings_description_summary"
-            android:dialogLayout="@layout/pref_dialog_edittext_fix" />
+            app:summary="@string/settings_description_summary"
+            app:useSimpleSummaryProvider="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="amicaliste"
         android:title="@string/settings_amicaliste">
 
-        <PreferenceScreen
-            android:key="barcode_preferences"
-            android:title="@string/settings_barcode_add"
-            android:summary="@string/settings_barcode_disclaimer"
-            android:persistent="false">
-
-            <EditTextPreference
-                android:key="barcode_dialog"
-                android:title="@string/settings_barcode_input"
-                android:summary="@string/settings_barcode_input_summary"
-                android:dialogLayout="@layout/pref_dialog_edittext_fix" />
-
-            <PreferenceScreen
-                android:key="barcode_camera"
-                android:title="@string/settings_barcode_camera"
-                android:summary="@string/settings_barcode_camera_summary" />
-
-        </PreferenceScreen>
-
+        <Preference
+            android:key="barcode_fragment"
+            android:title="@string/barcode"
+            app:fragment="fr.insapp.insapp.fragments.BarcodeSettingsFragment"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -87,9 +76,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="events"
         android:title="@string/shortcut_events">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="calendar"
             android:title="@string/settings_calendar"
             android:summary="@string/settings_calendar_summary"

@@ -1,15 +1,14 @@
 package fr.insapp.insapp.fragments
 
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
-import androidx.preference.*
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
@@ -27,43 +26,32 @@ import retrofit2.Response
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences, rootKey)
+
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
-        // Update notification parameters from system parameter
-        //updateNotificationChannelStatus()
 
-        addPreferencesFromResource(R.xml.preferences)
-
-        initSummary(preferenceScreen)
-
-        val barcodeData = defaultSharedPreferences.getString("barcode", "")
-
-        if (barcodeData != "") {
-            findPreference("barcode_preferences").summary = barcodeData
+        val barcode = defaultSharedPreferences.getString("barcode", "")
+        barcode?.let {
+            findPreference<Preference>("barcode_fragment")?.summary = barcode
         }
 
-        val myPref = findPreference("notifications_system") as Preference
-        myPref.onPreferenceClickListener = object : Preference.OnPreferenceClickListener {
-            override fun onPreferenceClick(preference: Preference): Boolean {
-                val intent = Intent()
-                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
-                //for Android 5-7
-                intent.putExtra("app_package", activity?.packageName)
-                intent.putExtra("app_uid", activity?.applicationInfo?.uid)
-                // for Android 8 and above
-                intent.putExtra("android.provider.extra.APP_PACKAGE", activity?.packageName)
-                startActivity(intent)
-                return true
-            }
+        val systemNotifications = findPreference<PreferenceScreen>("notifications_system")
+        systemNotifications?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            val intent = Intent()
+            intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+            //for Android 5-7
+            intent.putExtra("app_package", activity?.packageName)
+            intent.putExtra("app_uid", activity?.applicationInfo?.uid)
+            // for Android 8 and above
+            intent.putExtra("android.provider.extra.APP_PACKAGE", activity?.packageName)
+            startActivity(intent)
+            true
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (findPreference(key) != null) {
-            updatePreferenceSummary(findPreference(key))
-        }
-
         when (key) {
-            "name", "sex", "class", "email", "description" -> {
+            "name", "gender", "class", "email", "description" -> {
 
                 // user change
                 val user = Utils.user
@@ -76,7 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                         sharedPreferences.getString("email", ""),
                         user.isEmailPublic,
                         sharedPreferences.getString("class", ""),
-                        sharedPreferences.getString("sex", ""),
+                        sharedPreferences.getString("gender", ""),
                         user.events,
                         user.postsLiked)
 
@@ -84,23 +72,23 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 call.enqueue(object : Callback<User> {
                     override fun onResponse(call: Call<User>, response: Response<User>) {
                         if (!response.isSuccessful) {
-                            Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show()
+                            Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
                         }
                     }
 
                     override fun onFailure(call: Call<User>, t: Throwable) {
-                        Toast.makeText(App.getAppContext(), "SettingsFragment", Toast.LENGTH_LONG).show()
+                        Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
                     }
                 })
             }
 
             "notifications_posts" -> {
-                Log.d(MyFirebaseMessagingService.TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
+                Log.d(TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
                 MyFirebaseMessagingService.subscribeToTopic("posts-android", sharedPreferences.getBoolean(key, true))
             }
 
             "notifications_events" -> {
-                Log.d(MyFirebaseMessagingService.TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
+                Log.d(TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
                 MyFirebaseMessagingService.subscribeToTopic("events-android", sharedPreferences.getBoolean(key, true))
             }
 
@@ -109,30 +97,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
-    private fun initSummary(preference: Preference) {
-        if (preference is PreferenceGroup) {
-            for (i in 0 until preference.preferenceCount) {
-                initSummary(preference.getPreference(i))
-            }
-        } else {
-            updatePreferenceSummary(preference)
-        }
-    }
-
-    private fun updatePreferenceSummary(preference: Preference) {
-        if (preference is ListPreference) {
-            preference.setSummary(preference.entry)
-        } else if (preference is EditTextPreference) {
-
-            if (preference.text != null && preference.text.isNotEmpty()) {
-                preference.setSummary(preference.text)
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        val barcode = preferenceScreen.sharedPreferences.getString("barcode", "")
+        barcode?.let {
+            findPreference<Preference>("barcode_fragment")?.summary = barcode
+        }
     }
 
     override fun onPause() {
@@ -140,20 +111,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    private fun isNotificationChannelEnabled(context: Context, channelId: String): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (!TextUtils.isEmpty(channelId)) {
-                val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                val channel = manager.getNotificationChannel(channelId)
-                return channel.importance != NotificationManager.IMPORTANCE_NONE
-            }
-            return false
-        } else {
-            return preferenceScreen.sharedPreferences.getBoolean("notifications_$channelId",true)
-        }
-    }
-
     companion object {
-        const val ID = "SETTINGS_FRAGMENT"
+        const val TAG = "SETTINGS_FRAGMENT"
     }
 }

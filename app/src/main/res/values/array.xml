@@ -57,13 +57,13 @@
         <item>Personnel/Enseignant</item>
     </string-array>
 
-    <string-array name="listArraySex">
+    <string-array name="listArrayGender">
         <item>Inconnu</item>
         <item>Féminin</item>
         <item>Masculin</item>
     </string-array>
 
-    <string-array name="listValuesSex">
+    <string-array name="listValuesGender">
         <item></item>
         <item>female</item>
         <item>male</item>

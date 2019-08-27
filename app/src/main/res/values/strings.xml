@@ -36,8 +36,8 @@
     <string name="settings_name_summary">Non renseigné</string>
     <string name="settings_class">Promotion</string>
     <string name="settings_class_summary">Renseigne ta promotion afin d\'obtenir l\'avatar associé</string>
-    <string name="settings_sex">Genre</string>
-    <string name="settings_sex_summary">Inconnu</string>
+    <string name="settings_gender">Genre</string>
+    <string name="settings_gender_summary">Inconnu</string>
     <string name="settings_mail">Email</string>
     <string name="settings_mail_summary">Non renseigné</string>
     <string name="settings_description">Description</string>

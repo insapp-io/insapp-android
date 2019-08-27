@@ -71,8 +71,8 @@ public class BarcodeDetectorActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
         }
 
-        cameraSourcePreview = (CameraSourcePreview) findViewById(R.id.preview);
-        graphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
+        cameraSourcePreview = findViewById(R.id.preview);
+        graphicOverlay = findViewById(R.id.graphicOverlay);
 
         createCameraSource();
 

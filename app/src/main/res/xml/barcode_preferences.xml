@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="barcode_preferences"
+    android:title="@string/settings_barcode_add"
+    android:summary="@string/settings_barcode_disclaimer"
+    android:persistent="false">
+
+    <EditTextPreference
+        android:key="barcode"
+        android:title="@string/settings_barcode_input"
+        android:summary="@string/settings_barcode_input_summary" />
+
+    <PreferenceScreen
+        android:key="barcode_camera"
+        android:title="@string/settings_barcode_camera"
+        android:summary="@string/settings_barcode_camera_summary" />
+
+</PreferenceScreen>

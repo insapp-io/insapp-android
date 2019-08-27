@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
  * Created by thomas on 15/12/2016.
  *
  * https://developer.android.com/guide/topics/ui/settings
+ * https://www.youtube.com/watch?v=PS9jhuHECEQ
  */
 
 class SettingsActivity : AppCompatActivity() {

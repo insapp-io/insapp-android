@@ -50,7 +50,7 @@ class EventActivity : AppCompatActivity() {
 
     private lateinit var event: Event
 
-    private var status: Event.PARTICIPATE = Event.PARTICIPATE.UNDEFINED
+    private var status: Event.ATTENDANCE_STATUS = Event.ATTENDANCE_STATUS.UNDEFINED
 
     private var bgColor: Int = 0
     private var fgColor: Int = 0
@@ -206,29 +206,29 @@ class EventActivity : AppCompatActivity() {
         viewPager.adapter = adapter
     }
 
-    private fun setFloatingActionMenuTheme(status: Event.PARTICIPATE) {
+    private fun setFloatingActionMenuTheme(status: Event.ATTENDANCE_STATUS) {
         when (status) {
-            Event.PARTICIPATE.UNDEFINED -> {
+            Event.ATTENDANCE_STATUS.UNDEFINED -> {
                 fab_participate_event?.menuButtonColorNormal = bgColor
                 fab_participate_event?.menuButtonColorPressed = bgColor
                 fab_participate_event?.menuIconView?.setColorFilter(fgColor)
             }
 
-            Event.PARTICIPATE.NO -> {
+            Event.ATTENDANCE_STATUS.NO -> {
                 fab_participate_event?.menuButtonColorNormal = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuButtonColorPressed = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuIconView?.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_black_24dp))
                 fab_participate_event?.menuIconView?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabRed))
             }
 
-            Event.PARTICIPATE.MAYBE -> {
+            Event.ATTENDANCE_STATUS.MAYBE -> {
                 fab_participate_event?.menuButtonColorNormal = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuButtonColorPressed = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuIconView?.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_question_mark_black))
                 fab_participate_event?.menuIconView?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabOrange))
             }
 
-            Event.PARTICIPATE.YES -> {
+            Event.ATTENDANCE_STATUS.YES -> {
                 fab_participate_event?.menuButtonColorNormal = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuButtonColorPressed = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuIconView?.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_check_black_24dp))
@@ -252,12 +252,12 @@ class EventActivity : AppCompatActivity() {
 
         fab_item_1_event?.setOnClickListener {
             when (status) {
-                Event.PARTICIPATE.NO, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
+                Event.ATTENDANCE_STATUS.NO, Event.ATTENDANCE_STATUS.MAYBE, Event.ATTENDANCE_STATUS.UNDEFINED -> {
                     val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "going")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
-                                status = Event.PARTICIPATE.YES
+                                status = Event.ATTENDANCE_STATUS.YES
 
                                 fab_participate_event?.close(true)
                                 setFloatingActionMenuTheme(status)
@@ -298,7 +298,7 @@ class EventActivity : AppCompatActivity() {
                     })
                 }
 
-                Event.PARTICIPATE.YES -> fab_participate_event?.close(true)
+                Event.ATTENDANCE_STATUS.YES -> fab_participate_event?.close(true)
             }
         }
 
@@ -313,12 +313,12 @@ class EventActivity : AppCompatActivity() {
 
         fab_item_2_event?.setOnClickListener {
             when (status) {
-                Event.PARTICIPATE.NO, Event.PARTICIPATE.YES, Event.PARTICIPATE.UNDEFINED -> {
+                Event.ATTENDANCE_STATUS.NO, Event.ATTENDANCE_STATUS.YES, Event.ATTENDANCE_STATUS.UNDEFINED -> {
                     val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "maybe")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
-                                status = Event.PARTICIPATE.MAYBE
+                                status = Event.ATTENDANCE_STATUS.MAYBE
 
                                 fab_participate_event?.close(true)
                                 setFloatingActionMenuTheme(status)
@@ -337,7 +337,7 @@ class EventActivity : AppCompatActivity() {
                     })
                 }
 
-                Event.PARTICIPATE.MAYBE -> fab_participate_event?.close(true)
+                Event.ATTENDANCE_STATUS.MAYBE -> fab_participate_event?.close(true)
             }
         }
 
@@ -352,12 +352,12 @@ class EventActivity : AppCompatActivity() {
 
         fab_item_3_event?.setOnClickListener {
             when (status) {
-                Event.PARTICIPATE.YES, Event.PARTICIPATE.MAYBE, Event.PARTICIPATE.UNDEFINED -> {
+                Event.ATTENDANCE_STATUS.YES, Event.ATTENDANCE_STATUS.MAYBE, Event.ATTENDANCE_STATUS.UNDEFINED -> {
                     val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "notgoing")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
-                                status = Event.PARTICIPATE.NO
+                                status = Event.ATTENDANCE_STATUS.NO
 
                                 fab_participate_event?.close(true)
                                 setFloatingActionMenuTheme(status)
@@ -376,7 +376,7 @@ class EventActivity : AppCompatActivity() {
                     })
                 }
 
-                Event.PARTICIPATE.NO -> fab_participate_event?.close(true)
+                Event.ATTENDANCE_STATUS.NO -> fab_participate_event?.close(true)
             }
         }
 
@@ -550,25 +550,25 @@ class EventActivity : AppCompatActivity() {
         val handler = Handler()
         handler.postDelayed({
             when (status) {
-                Event.PARTICIPATE.YES -> {
+                Event.ATTENDANCE_STATUS.YES -> {
                     fab_item_1_event!!.visibility = View.GONE
                     fab_item_2_event!!.visibility = View.VISIBLE
                     fab_item_3_event!!.visibility = View.VISIBLE
                 }
 
-                Event.PARTICIPATE.MAYBE -> {
+                Event.ATTENDANCE_STATUS.MAYBE -> {
                     fab_item_1_event!!.visibility = View.VISIBLE
                     fab_item_2_event!!.visibility = View.GONE
                     fab_item_3_event!!.visibility = View.VISIBLE
                 }
 
-                Event.PARTICIPATE.NO -> {
+                Event.ATTENDANCE_STATUS.NO -> {
                     fab_item_1_event!!.visibility = View.VISIBLE
                     fab_item_2_event!!.visibility = View.VISIBLE
                     fab_item_3_event!!.visibility = View.GONE
                 }
 
-                Event.PARTICIPATE.UNDEFINED -> {
+                Event.ATTENDANCE_STATUS.UNDEFINED -> {
                 }
             }
         }, 500)

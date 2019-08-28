@@ -67,7 +67,7 @@ public abstract class Event implements Parcelable, Comparable<Event> {
     @SerializedName("fgColor")
     abstract String fgColor();
 
-    public enum PARTICIPATE {
+    public enum ATTENDANCE_STATUS {
         YES,
         MAYBE,
         NO,
@@ -78,11 +78,11 @@ public abstract class Event implements Parcelable, Comparable<Event> {
         return new AutoParcelGson_Event(id, name, association, description, attendees, maybe, notgoing, comments, status, dateStart, dateEnd, image, promotions, plateforms, bgColor, fgColor);
     }
 
-    public PARTICIPATE getStatusForUser(String userId) {
+    public ATTENDANCE_STATUS getStatusForUser(String userId) {
         if (notgoing() != null) {
             for (final String id : notgoing()) {
                 if (userId.equals(id)) {
-                    return Event.PARTICIPATE.NO;
+                    return ATTENDANCE_STATUS.NO;
                 }
             }
         }
@@ -90,7 +90,7 @@ public abstract class Event implements Parcelable, Comparable<Event> {
         if (maybe() != null) {
             for (final String id : maybe()) {
                 if (userId.equals(id)) {
-                    return Event.PARTICIPATE.MAYBE;
+                    return ATTENDANCE_STATUS.MAYBE;
                 }
             }
         }
@@ -98,12 +98,12 @@ public abstract class Event implements Parcelable, Comparable<Event> {
         if (attendees() != null) {
             for (final String id : attendees()) {
                 if (userId.equals(id)) {
-                    return Event.PARTICIPATE.YES;
+                    return ATTENDANCE_STATUS.YES;
                 }
             }
         }
 
-        return PARTICIPATE.UNDEFINED;
+        return ATTENDANCE_STATUS.UNDEFINED;
     }
 
     @Override

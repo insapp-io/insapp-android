@@ -1,6 +1,5 @@
 package fr.insapp.insapp.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -23,7 +22,7 @@ import retrofit2.Response
 
 class AttendeesActivity : AppCompatActivity() {
 
-    private var adapter: AttendeeRecyclerViewAdapter? = null
+    private lateinit var adapter: AttendeeRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,16 +30,15 @@ class AttendeesActivity : AppCompatActivity() {
 
         val attendees = intent.getStringArrayListExtra("attendees")
         if (attendees != null) {
-            generateUsers(attendees, Event.PARTICIPATE.YES)
+            generateUsers(attendees, Event.ATTENDANCE_STATUS.YES)
         }
 
         val maybe = intent.getStringArrayListExtra("maybe")
         if (maybe != null) {
-            generateUsers(maybe, Event.PARTICIPATE.MAYBE)
+            generateUsers(maybe, Event.ATTENDANCE_STATUS.MAYBE)
         }
 
-        this.adapter = AttendeeRecyclerViewAdapter(this, Glide.with(this), true)
-        adapter!!.setOnItemClickListener { user -> startActivity(Intent(baseContext, ProfileActivity::class.java).putExtra("user", user)) }
+        this.adapter = AttendeeRecyclerViewAdapter(mutableMapOf(), Glide.with(this), true)
 
         // toolbar
 
@@ -58,13 +56,13 @@ class AttendeesActivity : AppCompatActivity() {
         recyclerview_users.adapter = adapter
     }
 
-    private fun generateUsers(users: List<String>, action: Event.PARTICIPATE) {
+    private fun generateUsers(users: List<String>, action: Event.ATTENDANCE_STATUS) {
         for (i in users.indices) {
             val call = ServiceGenerator.create().getUserFromId(users[i])
             call.enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    if (response.isSuccessful) {
-                        adapter!!.addItem(response.body(), action)
+                    if (response.isSuccessful && response.body() != null) {
+                        adapter.addItem(response.body() as User, action)
                     } else {
                         Toast.makeText(this@AttendeesActivity, "AttendeesActivity", Toast.LENGTH_LONG).show()
                     }

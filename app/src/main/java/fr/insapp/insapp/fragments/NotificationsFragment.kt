@@ -1,6 +1,5 @@
 package fr.insapp.insapp.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.EventActivity
-import fr.insapp.insapp.activities.PostActivity
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.Event
 import fr.insapp.insapp.models.Notifications
-import fr.insapp.insapp.models.Post
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import retrofit2.Call
@@ -29,79 +24,12 @@ import retrofit2.Response
 
 class NotificationsFragment : Fragment() {
 
-    private var adapter: NotificationRecyclerViewAdapter? = null
+    private lateinit var adapter: NotificationRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // adapter
-
-        this.adapter = NotificationRecyclerViewAdapter(context, Glide.with(this))
-        adapter!!.setOnItemClickListener { notification ->
-            when (notification.type) {
-                "tag", "post" -> {
-                    val call1 = ServiceGenerator.create().getPostFromId(notification.content)
-                    call1.enqueue(object : Callback<Post> {
-                        override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                            if (response.isSuccessful) {
-                                startActivity(Intent(context, PostActivity::class.java).putExtra("post", response.body()))
-                            } else if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                        }
-
-                        override fun onFailure(call: Call<Post>, t: Throwable) {
-                            if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                        }
-                    })
-                }
-
-                "eventTag", "event" -> {
-                    val call2 = ServiceGenerator.create().getEventFromId(notification.content)
-                    call2.enqueue(object : Callback<Event> {
-                        override fun onResponse(call: Call<Event>, response: Response<Event>) {
-                            if (response.isSuccessful) {
-                                startActivity(Intent(context, EventActivity::class.java).putExtra("event", response.body()))
-                            } else if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                        }
-
-                        override fun onFailure(call: Call<Event>, t: Throwable) {
-                            if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                        }
-                    })
-                }
-
-                else -> {
-                }
-            }
-
-            // mark notification as seen
-
-            val user = Utils.user
-
-            val call = ServiceGenerator.create().markNotificationAsSeen(user?.id, notification.id)
-            call.enqueue(object : Callback<Notifications> {
-                override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                    if (response.isSuccessful) {
-
-                    } else {
-                        // Il y a déjà une snackbar qui s'ouvre
-                        //Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                    // Il y a déjà une snackbar qui s'ouvre
-                    //Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
-                }
-            })
-        }
+        this.adapter = NotificationRecyclerViewAdapter(mutableListOf(), Glide.with(this))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -131,11 +59,11 @@ class NotificationsFragment : Fragment() {
 
                     if (notifications!!.notifications != null) {
                         for (notification in notifications.notifications) {
-                            adapter!!.addItem(notification)
+                            adapter.addItem(notification)
                         }
                     }
                 } else {
-                    if (adapter!!.itemCount == 0) {
+                    if (adapter.itemCount == 0) {
                         no_network?.visibility = View.VISIBLE
                     } else if (recyclerview_notifications != null){
                         Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
@@ -144,7 +72,7 @@ class NotificationsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                if (adapter!!.itemCount == 0) {
+                if (adapter.itemCount == 0) {
                     no_network?.visibility = View.VISIBLE
                 } else if (recyclerview_notifications != null){
                     Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()

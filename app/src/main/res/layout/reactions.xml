@@ -16,7 +16,7 @@
         android:layout_margin="0dp" />
 
     <TextView
-        android:id="@+id/heart_counter"
+        android:id="@+id/like_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

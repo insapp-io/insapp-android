@@ -1,6 +1,5 @@
 package fr.insapp.insapp.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.ClubActivity
-import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter
+import fr.insapp.insapp.adapters.AssociationRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Club
 import kotlinx.android.synthetic.main.fragment_clubs.*
@@ -25,13 +23,12 @@ import retrofit2.Response
 
 class ClubsFragment : Fragment() {
 
-    private var adapter: ClubRecyclerViewAdapter? = null
+    private lateinit var adapter: AssociationRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        this.adapter = ClubRecyclerViewAdapter(context, Glide.with(this), true)
-        adapter!!.setOnItemClickListener { club -> context!!.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", club)) }
+        this.adapter = AssociationRecyclerViewAdapter(mutableListOf(), Glide.with(this), true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,13 +56,13 @@ class ClubsFragment : Fragment() {
 
                     if (clubs != null) {
                         for (club in clubs) {
-                            if (!club.profilePicture.isEmpty() && !club.cover.isEmpty()) {
-                                adapter!!.addItem(club)
+                            if (club.profilePicture.isNotEmpty() && club.cover.isNotEmpty()) {
+                                adapter.addItem(club)
                             }
                         }
                     }
                 } else {
-                    if (adapter!!.clubs.isEmpty()) {
+                    if (adapter.associations.isEmpty()) {
                         no_network?.visibility = View.VISIBLE
                     } else if (recyclerview_clubs != null){
                         Snackbar.make(recyclerview_clubs, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
@@ -74,7 +71,7 @@ class ClubsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<List<Club>>, t: Throwable) {
-                if (adapter!!.clubs.isEmpty()) {
+                if (adapter.associations.isEmpty()) {
                     no_network?.visibility = View.VISIBLE
                 } else if (recyclerview_clubs != null){
                     Snackbar.make(recyclerview_clubs, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()

@@ -107,8 +107,8 @@ class ClubActivity : AppCompatActivity() {
 
         club_profile.setBackgroundColor(bgColor)
 
-        club_name.text = club!!.name
-        club_name.setTextColor(fgColor)
+        association_name.text = club!!.name
+        association_name.setTextColor(fgColor)
 
         club_description_text.text = club!!.description
         club_description_text.setTextColor(fgColor)
@@ -118,7 +118,7 @@ class ClubActivity : AppCompatActivity() {
         requestManager
             .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
             .apply(RequestOptions.circleCropTransform())
-            .into(club_avatar)
+            .into(association_avatar)
 
         GlideApp
             .with(this)

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Event
@@ -52,20 +51,11 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         val requestManager = Glide.with(this)
 
-        this.adapterNow = EventRecyclerViewAdapter(context, requestManager, false, layout)
-        adapterNow!!.setOnItemClickListener { event -> startActivityForResult(Intent(context, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
-
-        this.adapterToday = EventRecyclerViewAdapter(context, requestManager, false, layout)
-        adapterToday!!.setOnItemClickListener { event -> startActivityForResult(Intent(context, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
-
-        this.adapterWeek = EventRecyclerViewAdapter(context, requestManager, false, layout)
-        adapterWeek!!.setOnItemClickListener { event -> startActivityForResult(Intent(context, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
-
-        this.adapterNextWeek = EventRecyclerViewAdapter(context, requestManager, false, layout)
-        adapterNextWeek!!.setOnItemClickListener { event -> startActivityForResult(Intent(context, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
-
-        this.adapterLater = EventRecyclerViewAdapter(context, requestManager, false, layout)
-        adapterLater!!.setOnItemClickListener { event -> startActivityForResult(Intent(context, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
+        this.adapterNow = EventRecyclerViewAdapter(mutableListOf(), requestManager, false, layout)
+        this.adapterToday = EventRecyclerViewAdapter(mutableListOf(), requestManager, false, layout)
+        this.adapterWeek = EventRecyclerViewAdapter(mutableListOf(), requestManager, false, layout)
+        this.adapterNextWeek = EventRecyclerViewAdapter(mutableListOf(), requestManager, false, layout)
+        this.adapterLater = EventRecyclerViewAdapter(mutableListOf(), requestManager, false, layout)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

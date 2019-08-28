@@ -5,7 +5,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/name_post"
+        android:id="@+id/post_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#3e3e3e"
@@ -14,12 +14,12 @@
         android:layout_marginBottom="5dp" />
 
     <TextView
-        android:id="@+id/date_post"
+        android:id="@+id/post_date"
         android:textColor="#7f7f7f"
         android:textSize="13sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/name_post"
+        android:layout_alignBaseline="@+id/post_name"
         android:layout_alignParentEnd="true" />
 
     <TextView
@@ -27,12 +27,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColorLink="@color/colorPrimary"
-        android:layout_below="@id/name_post"
+        android:layout_below="@id/post_name"
         android:textColor="#7f7f7f"
         android:lineSpacingExtra="3dp" />
 
     <fr.insapp.insapp.components.RatioImageView
-        android:id="@+id/placeholder"
+        android:id="@+id/post_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
@@ -41,7 +41,7 @@
         android:background="@color/lightGray" />
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/post_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -53,10 +53,10 @@
 
     <include
         layout="@layout/reactions"
-        android:id="@+id/reactions"
+        android:id="@+id/post_reactions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/placeholder"
+        android:layout_below="@id/post_placeholder"
         android:layout_marginStart="-17dp"
         android:layout_marginBottom="-15dp" />
 </RelativeLayout>

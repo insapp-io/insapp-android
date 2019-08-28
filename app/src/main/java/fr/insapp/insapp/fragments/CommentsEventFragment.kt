@@ -13,7 +13,6 @@ import com.bumptech.glide.request.RequestOptions
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter
-import fr.insapp.insapp.listeners.EventCommentLongClickListener
 import fr.insapp.insapp.models.Event
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_event.*
@@ -26,7 +25,7 @@ import java.util.*
 
 class CommentsEventFragment : Fragment() {
 
-    private var adapter: CommentRecyclerViewAdapter? = null
+    private lateinit var adapter: CommentRecyclerViewAdapter
 
     private var event: Event? = null
 
@@ -42,8 +41,9 @@ class CommentsEventFragment : Fragment() {
 
         // adapter
 
-        this.adapter = CommentRecyclerViewAdapter(context, Glide.with(this), event!!.comments)
-        adapter!!.setOnItemLongClickListener(EventCommentLongClickListener(context, event, adapter))
+        event.let {
+            this.adapter = CommentRecyclerViewAdapter(event!!.comments, Glide.with(this), event!!.id)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

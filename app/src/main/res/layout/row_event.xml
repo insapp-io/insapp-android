@@ -12,7 +12,7 @@
         android:layout_weight="0.7">
 
         <TextView
-            android:id="@+id/name_event"
+            android:id="@+id/event_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#3e3e3e"
@@ -21,18 +21,18 @@
             android:layout_marginStart="10dp" />
 
         <TextView
-            android:id="@+id/going_event"
+            android:id="@+id/event_going"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name_event"
+            android:layout_below="@id/event_name"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="3dp" />
 
         <TextView
-            android:id="@+id/date_event"
+            android:id="@+id/event_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/going_event"
+            android:layout_below="@id/event_going"
             android:layout_marginBottom="5dp"
             android:layout_marginStart="10dp" />
     </RelativeLayout>
@@ -44,7 +44,7 @@
         android:layout_weight="0.3">
 
         <ImageView
-            android:id="@+id/thumbnail_event"
+            android:id="@+id/event_thumbnail"
             android:layout_marginStart="14dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"

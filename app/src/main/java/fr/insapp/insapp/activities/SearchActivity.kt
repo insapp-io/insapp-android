@@ -4,17 +4,15 @@ import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.SearchEvent
 import fr.insapp.insapp.R
-import fr.insapp.insapp.adapters.ClubRecyclerViewAdapter
+import fr.insapp.insapp.adapters.AssociationRecyclerViewAdapter
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter
 import fr.insapp.insapp.adapters.UserRecyclerViewAdapter
@@ -33,10 +31,10 @@ import java.util.*
 
 class SearchActivity : AppCompatActivity() {
 
-    private var adapterClubs: ClubRecyclerViewAdapter? = null
-    private var adapterPosts: PostRecyclerViewAdapter? = null
-    private var adapterEvents: EventRecyclerViewAdapter? = null
-    private var adapterUsers: UserRecyclerViewAdapter? = null
+    private lateinit var adapterClubs: AssociationRecyclerViewAdapter
+    private lateinit var adapterPosts: PostRecyclerViewAdapter
+    private lateinit var adapterEvents: EventRecyclerViewAdapter
+    private lateinit var adapterUsers: UserRecyclerViewAdapter
 
     private var query: String? = null
 
@@ -71,51 +69,41 @@ class SearchActivity : AppCompatActivity() {
         val layoutManagerClubs = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerview_search_clubs.layoutManager = layoutManagerClubs
 
-        this.adapterClubs = ClubRecyclerViewAdapter(this, requestManager, false)
-        adapterClubs!!.setOnItemClickListener { club -> startActivity(Intent(baseContext, ClubActivity::class.java).putExtra("club", club)) }
-
+        this.adapterClubs = AssociationRecyclerViewAdapter(mutableListOf(), requestManager, false)
         recyclerview_search_clubs.adapter = adapterClubs
 
         // posts recycler view
 
-        val recyclerViewPosts = findViewById<View>(R.id.recyclerview_search_posts) as RecyclerView
-        recyclerViewPosts.setHasFixedSize(true)
-        recyclerViewPosts.isNestedScrollingEnabled = false
+        recyclerview_search_posts.setHasFixedSize(true)
+        recyclerview_search_posts.isNestedScrollingEnabled = false
 
         val layoutManagerPosts = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerViewPosts.layoutManager = layoutManagerPosts
+        recyclerview_search_posts.layoutManager = layoutManagerPosts
 
-        this.adapterPosts = PostRecyclerViewAdapter(this, requestManager, R.layout.row_post)
-        adapterPosts!!.setOnItemClickListener { post -> startActivity(Intent(baseContext, PostActivity::class.java).putExtra("post", post)) }
-
-        recyclerViewPosts.adapter = adapterPosts
+        this.adapterPosts = PostRecyclerViewAdapter(mutableListOf(), requestManager, R.layout.row_post)
+        recyclerview_search_posts.adapter = adapterPosts
 
         // events recycler view
 
-        val recyclerViewEvents = findViewById<View>(R.id.recyclerview_search_events) as RecyclerView
-        recyclerViewEvents.setHasFixedSize(true)
-        recyclerViewEvents.isNestedScrollingEnabled = false
+        recyclerview_search_events.setHasFixedSize(true)
+        recyclerview_search_events.isNestedScrollingEnabled = false
 
         val layoutManagerEvents = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerViewEvents.layoutManager = layoutManagerEvents
+        recyclerview_search_events.layoutManager = layoutManagerEvents
 
-        this.adapterEvents = EventRecyclerViewAdapter(this, requestManager, false, R.layout.row_event_with_avatars)
-        adapterEvents!!.setOnItemClickListener { event -> startActivity(Intent(baseContext, EventActivity::class.java).putExtra("event", event)) }
-        recyclerViewEvents.adapter = adapterEvents
+        this.adapterEvents = EventRecyclerViewAdapter(mutableListOf(), requestManager, false, R.layout.row_event_with_avatars)
+        recyclerview_search_events.adapter = adapterEvents
 
         // users recycler view
 
-        val recyclerViewUsers = findViewById<View>(R.id.recyclerview_search_users) as RecyclerView
-        recyclerViewUsers.setHasFixedSize(true)
-        recyclerViewUsers.isNestedScrollingEnabled = false
+        recyclerview_search_users.setHasFixedSize(true)
+        recyclerview_search_users.isNestedScrollingEnabled = false
 
         val layoutManagerUsers = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewUsers.layoutManager = layoutManagerUsers
+        recyclerview_search_users.layoutManager = layoutManagerUsers
 
-        this.adapterUsers = UserRecyclerViewAdapter(this, requestManager, false)
-        adapterUsers!!.setOnItemClickListener { user -> startActivity(Intent(baseContext, ProfileActivity::class.java).putExtra("user", user)) }
-
-        recyclerViewUsers.adapter = adapterUsers
+        this.adapterUsers = UserRecyclerViewAdapter(mutableListOf(), requestManager, false)
+        recyclerview_search_users.adapter = adapterUsers
 
         // hide layouts
 
@@ -132,10 +120,10 @@ class SearchActivity : AppCompatActivity() {
 
     private fun generateSearchResults() {
         if (this.query != null) {
-            adapterClubs!!.clubs.clear()
-            adapterPosts!!.posts.clear()
-            adapterEvents!!.events.clear()
-            adapterUsers!!.users.clear()
+            adapterClubs.associations.clear()
+            adapterPosts.posts.clear()
+            adapterEvents.events.clear()
+            adapterUsers.users.clear()
 
             val call = ServiceGenerator.create().universalSearch(SearchTerms(query))
             call.enqueue(object : Callback<UniversalSearchResults> {
@@ -147,8 +135,8 @@ class SearchActivity : AppCompatActivity() {
                             for (i in 0 until results.clubs.size) {
                                 val club = results.clubs[i]
 
-                                if (!club.profilePicture.isEmpty() && !club.cover.isEmpty()) {
-                                    adapterClubs!!.addItem(club)
+                                if (club.profilePicture.isNotEmpty() && club.cover.isNotEmpty()) {
+                                    adapterClubs.addItem(club)
                                     search_clubs_layout.visibility = LinearLayout.VISIBLE
                                 }
                             }
@@ -156,7 +144,7 @@ class SearchActivity : AppCompatActivity() {
 
                         if (results.posts != null) {
                             for (i in 0 until results.posts.size) {
-                                adapterPosts!!.addItem(results.posts[i])
+                                adapterPosts.addItem(results.posts[i])
                                 search_posts_layout.visibility = LinearLayout.VISIBLE
                             }
                         }
@@ -168,7 +156,7 @@ class SearchActivity : AppCompatActivity() {
                                 val event = results.events[i]
 
                                 if (event.dateEnd.time > atm.time) {
-                                    adapterEvents!!.addItem(event)
+                                    adapterEvents.addItem(event)
                                     search_events_layout.visibility = LinearLayout.VISIBLE
                                 }
                             }
@@ -176,7 +164,7 @@ class SearchActivity : AppCompatActivity() {
 
                         if (results.users != null) {
                             for (i in 0 until results.users.size) {
-                                adapterUsers!!.addItem(results.users[i])
+                                adapterUsers.addItem(results.users[i])
                                 search_users_layout.visibility = LinearLayout.VISIBLE
                             }
                         }

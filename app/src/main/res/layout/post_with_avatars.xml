@@ -5,7 +5,7 @@
     android:background="?android:selectableItemBackground">
 
     <ImageView
-        android:id="@+id/avatar_club_post"
+        android:id="@+id/post_association_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="14dp"

@@ -104,7 +104,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                                 @Override
                                 public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
                                     if (response.isSuccessful()) {
-                                        commentAdapter.setComments(response.body().getComments());
+                                        //commentAdapter.addComment(comment);
                                         tags.clear();
 
                                         Toast.makeText(App.getAppContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();
@@ -127,7 +127,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                                 @Override
                                 public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                                     if (response.isSuccessful()) {
-                                        commentAdapter.setComments(response.body().getComments());
+                                        //commentAdapter.addComment(comment);
                                         tags.clear();
 
                                         Toast.makeText(App.getAppContext(), getContext().getResources().getText(R.string.write_comment_success), Toast.LENGTH_LONG).show();

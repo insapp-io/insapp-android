@@ -6,7 +6,7 @@
     android:background="?android:selectableItemBackground">
 
     <ImageView
-        android:id="@+id/avatar_club_post"
+        android:id="@+id/post_association_avatar"
         android:layout_marginTop="14dp"
         android:layout_marginStart="14dp"
         android:layout_width="40dp"
@@ -25,7 +25,7 @@
             android:layout_weight="0.7">
 
             <TextView
-                android:id="@+id/name_post"
+                android:id="@+id/post_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#3e3e3e"
@@ -34,10 +34,10 @@
                 android:layout_marginStart="10dp" />
 
             <TextView
-                android:id="@+id/date_post"
+                android:id="@+id/post_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name_post"
+                android:layout_below="@id/post_name"
                 android:layout_marginBottom="5dp"
                 android:layout_marginStart="10dp" />
         </RelativeLayout>
@@ -49,7 +49,7 @@
             android:layout_weight="0.3">
 
             <ImageView
-                android:id="@+id/thumbnail_post"
+                android:id="@+id/post_thumbnail"
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"

@@ -20,7 +20,6 @@ import com.like.OnLikeListener
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.listeners.PostCommentLongClickListener
 import fr.insapp.insapp.models.*
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.activity_post.*
@@ -185,11 +184,11 @@ class PostActivity : AppCompatActivity() {
                         .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
                         .apply(RequestOptions.circleCropTransform())
                         .transition(withCrossFade())
-                        .into(post_club_avatar)
+                        .into(post_association_avatar)
 
                     // listener
 
-                    post_club_avatar?.setOnClickListener { startActivity(Intent(this@PostActivity, ClubActivity::class.java).putExtra("club", club)) }
+                    post_association_avatar?.setOnClickListener { startActivity(Intent(this@PostActivity, ClubActivity::class.java).putExtra("club", club)) }
                 } else {
                     Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
                 }
@@ -211,8 +210,7 @@ class PostActivity : AppCompatActivity() {
 
         // adapter
 
-        this.adapter = CommentRecyclerViewAdapter(this@PostActivity, requestManager, post.comments)
-        adapter.setOnItemLongClickListener(PostCommentLongClickListener(this@PostActivity, post, adapter))
+        this.adapter = CommentRecyclerViewAdapter(post.comments, requestManager, post.id)
 
         // edit comment
 
@@ -239,7 +237,7 @@ class PostActivity : AppCompatActivity() {
 
         // image
 
-        if (post.imageSize != null && !post.image.isEmpty()) {
+        if (post.imageSize != null && post.image.isNotEmpty()) {
             post_placeholder?.setImageSize(post.imageSize)
 
             requestManager

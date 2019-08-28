@@ -1,7 +1,5 @@
 package fr.insapp.insapp.fragments
 
-import android.app.Activity.RESULT_CANCELED
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +11,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.PostActivity
 import fr.insapp.insapp.adapters.PostRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Post
@@ -30,10 +27,10 @@ import retrofit2.Response
 class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var layout: Int = 0
-    private var filter_club_id: String? = null
+    private var filterAssociationId: String? = null
     private var swipeColor: Int = 0
 
-    private var adapter: PostRecyclerViewAdapter? = null
+    private lateinit var adapter: PostRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,14 +40,13 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val bundle = arguments
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.post_with_avatars)
-            this.filter_club_id = bundle.getString("filter_club_id")
+            this.filterAssociationId = bundle.getString("filter_club_id")
             this.swipeColor = bundle.getInt("swipe_color")
         }
 
         // adapter
 
-        this.adapter = PostRecyclerViewAdapter(context, Glide.with(this), layout)
-        adapter!!.setOnItemClickListener { post -> startActivityForResult(Intent(activity, PostActivity::class.java).putExtra("post", post), POST_REQUEST) }
+        this.adapter = PostRecyclerViewAdapter(mutableListOf(), Glide.with(this), layout)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -79,7 +75,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         refresh_posts.setOnRefreshListener(this)
 
-        if (filter_club_id != null) {
+        if (filterAssociationId != null) {
             refresh_posts.setColorSchemeColors(swipeColor)
         } else {
             refresh_posts.setColorSchemeResources(R.color.colorPrimary)
@@ -91,19 +87,19 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun generatePosts() {
         no_network?.visibility = View.GONE
 
-        val call = if (filter_club_id == null) {
+        val call = if (filterAssociationId == null) {
             ServiceGenerator.create().latestPosts
         } else {
-            ServiceGenerator.create().getPostsForAssociation(filter_club_id)
+            ServiceGenerator.create().getPostsForAssociation(filterAssociationId)
         }
 
         call.enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
-                    adapter!!.posts.clear()
+                    adapter.posts.clear()
                     addPostsToAdapter(response.body())
                 } else {
-                    if (adapter!!.posts.isEmpty()) {
+                    if (adapter.posts.isEmpty()) {
                         no_network?.visibility = View.VISIBLE
                     } else {
                         Snackbar.make(refresh_posts, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
@@ -115,7 +111,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                if (adapter!!.posts.isEmpty()) {
+                if (adapter.posts.isEmpty()) {
                     no_network?.visibility = View.VISIBLE
                 } else if (refresh_posts != null){
                     Snackbar.make(refresh_posts, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
@@ -129,7 +125,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun addPostsToAdapter(posts: List<Post>?) {
         if (posts != null) {
             for (post in posts) {
-                adapter!!.addItem(post)
+                adapter.addItem(post)
             }
         }
     }
@@ -137,14 +133,17 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
+        //TODO: update the result of liking a post
+
         if (requestCode == POST_REQUEST) {
+            /*
             when (resultCode) {
                 RESULT_OK -> {
                     val post = intent!!.getParcelableExtra<Post>("post")
 
-                    for (i in 0 until adapter!!.itemCount) {
-                        if (adapter!!.posts[i].id == post.id) {
-                            adapter!!.updatePost(i, post)
+                    for (i in 0 until adapter.itemCount) {
+                        if (adapter.posts[i].id == post.id) {
+                            adapter.updatePost(i, post)
                         }
                     }
                 }
@@ -154,6 +153,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 else -> {
                 }
             }
+            */
         }
     }
 

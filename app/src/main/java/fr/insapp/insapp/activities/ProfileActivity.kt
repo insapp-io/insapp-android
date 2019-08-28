@@ -43,7 +43,7 @@ import java.util.*
 
 class ProfileActivity : AppCompatActivity() {
 
-    private var adapter: EventRecyclerViewAdapter? = null
+    private lateinit var adapter: EventRecyclerViewAdapter
 
     private var user: User? = null
     private var isOwner = false
@@ -80,8 +80,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // adapter
 
-        this.adapter = EventRecyclerViewAdapter(this, Glide.with(this), false, R.layout.row_event_with_avatars)
-        adapter!!.setOnItemClickListener { event -> startActivityForResult(Intent(baseContext, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
+        this.adapter = EventRecyclerViewAdapter(mutableListOf(), Glide.with(this), false, R.layout.row_event_with_avatars)
 
         // recycler view
 
@@ -239,8 +238,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun clearEvents() {
-        adapter!!.events.clear()
-        adapter!!.notifyDataSetChanged()
+        adapter.events.clear()
+        adapter.notifyDataSetChanged()
     }
 
     private fun generateEvents() {
@@ -270,7 +269,7 @@ class ProfileActivity : AppCompatActivity() {
         val atm = Calendar.getInstance().time
 
         if (event.dateEnd.time > atm.time) {
-            adapter!!.addItem(event)
+            adapter.addItem(event)
         }
     }
 
@@ -282,20 +281,20 @@ class ProfileActivity : AppCompatActivity() {
                 Activity.RESULT_OK -> {
                     val event = intent?.getParcelableExtra<Event>("event")
 
-                    for (i in 0 until adapter!!.itemCount) {
-                        if (adapter!!.events[i].id == event!!.id) {
+                    for (i in 0 until adapter.itemCount) {
+                        if (adapter.events[i].id == event!!.id) {
                             val user = Utils.user
 
                             if (user?.events != null) {
                                 for (eventId in user.events) {
                                     if (eventId == event.id) {
-                                        adapter!!.updateEvent(i, event)
+                                        adapter.updateEvent(i, event)
                                         break
                                     }
                                 }
                             }
 
-                            adapter!!.removeItem(event.id)
+                            adapter.removeItem(event.id)
                         }
                     }
                 }
@@ -362,8 +361,8 @@ class ProfileActivity : AppCompatActivity() {
         const val BLACK = -0x1000000
 
         private fun guessAppropriateEncoding(contents: CharSequence): String? {
-            for (i in 0 until contents.length) {
-                if (contents[i].toInt() > 0xFF) {
+            for (element in contents) {
+                if (element.toInt() > 0xFF) {
                     return "UTF-8"
                 }
             }

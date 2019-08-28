@@ -5,39 +5,39 @@
     android:paddingBottom="10dp">
 
     <ImageView
-        android:id="@+id/username_avatar"
+        android:id="@+id/comment_avatar"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="6dp"
         android:layout_width="40dp"
         android:layout_height="40dp" />
 
     <TextView
-        android:id="@+id/username_comment"
+        android:id="@+id/comment_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#3e3e3e"
         android:textSize="15sp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/username_avatar"
-        android:layout_alignTop="@id/username_avatar" />
+        android:layout_toEndOf="@id/comment_avatar"
+        android:layout_alignTop="@id/comment_avatar" />
 
     <TextView
-        android:id="@+id/content_comment"
+        android:id="@+id/comment_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username_comment"
+        android:layout_below="@id/comment_username"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@id/username_avatar" />
+        android:layout_toEndOf="@id/comment_avatar" />
 
     <TextView
-        android:id="@+id/date_comment"
+        android:id="@+id/comment_date"
         android:textColor="#7f7f7f"
         android:textSize="13sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        android:layout_alignBaseline="@+id/username_comment"
+        android:layout_alignBaseline="@+id/comment_username"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>

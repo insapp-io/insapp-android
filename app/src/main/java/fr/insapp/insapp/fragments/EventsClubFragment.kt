@@ -14,7 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Club
@@ -36,8 +35,8 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var club: Club? = null
 
-    private var adapterFuture: EventRecyclerViewAdapter? = null
-    private var adapterPast: EventRecyclerViewAdapter? = null
+    private lateinit var adapterFuture: EventRecyclerViewAdapter
+    private lateinit var adapterPast: EventRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +54,8 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         val requestManager = Glide.with(this)
 
-        this.adapterFuture = EventRecyclerViewAdapter(context, requestManager, false, layout)
-        adapterFuture!!.setOnItemClickListener { event -> startActivityForResult(Intent(context, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
-
-        this.adapterPast = EventRecyclerViewAdapter(context, requestManager, true, layout)
-        adapterPast!!.setOnItemClickListener { event -> startActivityForResult(Intent(context, EventActivity::class.java).putExtra("event", event), EVENT_REQUEST) }
+        this.adapterFuture = EventRecyclerViewAdapter(mutableListOf(), requestManager, false, layout)
+        this.adapterPast = EventRecyclerViewAdapter(mutableListOf(), requestManager, true, layout)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -90,8 +86,8 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun clearEvents() {
-        adapterFuture!!.events.clear()
-        adapterPast!!.events.clear()
+        adapterFuture.events.clear()
+        adapterPast.events.clear()
 
         events_future_layout.visibility = View.GONE
         events_past_layout.visibility = View.GONE
@@ -126,10 +122,10 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
             for (event in events) {
                 if (event.dateEnd.time > atm.time) {
-                    adapterFuture!!.addItem(event)
+                    adapterFuture.addItem(event)
                     events_future_layout?.visibility = View.VISIBLE
                 } else {
-                    adapterPast!!.addItem(event)
+                    adapterPast.addItem(event)
                     events_past_layout?.visibility = View.VISIBLE
                 }
             }
@@ -144,15 +140,15 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 RESULT_OK -> {
                     val event = intent!!.getParcelableExtra<Event>("event")
 
-                    for (i in 0 until adapterPast!!.itemCount) {
-                        if (adapterPast!!.events[i].id == event.id) {
-                            adapterPast!!.updateEvent(i, event)
+                    for (i in 0 until adapterPast.itemCount) {
+                        if (adapterPast.events[i].id == event.id) {
+                            adapterPast.updateEvent(i, event)
                         }
                     }
 
-                    for (i in 0 until adapterFuture!!.itemCount) {
-                        if (adapterFuture!!.events[i].id == event.id) {
-                            adapterFuture!!.updateEvent(i, event)
+                    for (i in 0 until adapterFuture.itemCount) {
+                        if (adapterFuture.events[i].id == event.id) {
+                            adapterFuture.updateEvent(i, event)
                         }
                     }
                 }

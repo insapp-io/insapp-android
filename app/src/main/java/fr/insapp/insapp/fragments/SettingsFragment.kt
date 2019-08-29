@@ -31,7 +31,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
 
         val barcode = defaultSharedPreferences.getString("barcode", "")
-        barcode?.let {
+        if (!barcode.isNullOrEmpty()) {
             findPreference<Preference>("barcode_fragment")?.summary = barcode
         }
 

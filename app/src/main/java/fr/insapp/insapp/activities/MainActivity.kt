@@ -104,6 +104,15 @@ class MainActivity : AppCompatActivity() {
                 val token = task.result?.token
                 Log.d(MyFirebaseMessagingService.TAG, "Current Firebase token: $token")
             })
+
+        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
+
+        //TODO: delete after update
+        val oldSex = defaultSharedPreferences.getString("sex", "")
+        if (!oldSex.isNullOrEmpty()) {
+            defaultSharedPreferences.edit().putString("gender", oldSex).apply()
+            defaultSharedPreferences.edit().remove("sex").apply()
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

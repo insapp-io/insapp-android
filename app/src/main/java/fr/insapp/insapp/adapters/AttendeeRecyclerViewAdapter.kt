@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestOptions
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.ProfileActivity
+import fr.insapp.insapp.models.AttendanceStatus
 import fr.insapp.insapp.models.Event
 import fr.insapp.insapp.models.User
 import fr.insapp.insapp.utility.Utils
@@ -24,12 +25,12 @@ import java.util.*
  */
 
 class AttendeeRecyclerViewAdapter(
-        private val users: MutableMap<User, Event.ATTENDANCE_STATUS>,
+        private val users: MutableMap<User, AttendanceStatus>,
         private val requestManager: RequestManager,
         private val matchParent: Boolean
 ) : RecyclerView.Adapter<AttendeeRecyclerViewAdapter.UserViewHolder>() {
 
-    fun addItem(user: User, action: Event.ATTENDANCE_STATUS) {
+    fun addItem(user: User, action: AttendanceStatus) {
         this.users[user] = action
         this.notifyDataSetChanged()
     }
@@ -38,7 +39,7 @@ class AttendeeRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = ArrayList(users.keys)[position]
-        holder.bindUser(user, users[user] == Event.ATTENDANCE_STATUS.YES)
+        holder.bindUser(user, users[user] == AttendanceStatus.YES)
     }
 
     override fun getItemCount() = users.size

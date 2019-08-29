@@ -50,7 +50,7 @@ class EventActivity : AppCompatActivity() {
 
     private lateinit var event: Event
 
-    private var status: Event.ATTENDANCE_STATUS = Event.ATTENDANCE_STATUS.UNDEFINED
+    private var status: AttendanceStatus = AttendanceStatus.UNDEFINED
 
     private var bgColor: Int = 0
     private var fgColor: Int = 0
@@ -129,8 +129,8 @@ class EventActivity : AppCompatActivity() {
                 .putContentId(event.id)
                 .putContentName(event.name)
                 .putContentType("Event")
-                .putCustomAttribute("Attendees count", if (event.attendees == null) 0 else event.attendees.size)
-                .putCustomAttribute("Interested count", if (event.maybe == null) 0 else event.maybe.size))
+                .putCustomAttribute("Attendees count", event.attendees?.size ?: 0)
+                .putCustomAttribute("Interested count", event.maybe?.size ?: 0))
 
         event_participants_layout.setOnClickListener {
             val newIntent = Intent(this@EventActivity, AttendeesActivity::class.java)
@@ -169,7 +169,9 @@ class EventActivity : AppCompatActivity() {
 
         // floating action menu
 
-        this.status = event.getStatusForUser(user?.id)
+        user?.let {
+            this.status = event.getStatusForUser(user.id)
+        }
 
         // fab style
 
@@ -206,29 +208,29 @@ class EventActivity : AppCompatActivity() {
         viewPager.adapter = adapter
     }
 
-    private fun setFloatingActionMenuTheme(status: Event.ATTENDANCE_STATUS) {
+    private fun setFloatingActionMenuTheme(status: AttendanceStatus) {
         when (status) {
-            Event.ATTENDANCE_STATUS.UNDEFINED -> {
+            AttendanceStatus.UNDEFINED -> {
                 fab_participate_event?.menuButtonColorNormal = bgColor
                 fab_participate_event?.menuButtonColorPressed = bgColor
                 fab_participate_event?.menuIconView?.setColorFilter(fgColor)
             }
 
-            Event.ATTENDANCE_STATUS.NO -> {
+            AttendanceStatus.NO -> {
                 fab_participate_event?.menuButtonColorNormal = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuButtonColorPressed = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuIconView?.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_close_black_24dp))
                 fab_participate_event?.menuIconView?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabRed))
             }
 
-            Event.ATTENDANCE_STATUS.MAYBE -> {
+            AttendanceStatus.MAYBE -> {
                 fab_participate_event?.menuButtonColorNormal = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuButtonColorPressed = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuIconView?.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_question_mark_black))
                 fab_participate_event?.menuIconView?.setColorFilter(ContextCompat.getColor(applicationContext, R.color.fabOrange))
             }
 
-            Event.ATTENDANCE_STATUS.YES -> {
+            AttendanceStatus.YES -> {
                 fab_participate_event?.menuButtonColorNormal = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuButtonColorPressed = ContextCompat.getColor(applicationContext, R.color.white)
                 fab_participate_event?.menuIconView?.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_check_black_24dp))
@@ -252,12 +254,12 @@ class EventActivity : AppCompatActivity() {
 
         fab_item_1_event?.setOnClickListener {
             when (status) {
-                Event.ATTENDANCE_STATUS.NO, Event.ATTENDANCE_STATUS.MAYBE, Event.ATTENDANCE_STATUS.UNDEFINED -> {
+                AttendanceStatus.NO, AttendanceStatus.MAYBE, AttendanceStatus.UNDEFINED -> {
                     val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "going")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
-                                status = Event.ATTENDANCE_STATUS.YES
+                                status = AttendanceStatus.YES
 
                                 fab_participate_event?.close(true)
                                 setFloatingActionMenuTheme(status)
@@ -298,7 +300,7 @@ class EventActivity : AppCompatActivity() {
                     })
                 }
 
-                Event.ATTENDANCE_STATUS.YES -> fab_participate_event?.close(true)
+                AttendanceStatus.YES -> fab_participate_event?.close(true)
             }
         }
 
@@ -313,12 +315,12 @@ class EventActivity : AppCompatActivity() {
 
         fab_item_2_event?.setOnClickListener {
             when (status) {
-                Event.ATTENDANCE_STATUS.NO, Event.ATTENDANCE_STATUS.YES, Event.ATTENDANCE_STATUS.UNDEFINED -> {
+                AttendanceStatus.NO, AttendanceStatus.YES, AttendanceStatus.UNDEFINED -> {
                     val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "maybe")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
-                                status = Event.ATTENDANCE_STATUS.MAYBE
+                                status = AttendanceStatus.MAYBE
 
                                 fab_participate_event?.close(true)
                                 setFloatingActionMenuTheme(status)
@@ -337,7 +339,7 @@ class EventActivity : AppCompatActivity() {
                     })
                 }
 
-                Event.ATTENDANCE_STATUS.MAYBE -> fab_participate_event?.close(true)
+                AttendanceStatus.MAYBE -> fab_participate_event?.close(true)
             }
         }
 
@@ -352,12 +354,12 @@ class EventActivity : AppCompatActivity() {
 
         fab_item_3_event?.setOnClickListener {
             when (status) {
-                Event.ATTENDANCE_STATUS.YES, Event.ATTENDANCE_STATUS.MAYBE, Event.ATTENDANCE_STATUS.UNDEFINED -> {
+                AttendanceStatus.YES, AttendanceStatus.MAYBE, AttendanceStatus.UNDEFINED -> {
                     val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "notgoing")
                     call.enqueue(object : Callback<EventInteraction> {
                         override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                             if (response.isSuccessful) {
-                                status = Event.ATTENDANCE_STATUS.NO
+                                status = AttendanceStatus.NO
 
                                 fab_participate_event?.close(true)
                                 setFloatingActionMenuTheme(status)
@@ -376,7 +378,7 @@ class EventActivity : AppCompatActivity() {
                     })
                 }
 
-                Event.ATTENDANCE_STATUS.NO -> fab_participate_event?.close(true)
+                AttendanceStatus.NO -> fab_participate_event?.close(true)
             }
         }
 
@@ -469,7 +471,7 @@ class EventActivity : AppCompatActivity() {
             val day = format.format(event.dateStart)
 
             event_date_text?.text = String.format(resources.getString(R.string.event_date_inf),
-                    day.replaceFirst(".".toRegex(), (day[0] + "").toUpperCase()),
+                    day.replaceFirst(".".toRegex(), (day[0] + "").toUpperCase(Locale.FRANCE)),
                     formatHoursMinutes.format(event.dateStart),
                     formatHoursMinutes.format(event.dateEnd))
         } else {
@@ -482,8 +484,8 @@ class EventActivity : AppCompatActivity() {
                     formatHoursMinutes.format(event.dateEnd))
 
             event_date_text?.text = String.format(resources.getString(R.string.event_date_sup),
-                    start.replaceFirst(".".toRegex(), (start[0] + "").toUpperCase()),
-                    end.replaceFirst(".".toRegex(), (end[0] + "").toUpperCase()))
+                    start.replaceFirst(".".toRegex(), (start[0] + "").toUpperCase(Locale.FRANCE)),
+                    end.replaceFirst(".".toRegex(), (end[0] + "").toUpperCase(Locale.FRANCE)))
         }
 
         event_date_text?.setTextColor(fgColor)
@@ -524,24 +526,24 @@ class EventActivity : AppCompatActivity() {
     }
 
     fun refreshAttendeesTextView() {
-        val nbParticipants = if (event.attendees == null) 0 else event.attendees.size
-        val nbInterested = if (event.maybe == null) 0 else event.maybe.size
+        val attendees = event.attendees?.size ?: 0
+        val unsure = event.maybe?.size ?: 0
 
-        when (nbParticipants) {
-            0 -> when (nbInterested) {
+        when (attendees) {
+            0 -> when (unsure) {
                 0 -> event_participants_text?.text = resources.getString(R.string.no_attendees_no_interested)
                 1 -> event_participants_text?.text = resources.getString(R.string.no_attendees_one_interested)
-                else -> event_participants_text?.text = String.format(resources.getString(R.string.no_attendees_x_interested), nbInterested)
+                else -> event_participants_text?.text = String.format(resources.getString(R.string.no_attendees_x_interested), unsure)
             }
-            1 -> when (nbInterested) {
+            1 -> when (unsure) {
                 0 -> event_participants_text?.text = resources.getString(R.string.one_attendee_no_interested)
                 1 -> event_participants_text?.text = resources.getString(R.string.one_attendee_one_interested)
-                else -> event_participants_text?.text = String.format(resources.getString(R.string.one_attendee_x_interested), nbInterested)
+                else -> event_participants_text?.text = String.format(resources.getString(R.string.one_attendee_x_interested), unsure)
             }
-            else -> when (nbInterested) {
-                0 -> event_participants_text?.text = String.format(resources.getString(R.string.x_attendees_no_interested), nbParticipants)
-                1 -> event_participants_text?.text = String.format(resources.getString(R.string.x_attendees_one_interested), nbParticipants)
-                else -> event_participants_text?.text = String.format(resources.getString(R.string.x_attendees_x_interested), nbParticipants, nbInterested)
+            else -> when (unsure) {
+                0 -> event_participants_text?.text = String.format(resources.getString(R.string.x_attendees_no_interested), attendees)
+                1 -> event_participants_text?.text = String.format(resources.getString(R.string.x_attendees_one_interested), attendees)
+                else -> event_participants_text?.text = String.format(resources.getString(R.string.x_attendees_x_interested), attendees, unsure)
             }
         }
     }
@@ -550,25 +552,25 @@ class EventActivity : AppCompatActivity() {
         val handler = Handler()
         handler.postDelayed({
             when (status) {
-                Event.ATTENDANCE_STATUS.YES -> {
-                    fab_item_1_event!!.visibility = View.GONE
-                    fab_item_2_event!!.visibility = View.VISIBLE
-                    fab_item_3_event!!.visibility = View.VISIBLE
+                AttendanceStatus.YES -> {
+                    fab_item_1_event?.visibility = View.GONE
+                    fab_item_2_event?.visibility = View.VISIBLE
+                    fab_item_3_event?.visibility = View.VISIBLE
                 }
 
-                Event.ATTENDANCE_STATUS.MAYBE -> {
-                    fab_item_1_event!!.visibility = View.VISIBLE
-                    fab_item_2_event!!.visibility = View.GONE
-                    fab_item_3_event!!.visibility = View.VISIBLE
+                AttendanceStatus.MAYBE -> {
+                    fab_item_1_event?.visibility = View.VISIBLE
+                    fab_item_2_event?.visibility = View.GONE
+                    fab_item_3_event?.visibility = View.VISIBLE
                 }
 
-                Event.ATTENDANCE_STATUS.NO -> {
-                    fab_item_1_event!!.visibility = View.VISIBLE
-                    fab_item_2_event!!.visibility = View.VISIBLE
-                    fab_item_3_event!!.visibility = View.GONE
+                AttendanceStatus.NO -> {
+                    fab_item_1_event?.visibility = View.VISIBLE
+                    fab_item_2_event?.visibility = View.VISIBLE
+                    fab_item_3_event?.visibility = View.GONE
                 }
 
-                Event.ATTENDANCE_STATUS.UNDEFINED -> {
+                AttendanceStatus.UNDEFINED -> {
                 }
             }
         }, 500)
@@ -606,4 +608,32 @@ class EventActivity : AppCompatActivity() {
 
         return super.dispatchTouchEvent(event)
     }
+}
+
+fun Event.getStatusForUser(userId: String): AttendanceStatus {
+    notgoing?.let {
+        for (id in notgoing) {
+            if (userId == id) {
+                return AttendanceStatus.NO
+            }
+        }
+    }
+
+    maybe?.let {
+        for (id in maybe) {
+            if (userId == id) {
+                return AttendanceStatus.MAYBE
+            }
+        }
+    }
+
+    attendees?.let {
+        for (id in attendees) {
+            if (userId == id) {
+                return AttendanceStatus.YES
+            }
+        }
+    }
+
+    return AttendanceStatus.UNDEFINED
 }

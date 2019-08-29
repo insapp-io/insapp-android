@@ -115,20 +115,22 @@ class PostActivity : AppCompatActivity() {
             .putContentId(post.id)
             .putContentName(post.title)
             .putContentType("Post")
-            .putCustomAttribute("Favorites count", post.likes?.size ?: 0)
-            .putCustomAttribute("Comments count", post.comments?.size ?: 0))
+            .putCustomAttribute("Favorites count", post.likes.size)
+            .putCustomAttribute("Comments count", post.comments.size))
 
         // hide image if necessary
 
-        if (post.imageSize == null || post.image.isEmpty()) {
+        if (post.image.isEmpty()) {
             post_placeholder?.visibility = View.GONE
             post_image?.visibility = View.GONE
         }
 
         // like button
 
-        post_like_button?.isLiked = post.isPostLikedBy(user?.id)
-        post_like_counter?.text = post.likes?.size?.toString() ?: "0"
+        user?.let {
+            post_like_button?.isLiked = post.isPostLikedBy(user.id)
+        }
+        post_like_counter?.text = post.likes.size.toString()
 
         post_like_button?.setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {
@@ -237,7 +239,7 @@ class PostActivity : AppCompatActivity() {
 
         // image
 
-        if (post.imageSize != null && post.image.isNotEmpty()) {
+        if (post.image.isNotEmpty()) {
             post_placeholder?.setImageSize(post.imageSize)
 
             requestManager
@@ -273,4 +275,11 @@ class PostActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+}
+
+fun Post.isPostLikedBy(userID: String): Boolean {
+    for (idUser in likes)
+        if (idUser == userID) return true
+
+    return false
 }

@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.AttendeeRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
+import fr.insapp.insapp.models.AttendanceStatus
 import fr.insapp.insapp.models.Event
 import fr.insapp.insapp.models.User
 import kotlinx.android.synthetic.main.activity_attendees.*
@@ -30,12 +31,12 @@ class AttendeesActivity : AppCompatActivity() {
 
         val attendees = intent.getStringArrayListExtra("attendees")
         if (attendees != null) {
-            generateUsers(attendees, Event.ATTENDANCE_STATUS.YES)
+            generateUsers(attendees, AttendanceStatus.YES)
         }
 
         val maybe = intent.getStringArrayListExtra("maybe")
         if (maybe != null) {
-            generateUsers(maybe, Event.ATTENDANCE_STATUS.MAYBE)
+            generateUsers(maybe, AttendanceStatus.MAYBE)
         }
 
         this.adapter = AttendeeRecyclerViewAdapter(mutableMapOf(), Glide.with(this), true)
@@ -56,7 +57,7 @@ class AttendeesActivity : AppCompatActivity() {
         recyclerview_users.adapter = adapter
     }
 
-    private fun generateUsers(users: List<String>, action: Event.ATTENDANCE_STATUS) {
+    private fun generateUsers(users: List<String>, action: AttendanceStatus) {
         for (i in users.indices) {
             val call = ServiceGenerator.create().getUserFromId(users[i])
             call.enqueue(object : Callback<User> {

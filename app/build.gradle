@@ -64,6 +64,10 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 ext {
     ANDROID_X_VER = '1.0.2'
 }

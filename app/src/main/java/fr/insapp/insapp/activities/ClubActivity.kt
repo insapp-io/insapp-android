@@ -23,7 +23,7 @@ import fr.insapp.insapp.adapters.ViewPagerAdapter
 import fr.insapp.insapp.fragments.EventsClubFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.models.Association
 import fr.insapp.insapp.utility.DarkenTransformation
 import fr.insapp.insapp.utility.GlideApp
 import fr.insapp.insapp.utility.Utils
@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.activity_club.*
 
 class ClubActivity : AppCompatActivity() {
 
-    private var club: Club? = null
+    private var club: Association? = null
 
     private var bgColor: Int = 0
     private var fgColor: Int = 0
@@ -58,7 +58,7 @@ class ClubActivity : AppCompatActivity() {
         Answers.getInstance().logContentView(ContentViewEvent()
             .putContentId(club!!.id)
             .putContentName(club!!.name)
-            .putContentType("Club"))
+            .putContentType("Association"))
 
         // toolbar
 

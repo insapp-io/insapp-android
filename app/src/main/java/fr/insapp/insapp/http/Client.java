@@ -2,8 +2,8 @@ package fr.insapp.insapp.http;
 
 import java.util.List;
 
-import fr.insapp.insapp.models.Club;
-import fr.insapp.insapp.models.ClubSearchResults;
+import fr.insapp.insapp.models.Association;
+import fr.insapp.insapp.models.AssociationSearchResults;
 import fr.insapp.insapp.models.Comment;
 import fr.insapp.insapp.models.Event;
 import fr.insapp.insapp.models.EventInteraction;
@@ -50,10 +50,10 @@ public interface Client {
      */
 
     @GET("associations")
-    Call<List<Club>> getClubs();
+    Call<List<Association>> getClubs();
 
     @GET("associations/{id}")
-    Call<Club> getClubFromId(@Path("id") String id);
+    Call<Association> getClubFromId(@Path("id") String id);
 
     /*
      * EVENTS
@@ -146,7 +146,7 @@ public interface Client {
     Call<UserSearchResults> searchUsers(@Body SearchTerms terms);
 
     @POST("search/associations")
-    Call<ClubSearchResults> searchClubs(@Body SearchTerms terms);
+    Call<AssociationSearchResults> searchClubs(@Body SearchTerms terms);
 
     @POST("search/events")
     Call<EventSearchResults> searchEvents(@Body SearchTerms terms);

@@ -11,7 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.AssociationRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.models.Association
 import kotlinx.android.synthetic.main.fragment_clubs.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,8 +49,8 @@ class ClubsFragment : Fragment() {
     private fun generateClubs() {
         no_network?.visibility = View.GONE
         val call = ServiceGenerator.create().clubs
-        call.enqueue(object : Callback<List<Club>> {
-            override fun onResponse(call: Call<List<Club>>, response: Response<List<Club>>) {
+        call.enqueue(object : Callback<List<Association>> {
+            override fun onResponse(call: Call<List<Association>>, response: Response<List<Association>>) {
                 if (response.isSuccessful) {
                     val clubs = response.body()
 
@@ -70,7 +70,7 @@ class ClubsFragment : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<List<Club>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Association>>, t: Throwable) {
                 if (adapter.associations.isEmpty()) {
                     no_network?.visibility = View.VISIBLE
                 } else if (recyclerview_clubs != null){

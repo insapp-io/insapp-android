@@ -16,7 +16,7 @@ import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.models.Association
 import fr.insapp.insapp.models.Event
 import kotlinx.android.synthetic.main.fragment_events_club.*
 import retrofit2.Call
@@ -33,7 +33,7 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var layout: Int = 0
     private var swipeColor: Int = 0
 
-    private var club: Club? = null
+    private var club: Association? = null
 
     private lateinit var adapterFuture: EventRecyclerViewAdapter
     private lateinit var adapterPast: EventRecyclerViewAdapter

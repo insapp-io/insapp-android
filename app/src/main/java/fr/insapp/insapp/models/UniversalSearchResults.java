@@ -11,7 +11,7 @@ import java.util.List;
 public class UniversalSearchResults {
 
     @SerializedName("associations")
-    private List<Club> clubs;
+    private List<Association> clubs;
 
     @SerializedName("posts")
     private List<Post> posts;
@@ -22,14 +22,14 @@ public class UniversalSearchResults {
     @SerializedName("users")
     private List<User> users;
 
-    public UniversalSearchResults(List<Club> clubs, List<Post> posts, List<Event> events, List<User> users) {
+    public UniversalSearchResults(List<Association> clubs, List<Post> posts, List<Event> events, List<User> users) {
         this.clubs = clubs;
         this.posts = posts;
         this.events = events;
         this.users = users;
     }
 
-    public List<Club> getClubs() {
+    public List<Association> getClubs() {
         return clubs;
     }
 

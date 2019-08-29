@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
@@ -96,7 +97,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                     if (!content.isEmpty()) {
                         final User user = Utils.INSTANCE.getUser();
 
-                        final Comment comment = Comment.create(null, user.getId(), content, null, tags);
+                        final Comment comment = new Comment(null, user.getId(), content, new Date(), tags);
 
                         if (object instanceof Post) {
                             Call<Post> call = ServiceGenerator.create().commentPost(((Post) object).getId(), comment);

@@ -36,7 +36,7 @@ class PostActivity : AppCompatActivity() {
     private lateinit var adapter: CommentRecyclerViewAdapter
 
     private lateinit var post: Post
-    private var club: Club? = null
+    private var club: Association? = null
 
     private lateinit var requestManager: RequestManager
 
@@ -177,8 +177,8 @@ class PostActivity : AppCompatActivity() {
         })
 
         val call = ServiceGenerator.create().getClubFromId(post.association)
-        call.enqueue(object : Callback<Club> {
-            override fun onResponse(call: Call<Club>, response: Response<Club>) {
+        call.enqueue(object : Callback<Association> {
+            override fun onResponse(call: Call<Association>, response: Response<Association>) {
                 if (response.isSuccessful) {
                     club = response.body()
 
@@ -196,7 +196,7 @@ class PostActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<Club>, t: Throwable) {
+            override fun onFailure(call: Call<Association>, t: Throwable) {
                 Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
             }
         })

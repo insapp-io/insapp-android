@@ -430,8 +430,8 @@ class EventActivity : AppCompatActivity() {
         event_club_icon?.setColorFilter(fgColor)
 
         val call = ServiceGenerator.create().getClubFromId(event.association)
-        call.enqueue(object : Callback<Club> {
-            override fun onResponse(call: Call<Club>, response: Response<Club>) {
+        call.enqueue(object : Callback<Association> {
+            override fun onResponse(call: Call<Association>, response: Response<Association>) {
                 if (response.isSuccessful) {
                     event_club_text?.text = response.body()!!.name
                 } else {
@@ -439,7 +439,7 @@ class EventActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<Club>, t: Throwable) {
+            override fun onFailure(call: Call<Association>, t: Throwable) {
                 Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
             }
         })

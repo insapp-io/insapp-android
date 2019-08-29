@@ -14,7 +14,7 @@ import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.ClubActivity
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.models.Association
 import fr.insapp.insapp.models.Event
 import fr.insapp.insapp.models.EventComparator
 import fr.insapp.insapp.utility.inflate
@@ -89,8 +89,8 @@ class EventRecyclerViewAdapter(
 
             if (layoutId == R.layout.row_event_with_avatars) {
                 val call = ServiceGenerator.create().getClubFromId(event.association)
-                call.enqueue(object : Callback<Club> {
-                    override fun onResponse(call: Call<Club>, response: Response<Club>) {
+                call.enqueue(object : Callback<Association> {
+                    override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {
                             val club = response.body()
 
@@ -108,7 +108,7 @@ class EventRecyclerViewAdapter(
                         }
                     }
 
-                    override fun onFailure(call: Call<Club>, t: Throwable) {
+                    override fun onFailure(call: Call<Association>, t: Throwable) {
                         Toast.makeText(context, "EventRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                     }
                 })

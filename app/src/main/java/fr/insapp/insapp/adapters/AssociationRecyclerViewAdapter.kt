@@ -11,7 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.ClubActivity
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.models.Association
 import fr.insapp.insapp.utility.inflate
 import kotlinx.android.synthetic.main.association_thumb.view.*
 
@@ -21,12 +21,12 @@ import kotlinx.android.synthetic.main.association_thumb.view.*
  */
 
 class AssociationRecyclerViewAdapter(
-        var associations: MutableList<Club>,
+        var associations: MutableList<Association>,
         private val requestManager: RequestManager,
         private val matchParent: Boolean
 ) : RecyclerView.Adapter<AssociationRecyclerViewAdapter.AssociationViewHolder>() {
 
-    fun addItem(club: Club) {
+    fun addItem(club: Association) {
         this.associations.add(club)
         this.notifyDataSetChanged()
     }
@@ -46,7 +46,7 @@ class AssociationRecyclerViewAdapter(
             matchParent: Boolean
     ) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private var association: Club? = null
+        private var association: Association? = null
 
         init {
             view.setOnClickListener(this)
@@ -55,7 +55,7 @@ class AssociationRecyclerViewAdapter(
                 view.club_thumb_layout.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
         }
 
-        fun bindAssociation(association: Club) {
+        fun bindAssociation(association: Association) {
             this.association = association
 
             view.association_name.text = association.name

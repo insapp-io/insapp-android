@@ -192,8 +192,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         "post" -> {
             val call2 = ServiceGenerator.create().getClubFromId(notification.post.association)
-            call2.enqueue(object : Callback<Club> {
-                override fun onResponse(call: Call<Club>, response: Response<Club>) {
+            call2.enqueue(object : Callback<Association> {
+                override fun onResponse(call: Call<Association>, response: Response<Association>) {
                     if (response.isSuccessful) {
                         val club = response.body()
 
@@ -207,7 +207,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     }
                 }
 
-                override fun onFailure(call: Call<Club>, t: Throwable) {
+                override fun onFailure(call: Call<Association>, t: Throwable) {
                     Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show()
                 }
             })
@@ -215,8 +215,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         "event" -> {
             val call3 = ServiceGenerator.create().getClubFromId(notification.event.association)
-            call3.enqueue(object : Callback<Club> {
-                override fun onResponse(call: Call<Club>, response: Response<Club>) {
+            call3.enqueue(object : Callback<Association> {
+                override fun onResponse(call: Call<Association>, response: Response<Association>) {
                     if (response.isSuccessful) {
                         val club = response.body()
 
@@ -230,7 +230,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     }
                 }
 
-                override fun onFailure(call: Call<Club>, t: Throwable) {
+                override fun onFailure(call: Call<Association>, t: Throwable) {
                     Toast.makeText(App.getAppContext(), "FirebaseMessaging", Toast.LENGTH_LONG).show()
                 }
             })

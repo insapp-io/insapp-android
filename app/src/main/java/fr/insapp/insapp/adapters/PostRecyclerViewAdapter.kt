@@ -16,8 +16,9 @@ import com.like.OnLikeListener
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.ClubActivity
 import fr.insapp.insapp.activities.PostActivity
+import fr.insapp.insapp.activities.isPostLikedBy
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.Club
+import fr.insapp.insapp.models.Association
 import fr.insapp.insapp.models.Post
 import fr.insapp.insapp.models.PostInteraction
 import fr.insapp.insapp.utility.Utils
@@ -85,8 +86,8 @@ class PostRecyclerViewAdapter(
                 // association avatar
 
                 val call = ServiceGenerator.create().getClubFromId(post.association)
-                call.enqueue(object : Callback<Club> {
-                    override fun onResponse(call: Call<Club>, response: Response<Club>) {
+                call.enqueue(object : Callback<Association> {
+                    override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {
                             val club = response.body()
 
@@ -106,7 +107,7 @@ class PostRecyclerViewAdapter(
                         }
                     }
 
-                    override fun onFailure(call: Call<Club>, t: Throwable) {
+                    override fun onFailure(call: Call<Association>, t: Throwable) {
                         Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                     }
                 })
@@ -191,7 +192,7 @@ class PostRecyclerViewAdapter(
 
             // hide image if necessary
 
-            if (post.imageSize == null || post.image.isEmpty()) {
+            if (post.image.isEmpty()) {
                 view.post_placeholder.visibility = View.GONE
                 view.post_image.visibility = View.GONE
             }

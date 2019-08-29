@@ -97,8 +97,8 @@ class NotificationRecyclerViewAdapter(
                 })
             } else if (notification.type == "post" || notification.type == "event") {
                 val call = ServiceGenerator.create().getClubFromId(notification.sender)
-                call.enqueue(object : Callback<Club> {
-                    override fun onResponse(call: Call<Club>, response: Response<Club>) {
+                call.enqueue(object : Callback<Association> {
+                    override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {
                             val club = response.body()
 
@@ -116,7 +116,7 @@ class NotificationRecyclerViewAdapter(
                         }
                     }
 
-                    override fun onFailure(call: Call<Club>, t: Throwable) {
+                    override fun onFailure(call: Call<Association>, t: Throwable) {
                         Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                     }
                 })

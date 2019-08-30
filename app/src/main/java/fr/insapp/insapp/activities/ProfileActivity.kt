@@ -245,8 +245,9 @@ class ProfileActivity : AppCompatActivity() {
     private fun generateEvents() {
         clearEvents()
 
-        if (user!!.events != null) {
-            for (eventId in user!!.events) {
+        val events = user?.events
+        events?.let {
+            for (eventId in events) {
                 val call = ServiceGenerator.create().getEventFromId(eventId)
                 call.enqueue(object : Callback<Event> {
                     override fun onResponse(call: Call<Event>, response: Response<Event>) {

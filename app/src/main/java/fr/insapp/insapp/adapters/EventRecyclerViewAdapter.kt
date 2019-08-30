@@ -16,7 +16,6 @@ import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Association
 import fr.insapp.insapp.models.Event
-import fr.insapp.insapp.models.EventComparator
 import fr.insapp.insapp.utility.inflate
 import kotlinx.android.synthetic.main.row_event.view.*
 import kotlinx.android.synthetic.main.row_event_with_avatars.view.*
@@ -145,6 +144,18 @@ class EventRecyclerViewAdapter(
         override fun onClick(v: View) {
             val context = itemView.context
             context.startActivity(Intent(context, EventActivity::class.java).putExtra("event", event))
+        }
+    }
+
+    class EventComparator(private val past: Boolean) : Comparator<Event> {
+
+        override fun compare(event1: Event, event2: Event): Int {
+            if (event1.dateStart.time == event2.dateStart.time)
+                return 0
+            if (event1.dateStart.time < event2.dateStart.time)
+                return if (past) 1 else -1
+
+            return if (past) -1 else 1
         }
     }
 }

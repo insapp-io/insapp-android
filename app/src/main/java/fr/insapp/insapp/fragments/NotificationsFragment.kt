@@ -54,13 +54,10 @@ class NotificationsFragment : Fragment() {
         val call = ServiceGenerator.create().getNotificationsForUser(user?.id)
         call.enqueue(object : Callback<Notifications> {
             override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                if (response.isSuccessful) {
-                    val notifications = response.body()
-
-                    if (notifications!!.notifications != null) {
-                        for (notification in notifications.notifications) {
-                            adapter.addItem(notification)
-                        }
+                val results = response.body()
+                if (response.isSuccessful && results != null) {
+                    for (notification in results.notifications) {
+                        adapter.addItem(notification)
                     }
                 } else {
                     if (adapter.itemCount == 0) {

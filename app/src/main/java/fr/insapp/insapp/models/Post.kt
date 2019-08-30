@@ -11,7 +11,7 @@ import java.util.*
  */
 
 @Parcelize
-data class Post (
+data class Post(
         @SerializedName("ID") val id: String,
         @SerializedName("title") val title: String,
         @SerializedName("association") val association: String,

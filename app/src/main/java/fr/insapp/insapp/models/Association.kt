@@ -3,7 +3,6 @@ package fr.insapp.insapp.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 /**
  * Kotlin rewrite on 29/08/2019.

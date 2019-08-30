@@ -139,8 +139,9 @@ class PostActivity : AppCompatActivity() {
                 val call = ServiceGenerator.create().likePost(post.id, user?.id)
                 call.enqueue(object : Callback<PostInteraction> {
                     override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                        if (response.isSuccessful) {
-                            post = response.body()!!.post
+                        val results = response.body()
+                        if (response.isSuccessful && results != null) {
+                            post = results.post
                         } else {
                             Toast.makeText(this@PostActivity, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                         }
@@ -162,8 +163,9 @@ class PostActivity : AppCompatActivity() {
                 val call = ServiceGenerator.create().dislikePost(post.id, user?.id)
                 call.enqueue(object : Callback<PostInteraction> {
                     override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                        if (response.isSuccessful) {
-                            post = response.body()!!.post
+                        val results = response.body()
+                        if (response.isSuccessful && results != null) {
+                            post = results.post
                         } else {
                             Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
                         }

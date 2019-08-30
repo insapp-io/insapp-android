@@ -56,7 +56,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 // user change
                 val user = Utils.user
 
-                val updatedUser = User.create(
+                val updatedUser = User(
                         user!!.id,
                         sharedPreferences.getString("name", ""),
                         user.username,

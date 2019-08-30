@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.R;
@@ -77,7 +77,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                     }
                 }
 
-                tags.add(Tag.create(null, userId, itemString));
+                tags.add(new Tag(null, userId, itemString));
             }
         });
 

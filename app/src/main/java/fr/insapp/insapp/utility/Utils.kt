@@ -5,6 +5,7 @@ import android.content.Intent
 import android.text.SpannableString
 import android.text.style.URLSpan
 import android.widget.TextView
+import androidx.preference.PreferenceManager
 import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory
 import com.google.gson.GsonBuilder
 import fr.insapp.insapp.App
@@ -29,9 +30,12 @@ object Utils {
         }
 
     fun clearAndDisconnect() {
-        val user = Utils.user
         if (user != null) {
-            user.clearData()
+            App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).edit().clear().apply()
+            App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply()
+
+            PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit().clear().apply()
+
             disconnect()
         }
     }
@@ -72,25 +76,25 @@ object Utils {
         // at least 1 week
 
         if (diffInDays >= 7) {
-            return ago + " " + Integer.toString(diffInDays / 7) + " " + App.getAppContext().getString(R.string.ago_week)
+            return ago + " " + (diffInDays / 7).toString() + " " + App.getAppContext().getString(R.string.ago_week)
         }
 
         // at least 1 day
 
         if (diffInDays >= 1) {
-            return ago + " " + java.lang.Long.toString(diffInDays.toLong()) + " " + App.getAppContext().getString(R.string.ago_day)
+            return ago + " " + diffInDays.toLong().toString() + " " + App.getAppContext().getString(R.string.ago_day)
         }
 
         // at least 1 hour
 
         if (diffHours >= 1) {
-            return ago + " " + java.lang.Long.toString(diffHours) + " " + App.getAppContext().getString(R.string.ago_hour)
+            return ago + " " + diffHours.toString() + " " + App.getAppContext().getString(R.string.ago_hour)
         }
 
         // at least 1 minute
 
         return if (diffMinutes >= 1) {
-            ago + " " + java.lang.Long.toString(diffMinutes) + " " + App.getAppContext().getString(R.string.ago_minute)
+            ago + " " + diffMinutes.toString() + " " + App.getAppContext().getString(R.string.ago_minute)
         } else App.getAppContext().getString(R.string.ago_now)
 
         // now
@@ -101,7 +105,7 @@ object Utils {
         var drawableString = "avatar"
 
         if (promo != null && promo != "" && gender != null && gender != "") {
-            var userPromotion = promo.toLowerCase()
+            var userPromotion = promo.toLowerCase(Locale.FRANCE)
 
             if (userPromotion.contains("personnel")) {
                 userPromotion = "worker"

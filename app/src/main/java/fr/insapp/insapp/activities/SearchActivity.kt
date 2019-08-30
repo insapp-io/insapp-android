@@ -128,33 +128,30 @@ class SearchActivity : AppCompatActivity() {
             val call = ServiceGenerator.create().universalSearch(SearchTerms(query))
             call.enqueue(object : Callback<UniversalSearchResults> {
                 override fun onResponse(call: Call<UniversalSearchResults>, response: Response<UniversalSearchResults>) {
-                    if (response.isSuccessful) {
-                        val results = response.body()
-
-                        if (results!!.clubs != null) {
-                            for (i in 0 until results.clubs.size) {
-                                val club = results.clubs[i]
-
-                                if (club.profilePicture.isNotEmpty() && club.cover.isNotEmpty()) {
-                                    adapterClubs.addItem(club)
+                    val results = response.body()
+                    if (response.isSuccessful && results != null) {
+                        val associations = results.associations
+                        associations?.let{
+                            for (association in associations) {
+                                if (association.profilePicture.isNotEmpty() && association.cover.isNotEmpty()) {
+                                    adapterClubs.addItem(association)
                                     search_clubs_layout.visibility = LinearLayout.VISIBLE
                                 }
                             }
                         }
 
-                        if (results.posts != null) {
-                            for (i in 0 until results.posts.size) {
-                                adapterPosts.addItem(results.posts[i])
+                        val posts = results.posts
+                        posts?.let {
+                            for (post in posts) {
+                                adapterPosts.addItem(post)
                                 search_posts_layout.visibility = LinearLayout.VISIBLE
                             }
                         }
 
-                        if (results.events != null) {
+                        val events = results.events
+                        events?.let {
                             val atm = Calendar.getInstance().time
-
-                            for (i in 0 until results.events.size) {
-                                val event = results.events[i]
-
+                            for (event in events) {
                                 if (event.dateEnd.time > atm.time) {
                                     adapterEvents.addItem(event)
                                     search_events_layout.visibility = LinearLayout.VISIBLE
@@ -162,17 +159,17 @@ class SearchActivity : AppCompatActivity() {
                             }
                         }
 
-                        if (results.users != null) {
-                            for (i in 0 until results.users.size) {
-                                adapterUsers.addItem(results.users[i])
+                        val users = results.users
+                        users?.let {
+                            for (user in users) {
+                                adapterUsers.addItem(user)
                                 search_users_layout.visibility = LinearLayout.VISIBLE
                             }
                         }
 
-                        if(results.clubs == null && results.events == null && results.posts == null && results.users == null){
+                        if (results.associations != null && results.events != null && results.posts != null && results.users != null){
                             search_no_result?.visibility = LinearLayout.VISIBLE
                         }
-
                     } else {
                         Toast.makeText(this@SearchActivity, "SearchActivity", Toast.LENGTH_LONG).show()
                     }

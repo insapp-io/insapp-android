@@ -14,7 +14,6 @@ import androidx.preference.PreferenceManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.NotificationUser
@@ -49,25 +48,28 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      *
      * @param token The new token.
      */
-    private fun sendRegistrationTokenToServer(token: String?) {
+    private fun sendRegistrationTokenToServer(token: String) {
         val user = Utils.user
+        if (user != null) {
+            val notificationUser = NotificationUser(null, user.id, token, "android")
 
-        val notificationUser = NotificationUser(null, user?.id, token, "android")
-
-        val call = ServiceGenerator.create().registerNotification(notificationUser)
-        call.enqueue(object : Callback<NotificationUser> {
-            override fun onResponse(call: Call<NotificationUser>, response: Response<NotificationUser>) {
-                var msg = "Firebase token successfully registered on server: $token"
-                if (!response.isSuccessful) {
-                    msg = "Failed to register Firebase token on server"
+            val call = ServiceGenerator.create().registerNotification(notificationUser)
+            call.enqueue(object : Callback<NotificationUser> {
+                override fun onResponse(call: Call<NotificationUser>, response: Response<NotificationUser>) {
+                    var msg = "Firebase token successfully registered on server: $token"
+                    if (!response.isSuccessful) {
+                        msg = "Failed to register Firebase token on server"
+                    }
+                    Log.d(TAG, msg)
                 }
-                Log.d(TAG, msg)
-            }
 
-            override fun onFailure(call: Call<NotificationUser>, t: Throwable) {
-                Log.d(TAG, "Failed to register Firebase token on server")
-            }
-        })
+                override fun onFailure(call: Call<NotificationUser>, t: Throwable) {
+                    Log.d(TAG, "Failed to register Firebase token on server: network failure")
+                }
+            })
+        } else {
+            Log.d(TAG, "Failed to register Firebase token on server: user is null")
+        }
     }
 
     /**
@@ -101,10 +103,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             channel = "events"
         }
 
-        if(PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).getBoolean("notifications_$channel", true)){
-            val pendingIntent = PendingIntent.getActivity(App.getAppContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_$channel", true)){
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
-            val builder: NotificationCompat.Builder = NotificationCompat.Builder(App.getAppContext(), channel)
+            val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, channel)
 
             builder
                     .setDefaults(Notification.DEFAULT_ALL)
@@ -112,12 +114,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     .setSmallIcon(R.drawable.ic_stat_notify)
                     .setAutoCancel(true)
                     .setLights(Color.RED, 500, 1000)
-                    .setColor(ContextCompat.getColor(App.getAppContext(), R.color.colorPrimary))
+                    .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                     .setContentTitle(title)
                     .setContentText(body)
                     .setContentIntent(pendingIntent)
 
-            val manager: NotificationManager = App.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             manager.notify(randomNotificationId, builder.build())
         }

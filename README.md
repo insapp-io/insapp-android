@@ -21,6 +21,20 @@ Insapp is a project aiming at helping associations from INSA Rennes to communica
 
 You can find us on [Facebook](https://www.facebook.com/insapp.crew/).
 
+## Configuration
+
+Use Android Studio to build the project.
+
+Two build types (build variants) can be used:
+
+- `release`: linked to the production API (`prod`) ;
+- `debug` : linked to the development API (`dev`).
+
+In order to receive push notifications under these two environments, two Firebase projects must be created. The attached `google-services.json` files should be at the following locations:
+
+- `release`: `app/google-services.json` ;
+- `debug` : `app/src/debug/google-services.json`.
+
 ## Notable open-source libraries
 
 - [**Retrofit**](https://github.com/square/retrofit) for constructing the REST API

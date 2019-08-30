@@ -6,8 +6,7 @@ import android.text.SpannableString
 import android.text.style.URLSpan
 import android.widget.TextView
 import androidx.preference.PreferenceManager
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory
-import com.google.gson.GsonBuilder
+import com.google.gson.Gson
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.IntroActivity
@@ -19,8 +18,7 @@ object Utils {
     val user: User?
         @Throws(NullPointerException::class)
         get() {
-            val gson = GsonBuilder().registerTypeAdapterFactory(AutoParcelGsonTypeAdapterFactory()).create()
-            val user = gson.fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User::class.java)
+            val user = Gson().fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User::class.java)
 
             if (user == null) {
                 disconnect()

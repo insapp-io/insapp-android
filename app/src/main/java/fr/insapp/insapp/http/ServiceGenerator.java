@@ -1,9 +1,5 @@
 package fr.insapp.insapp.http;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.activities.MainActivity;
 import fr.insapp.insapp.http.interceptors.JsonInterceptor;
 import fr.insapp.insapp.http.interceptors.TokenInterceptor;
@@ -38,9 +34,10 @@ public class ServiceGenerator {
 
     private static Client client;
 
-     private static <S> S createService(Class<S> serviceClass, TypeAdapter... adapters) {
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(ServiceGenerator.ROOT_URL).addConverterFactory(GsonConverterFactory.create(gson));
+     private static Client createService() {
+        Retrofit.Builder retrofit = new Retrofit.Builder()
+                .baseUrl(ServiceGenerator.ROOT_URL)
+                .addConverterFactory(GsonConverterFactory.create());
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -48,14 +45,14 @@ public class ServiceGenerator {
         httpClient.addInterceptor(tokenInterceptor);
         httpClient.addInterceptor(loggingInterceptor);
 
-        builder.client(httpClient.build());
+         retrofit.client(httpClient.build());
 
-        return builder.build().create(serviceClass);
+        return retrofit.build().create(Client.class);
     }
 
     public static Client create() {
         if (ServiceGenerator.client == null) {
-            ServiceGenerator.client = ServiceGenerator.createService(Client.class);
+            ServiceGenerator.client = ServiceGenerator.createService();
         }
 
         return ServiceGenerator.client;

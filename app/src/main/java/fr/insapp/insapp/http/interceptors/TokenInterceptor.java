@@ -5,11 +5,9 @@ import android.content.SharedPreferences;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
-import auto.parcelgson.gson.AutoParcelGsonTypeAdapterFactory;
 import fr.insapp.insapp.App;
 import fr.insapp.insapp.http.ServiceGenerator;
 import fr.insapp.insapp.models.credentials.LoginCredentials;
@@ -32,16 +30,14 @@ public class TokenInterceptor implements Interceptor {
         Request request = chain.request();
 
         final SharedPreferences credentialsPreferences = App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE);
-        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
-
-        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new AutoParcelGsonTypeAdapterFactory()).create();
 
         // if user is stored, register firebase token
+        //        final SharedPreferences userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE);
         //handleFirebaseTokenRegistration(gson, userPreferences);
 
         // add session token in a query parameter
 
-        SessionCredentials sessionCredentials = gson.fromJson(credentialsPreferences.getString("session", ""), SessionCredentials.class);
+        SessionCredentials sessionCredentials = new Gson().fromJson(credentialsPreferences.getString("session", ""), SessionCredentials.class);
 
         if (sessionCredentials != null && sessionCredentials.getSessionToken() != null) {
             final String sessionToken = sessionCredentials.getSessionToken().getToken();

@@ -90,7 +90,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val call = if (filterAssociationId == null) {
             ServiceGenerator.create().latestPosts
         } else {
-            ServiceGenerator.create().getPostsForAssociation(filterAssociationId)
+            ServiceGenerator.create().getPostsForAssociation(filterAssociationId!!)
         }
 
         call.enqueue(object : Callback<List<Post>> {

@@ -1,6 +1,6 @@
 package fr.insapp.insapp.http;
 
-import fr.insapp.insapp.activities.MainActivity;
+import fr.insapp.insapp.BuildConfig;
 import fr.insapp.insapp.http.interceptors.JsonInterceptor;
 import fr.insapp.insapp.http.interceptors.TokenInterceptor;
 import okhttp3.OkHttpClient;
@@ -18,7 +18,7 @@ public class ServiceGenerator {
     public static String CDN_URL;
 
     static {
-        if (MainActivity.dev) {
+        if (BuildConfig.BUILD_TYPE == "debug") {
             ROOT_URL = "https://insapp.insa-rennes.fr/api/v1/";
             CDN_URL = "https://insapp.insa-rennes.fr/cdn/";
         }

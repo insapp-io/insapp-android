@@ -75,20 +75,21 @@ class SignInActivity : AppCompatActivity() {
         val call = ServiceGenerator.create().signUser(ticket, signinCredentials)
         call.enqueue(object : Callback<LoginCredentials> {
             override fun onResponse(call: Call<LoginCredentials>, response: Response<LoginCredentials>) {
-                if (response.isSuccessful) {
-                    login(response.body())
+                val loginCredentials = response.body()
+                if (response.isSuccessful && loginCredentials != null) {
+                    login(loginCredentials)
                 } else {
-                    Toast.makeText(this@SignInActivity, "SignInActivity", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onFailure(call: Call<LoginCredentials>, t: Throwable) {
-                Toast.makeText(this@SignInActivity, "SignInActivity", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
             }
         })
     }
 
-    fun login(loginCredentials: LoginCredentials?) {
+    fun login(loginCredentials: LoginCredentials) {
         val call = ServiceGenerator.create().logUser(loginCredentials)
         call.enqueue(object : Callback<SessionCredentials> {
             override fun onResponse(call: Call<SessionCredentials>, response: Response<SessionCredentials>) {
@@ -97,14 +98,18 @@ class SignInActivity : AppCompatActivity() {
 
                     finish()
                 } else {
-                    Toast.makeText(this@SignInActivity, "SignInActivity", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onFailure(call: Call<SessionCredentials>, t: Throwable) {
-                Toast.makeText(this@SignInActivity, "SignInActivity", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
             }
         })
     }
 
+    companion object {
+
+        const val TAG = "SignInActivity"
+    }
 }

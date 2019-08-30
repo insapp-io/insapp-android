@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +34,7 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var layout: Int = 0
     private var swipeColor: Int = 0
 
-    private var club: Association? = null
+    private var association: Association? = null
 
     private lateinit var adapterFuture: EventRecyclerViewAdapter
     private lateinit var adapterPast: EventRecyclerViewAdapter
@@ -46,7 +47,7 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val bundle = arguments
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.row_event)
-            this.club = bundle.getParcelable("club")
+            this.association = bundle.getParcelable("association")
             this.swipeColor = bundle.getInt("swipe_color")
         }
 
@@ -96,24 +97,28 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun generateEvents() {
         clearEvents()
 
-        val call = ServiceGenerator.create().getEventsForAssociation(club?.id)
-        call.enqueue(object : Callback<List<Event>> {
-            override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
-                if (response.isSuccessful) {
-                    addEventsToAdapter(response.body())
-                } else {
-                    Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show()
+        if (association != null) {
+            val call = ServiceGenerator.create().getEventsForAssociation(association!!.id)
+            call.enqueue(object : Callback<List<Event>> {
+                override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
+                    if (response.isSuccessful) {
+                        addEventsToAdapter(response.body())
+                    } else {
+                        Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
+                    }
+
+                    refresh_events_club?.isRefreshing = false
                 }
 
-                refresh_events_club?.isRefreshing = false
-            }
+                override fun onFailure(call: Call<List<Event>>, t: Throwable) {
+                    Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
 
-            override fun onFailure(call: Call<List<Event>>, t: Throwable) {
-                Toast.makeText(App.getAppContext(), "EventsClubFragment", Toast.LENGTH_LONG).show()
-
-                refresh_events_club?.isRefreshing = false
-            }
-        })
+                    refresh_events_club?.isRefreshing = false
+                }
+            })
+        } else {
+            Log.d(TAG, "Couldn't get events: association is null")
+        }
     }
 
     private fun addEventsToAdapter(events: List<Event>?) {
@@ -167,6 +172,7 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
 
+        const val TAG = "EventsClubFragment"
         private const val EVENT_REQUEST = 2
     }
 }

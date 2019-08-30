@@ -12,7 +12,7 @@ import java.util.*
 
 @Parcelize
 data class Comment(
-    @SerializedName("ID") val id: String?,
+    @SerializedName("ID") val id: String,
     @SerializedName("user") val user: String,
     @SerializedName("content") val content: String,
     @SerializedName("date") val date: Date,

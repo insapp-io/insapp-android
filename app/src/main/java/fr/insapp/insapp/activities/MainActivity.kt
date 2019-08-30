@@ -22,7 +22,6 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import fr.insapp.insapp.App
-import fr.insapp.insapp.BuildConfig
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.ViewPagerAdapter
 import fr.insapp.insapp.components.CustomTabsConnection
@@ -38,9 +37,6 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     companion object {
-
-        const val dev = BuildConfig.BUILD_VARIANT == "dev"
-
         @JvmField var customTabsConnection: CustomTabsConnection? = null
     }
 

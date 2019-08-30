@@ -6,6 +6,7 @@ import android.text.Spanned
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -112,10 +113,9 @@ class CommentRecyclerViewAdapter(
             val call = ServiceGenerator.create().getUserFromId(comment.user)
             call.enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    if (response.isSuccessful) {
-                        val user = response.body()
-
-                        val id = context.resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user.gender), "drawable", context.packageName)
+                    val user = response.body()
+                    if (response.isSuccessful && user != null) {
+                        val id = context.resources.getIdentifier(Utils.drawableProfileName(user.promotion, user.gender), "drawable", context.packageName)
                         requestManager
                             .load(id)
                             .transition(withCrossFade())
@@ -141,62 +141,64 @@ class CommentRecyclerViewAdapter(
 
         override fun onLongClick(v: View): Boolean {
             val context = itemView.context
-
+            val user = Utils.user
             val alertDialogBuilder = AlertDialog.Builder(context)
 
-            // delete comment
+            if (user != null) {
+                if (user.id == comment?.user) {
+                    alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_comment_action))
+                    alertDialogBuilder
+                            .setMessage(R.string.delete_comment_are_you_sure)
+                            .setCancelable(true)
+                            .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
+                                val call = ServiceGenerator.create().uncommentPost(postId, comment!!.id)
 
-            if (Utils.user!!.id == comment?.user) {
-                alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_comment_action))
-                alertDialogBuilder
-                        .setMessage(R.string.delete_comment_are_you_sure)
-                        .setCancelable(true)
-                        .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                            val call = ServiceGenerator.create().uncommentPost(postId, comment?.id)
+                                call.enqueue(object : Callback<Post> {
+                                    override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                                        if (response.isSuccessful) {
+                                            view.visibility = View.GONE
+                                        } else {
+                                            Toast.makeText(context, "EventCommentLongClickListener", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
 
-                            call.enqueue(object : Callback<Post> {
-                                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                                    if (response.isSuccessful) {
-                                        view.visibility = View.GONE
-                                    } else {
+                                    override fun onFailure(call: Call<Post>, t: Throwable) {
                                         Toast.makeText(context, "EventCommentLongClickListener", Toast.LENGTH_LONG).show()
                                     }
-                                }
+                                })
+                            }
+                            .setNegativeButton(context.getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
 
-                                override fun onFailure(call: Call<Post>, t: Throwable) {
-                                    Toast.makeText(context, "EventCommentLongClickListener", Toast.LENGTH_LONG).show()
-                                }
-                            })
-                        }
-                        .setNegativeButton(context.getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
+                    val alertDialog = alertDialogBuilder.create()
+                    alertDialog.show()
+                } else {
+                    alertDialogBuilder.setTitle(context.getString(R.string.report_comment_action))
+                    alertDialogBuilder
+                            .setMessage(R.string.report_comment_are_you_sure)
+                            .setCancelable(true)
+                            .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
+                                val call = ServiceGenerator.create().reportComment(postId, comment!!.id)
+                                call.enqueue(object : Callback<Void> {
+                                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
 
-                val alertDialog = alertDialogBuilder.create()
-                alertDialog.show()
-            } else {
-                alertDialogBuilder.setTitle(context.getString(R.string.report_comment_action))
-                alertDialogBuilder
-                        .setMessage(R.string.report_comment_are_you_sure)
-                        .setCancelable(true)
-                        .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                            val call = ServiceGenerator.create().reportComment(postId, comment?.id)
-                            call.enqueue(object : Callback<Void> {
-                                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                    if (response.isSuccessful) {
-                                        Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show()
-                                    } else {
+                                    override fun onFailure(call: Call<Void>, t: Throwable) {
                                         Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show()
                                     }
-                                }
+                                })
+                            }
+                            .setNegativeButton(context.getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
 
-                                override fun onFailure(call: Call<Void>, t: Throwable) {
-                                    Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show()
-                                }
-                            })
-                        }
-                        .setNegativeButton(context.getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
-
-                val alertDialog = alertDialogBuilder.create()
-                alertDialog.show()
+                    val alertDialog = alertDialogBuilder.create()
+                    alertDialog.show()
+                }
+            } else {
+                Log.d("CommentRecyclerView", "Couldn't perform action: user is null")
             }
 
             return true

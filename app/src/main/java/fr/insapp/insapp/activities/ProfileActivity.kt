@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.text.util.Linkify
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -174,6 +175,7 @@ class ProfileActivity : AppCompatActivity() {
 
             R.id.action_report -> {
                 val alertDialogBuilder = AlertDialog.Builder(this@ProfileActivity)
+                val user = Utils.user
 
                 if (!isOwner) {
                     alertDialogBuilder.setTitle(getString(R.string.report_user_action))
@@ -181,20 +183,24 @@ class ProfileActivity : AppCompatActivity() {
                             .setMessage(R.string.report_user_are_you_sure)
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.create().reportUser(user!!.id)
-                                call.enqueue(object : Callback<User> {
-                                    override fun onResponse(call: Call<User>, response: Response<User>) {
-                                        if (response.isSuccessful) {
-                                            Toast.makeText(this@ProfileActivity, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(this@ProfileActivity, "ProfileActivity", Toast.LENGTH_LONG).show()
+                                if (user != null) {
+                                    val call = ServiceGenerator.create().reportUser(user.id)
+                                    call.enqueue(object : Callback<User> {
+                                        override fun onResponse(call: Call<User>, response: Response<User>) {
+                                            if (response.isSuccessful) {
+                                                Toast.makeText(this@ProfileActivity, getString(R.string.report_user_success), Toast.LENGTH_SHORT).show()
+                                            } else {
+                                                Toast.makeText(this@ProfileActivity, TAG, Toast.LENGTH_LONG).show()
+                                            }
                                         }
-                                    }
 
-                                    override fun onFailure(call: Call<User>, t: Throwable) {
-                                        Toast.makeText(this@ProfileActivity, "ProfileActivity", Toast.LENGTH_LONG).show()
-                                    }
-                                })
+                                        override fun onFailure(call: Call<User>, t: Throwable) {
+                                            Toast.makeText(this@ProfileActivity, TAG, Toast.LENGTH_LONG).show()
+                                        }
+                                    })
+                                } else {
+                                    Log.d(TAG, "Couldn't report user: user is null")
+                                }
                             }
                             .setNegativeButton(getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
                 } else {
@@ -203,25 +209,29 @@ class ProfileActivity : AppCompatActivity() {
                             .setMessage(R.string.delete_account_are_you_sure)
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.create().deleteUser(Utils.user?.id)
-                                call.enqueue(object : Callback<Void> {
-                                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                        if (response.isSuccessful) {
-                                            val activity = Intent(this@ProfileActivity, IntroActivity::class.java)
-                                            activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            startActivity(activity)
+                                if (user != null) {
+                                    val call = ServiceGenerator.create().deleteUser(user.id)
+                                    call.enqueue(object : Callback<Void> {
+                                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                                            if (response.isSuccessful) {
+                                                val activity = Intent(this@ProfileActivity, IntroActivity::class.java)
+                                                activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                startActivity(activity)
 
-                                            Toast.makeText(this@ProfileActivity, R.string.delete_account_success, Toast.LENGTH_SHORT).show()
-                                            finish()
-                                        } else {
-                                            Toast.makeText(this@ProfileActivity, "ProfileActivity", Toast.LENGTH_LONG).show()
+                                                Toast.makeText(this@ProfileActivity, R.string.delete_account_success, Toast.LENGTH_SHORT).show()
+                                                finish()
+                                            } else {
+                                                Toast.makeText(this@ProfileActivity, TAG, Toast.LENGTH_LONG).show()
+                                            }
                                         }
-                                    }
 
-                                    override fun onFailure(call: Call<Void>, t: Throwable) {
-                                        Toast.makeText(this@ProfileActivity, "ProfileActivity", Toast.LENGTH_LONG).show()
-                                    }
-                                })
+                                        override fun onFailure(call: Call<Void>, t: Throwable) {
+                                            Toast.makeText(this@ProfileActivity, TAG, Toast.LENGTH_LONG).show()
+                                        }
+                                    })
+                                } else {
+                                    Log.d(TAG, "Couldn't delete user: user is null")
+                                }
                             }
                             .setNegativeButton(getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
                 }
@@ -251,15 +261,16 @@ class ProfileActivity : AppCompatActivity() {
                 val call = ServiceGenerator.create().getEventFromId(eventId)
                 call.enqueue(object : Callback<Event> {
                     override fun onResponse(call: Call<Event>, response: Response<Event>) {
-                        if (response.isSuccessful) {
-                            addEventToAdapter(response.body()!!)
+                        val event = response.body()
+                        if (response.isSuccessful && event != null) {
+                            addEventToAdapter(event)
                         } else {
-                            Toast.makeText(this@ProfileActivity, "ProfileActivity", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@ProfileActivity, TAG, Toast.LENGTH_LONG).show()
                         }
                     }
 
                     override fun onFailure(call: Call<Event>, t: Throwable) {
-                        Toast.makeText(this@ProfileActivity, "ProfileActivity", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@ProfileActivity, TAG, Toast.LENGTH_LONG).show()
                     }
                 })
             }
@@ -350,6 +361,7 @@ class ProfileActivity : AppCompatActivity() {
 
     companion object {
 
+        const val TAG = "ProfileActivity"
         const val EVENT_REQUEST = 2
 
         /*

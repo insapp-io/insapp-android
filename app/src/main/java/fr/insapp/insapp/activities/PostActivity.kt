@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.util.Linkify
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -60,18 +61,22 @@ class PostActivity : AppCompatActivity() {
             if (intent.getParcelableExtra<Notification>("notification") != null) {
                 val notification = intent.getParcelableExtra<Notification>("notification")
 
-                val call = ServiceGenerator.create().markNotificationAsSeen(user?.id, notification.id)
-                call.enqueue(object : Callback<Notifications> {
-                    override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                        if (!response.isSuccessful) {
-                            Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                if (user != null) {
+                    val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                    call.enqueue(object : Callback<Notifications> {
+                        override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
+                            if (!response.isSuccessful) {
+                                Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                            }
                         }
-                    }
 
-                    override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                        Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
-                    }
-                })
+                        override fun onFailure(call: Call<Notifications>, t: Throwable) {
+                            Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                        }
+                    })
+                } else {
+                    Log.d(TAG, "")
+                }
             }
         } else {
             // coming from notification
@@ -80,19 +85,20 @@ class PostActivity : AppCompatActivity() {
             val call = ServiceGenerator.create().getPostFromId(intent.getStringExtra("ID"))
             call.enqueue(object : Callback<Post> {
                 override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    if (response.isSuccessful) {
-                        post = response.body()!!
+                    val result = response.body()
+                    if (response.isSuccessful && result != null) {
+                        post = result
                         generateActivity()
                     } else {
-                        Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
                     }
                 }
 
                 override fun onFailure(call: Call<Post>, t: Throwable) {
                     Toast.makeText(this@PostActivity, R.string.check_internet_connection, Toast.LENGTH_LONG).show()
-                    // Ouvrir l'application insapp
-                    val intent = Intent(applicationContext, MainActivity::class.java)
-                    startActivity(intent)
+
+                    // Open the application
+                    startActivity(Intent(this@PostActivity, MainActivity::class.java))
                     finish()
                 }
             })
@@ -136,21 +142,25 @@ class PostActivity : AppCompatActivity() {
             override fun liked(likeButton: LikeButton) {
                 post_like_counter?.text = (Integer.valueOf(post_like_counter?.text as String) + 1).toString()
 
-                val call = ServiceGenerator.create().likePost(post.id, user?.id)
-                call.enqueue(object : Callback<PostInteraction> {
-                    override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                        val results = response.body()
-                        if (response.isSuccessful && results != null) {
-                            post = results.post
-                        } else {
-                            Toast.makeText(this@PostActivity, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
+                if (user != null) {
+                    val call = ServiceGenerator.create().likePost(post.id, user.id)
+                    call.enqueue(object : Callback<PostInteraction> {
+                        override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
+                            val results = response.body()
+                            if (response.isSuccessful && results != null) {
+                                post = results.post
+                            } else {
+                                Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                            }
                         }
-                    }
 
-                    override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
-                        Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
-                    }
-                })
+                        override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
+                            Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                        }
+                    })
+                } else {
+                    Log.d(TAG, "Couldn't update the like status: user is null")
+                }
             }
 
             override fun unLiked(likeButton: LikeButton) {
@@ -160,25 +170,29 @@ class PostActivity : AppCompatActivity() {
                     post_like_counter?.text = "0"
                 }
 
-                val call = ServiceGenerator.create().dislikePost(post.id, user?.id)
-                call.enqueue(object : Callback<PostInteraction> {
-                    override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                        val results = response.body()
-                        if (response.isSuccessful && results != null) {
-                            post = results.post
-                        } else {
-                            Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                if (user != null) {
+                    val call = ServiceGenerator.create().dislikePost(post.id, user.id)
+                    call.enqueue(object : Callback<PostInteraction> {
+                        override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
+                            val result = response.body()
+                            if (response.isSuccessful && result != null) {
+                                post = result.post
+                            } else {
+                                Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                            }
                         }
-                    }
 
-                    override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
-                        Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
-                    }
-                })
+                        override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
+                            Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                        }
+                    })
+                } else {
+                    Log.d(TAG, "Couldn't update the like status: user is null")
+                }
             }
         })
 
-        val call = ServiceGenerator.create().getClubFromId(post.association)
+        val call = ServiceGenerator.create().getAssociationFromId(post.association)
         call.enqueue(object : Callback<Association> {
             override fun onResponse(call: Call<Association>, response: Response<Association>) {
                 if (response.isSuccessful) {
@@ -194,12 +208,12 @@ class PostActivity : AppCompatActivity() {
 
                     post_association_avatar?.setOnClickListener { startActivity(Intent(this@PostActivity, ClubActivity::class.java).putExtra("club", club)) }
                 } else {
-                    Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onFailure(call: Call<Association>, t: Throwable) {
-                Toast.makeText(this@PostActivity, "PostActivity", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
             }
         })
 
@@ -276,6 +290,11 @@ class PostActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+
+        const val TAG = "PostActivity"
     }
 }
 

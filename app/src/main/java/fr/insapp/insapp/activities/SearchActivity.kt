@@ -61,7 +61,7 @@ class SearchActivity : AppCompatActivity() {
 
         val requestManager = Glide.with(this)
 
-        // clubs recycler view
+        // associations recycler view
 
         recyclerview_search_clubs.setHasFixedSize(true)
         recyclerview_search_clubs.isNestedScrollingEnabled = false

@@ -193,7 +193,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         "post" -> {
-            val call2 = ServiceGenerator.create().getClubFromId(notification.post.association)
+            val call2 = ServiceGenerator.create().getAssociationFromId(notification.post.association)
             call2.enqueue(object : Callback<Association> {
                 override fun onResponse(call: Call<Association>, response: Response<Association>) {
                     if (response.isSuccessful) {
@@ -216,7 +216,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         "event" -> {
-            val call3 = ServiceGenerator.create().getClubFromId(notification.event.association)
+            val call3 = ServiceGenerator.create().getAssociationFromId(notification.event.association)
             call3.enqueue(object : Callback<Association> {
                 override fun onResponse(call: Call<Association>, response: Response<Association>) {
                     if (response.isSuccessful) {

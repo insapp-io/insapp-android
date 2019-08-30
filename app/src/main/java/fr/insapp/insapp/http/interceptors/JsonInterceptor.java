@@ -60,7 +60,7 @@ public class JsonInterceptor implements Interceptor {
                     editor.putString("description", userJson.getString("description"));
                     editor.putString("email", userJson.getString("email"));
                     editor.putString("class", userJson.getString("promotion"));
-                    editor.putString("sex", userJson.getString("gender"));
+                    editor.putString("gender", userJson.getString("gender"));
 
                     editor.apply();
                 }

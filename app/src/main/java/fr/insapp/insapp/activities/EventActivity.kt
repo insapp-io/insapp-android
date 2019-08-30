@@ -11,6 +11,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.provider.CalendarContract
+import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -74,18 +75,22 @@ class EventActivity : AppCompatActivity() {
             if (intent.getParcelableExtra<Notification>("notification") != null) {
                 val notification = intent.getParcelableExtra<Notification>("notification")
 
-                val call = ServiceGenerator.create().markNotificationAsSeen(user?.id, notification.id)
-                call.enqueue(object : Callback<Notifications> {
-                    override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                        if (!response.isSuccessful) {
-                            Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                if (user != null) {
+                    val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                    call.enqueue(object : Callback<Notifications> {
+                        override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
+                            if (!response.isSuccessful) {
+                                Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
+                            }
                         }
-                    }
 
-                    override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                        Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
-                    }
-                })
+                        override fun onFailure(call: Call<Notifications>, t: Throwable) {
+                            Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
+                        }
+                    })
+                } else {
+                    Log.d(TAG, "Couldn't mark the notification as seen: user is null")
+                }
             }
         } else {
             // coming from notification
@@ -94,19 +99,20 @@ class EventActivity : AppCompatActivity() {
             val call = ServiceGenerator.create().getEventFromId(intent.getStringExtra("ID"))
             call.enqueue(object : Callback<Event> {
                 override fun onResponse(call: Call<Event>, response: Response<Event>) {
-                    if (response.isSuccessful) {
-                        event = response.body()!!
+                    val result = response.body()
+                    if (response.isSuccessful && result != null) {
+                        event = result
                         generateActivity()
                     } else {
-                        Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
                     }
                 }
 
                 override fun onFailure(call: Call<Event>, t: Throwable) {
                     Toast.makeText(this@EventActivity, R.string.check_internet_connection, Toast.LENGTH_LONG).show()
-                    // Ouvrir l'application insapp
-                    val intent = Intent(applicationContext, MainActivity::class.java)
-                    startActivity(intent)
+
+                    // Open the application
+                    startActivity(Intent(applicationContext, MainActivity::class.java))
                     finish()
                 }
             })
@@ -255,49 +261,54 @@ class EventActivity : AppCompatActivity() {
         fab_item_1_event?.setOnClickListener {
             when (status) {
                 AttendanceStatus.NO, AttendanceStatus.MAYBE, AttendanceStatus.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "going")
-                    call.enqueue(object : Callback<EventInteraction> {
-                        override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
-                            if (response.isSuccessful) {
-                                status = AttendanceStatus.YES
+                    if (user != null) {
+                        val call = ServiceGenerator.create().addAttendee(event.id, user.id, "going")
+                        call.enqueue(object : Callback<EventInteraction> {
+                            override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
+                                val result = response.body()
+                                if (response.isSuccessful && result != null) {
+                                    status = AttendanceStatus.YES
 
-                                fab_participate_event?.close(true)
-                                setFloatingActionMenuTheme(status)
-                                refreshFloatingActionButtons()
+                                    fab_participate_event?.close(true)
+                                    setFloatingActionMenuTheme(status)
+                                    refreshFloatingActionButtons()
 
-                                event = response.body()!!.event
-                                refreshAttendeesTextView()
+                                    event = result.event
+                                    refreshAttendeesTextView()
 
-                                // if first time user join an event
+                                    // if first time user join an event
 
-                                val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
-                                if (defaultSharedPreferences.getBoolean("calendar", false)) {
-                                    val alertDialogBuilder = AlertDialog.Builder(this@EventActivity)
+                                    val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
+                                    if (defaultSharedPreferences.getBoolean("calendar", false)) {
+                                        val alertDialogBuilder = AlertDialog.Builder(this@EventActivity)
 
-                                    // set title
-                                    alertDialogBuilder.setTitle(resources.getString(R.string.add_to_calendar_action))
+                                        // set title
+                                        alertDialogBuilder.setTitle(resources.getString(R.string.add_to_calendar_action))
 
-                                    // set dialog message
-                                    alertDialogBuilder
-                                            .setMessage(resources.getString(R.string.add_to_calendar_are_you_sure))
-                                            .setCancelable(false)
-                                            .setPositiveButton(R.string.positive_button) { _, _ -> addEventToCalendar() }
-                                            .setNegativeButton(R.string.negative_button) { dialogAlert, _ -> dialogAlert.cancel() }
+                                        // set dialog message
+                                        alertDialogBuilder
+                                                .setMessage(resources.getString(R.string.add_to_calendar_are_you_sure))
+                                                .setCancelable(false)
+                                                .setPositiveButton(R.string.positive_button) { _, _ -> addEventToCalendar() }
+                                                .setNegativeButton(R.string.negative_button) { dialogAlert, _ -> dialogAlert.cancel() }
 
-                                    // create alert dialog
+                                        // create alert dialog
 
-                                    val alertDialog = alertDialogBuilder.create()
-                                    alertDialog.show()
+                                        val alertDialog = alertDialogBuilder.create()
+                                        alertDialog.show()
+                                    }
+                                } else {
+                                    Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
                                 }
-                            } else {
-                                Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
                             }
-                        }
 
-                        override fun onFailure(call: Call<EventInteraction>, t: Throwable) {
-                            Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
-                        }
-                    })
+                            override fun onFailure(call: Call<EventInteraction>, t: Throwable) {
+                                Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
+                            }
+                        })
+                    } else {
+                        Log.d(TAG, "Couldn't update the attendance status: user is null")
+                    }
                 }
 
                 AttendanceStatus.YES -> fab_participate_event?.close(true)
@@ -316,27 +327,32 @@ class EventActivity : AppCompatActivity() {
         fab_item_2_event?.setOnClickListener {
             when (status) {
                 AttendanceStatus.NO, AttendanceStatus.YES, AttendanceStatus.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "maybe")
-                    call.enqueue(object : Callback<EventInteraction> {
-                        override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
-                            if (response.isSuccessful) {
-                                status = AttendanceStatus.MAYBE
+                    if (user != null) {
+                        val call = ServiceGenerator.create().addAttendee(event.id, user.id, "maybe")
+                        call.enqueue(object : Callback<EventInteraction> {
+                            override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
+                                val result = response.body()
+                                if (response.isSuccessful && result != null) {
+                                    status = AttendanceStatus.MAYBE
 
-                                fab_participate_event?.close(true)
-                                setFloatingActionMenuTheme(status)
-                                refreshFloatingActionButtons()
+                                    fab_participate_event?.close(true)
+                                    setFloatingActionMenuTheme(status)
+                                    refreshFloatingActionButtons()
 
-                                event = response.body()!!.event
-                                refreshAttendeesTextView()
-                            } else {
+                                    event = result.event
+                                    refreshAttendeesTextView()
+                                } else {
+                                    Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<EventInteraction>, t: Throwable) {
                                 Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
                             }
-                        }
-
-                        override fun onFailure(call: Call<EventInteraction>, t: Throwable) {
-                            Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
-                        }
-                    })
+                        })
+                    } else {
+                        Log.d(TAG, "Couldn't update the attendance status: user is null")
+                    }
                 }
 
                 AttendanceStatus.MAYBE -> fab_participate_event?.close(true)
@@ -355,27 +371,32 @@ class EventActivity : AppCompatActivity() {
         fab_item_3_event?.setOnClickListener {
             when (status) {
                 AttendanceStatus.YES, AttendanceStatus.MAYBE, AttendanceStatus.UNDEFINED -> {
-                    val call = ServiceGenerator.create().addAttendee(event.id, user?.id, "notgoing")
-                    call.enqueue(object : Callback<EventInteraction> {
-                        override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
-                            if (response.isSuccessful) {
-                                status = AttendanceStatus.NO
+                    if (user != null) {
+                        val call = ServiceGenerator.create().addAttendee(event.id, user.id, "notgoing")
+                        call.enqueue(object : Callback<EventInteraction> {
+                            override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
+                                val result = response.body()
+                                if (response.isSuccessful && result != null) {
+                                    status = AttendanceStatus.NO
 
-                                fab_participate_event?.close(true)
-                                setFloatingActionMenuTheme(status)
-                                refreshFloatingActionButtons()
+                                    fab_participate_event?.close(true)
+                                    setFloatingActionMenuTheme(status)
+                                    refreshFloatingActionButtons()
 
-                                event = response.body()!!.event
-                                refreshAttendeesTextView()
-                            } else {
-                                Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                                    event = result.event
+                                    refreshAttendeesTextView()
+                                } else {
+                                    Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
+                                }
                             }
-                        }
 
-                        override fun onFailure(call: Call<EventInteraction>, t: Throwable) {
-                            Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
-                        }
-                    })
+                            override fun onFailure(call: Call<EventInteraction>, t: Throwable) {
+                                Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
+                            }
+                        })
+                    } else {
+                        Log.d(TAG, "Couldn't update the attendance status: user is null")
+                    }
                 }
 
                 AttendanceStatus.NO -> fab_participate_event?.close(true)
@@ -429,18 +450,19 @@ class EventActivity : AppCompatActivity() {
 
         event_club_icon?.setColorFilter(fgColor)
 
-        val call = ServiceGenerator.create().getClubFromId(event.association)
+        val call = ServiceGenerator.create().getAssociationFromId(event.association)
         call.enqueue(object : Callback<Association> {
             override fun onResponse(call: Call<Association>, response: Response<Association>) {
-                if (response.isSuccessful) {
-                    event_club_text?.text = response.body()!!.name
+                val result = response.body()
+                if (response.isSuccessful && result != null) {
+                    event_club_text?.text = result.name
                 } else {
-                    Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onFailure(call: Call<Association>, t: Throwable) {
-                Toast.makeText(this@EventActivity, "EventActivity", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
             }
         })
 
@@ -513,8 +535,7 @@ class EventActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 if (isTaskRoot) {
-                    val i = Intent(this@EventActivity, MainActivity::class.java)
-                    startActivity(i)
+                    startActivity(Intent(this@EventActivity, MainActivity::class.java))
                 } else {
                     finish()
                 }
@@ -607,6 +628,11 @@ class EventActivity : AppCompatActivity() {
         }
 
         return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+
+        const val TAG = "EventActivity"
     }
 }
 

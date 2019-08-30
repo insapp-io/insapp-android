@@ -1,6 +1,7 @@
 package fr.insapp.insapp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,30 +52,39 @@ class NotificationsFragment : Fragment() {
         no_network?.visibility = View.GONE
         val user = Utils.user
 
-        val call = ServiceGenerator.create().getNotificationsForUser(user?.id)
-        call.enqueue(object : Callback<Notifications> {
-            override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                val results = response.body()
-                if (response.isSuccessful && results != null) {
-                    for (notification in results.notifications) {
-                        adapter.addItem(notification)
+        if (user != null) {
+            val call = ServiceGenerator.create().getNotificationsForUser(user.id)
+            call.enqueue(object : Callback<Notifications> {
+                override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
+                    val results = response.body()
+                    if (response.isSuccessful && results != null) {
+                        for (notification in results.notifications) {
+                            adapter.addItem(notification)
+                        }
+                    } else {
+                        if (adapter.itemCount == 0) {
+                            no_network?.visibility = View.VISIBLE
+                        } else if (recyclerview_notifications != null) {
+                            Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
+                        }
                     }
-                } else {
+                }
+
+                override fun onFailure(call: Call<Notifications>, t: Throwable) {
                     if (adapter.itemCount == 0) {
                         no_network?.visibility = View.VISIBLE
-                    } else if (recyclerview_notifications != null){
+                    } else if (recyclerview_notifications != null) {
                         Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                     }
                 }
-            }
+            })
+        } else {
+            Log.d(TAG, "Couldn't fetch notifications: user is null")
+        }
+    }
 
-            override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                if (adapter.itemCount == 0) {
-                    no_network?.visibility = View.VISIBLE
-                } else if (recyclerview_notifications != null){
-                    Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                }
-            }
-        })
+    companion object {
+
+        const val TAG = "NotificationsFragment"
     }
 }

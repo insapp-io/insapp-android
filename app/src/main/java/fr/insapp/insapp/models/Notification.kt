@@ -12,7 +12,7 @@ import java.util.*
 
 @Parcelize
 data class Notification(
-        @SerializedName("ID") val id: String?,
+        @SerializedName("ID") val id: String,
         @SerializedName("sender") val sender: String,
         @SerializedName("receiver") val receiver: String,
         @SerializedName("content") val content: String,

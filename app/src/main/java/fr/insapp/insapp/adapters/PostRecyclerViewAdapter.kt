@@ -85,7 +85,7 @@ class PostRecyclerViewAdapter(
 
                 // association avatar
 
-                val call = ServiceGenerator.create().getClubFromId(post.association)
+                val call = ServiceGenerator.create().getAssociationFromId(post.association)
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {

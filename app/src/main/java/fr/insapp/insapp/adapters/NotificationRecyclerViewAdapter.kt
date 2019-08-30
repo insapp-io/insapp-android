@@ -73,19 +73,16 @@ class NotificationRecyclerViewAdapter(
                 val call = ServiceGenerator.create().getUserFromId(notification.sender)
                 call.enqueue(object : Callback<User> {
                     override fun onResponse(call: Call<User>, response: Response<User>) {
-                        if (response.isSuccessful) {
-                            val user = response.body()
+                        val user = response.body()
+                        if (response.isSuccessful && user != null) {
+                            val id = context.resources.getIdentifier(Utils.drawableProfileName(user.promotion, user.gender), "drawable", context.packageName)
+                            requestManager
+                                .load(id)
+                                .apply(RequestOptions.circleCropTransform())
+                                .transition(withCrossFade())
+                                .into(view.avatar_notification)
 
-                            if (user != null) {
-                                val id = context.resources.getIdentifier(Utils.drawableProfileName(user.promotion, user.gender), "drawable", context.packageName)
-                                requestManager
-                                    .load(id)
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .transition(withCrossFade())
-                                    .into(view.avatar_notification)
-
-                                view.avatar_notification.setOnClickListener { context.startActivity(Intent(context, ProfileActivity::class.java).putExtra("user", user)) }
-                            }
+                            view.avatar_notification.setOnClickListener { context.startActivity(Intent(context, ProfileActivity::class.java).putExtra("user", user)) }
                         } else {
                             Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                         }
@@ -96,21 +93,18 @@ class NotificationRecyclerViewAdapter(
                     }
                 })
             } else if (notification.type == "post" || notification.type == "event") {
-                val call = ServiceGenerator.create().getClubFromId(notification.sender)
+                val call = ServiceGenerator.create().getAssociationFromId(notification.sender)
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
-                        if (response.isSuccessful) {
-                            val club = response.body()
+                        val club = response.body()
+                        if (response.isSuccessful && club != null) {
+                            requestManager
+                                .load(ServiceGenerator.CDN_URL + club.profilePicture)
+                                .apply(RequestOptions.circleCropTransform())
+                                .transition(withCrossFade())
+                                .into(view.avatar_notification)
 
-                            if (club != null) {
-                                requestManager
-                                    .load(ServiceGenerator.CDN_URL + club.profilePicture)
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .transition(withCrossFade())
-                                    .into(view.avatar_notification)
-
-                                view.avatar_notification.setOnClickListener { context.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", club)) }
-                            }
+                            view.avatar_notification.setOnClickListener { context.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", club)) }
                         } else {
                             Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                         }
@@ -128,16 +122,13 @@ class NotificationRecyclerViewAdapter(
                 val call = ServiceGenerator.create().getPostFromId(notification.content)
                 call.enqueue(object : Callback<Post> {
                     override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                        if (response.isSuccessful) {
-                            val post = response.body()
-
-                            if (post != null) {
-                                requestManager
-                                    .load(ServiceGenerator.CDN_URL + post.image)
-                                    .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(8)))
-                                    .transition(withCrossFade())
-                                    .into(view.notification_thumbnails)
-                            }
+                        val post = response.body()
+                        if (response.isSuccessful && post != null) {
+                            requestManager
+                                .load(ServiceGenerator.CDN_URL + post.image)
+                                .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(8)))
+                                .transition(withCrossFade())
+                                .into(view.notification_thumbnails)
                         } else {
                             Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                         }
@@ -151,16 +142,13 @@ class NotificationRecyclerViewAdapter(
                 val call = ServiceGenerator.create().getEventFromId(notification.content)
                 call.enqueue(object : Callback<Event> {
                     override fun onResponse(call: Call<Event>, response: Response<Event>) {
-                        if (response.isSuccessful) {
-                            val event = response.body()
-
-                            if (event != null) {
-                                requestManager
-                                    .load(ServiceGenerator.CDN_URL + event.image)
-                                    .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(8)))
-                                    .transition(withCrossFade())
-                                    .into(view.notification_thumbnails)
-                            }
+                        val event = response.body()
+                        if (response.isSuccessful && event != null) {
+                            requestManager
+                                .load(ServiceGenerator.CDN_URL + event.image)
+                                .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(8)))
+                                .transition(withCrossFade())
+                                .into(view.notification_thumbnails)
                         } else {
                             Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                         }
@@ -178,49 +166,33 @@ class NotificationRecyclerViewAdapter(
 
             when (notification?.type) {
                 "tag", "post" -> {
-                    val call1 = ServiceGenerator.create().getPostFromId(notification?.content)
+                    val call1 = ServiceGenerator.create().getPostFromId(notification!!.content)
                     call1.enqueue(object : Callback<Post> {
                         override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                            if (response.isSuccessful) {
-                                context.startActivity(Intent(context, PostActivity::class.java).putExtra("post", response.body()))
+                            val post = response.body()
+                            if (response.isSuccessful && post != null) {
+                                context.startActivity(Intent(context, PostActivity::class.java).putExtra("post", post))
                             }
-                            /*
-                            else if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                            */
                         }
 
                         override fun onFailure(call: Call<Post>, t: Throwable) {
-                            /*
-                            if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                            */
+                            //
                         }
                     })
                 }
 
                 "eventTag", "event" -> {
-                    val call2 = ServiceGenerator.create().getEventFromId(notification?.content)
+                    val call2 = ServiceGenerator.create().getEventFromId(notification!!.content)
                     call2.enqueue(object : Callback<Event> {
                         override fun onResponse(call: Call<Event>, response: Response<Event>) {
-                            if (response.isSuccessful) {
-                                context.startActivity(Intent(context, EventActivity::class.java).putExtra("event", response.body()))
+                            val event = response.body()
+                            if (response.isSuccessful && event != null) {
+                                context.startActivity(Intent(context, EventActivity::class.java).putExtra("event", event))
                             }
-                            /*
-                            else if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                            */
                         }
 
                         override fun onFailure(call: Call<Event>, t: Throwable) {
-                            /*
-                            if (recyclerview_notifications != null){
-                                Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                            }
-                            */
+                           //
                         }
                     })
                 }
@@ -233,22 +205,18 @@ class NotificationRecyclerViewAdapter(
 
             val user = Utils.user
 
-            val call = ServiceGenerator.create().markNotificationAsSeen(user?.id, notification?.id)
-            call.enqueue(object : Callback<Notifications> {
-                override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
-                    if (response.isSuccessful) {
+            if (user != null && notification != null) {
+                val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification!!.id)
+                call.enqueue(object : Callback<Notifications> {
+                    override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
+                        //
+                    }
 
-                    } else {
-                        // Il y a déjà une snackbar qui s'ouvre
+                    override fun onFailure(call: Call<Notifications>, t: Throwable) {
                         //Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
                     }
-                }
-
-                override fun onFailure(call: Call<Notifications>, t: Throwable) {
-                    // Il y a déjà une snackbar qui s'ouvre
-                    //Toast.makeText(App.getAppContext(), "NotificationsFragment", Toast.LENGTH_LONG).show()
-                }
-            })
+                })
+            }
         }
     }
 }

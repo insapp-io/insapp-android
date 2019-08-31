@@ -115,8 +115,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         val oldClass = defaultSharedPreferences.getString("class", "")
-        if (!oldClass.isNullOrEmpty() && oldClass == "Alternant") {
-            defaultSharedPreferences.edit().putString("class", "5CDTI").apply()
+        if (!oldClass.isNullOrEmpty()) {
+            if (oldClass == "Alternant") {
+                defaultSharedPreferences.edit().putString("class", "5CDTI").apply()
+            }
+            if (oldClass == "Personnel/Enseignant") {
+                defaultSharedPreferences.edit().putString("class", "STAFF").apply()
+            }
         }
 
         MyFirebaseMessagingService.subscribeToTopic("news", false)

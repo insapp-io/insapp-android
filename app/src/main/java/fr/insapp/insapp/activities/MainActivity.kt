@@ -126,6 +126,16 @@ class MainActivity : AppCompatActivity() {
 
         MyFirebaseMessagingService.subscribeToTopic("news", false)
         MyFirebaseMessagingService.subscribeToTopic("events", false)
+
+        if (defaultSharedPreferences.getBoolean("notifications_news", false)) {
+            MyFirebaseMessagingService.subscribeToTopic("posts-android")
+        }
+        if (defaultSharedPreferences.getBoolean("notifications_events", false)) {
+            MyFirebaseMessagingService.subscribeToTopic("events-android")
+        }
+
+        defaultSharedPreferences.edit().remove("notifications_news").apply()
+        defaultSharedPreferences.edit().remove("notifications_others").apply()
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

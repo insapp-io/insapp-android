@@ -118,6 +118,9 @@ class MainActivity : AppCompatActivity() {
         if (!oldClass.isNullOrEmpty() && oldClass == "Alternant") {
             defaultSharedPreferences.edit().putString("class", "5CDTI").apply()
         }
+
+        MyFirebaseMessagingService.subscribeToTopic("news", false)
+        MyFirebaseMessagingService.subscribeToTopic("events", false)
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

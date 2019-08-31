@@ -101,13 +101,22 @@ class MainActivity : AppCompatActivity() {
                 Log.d(MyFirebaseMessagingService.TAG, "Current Firebase token: $token")
             })
 
+        updateApp()
+    }
+
+    //TODO: delete after update
+    private fun updateApp() {
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
 
-        //TODO: delete after update
         val oldSex = defaultSharedPreferences.getString("sex", "")
         if (!oldSex.isNullOrEmpty()) {
             defaultSharedPreferences.edit().putString("gender", oldSex).apply()
             defaultSharedPreferences.edit().remove("sex").apply()
+        }
+
+        val oldClass = defaultSharedPreferences.getString("class", "")
+        if (!oldClass.isNullOrEmpty() && oldClass == "Alternant") {
+            defaultSharedPreferences.edit().putString("class", "5CDTI").apply()
         }
     }
 

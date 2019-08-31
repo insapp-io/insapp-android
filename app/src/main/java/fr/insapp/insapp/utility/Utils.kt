@@ -107,8 +107,6 @@ object Utils {
 
             if (userPromotion.contains("personnel")) {
                 userPromotion = "worker"
-            } else if (userPromotion.contains("alternant")) {
-                userPromotion = "apprentice"
             } else if (!userPromotion.contains("stpi") && Character.isDigit(userPromotion[0])) {
                 userPromotion = userPromotion.substring(1)
             }

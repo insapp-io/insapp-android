@@ -3,6 +3,9 @@
         <item>Inconnu</item>
         <item>1STPI</item>
         <item>2STPI</item>
+        <item>3CDTI</item>
+        <item>4CDTI</item>
+        <item>5CDTI</item>
         <item>3EII</item>
         <item>4EII</item>
         <item>5EII</item>
@@ -24,7 +27,6 @@
         <item>3SRC</item>
         <item>4SRC</item>
         <item>5SRC</item>
-        <item>Alternant</item>
         <item>Personnel/Enseignant</item>
     </string-array>
 
@@ -32,6 +34,9 @@
         <item></item>
         <item>1STPI</item>
         <item>2STPI</item>
+        <item>3CDTI</item>
+        <item>4CDTI</item>
+        <item>5CDTI</item>
         <item>3EII</item>
         <item>4EII</item>
         <item>5EII</item>
@@ -53,8 +58,7 @@
         <item>3SRC</item>
         <item>4SRC</item>
         <item>5SRC</item>
-        <item>Alternant</item>
-        <item>Personnel/Enseignant</item>
+        <item>STAFF</item>
     </string-array>
 
     <string-array name="listArrayGender">

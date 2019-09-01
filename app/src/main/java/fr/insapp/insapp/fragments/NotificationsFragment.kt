@@ -57,16 +57,12 @@ class NotificationsFragment : Fragment() {
             call.enqueue(object : Callback<Notifications> {
                 override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                     val results = response.body()
-                    if (response.isSuccessful && results != null) {
+                    if (response.isSuccessful && results?.notifications != null) {
                         for (notification in results.notifications) {
                             adapter.addItem(notification)
                         }
-                    } else {
-                        if (adapter.itemCount == 0) {
-                            no_network?.visibility = View.VISIBLE
-                        } else if (recyclerview_notifications != null) {
-                            Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
-                        }
+                    } else if (recyclerview_notifications != null) {
+                        Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                     }
                 }
 

@@ -27,6 +27,7 @@ import fr.insapp.insapp.adapters.ViewPagerAdapter
 import fr.insapp.insapp.components.CustomTabsConnection
 import fr.insapp.insapp.fragments.AssociationsFragment
 import fr.insapp.insapp.fragments.EventsFragment
+import fr.insapp.insapp.fragments.MenusFragment
 import fr.insapp.insapp.fragments.NotificationsFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.notifications.MyFirebaseMessagingService
@@ -177,6 +178,9 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(eventsFragment, resources.getString(R.string.events))
 
         adapter.addFragment(AssociationsFragment(), resources.getString(R.string.clubs))
+
+        adapter.addFragment(MenusFragment(), resources.getString(R.string.menu))
+
         adapter.addFragment(NotificationsFragment(), resources.getString(R.string.notifications))
 
         viewPager.adapter = adapter

@@ -79,8 +79,9 @@
     <string name="delete_account_success">Compte supprimé avec succès</string>
 
     <string name="posts">Actualités</string>
-    <string name="clubs">Associations</string>
     <string name="events">Évènements</string>
+    <string name="clubs">Associations</string>
+    <string name="menu">Menu</string>
     <string name="users">Utilisateurs</string>
     <string name="notifications">Notifications</string>
     <string name="about">À propos</string>

@@ -51,45 +51,111 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
-            "name", "gender", "class", "email", "description" -> {
+            "name", "gender", "email", "description" -> {
+                val value = sharedPreferences.getString(key, "")
+                Log.d(TAG, "$key has changed and is now $value")
 
-                // user change
                 val user = Utils.user
 
-                val updatedUser = User(
-                        user!!.id,
-                        sharedPreferences.getString("name", ""),
-                        user.username,
-                        sharedPreferences.getString("description", ""),
-                        sharedPreferences.getString("email", ""),
-                        user.isEmailPublic,
-                        sharedPreferences.getString("class", ""),
-                        sharedPreferences.getString("gender", ""),
-                        user.events,
-                        user.postsLiked)
+                if (user != null) {
+                    val updatedUser = User(
+                            user.id,
+                            sharedPreferences.getString("name", ""),
+                            user.username,
+                            sharedPreferences.getString("description", ""),
+                            sharedPreferences.getString("email", ""),
+                            user.isEmailPublic,
+                            sharedPreferences.getString("class", ""),
+                            sharedPreferences.getString("gender", ""),
+                            user.events,
+                            user.postsLiked)
 
-                val call = ServiceGenerator.create().updateUser(user.id, updatedUser)
-                call.enqueue(object : Callback<User> {
-                    override fun onResponse(call: Call<User>, response: Response<User>) {
-                        if (!response.isSuccessful) {
+                    val call = ServiceGenerator.create().updateUser(user.id, updatedUser)
+                    call.enqueue(object : Callback<User> {
+                        override fun onResponse(call: Call<User>, response: Response<User>) {
+                            if (!response.isSuccessful) {
+                                Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<User>, t: Throwable) {
                             Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
+                        }
+                    })
+                }
+            }
+
+            "class" -> {
+                val value = sharedPreferences.getString(key, "")
+                Log.d(TAG, "$key has changed and is now $value")
+
+                val user = Utils.user
+
+                if (user != null) {
+                    if (value != null) {
+                        if (value.isBlank()) {
+                            MyFirebaseMessagingService.subscribeToTopic("posts-unknown-class")
+                            MyFirebaseMessagingService.subscribeToTopic("events-unknown-class")
+
+                            // unsubscribing from old topics
+                            if (!user.promotion.isBlank()) {
+                                MyFirebaseMessagingService.subscribeToTopic("posts-${user.promotion}", false)
+                                MyFirebaseMessagingService.subscribeToTopic("events-${user.promotion}", false)
+                            }
+                        } else {
+                            MyFirebaseMessagingService.subscribeToTopic("posts-$value")
+                            MyFirebaseMessagingService.subscribeToTopic("events-$value")
+
+                            // unsubscribing from old topics
+                            if (!user.promotion.isBlank()) {
+                                MyFirebaseMessagingService.subscribeToTopic("posts-${user.promotion}", false)
+                                MyFirebaseMessagingService.subscribeToTopic("events-${user.promotion}", false)
+                            } else {
+                                MyFirebaseMessagingService.subscribeToTopic("posts-unknown-class", false)
+                                MyFirebaseMessagingService.subscribeToTopic("events-unknown-class", false)
+                            }
                         }
                     }
 
-                    override fun onFailure(call: Call<User>, t: Throwable) {
-                        Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
-                    }
-                })
+                    val updatedUser = User(
+                            user.id,
+                            sharedPreferences.getString("name", ""),
+                            user.username,
+                            sharedPreferences.getString("description", ""),
+                            sharedPreferences.getString("email", ""),
+                            user.isEmailPublic,
+                            sharedPreferences.getString("class", ""),
+                            sharedPreferences.getString("gender", ""),
+                            user.events,
+                            user.postsLiked)
+
+                    val call = ServiceGenerator.create().updateUser(user.id, updatedUser)
+                    call.enqueue(object : Callback<User> {
+                        override fun onResponse(call: Call<User>, response: Response<User>) {
+                            if (!response.isSuccessful) {
+                                Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<User>, t: Throwable) {
+                            Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
+                        }
+                    })
+                }
             }
 
             "notifications_posts" -> {
-                Log.d(TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
-                MyFirebaseMessagingService.subscribeToTopic("posts-android", sharedPreferences.getBoolean(key, true))
+                val enabled = sharedPreferences.getBoolean(key, true)
+                Log.d(TAG, "$key has changed and is now $enabled")
+
+                MyFirebaseMessagingService.subscribeToTopic("posts-android", enabled)
             }
 
             "notifications_events" -> {
-                Log.d(TAG, "$key has changed and is now ${sharedPreferences.getBoolean(key, true)}")
-                MyFirebaseMessagingService.subscribeToTopic("events-android", sharedPreferences.getBoolean(key, true))
+                val enabled = sharedPreferences.getBoolean(key, true)
+                Log.d(TAG, "$key has changed and is now $enabled")
+
+                MyFirebaseMessagingService.subscribeToTopic("events-android", enabled)
             }
 
             else -> {

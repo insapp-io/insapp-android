@@ -133,15 +133,71 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         private val topics = arrayOf(
             "posts-android",
-            "events-android",
             "posts-unknown-class",
-            "events-unknown-class"
+            "posts-1STPI",
+            "posts-2STPI",
+            "posts-3CDTI",
+            "posts-4CDTI",
+            "posts-5CDTI",
+            "posts-3EII",
+            "posts-4EII",
+            "posts-5EII",
+            "posts-3GM",
+            "posts-4GM",
+            "posts-5GM",
+            "posts-3GMA",
+            "posts-4GMA",
+            "posts-5GMA",
+            "posts-3GCU",
+            "posts-4GCU",
+            "posts-5GCU",
+            "posts-3INFO",
+            "posts-4INFO",
+            "posts-5INFO",
+            "posts-3SGM",
+            "posts-4SGM",
+            "posts-5SGM",
+            "posts-3SRC",
+            "posts-4SRC",
+            "posts-5SRC",
+            "posts-STAFF",
+            "events-android",
+            "events-unknown-class",
+            "events-1STPI",
+            "events-2STPI",
+            "events-3CDTI",
+            "events-4CDTI",
+            "events-5CDTI",
+            "events-3EII",
+            "events-4EII",
+            "events-5EII",
+            "events-3GM",
+            "events-4GM",
+            "events-5GM",
+            "events-3GMA",
+            "events-4GMA",
+            "events-5GMA",
+            "events-3GCU",
+            "events-4GCU",
+            "events-5GCU",
+            "events-3INFO",
+            "events-4INFO",
+            "events-5INFO",
+            "events-3SGM",
+            "events-4SGM",
+            "events-5SGM",
+            "events-3SRC",
+            "events-4SRC",
+            "events-5SRC",
+            "events-STAFF"
         )
 
-        fun subscribeToTopic(topic: String, flag: Boolean = true) {
-            if (topic !in topics) {
-                Log.d(TAG, "Topic $topic is unknown")
-                return
+        fun subscribeToTopic(topic: String, flag: Boolean = true, forceSubscribe: Boolean = false) {
+            if (!forceSubscribe) {
+                if (topic !in topics) {
+                    Log.d(TAG, "Topic $topic is unknown")
+                    return
+                }
             }
 
             if (flag) {

@@ -13,8 +13,10 @@ import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.NotificationRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Notifications
+import fr.insapp.insapp.utility.DividerItemDecoration
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.fragment_notifications.*
+import kotlinx.android.synthetic.main.fragment_notifications.no_network
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,6 +48,7 @@ class NotificationsFragment : Fragment() {
 
         recyclerview_notifications.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerview_notifications.adapter = adapter
+        recyclerview_notifications.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
     }
 
     private fun generateNotifications() {

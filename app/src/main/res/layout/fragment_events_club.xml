@@ -27,25 +27,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/events_future" />
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/events_future"
+                    android:textSize="16sp" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardview_events_future"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp">
+                    android:layout_height="match_parent">
 
-                    <RelativeLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview_events_future"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclerview_events_future"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-                    </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -60,25 +55,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/events_past" />
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/events_past"
+                    android:textSize="16sp" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardview_events_past"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp">
+                    android:layout_height="match_parent">
 
-                    <RelativeLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview_events_past"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclerview_events_past"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-                    </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

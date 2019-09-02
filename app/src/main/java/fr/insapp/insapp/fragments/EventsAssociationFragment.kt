@@ -98,7 +98,7 @@ class EventsAssociationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
         clearEvents()
 
         if (association != null) {
-            val call = ServiceGenerator.create().getEventsForAssociation(association!!.id)
+            val call = ServiceGenerator.client.getEventsForAssociation(association!!.id)
             call.enqueue(object : Callback<List<Event>> {
                 override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
                     if (response.isSuccessful) {

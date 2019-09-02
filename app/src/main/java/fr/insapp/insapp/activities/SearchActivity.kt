@@ -125,7 +125,7 @@ class SearchActivity : AppCompatActivity() {
             adapterEvents.events.clear()
             adapterUsers.users.clear()
 
-            val call = ServiceGenerator.create().universalSearch(SearchTerms(query))
+            val call = ServiceGenerator.client.universalSearch(SearchTerms(query))
             call.enqueue(object : Callback<UniversalSearchResults> {
                 override fun onResponse(call: Call<UniversalSearchResults>, response: Response<UniversalSearchResults>) {
                     val results = response.body()

@@ -77,7 +77,7 @@ class CommentRecyclerViewAdapter(
 
                 val span = object : ClickableSpan() {
                     override fun onClick(view: View) {
-                        val call = ServiceGenerator.create().getUserFromId(tag.user)
+                        val call = ServiceGenerator.client.getUserFromId(tag.user)
                         call.enqueue(object : Callback<User> {
                             override fun onResponse(call: Call<User>, response: Response<User>) {
                                 if (response.isSuccessful) {
@@ -110,7 +110,7 @@ class CommentRecyclerViewAdapter(
 
             // user
 
-            val call = ServiceGenerator.create().getUserFromId(comment.user)
+            val call = ServiceGenerator.client.getUserFromId(comment.user)
             call.enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     val user = response.body()
@@ -151,7 +151,7 @@ class CommentRecyclerViewAdapter(
                             .setMessage(R.string.delete_comment_are_you_sure)
                             .setCancelable(true)
                             .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.create().uncommentPost(postId, comment!!.id)
+                                val call = ServiceGenerator.client.uncommentPost(postId, comment!!.id)
 
                                 call.enqueue(object : Callback<Post> {
                                     override fun onResponse(call: Call<Post>, response: Response<Post>) {
@@ -177,7 +177,7 @@ class CommentRecyclerViewAdapter(
                             .setMessage(R.string.report_comment_are_you_sure)
                             .setCancelable(true)
                             .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.create().reportComment(postId, comment!!.id)
+                                val call = ServiceGenerator.client.reportComment(postId, comment!!.id)
                                 call.enqueue(object : Callback<Void> {
                                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                         if (response.isSuccessful) {

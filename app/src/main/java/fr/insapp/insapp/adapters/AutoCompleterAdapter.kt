@@ -11,11 +11,9 @@ import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.SearchTerms
 import fr.insapp.insapp.models.User
-import fr.insapp.insapp.models.UserSearchResults
 import fr.insapp.insapp.utility.GlideApp
 import fr.insapp.insapp.utility.Utils
 import kotlinx.android.synthetic.main.dropdown.view.*
-import java.io.IOException
 import java.util.*
 import kotlin.math.min
 
@@ -65,29 +63,20 @@ class AutoCompleterAdapter(
                 val filterResults = FilterResults()
 
                 if (constraint != null) {
-                    val call = ServiceGenerator.create().searchUsers(SearchTerms(constraint.toString()))
-                    val results: UserSearchResults?
-                    try {
-                        results = call.execute().body()
-
-                        var users: List<User>? = null
-                        if (results != null) {
-                            users = results.users
-                        }
+                    val call = ServiceGenerator.client.searchUsers(SearchTerms(constraint.toString()))
+                    val results = call.execute().body()
+                    if (results != null) {
+                        val users = results.users
                         val filteredUsers = ArrayList<User>()
 
-                        if (users != null && users.isNotEmpty()) {
-                            for (i in 0 until min(users.size, 10)) {
-                                filteredUsers.add(users[i])
-                            }
-
-                            filterResults.values = filteredUsers
-                            filterResults.count = filteredUsers.size
+                        for (i in 0 until min(users.size, 10)) {
+                            filteredUsers.add(users[i])
                         }
-                    } catch (ex: IOException) {
-                        ex.printStackTrace()
-                    }
 
+                        filterResults.values = filteredUsers
+                        filterResults.count = filteredUsers.size
+
+                    }
                 }
 
                 return filterResults

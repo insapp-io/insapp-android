@@ -53,7 +53,7 @@ class NotificationsFragment : Fragment() {
         val user = Utils.user
 
         if (user != null) {
-            val call = ServiceGenerator.create().getNotificationsForUser(user.id)
+            val call = ServiceGenerator.client.getNotificationsForUser(user.id)
             call.enqueue(object : Callback<Notifications> {
                 override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                     val results = response.body()

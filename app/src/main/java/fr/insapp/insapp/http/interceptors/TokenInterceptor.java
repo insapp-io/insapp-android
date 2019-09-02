@@ -55,7 +55,7 @@ public class TokenInterceptor implements Interceptor {
             case 401:
                 LoginCredentials loginCredentials = new Gson().fromJson(credentialsPreferences.getString("login", ""), LoginCredentials.class);
 
-                Call<SessionCredentials> call = ServiceGenerator.create().logUser(loginCredentials);
+                Call<SessionCredentials> call = ServiceGenerator.INSTANCE.getClient().logUser(loginCredentials);
                 retrofit2.Response<SessionCredentials> res;
 
                 try {

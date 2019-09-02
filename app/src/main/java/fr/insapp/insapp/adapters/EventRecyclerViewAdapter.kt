@@ -87,7 +87,7 @@ class EventRecyclerViewAdapter(
             val context = itemView.context
 
             if (layoutId == R.layout.row_event_with_avatars) {
-                val call = ServiceGenerator.create().getAssociationFromId(event.association)
+                val call = ServiceGenerator.client.getAssociationFromId(event.association)
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {

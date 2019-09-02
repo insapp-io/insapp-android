@@ -76,7 +76,7 @@ class EventActivity : AppCompatActivity() {
                 val notification = intent.getParcelableExtra<Notification>("notification")
 
                 if (user != null) {
-                    val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                    val call = ServiceGenerator.client.markNotificationAsSeen(user.id, notification.id)
                     call.enqueue(object : Callback<Notifications> {
                         override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                             if (!response.isSuccessful) {
@@ -96,7 +96,7 @@ class EventActivity : AppCompatActivity() {
             // coming from notification
             setContentView(R.layout.loading)
 
-            val call = ServiceGenerator.create().getEventFromId(intent.getStringExtra("ID"))
+            val call = ServiceGenerator.client.getEventFromId(intent.getStringExtra("ID"))
             call.enqueue(object : Callback<Event> {
                 override fun onResponse(call: Call<Event>, response: Response<Event>) {
                     val result = response.body()
@@ -256,7 +256,7 @@ class EventActivity : AppCompatActivity() {
             when (status) {
                 AttendanceStatus.NO, AttendanceStatus.MAYBE, AttendanceStatus.UNDEFINED -> {
                     if (user != null) {
-                        val call = ServiceGenerator.create().addAttendee(event.id, user.id, "going")
+                        val call = ServiceGenerator.client.addAttendee(event.id, user.id, "going")
                         call.enqueue(object : Callback<EventInteraction> {
                             override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                                 val result = response.body()
@@ -322,7 +322,7 @@ class EventActivity : AppCompatActivity() {
             when (status) {
                 AttendanceStatus.NO, AttendanceStatus.YES, AttendanceStatus.UNDEFINED -> {
                     if (user != null) {
-                        val call = ServiceGenerator.create().addAttendee(event.id, user.id, "maybe")
+                        val call = ServiceGenerator.client.addAttendee(event.id, user.id, "maybe")
                         call.enqueue(object : Callback<EventInteraction> {
                             override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                                 val result = response.body()
@@ -366,7 +366,7 @@ class EventActivity : AppCompatActivity() {
             when (status) {
                 AttendanceStatus.YES, AttendanceStatus.MAYBE, AttendanceStatus.UNDEFINED -> {
                     if (user != null) {
-                        val call = ServiceGenerator.create().addAttendee(event.id, user.id, "notgoing")
+                        val call = ServiceGenerator.client.addAttendee(event.id, user.id, "notgoing")
                         call.enqueue(object : Callback<EventInteraction> {
                             override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
                                 val result = response.body()
@@ -444,7 +444,7 @@ class EventActivity : AppCompatActivity() {
 
         event_club_icon?.setColorFilter(fgColor)
 
-        val call = ServiceGenerator.create().getAssociationFromId(event.association)
+        val call = ServiceGenerator.client.getAssociationFromId(event.association)
         call.enqueue(object : Callback<Association> {
             override fun onResponse(call: Call<Association>, response: Response<Association>) {
                 val result = response.body()

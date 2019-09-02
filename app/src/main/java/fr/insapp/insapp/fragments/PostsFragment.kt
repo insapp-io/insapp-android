@@ -88,9 +88,9 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         no_network?.visibility = View.GONE
 
         val call = if (filterAssociationId == null) {
-            ServiceGenerator.create().latestPosts
+            ServiceGenerator.client.latestPosts
         } else {
-            ServiceGenerator.create().getPostsForAssociation(filterAssociationId!!)
+            ServiceGenerator.client.getPostsForAssociation(filterAssociationId!!)
         }
 
         call.enqueue(object : Callback<List<Post>> {

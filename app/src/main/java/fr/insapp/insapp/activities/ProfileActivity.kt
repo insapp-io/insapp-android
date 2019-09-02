@@ -184,7 +184,7 @@ class ProfileActivity : AppCompatActivity() {
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button)) { _, _ ->
                                 if (user != null) {
-                                    val call = ServiceGenerator.create().reportUser(user.id)
+                                    val call = ServiceGenerator.client.reportUser(user.id)
                                     call.enqueue(object : Callback<User> {
                                         override fun onResponse(call: Call<User>, response: Response<User>) {
                                             if (response.isSuccessful) {
@@ -210,7 +210,7 @@ class ProfileActivity : AppCompatActivity() {
                             .setCancelable(true)
                             .setPositiveButton(getString(R.string.positive_button)) { _, _ ->
                                 if (user != null) {
-                                    val call = ServiceGenerator.create().deleteUser(user.id)
+                                    val call = ServiceGenerator.client.deleteUser(user.id)
                                     call.enqueue(object : Callback<Void> {
                                         override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                             if (response.isSuccessful) {
@@ -258,7 +258,7 @@ class ProfileActivity : AppCompatActivity() {
         val events = user?.events
         events?.let {
             for (eventId in events) {
-                val call = ServiceGenerator.create().getEventFromId(eventId)
+                val call = ServiceGenerator.client.getEventFromId(eventId)
                 call.enqueue(object : Callback<Event> {
                     override fun onResponse(call: Call<Event>, response: Response<Event>) {
                         val event = response.body()

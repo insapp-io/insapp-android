@@ -53,7 +53,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (user != null) {
             val notificationUser = NotificationUser(null, user.id, token, "android")
 
-            val call = ServiceGenerator.create().registerNotification(notificationUser)
+            val call = ServiceGenerator.client.registerNotification(notificationUser)
             call.enqueue(object : Callback<NotificationUser> {
                 override fun onResponse(call: Call<NotificationUser>, response: Response<NotificationUser>) {
                     var msg = "Firebase token successfully registered on server: $token"

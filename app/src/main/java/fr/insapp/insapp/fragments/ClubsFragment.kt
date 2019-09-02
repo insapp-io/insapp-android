@@ -48,7 +48,7 @@ class ClubsFragment : Fragment() {
 
     private fun generateClubs() {
         no_network?.visibility = View.GONE
-        val call = ServiceGenerator.create().associations
+        val call = ServiceGenerator.client.associations
         call.enqueue(object : Callback<List<Association>> {
             override fun onResponse(call: Call<List<Association>>, response: Response<List<Association>>) {
                 if (response.isSuccessful) {

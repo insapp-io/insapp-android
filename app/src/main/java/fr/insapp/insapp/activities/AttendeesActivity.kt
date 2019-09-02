@@ -10,7 +10,6 @@ import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.AttendeeRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.AttendanceStatus
-import fr.insapp.insapp.models.Event
 import fr.insapp.insapp.models.User
 import kotlinx.android.synthetic.main.activity_attendees.*
 import retrofit2.Call
@@ -59,7 +58,7 @@ class AttendeesActivity : AppCompatActivity() {
 
     private fun generateUsers(users: List<String>, action: AttendanceStatus) {
         for (i in users.indices) {
-            val call = ServiceGenerator.create().getUserFromId(users[i])
+            val call = ServiceGenerator.client.getUserFromId(users[i])
             call.enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful && response.body() != null) {

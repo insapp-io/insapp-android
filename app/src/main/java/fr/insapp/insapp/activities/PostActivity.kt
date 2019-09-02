@@ -62,7 +62,7 @@ class PostActivity : AppCompatActivity() {
                 val notification = intent.getParcelableExtra<Notification>("notification")
 
                 if (user != null) {
-                    val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification.id)
+                    val call = ServiceGenerator.client.markNotificationAsSeen(user.id, notification.id)
                     call.enqueue(object : Callback<Notifications> {
                         override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                             if (!response.isSuccessful) {
@@ -82,7 +82,7 @@ class PostActivity : AppCompatActivity() {
             // coming from notification
             setContentView(R.layout.loading)
 
-            val call = ServiceGenerator.create().getPostFromId(intent.getStringExtra("ID"))
+            val call = ServiceGenerator.client.getPostFromId(intent.getStringExtra("ID"))
             call.enqueue(object : Callback<Post> {
                 override fun onResponse(call: Call<Post>, response: Response<Post>) {
                     val result = response.body()
@@ -143,7 +143,7 @@ class PostActivity : AppCompatActivity() {
                 post_like_counter?.text = (Integer.valueOf(post_like_counter?.text as String) + 1).toString()
 
                 if (user != null) {
-                    val call = ServiceGenerator.create().likePost(post.id, user.id)
+                    val call = ServiceGenerator.client.likePost(post.id, user.id)
                     call.enqueue(object : Callback<PostInteraction> {
                         override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
                             val results = response.body()
@@ -171,7 +171,7 @@ class PostActivity : AppCompatActivity() {
                 }
 
                 if (user != null) {
-                    val call = ServiceGenerator.create().dislikePost(post.id, user.id)
+                    val call = ServiceGenerator.client.dislikePost(post.id, user.id)
                     call.enqueue(object : Callback<PostInteraction> {
                         override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
                             val result = response.body()
@@ -192,7 +192,7 @@ class PostActivity : AppCompatActivity() {
             }
         })
 
-        val call = ServiceGenerator.create().getAssociationFromId(post.association)
+        val call = ServiceGenerator.client.getAssociationFromId(post.association)
         call.enqueue(object : Callback<Association> {
             override fun onResponse(call: Call<Association>, response: Response<Association>) {
                 if (response.isSuccessful) {

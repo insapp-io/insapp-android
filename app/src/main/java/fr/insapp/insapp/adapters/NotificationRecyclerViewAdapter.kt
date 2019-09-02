@@ -70,7 +70,7 @@ class NotificationRecyclerViewAdapter(
             // avatars
 
             if (notification.type == "tag" || notification.type == "eventTag") {
-                val call = ServiceGenerator.create().getUserFromId(notification.sender)
+                val call = ServiceGenerator.client.getUserFromId(notification.sender)
                 call.enqueue(object : Callback<User> {
                     override fun onResponse(call: Call<User>, response: Response<User>) {
                         val user = response.body()
@@ -93,7 +93,7 @@ class NotificationRecyclerViewAdapter(
                     }
                 })
             } else if (notification.type == "post" || notification.type == "event") {
-                val call = ServiceGenerator.create().getAssociationFromId(notification.sender)
+                val call = ServiceGenerator.client.getAssociationFromId(notification.sender)
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         val association = response.body()
@@ -119,7 +119,7 @@ class NotificationRecyclerViewAdapter(
             // thumbnails
 
             if (notification.type == "tag" || notification.type == "post") {
-                val call = ServiceGenerator.create().getPostFromId(notification.content)
+                val call = ServiceGenerator.client.getPostFromId(notification.content)
                 call.enqueue(object : Callback<Post> {
                     override fun onResponse(call: Call<Post>, response: Response<Post>) {
                         val post = response.body()
@@ -139,7 +139,7 @@ class NotificationRecyclerViewAdapter(
                     }
                 })
             } else if (notification.type == "eventTag" || notification.type == "event") {
-                val call = ServiceGenerator.create().getEventFromId(notification.content)
+                val call = ServiceGenerator.client.getEventFromId(notification.content)
                 call.enqueue(object : Callback<Event> {
                     override fun onResponse(call: Call<Event>, response: Response<Event>) {
                         val event = response.body()
@@ -166,7 +166,7 @@ class NotificationRecyclerViewAdapter(
 
             when (notification?.type) {
                 "tag", "post" -> {
-                    val call1 = ServiceGenerator.create().getPostFromId(notification!!.content)
+                    val call1 = ServiceGenerator.client.getPostFromId(notification!!.content)
                     call1.enqueue(object : Callback<Post> {
                         override fun onResponse(call: Call<Post>, response: Response<Post>) {
                             val post = response.body()
@@ -182,7 +182,7 @@ class NotificationRecyclerViewAdapter(
                 }
 
                 "eventTag", "event" -> {
-                    val call2 = ServiceGenerator.create().getEventFromId(notification!!.content)
+                    val call2 = ServiceGenerator.client.getEventFromId(notification!!.content)
                     call2.enqueue(object : Callback<Event> {
                         override fun onResponse(call: Call<Event>, response: Response<Event>) {
                             val event = response.body()
@@ -206,7 +206,7 @@ class NotificationRecyclerViewAdapter(
             val user = Utils.user
 
             if (user != null && notification != null) {
-                val call = ServiceGenerator.create().markNotificationAsSeen(user.id, notification!!.id)
+                val call = ServiceGenerator.client.markNotificationAsSeen(user.id, notification!!.id)
                 call.enqueue(object : Callback<Notifications> {
                     override fun onResponse(call: Call<Notifications>, response: Response<Notifications>) {
                         //

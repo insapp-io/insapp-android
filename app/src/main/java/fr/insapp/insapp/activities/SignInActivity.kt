@@ -51,7 +51,7 @@ class SignInActivity : AppCompatActivity() {
                     Log.d("CAS", "URL: $url")
                     Log.d("CAS", "Ticket: $ticket")
 
-                    signin(ticket)
+                    signIn(ticket)
                     webview_conditions.visibility = View.INVISIBLE
                 }
             }
@@ -69,10 +69,10 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun signin(ticket: String) {
-        val signinCredentials = SigninCredentials(Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID))
+    fun signIn(ticket: String) {
+        val signInCredentials = SigninCredentials(Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID))
 
-        val call = ServiceGenerator.create().signUser(ticket, signinCredentials)
+        val call = ServiceGenerator.client.signUser(ticket, signInCredentials)
         call.enqueue(object : Callback<LoginCredentials> {
             override fun onResponse(call: Call<LoginCredentials>, response: Response<LoginCredentials>) {
                 val loginCredentials = response.body()
@@ -90,7 +90,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     fun login(loginCredentials: LoginCredentials) {
-        val call = ServiceGenerator.create().logUser(loginCredentials)
+        val call = ServiceGenerator.client.logUser(loginCredentials)
         call.enqueue(object : Callback<SessionCredentials> {
             override fun onResponse(call: Call<SessionCredentials>, response: Response<SessionCredentials>) {
                 if (response.isSuccessful) {

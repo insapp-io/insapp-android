@@ -85,7 +85,7 @@ class PostRecyclerViewAdapter(
 
                 // association avatar
 
-                val call = ServiceGenerator.create().getAssociationFromId(post.association)
+                val call = ServiceGenerator.client.getAssociationFromId(post.association)
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {
@@ -146,7 +146,7 @@ class PostRecyclerViewAdapter(
 
                     view.like_button.setOnLikeListener(object : OnLikeListener {
                         override fun liked(likeButton: LikeButton) {
-                            val call = ServiceGenerator.create().likePost(post.id, userId)
+                            val call = ServiceGenerator.client.likePost(post.id, userId)
                             call.enqueue(object : Callback<PostInteraction> {
                                 override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
                                     if (response.isSuccessful) {
@@ -165,7 +165,7 @@ class PostRecyclerViewAdapter(
                         }
 
                         override fun unLiked(likeButton: LikeButton) {
-                            val call = ServiceGenerator.create().dislikePost(post.id, userId)
+                            val call = ServiceGenerator.client.dislikePost(post.id, userId)
                             call.enqueue(object : Callback<PostInteraction> {
                                 override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
                                     if (response.isSuccessful) {

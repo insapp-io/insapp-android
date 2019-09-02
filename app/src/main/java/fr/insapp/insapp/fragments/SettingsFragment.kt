@@ -70,7 +70,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                             user.events,
                             user.postsLiked)
 
-                    val call = ServiceGenerator.create().updateUser(user.id, updatedUser)
+                    val call = ServiceGenerator.client.updateUser(user.id, updatedUser)
                     call.enqueue(object : Callback<User> {
                         override fun onResponse(call: Call<User>, response: Response<User>) {
                             if (!response.isSuccessful) {
@@ -129,7 +129,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                             user.events,
                             user.postsLiked)
 
-                    val call = ServiceGenerator.create().updateUser(user.id, updatedUser)
+                    val call = ServiceGenerator.client.updateUser(user.id, updatedUser)
                     call.enqueue(object : Callback<User> {
                         override fun onResponse(call: Call<User>, response: Response<User>) {
                             if (!response.isSuccessful) {

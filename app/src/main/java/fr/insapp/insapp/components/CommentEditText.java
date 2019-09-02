@@ -100,7 +100,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                         final Comment comment = new Comment(null, user.getId(), content, new Date(), tags);
 
                         if (object instanceof Post) {
-                            Call<Post> call = ServiceGenerator.create().commentPost(((Post) object).getId(), comment);
+                            Call<Post> call = ServiceGenerator.INSTANCE.getClient().commentPost(((Post) object).getId(), comment);
                             call.enqueue(new Callback<Post>() {
                                 @Override
                                 public void onResponse(@NonNull Call<Post> call, @NonNull Response<Post> response) {
@@ -123,7 +123,7 @@ public class CommentEditText extends AppCompatMultiAutoCompleteTextView {
                         }
 
                         else if (object instanceof Event) {
-                            Call<Event> call = ServiceGenerator.create().commentEvent(((Event) object).getId(), comment);
+                            Call<Event> call = ServiceGenerator.INSTANCE.getClient().commentEvent(((Event) object).getId(), comment);
                             call.enqueue(new Callback<Event>() {
                                 @Override
                                 public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {

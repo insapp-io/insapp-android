@@ -30,11 +30,11 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var layout: Int = 0
     private var filter_club_id: String? = null
 
-    private var adapterNow: EventRecyclerViewAdapter? = null
-    private var adapterToday: EventRecyclerViewAdapter? = null
-    private var adapterWeek: EventRecyclerViewAdapter? = null
-    private var adapterNextWeek: EventRecyclerViewAdapter? = null
-    private var adapterLater: EventRecyclerViewAdapter? = null
+    private lateinit var adapterNow: EventRecyclerViewAdapter
+    private lateinit var adapterToday: EventRecyclerViewAdapter
+    private lateinit var adapterWeek: EventRecyclerViewAdapter
+    private lateinit var adapterNextWeek: EventRecyclerViewAdapter
+    private lateinit var adapterLater: EventRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,11 +106,11 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun clearEvents() {
-        adapterNow!!.events.clear()
-        adapterToday!!.events.clear()
-        adapterWeek!!.events.clear()
-        adapterNextWeek!!.events.clear()
-        adapterLater!!.events.clear()
+        adapterNow.events.clear()
+        adapterToday.events.clear()
+        adapterWeek.events.clear()
+        adapterNextWeek.events.clear()
+        adapterLater.events.clear()
 
         events_now_layout?.visibility = View.GONE
         events_today_layout?.visibility = View.GONE
@@ -128,29 +128,25 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         no_network?.visibility = View.INVISIBLE
         no_event?.visibility = View.INVISIBLE
 
-        val call = ServiceGenerator.create().futureEvents
+        val call = ServiceGenerator.client.futureEvents
         call.enqueue(object : Callback<List<Event>> {
             override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
                 if (response.isSuccessful) {
                     val events = response.body()
                     val atm = Calendar.getInstance().time
 
-                    if (events != null) {
-                        if (events.isNotEmpty()) {
-                            no_event?.visibility = View.GONE
-                            for (event in events) {
-                                if (event.dateEnd.time > atm.time) {
-                                    if (filter_club_id != null) {
-                                        if (filter_club_id == event.association) {
-                                            addEventToAdapter(event)
-                                        }
-                                    } else {
-                                        addEventToAdapter(event)
-                                    }
+                    if (events != null && events.isNotEmpty()) {
+                        no_event?.visibility = View.GONE
+                        for (event in events) {
+                            if (event.dateEnd.time > atm.time) {
+                                if (filter_club_id != null && filter_club_id == event.association) {
+                                    addEventToAdapter(event)
+                                } else {
+                                    addEventToAdapter(event)
                                 }
+                            } else {
+                                no_event?.visibility = View.VISIBLE
                             }
-                        } else {
-                            no_event?.visibility = View.VISIBLE
                         }
                     }
                 } else {
@@ -174,7 +170,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val now = Calendar.getInstance()
 
         if (event.dateStart.time <= now.time.time && event.dateEnd.time > now.time.time) {
-            adapterNow!!.addItem(event)
+            adapterNow.addItem(event)
             events_now_layout?.visibility = View.VISIBLE
             return
         }
@@ -191,7 +187,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
         if (event.dateStart.time <= tomorrow.time.time) {
-            adapterToday!!.addItem(event)
+            adapterToday.addItem(event)
             events_today_layout?.visibility = View.VISIBLE
             return
         }
@@ -210,7 +206,7 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         week.set(Calendar.MILLISECOND, 0)
 
         if (event.dateStart.time <= week.time.time) {
-            adapterWeek!!.addItem(event)
+            adapterWeek.addItem(event)
             events_week_layout?.visibility = View.VISIBLE
             return
         }
@@ -230,12 +226,12 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         nextWeek.add(Calendar.WEEK_OF_MONTH, 1)
 
         if (event.dateStart.time <= nextWeek.time.time) {
-            adapterNextWeek!!.addItem(event)
+            adapterNextWeek.addItem(event)
             events_next_week_layout?.visibility = View.VISIBLE
             return
         }
 
-        adapterLater!!.addItem(event)
+        adapterLater.addItem(event)
         events_later_layout?.visibility = View.VISIBLE
     }
 
@@ -252,33 +248,33 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 RESULT_OK -> {
                     val event = intent!!.getParcelableExtra<Event>("event")
 
-                    for (i in 0 until adapterNow!!.itemCount) {
-                        if (adapterNow!!.events[i].id == event.id) {
-                            adapterNow!!.updateEvent(i, event)
+                    for (i in 0 until adapterNow.itemCount) {
+                        if (adapterNow.events[i].id == event.id) {
+                            adapterNow.updateEvent(i, event)
                         }
                     }
 
-                    for (i in 0 until adapterToday!!.itemCount) {
-                        if (adapterToday!!.events[i].id == event.id) {
-                            adapterToday!!.updateEvent(i, event)
+                    for (i in 0 until adapterToday.itemCount) {
+                        if (adapterToday.events[i].id == event.id) {
+                            adapterToday.updateEvent(i, event)
                         }
                     }
 
-                    for (i in 0 until adapterWeek!!.itemCount) {
-                        if (adapterWeek!!.events[i].id == event.id) {
-                            adapterWeek!!.updateEvent(i, event)
+                    for (i in 0 until adapterWeek.itemCount) {
+                        if (adapterWeek.events[i].id == event.id) {
+                            adapterWeek.updateEvent(i, event)
                         }
                     }
 
-                    for (i in 0 until adapterNextWeek!!.itemCount) {
-                        if (adapterNextWeek!!.events[i].id == event.id) {
-                            adapterNextWeek!!.updateEvent(i, event)
+                    for (i in 0 until adapterNextWeek.itemCount) {
+                        if (adapterNextWeek.events[i].id == event.id) {
+                            adapterNextWeek.updateEvent(i, event)
                         }
                     }
 
-                    for (i in 0 until adapterLater!!.itemCount) {
-                        if (adapterLater!!.events[i].id == event.id) {
-                            adapterLater!!.updateEvent(i, event)
+                    for (i in 0 until adapterLater.itemCount) {
+                        if (adapterLater.events[i].id == event.id) {
+                            adapterLater.updateEvent(i, event)
                         }
                     }
                 }

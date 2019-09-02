@@ -156,12 +156,6 @@ class EventActivity : AppCompatActivity() {
 
         setupViewPager(viewpager_event)
 
-        if (fgColor != -0x1) {
-            setupViewPager(viewpager_event)
-        } else {
-            setupViewPager(viewpager_event)
-        }
-
         // tab layout
 
         tabs_event.setupWithViewPager(viewpager_event)

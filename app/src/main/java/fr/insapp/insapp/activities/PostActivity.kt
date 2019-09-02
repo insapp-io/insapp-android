@@ -37,7 +37,7 @@ class PostActivity : AppCompatActivity() {
     private lateinit var adapter: CommentRecyclerViewAdapter
 
     private lateinit var post: Post
-    private var club: Association? = null
+    private var association: Association? = null
 
     private lateinit var requestManager: RequestManager
 
@@ -196,17 +196,17 @@ class PostActivity : AppCompatActivity() {
         call.enqueue(object : Callback<Association> {
             override fun onResponse(call: Call<Association>, response: Response<Association>) {
                 if (response.isSuccessful) {
-                    club = response.body()
+                    association = response.body()
 
                     requestManager
-                        .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
+                        .load(ServiceGenerator.CDN_URL + association!!.profilePicture)
                         .apply(RequestOptions.circleCropTransform())
                         .transition(withCrossFade())
                         .into(post_association_avatar)
 
                     // listener
 
-                    post_association_avatar?.setOnClickListener { startActivity(Intent(this@PostActivity, ClubActivity::class.java).putExtra("club", club)) }
+                    post_association_avatar?.setOnClickListener { startActivity(Intent(this@PostActivity, AssociationActivity::class.java).putExtra("association", association)) }
                 } else {
                     Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
                 }

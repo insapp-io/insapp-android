@@ -40,7 +40,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val bundle = arguments
         if (bundle != null) {
             this.layout = bundle.getInt("layout", R.layout.post_with_avatars)
-            this.filterAssociationId = bundle.getString("filter_club_id")
+            this.filterAssociationId = bundle.getString("filter_association_id")
             this.swipeColor = bundle.getInt("swipe_color")
         }
 

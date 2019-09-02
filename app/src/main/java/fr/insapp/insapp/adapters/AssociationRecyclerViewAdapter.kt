@@ -9,7 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.ClubActivity
+import fr.insapp.insapp.activities.AssociationActivity
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Association
 import fr.insapp.insapp.utility.inflate
@@ -69,7 +69,7 @@ class AssociationRecyclerViewAdapter(
 
         override fun onClick(v: View) {
             val context = itemView.context
-            context.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", association))
+            context.startActivity(Intent(context, AssociationActivity::class.java).putExtra("association", association))
         }
     }
 }

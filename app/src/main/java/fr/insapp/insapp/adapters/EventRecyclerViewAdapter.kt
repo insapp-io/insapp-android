@@ -11,7 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.ClubActivity
+import fr.insapp.insapp.activities.AssociationActivity
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Association
@@ -91,16 +91,16 @@ class EventRecyclerViewAdapter(
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {
-                            val club = response.body()
+                            val association = response.body()
 
-                            if (club != null) {
+                            if (association != null) {
                                 requestManager
-                                    .load(ServiceGenerator.CDN_URL + club.profilePicture)
+                                    .load(ServiceGenerator.CDN_URL + association.profilePicture)
                                     .apply(RequestOptions.circleCropTransform())
                                     .transition(withCrossFade())
                                     .into(view.event_association_avatar)
 
-                                view.event_association_avatar.setOnClickListener { context.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", club)) }
+                                view.event_association_avatar.setOnClickListener { context.startActivity(Intent(context, AssociationActivity::class.java).putExtra("association", association)) }
                             }
                         } else {
                             Toast.makeText(context, "EventRecyclerViewAdapter", Toast.LENGTH_LONG).show()

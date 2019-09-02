@@ -11,7 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.ClubActivity
+import fr.insapp.insapp.activities.AssociationActivity
 import fr.insapp.insapp.activities.EventActivity
 import fr.insapp.insapp.activities.PostActivity
 import fr.insapp.insapp.activities.ProfileActivity
@@ -96,15 +96,15 @@ class NotificationRecyclerViewAdapter(
                 val call = ServiceGenerator.create().getAssociationFromId(notification.sender)
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
-                        val club = response.body()
-                        if (response.isSuccessful && club != null) {
+                        val association = response.body()
+                        if (response.isSuccessful && association != null) {
                             requestManager
-                                .load(ServiceGenerator.CDN_URL + club.profilePicture)
+                                .load(ServiceGenerator.CDN_URL + association.profilePicture)
                                 .apply(RequestOptions.circleCropTransform())
                                 .transition(withCrossFade())
                                 .into(view.avatar_notification)
 
-                            view.avatar_notification.setOnClickListener { context.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", club)) }
+                            view.avatar_notification.setOnClickListener { context.startActivity(Intent(context, AssociationActivity::class.java).putExtra("association", association)) }
                         } else {
                             Toast.makeText(context, "NotificationRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                         }

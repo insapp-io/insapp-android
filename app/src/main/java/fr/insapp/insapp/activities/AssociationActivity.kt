@@ -20,7 +20,7 @@ import com.crashlytics.android.answers.ContentViewEvent
 import com.google.android.material.appbar.AppBarLayout
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.ViewPagerAdapter
-import fr.insapp.insapp.fragments.EventsClubFragment
+import fr.insapp.insapp.fragments.EventsAssociationFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Association
@@ -33,9 +33,9 @@ import kotlinx.android.synthetic.main.activity_club.*
  * Created by thomas on 11/11/2016.
  */
 
-class ClubActivity : AppCompatActivity() {
+class AssociationActivity : AppCompatActivity() {
 
-    private var club: Association? = null
+    private var association: Association? = null
 
     private var bgColor: Int = 0
     private var fgColor: Int = 0
@@ -48,16 +48,16 @@ class ClubActivity : AppCompatActivity() {
 
         requestManager = Glide.with(this);
 
-        // club
+        // association
 
         val intent = intent
-        this.club = intent.getParcelableExtra("club")
+        this.association = intent.getParcelableExtra("association")
 
         // Answers
 
         Answers.getInstance().logContentView(ContentViewEvent()
-            .putContentId(club!!.id)
-            .putContentName(club!!.name)
+            .putContentId(association!!.id)
+            .putContentName(association!!.name)
             .putContentType("Association"))
 
         // toolbar
@@ -68,8 +68,8 @@ class ClubActivity : AppCompatActivity() {
 
         // dynamic color
 
-        this.bgColor = Color.parseColor("#" + club!!.bgColor)
-        this.fgColor = Color.parseColor("#" + club!!.fgColor)
+        this.bgColor = Color.parseColor("#" + association!!.bgColor)
+        this.fgColor = Color.parseColor("#" + association!!.fgColor)
 
         // collapsing toolbar
 
@@ -83,17 +83,17 @@ class ClubActivity : AppCompatActivity() {
                 }
 
                 if (scrollRange + verticalOffset == 0) {
-                    collapsing_toolbar_club.title = club!!.name
+                    collapsing_toolbar_club.title = association!!.name
                     isShow = true
 
-                    val upArrow = ContextCompat.getDrawable(this@ClubActivity, R.drawable.abc_ic_ab_back_material)
+                    val upArrow = ContextCompat.getDrawable(this@AssociationActivity, R.drawable.abc_ic_ab_back_material)
                     upArrow?.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
                     supportActionBar?.setHomeAsUpIndicator(upArrow)
                 } else if (isShow) {
                     collapsing_toolbar_club.title = " "
                     isShow = false
 
-                    val upArrow = ContextCompat.getDrawable(this@ClubActivity, R.drawable.abc_ic_ab_back_material)
+                    val upArrow = ContextCompat.getDrawable(this@AssociationActivity, R.drawable.abc_ic_ab_back_material)
                     upArrow?.setColorFilter(-0x1, PorterDuff.Mode.SRC_ATOP)
                     supportActionBar?.setHomeAsUpIndicator(upArrow)
                 }
@@ -107,33 +107,33 @@ class ClubActivity : AppCompatActivity() {
 
         club_profile.setBackgroundColor(bgColor)
 
-        association_name.text = club!!.name
+        association_name.text = association!!.name
         association_name.setTextColor(fgColor)
 
-        club_description_text.text = club!!.description
+        club_description_text.text = association!!.description
         club_description_text.setTextColor(fgColor)
 
         collapsing_toolbar_club.setCollapsedTitleTextColor(fgColor)
 
         requestManager
-            .load(ServiceGenerator.CDN_URL + club!!.profilePicture)
+            .load(ServiceGenerator.CDN_URL + association!!.profilePicture)
             .apply(RequestOptions.circleCropTransform())
             .into(association_avatar)
 
         GlideApp
             .with(this)
-            .load(ServiceGenerator.CDN_URL + club!!.cover)
+            .load(ServiceGenerator.CDN_URL + association!!.cover)
             .transform(DarkenTransformation())
             .into(header_image_club)
 
         // links
 
         Linkify.addLinks(club_description_text, Linkify.ALL)
-        Utils.convertToLinkSpan(this@ClubActivity, club_description_text)
+        Utils.convertToLinkSpan(this@AssociationActivity, club_description_text)
 
         // send a mail
 
-        val email = ContextCompat.getDrawable(this@ClubActivity, R.drawable.ic_email_black_24dp)
+        val email = ContextCompat.getDrawable(this@AssociationActivity, R.drawable.ic_email_black_24dp)
 
         if (fgColor != -0x1) {
             email?.setColorFilter(fgColor, PorterDuff.Mode.SRC_ATOP)
@@ -178,17 +178,17 @@ class ClubActivity : AppCompatActivity() {
         val postsFragment = PostsFragment()
         val bundle1 = Bundle()
         bundle1.putInt("layout", R.layout.post)
-        bundle1.putString("filter_club_id", club!!.id)
+        bundle1.putString("filter_association_id", association!!.id)
         bundle1.putInt("swipe_color", swipeColor)
         postsFragment.arguments = bundle1
         adapter.addFragment(postsFragment, resources.getString(R.string.posts))
 
-        val eventsClubFragment = EventsClubFragment()
+        val eventsClubFragment = EventsAssociationFragment()
         val bundle2 = Bundle()
         bundle2.putInt("layout", R.layout.row_event)
-        bundle2.putString("filter_club_id", club!!.id)
+        bundle2.putString("filter_association_id", association!!.id)
         bundle2.putInt("swipe_color", swipeColor)
-        bundle2.putParcelable("club", club)
+        bundle2.putParcelable("association", association)
         eventsClubFragment.arguments = bundle2
         adapter.addFragment(eventsClubFragment, resources.getString(R.string.events))
 
@@ -210,7 +210,7 @@ class ClubActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SENDTO)
 
         intent.data = Uri.parse("mailto:")
-        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(club!!.email))
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(association!!.email))
         intent.putExtra(Intent.EXTRA_SUBJECT, "")
 
         if (intent.resolveActivity(packageManager) != null) {

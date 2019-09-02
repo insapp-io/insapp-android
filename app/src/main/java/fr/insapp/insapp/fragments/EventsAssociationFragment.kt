@@ -29,7 +29,7 @@ import java.util.*
  * Created by thomas on 09/12/2016.
  */
 
-class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class EventsAssociationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var layout: Int = 0
     private var swipeColor: Int = 0
@@ -172,7 +172,7 @@ class EventsClubFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
 
-        const val TAG = "EventsClubFragment"
+        const val TAG = "EventsAssociationFragment"
         private const val EVENT_REQUEST = 2
     }
 }

@@ -14,7 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.like.LikeButton
 import com.like.OnLikeListener
 import fr.insapp.insapp.R
-import fr.insapp.insapp.activities.ClubActivity
+import fr.insapp.insapp.activities.AssociationActivity
 import fr.insapp.insapp.activities.PostActivity
 import fr.insapp.insapp.activities.isPostLikedBy
 import fr.insapp.insapp.http.ServiceGenerator
@@ -89,18 +89,18 @@ class PostRecyclerViewAdapter(
                 call.enqueue(object : Callback<Association> {
                     override fun onResponse(call: Call<Association>, response: Response<Association>) {
                         if (response.isSuccessful) {
-                            val club = response.body()
+                            val association = response.body()
 
-                            if (club != null) {
+                            if (association != null) {
                                 requestManager
-                                    .load(ServiceGenerator.CDN_URL + club.profilePicture)
+                                    .load(ServiceGenerator.CDN_URL + association.profilePicture)
                                     .apply(RequestOptions.circleCropTransform())
                                     .transition(withCrossFade())
                                     .into(view.post_association_avatar)
 
                                 // listener
 
-                                view.post_association_avatar.setOnClickListener { context.startActivity(Intent(context, ClubActivity::class.java).putExtra("club", club)) }
+                                view.post_association_avatar.setOnClickListener { context.startActivity(Intent(context, AssociationActivity::class.java).putExtra("association", association)) }
                             }
                         } else {
                             Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()

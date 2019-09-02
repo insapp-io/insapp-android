@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatCheckBox
@@ -31,6 +32,7 @@ import fr.insapp.insapp.fragments.NotificationsFragment
 import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.notifications.MyFirebaseMessagingService
 import fr.insapp.insapp.utility.Utils
+import fr.insapp.insapp.utility.Utils.user
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 
@@ -63,9 +65,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // toolbar
+        val profileID = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender), "drawable", packageName)
+        toolbar_main.setNavigationIcon(profileID)
         setSupportActionBar(toolbar_main)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        toolbar_main.setNavigationOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = Utils.user?.username
+        //supportActionBar?.setIcon(R.drawable.avatar_1stpi_female_test)
 
         // view pager
         setupViewPager(viewpager)
@@ -189,7 +195,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+            //R.id.action_profile -> startActivity(Intent(this, ProfileActivity::class.java))
 
             R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
 
@@ -201,6 +207,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val profileID = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender), "drawable", packageName)
+        toolbar_main.setNavigationIcon(profileID)
     }
 
     override fun onDestroy() {

@@ -11,10 +11,10 @@
         android:actionViewClass="androidx.appcompat.widget.SearchView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
-    <item
+    <!--<item
         android:id="@+id/action_profile"
         android:title="@string/profile"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 
     <item
         android:id="@+id/action_settings"

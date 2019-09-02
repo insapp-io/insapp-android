@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refresh_events"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,25 +33,27 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/events_now" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/events_now"
+                        android:textSize="16sp" />
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cardview_events_now"
+                    <View
+                        android:id="@+id/view2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp">
+                        android:layout_height="1dp"
+                        android:background="#ddd" />
 
-                        <RelativeLayout
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_events_now"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerview_events_now"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </RelativeLayout>
-                    </androidx.cardview.widget.CardView>
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -64,25 +67,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/events_today" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/events_today"
+                        android:textSize="16sp" />
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cardview_events_today"
+                    <View
+                        android:id="@+id/view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp">
+                        android:layout_height="1dp"
+                        android:background="#ddd" />
 
-                        <RelativeLayout
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_events_today"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerview_events_today"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </RelativeLayout>
-                    </androidx.cardview.widget.CardView>
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -96,25 +100,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/events_week" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/events_week"
+                        android:textSize="16sp" />
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cardview_events_week"
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="#ddd" />
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp">
+                        android:layout_height="match_parent">
 
-                        <RelativeLayout
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_events_week"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerview_events_week"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </RelativeLayout>
-                    </androidx.cardview.widget.CardView>
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -128,25 +132,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/events_next_week" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/events_next_week"
+                        android:textSize="16sp" />
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cardview_events_next_week"
+                    <View
+                        android:id="@+id/view4"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp">
+                        android:layout_height="1dp"
+                        android:background="#ddd" />
 
-                        <RelativeLayout
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_events_next_week"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerview_events_next_week"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </RelativeLayout>
-                    </androidx.cardview.widget.CardView>
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -160,25 +165,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/events_later" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/events_later"
+                        android:textSize="16sp" />
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cardview_events_later"
+                    <View
+                        android:id="@+id/view3"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp">
+                        android:layout_height="1dp"
+                        android:background="#ddd" />
 
-                        <RelativeLayout
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_events_later"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/recyclerview_events_later"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </RelativeLayout>
-                    </androidx.cardview.widget.CardView>
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -203,22 +209,26 @@
                 android:id="@+id/event_nothing_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center_horizontal"
                 android:text="@string/event_nothing_1"
                 android:textAlignment="gravity"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/event_nothing_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/event_nothing_1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center_horizontal"
                 android:text="@string/event_nothing_2"
                 android:textAlignment="gravity"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
         </RelativeLayout>
 

@@ -61,11 +61,7 @@ class PostsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         recyclerview_posts.setHasFixedSize(true)
         recyclerview_posts.isNestedScrollingEnabled = false
 
-        if (layout == R.layout.post_with_avatars) {
-            recyclerview_posts.addItemDecoration(DividerItemDecoration(resources, R.drawable.half_divider))
-        } else if (layout == R.layout.post) {
-            recyclerview_posts.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
-        }
+        recyclerview_posts.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerview_posts.layoutManager = layoutManager

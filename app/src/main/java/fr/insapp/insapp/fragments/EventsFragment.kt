@@ -15,7 +15,11 @@ import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Event
+import fr.insapp.insapp.utility.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_events.*
+import kotlinx.android.synthetic.main.fragment_events.no_network
+import kotlinx.android.synthetic.main.fragment_events.progress_bar
+import kotlinx.android.synthetic.main.fragment_posts.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -84,18 +88,23 @@ class EventsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         recyclerview_events_now.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerview_events_now.adapter = adapterNow
+        recyclerview_events_now.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
 
         recyclerview_events_today.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerview_events_today.adapter = adapterToday
+        recyclerview_events_today.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
 
         recyclerview_events_week.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerview_events_week.adapter = adapterWeek
+        recyclerview_events_week.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
 
         recyclerview_events_next_week.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerview_events_next_week.adapter = adapterNextWeek
+        recyclerview_events_next_week.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
 
         recyclerview_events_later.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerview_events_later.adapter = adapterLater
+        recyclerview_events_later.addItemDecoration(DividerItemDecoration(resources, R.drawable.full_divider))
 
         // swipe refresh layout
 

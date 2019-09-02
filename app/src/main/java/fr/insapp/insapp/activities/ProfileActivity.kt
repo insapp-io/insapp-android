@@ -93,12 +93,7 @@ class ProfileActivity : AppCompatActivity() {
         // fill the main layout
 
         val id = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender), "drawable", packageName)
-        Glide
-            .with(this@ProfileActivity)
-            .load(id)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .apply(RequestOptions.circleCropTransform())
-            .into(profile_avatar)
+        profile_avatar.setImageResource(id)
 
         profile_username.text = user!!.username
         profile_name.text = user!!.name

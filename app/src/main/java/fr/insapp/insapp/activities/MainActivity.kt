@@ -129,6 +129,9 @@ class MainActivity : AppCompatActivity() {
 
         if (defaultSharedPreferences.getBoolean("notifications_news", false)) {
             MyFirebaseMessagingService.subscribeToTopic("posts-android")
+            defaultSharedPreferences.edit().putBoolean("notifications_posts", true).apply()
+        } else {
+            defaultSharedPreferences.edit().putBoolean("notifications_posts", false).apply()
         }
         if (defaultSharedPreferences.getBoolean("notifications_events", false)) {
             MyFirebaseMessagingService.subscribeToTopic("events-android")

@@ -39,6 +39,11 @@ class CommentRecyclerViewAdapter(
         private val objectId: String
 ) : RecyclerView.Adapter<CommentRecyclerViewAdapter.CommentViewHolder>() {
 
+    fun addComment(comment: Comment) {
+        comments.add(comment)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(parent.inflate(R.layout.row_comment), requestManager, objectId)
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
@@ -80,8 +85,9 @@ class CommentRecyclerViewAdapter(
                         val call = ServiceGenerator.client.getUserFromId(tag.user)
                         call.enqueue(object : Callback<User> {
                             override fun onResponse(call: Call<User>, response: Response<User>) {
-                                if (response.isSuccessful) {
-                                    context.startActivity(Intent(context, ProfileActivity::class.java).putExtra("user", response.body()))
+                                val user = response.body()
+                                if (response.isSuccessful && user != null) {
+                                    context.startActivity(Intent(context, ProfileActivity::class.java).putExtra("user", user))
                                 } else {
                                     Toast.makeText(context, "PostCommentRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                                 }
@@ -106,7 +112,9 @@ class CommentRecyclerViewAdapter(
             view.comment_text.movementMethod = LinkMovementMethod.getInstance()
             view.comment_text.isEnabled = true
 
-            view.comment_date.text = Utils.displayedDate(comment.date)
+            if (comment.date != null) {
+                view.comment_date.text = Utils.displayedDate(comment.date)
+            }
 
             // user
 
@@ -151,7 +159,7 @@ class CommentRecyclerViewAdapter(
                             .setMessage(R.string.delete_comment_are_you_sure)
                             .setCancelable(true)
                             .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.client.uncommentPost(postId, comment!!.id)
+                                val call = ServiceGenerator.client.uncommentPost(postId, comment!!.id!!)
 
                                 call.enqueue(object : Callback<Post> {
                                     override fun onResponse(call: Call<Post>, response: Response<Post>) {
@@ -177,7 +185,7 @@ class CommentRecyclerViewAdapter(
                             .setMessage(R.string.report_comment_are_you_sure)
                             .setCancelable(true)
                             .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.client.reportComment(postId, comment!!.id)
+                                val call = ServiceGenerator.client.reportComment(postId, comment!!.id!!)
                                 call.enqueue(object : Callback<Void> {
                                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                         if (response.isSuccessful) {

@@ -1,12 +1,16 @@
 package fr.insapp.insapp.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.util.Linkify
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,7 +38,7 @@ import retrofit2.Response
 
 class PostActivity : AppCompatActivity() {
 
-    private lateinit var adapter: CommentRecyclerViewAdapter
+    private lateinit var commentAdapter: CommentRecyclerViewAdapter
 
     private lateinit var post: Post
     private var association: Association? = null
@@ -82,26 +86,26 @@ class PostActivity : AppCompatActivity() {
             // coming from notification
             setContentView(R.layout.loading)
 
-            val call = ServiceGenerator.client.getPostFromId(intent.getStringExtra("ID"))
-            call.enqueue(object : Callback<Post> {
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                    val result = response.body()
-                    if (response.isSuccessful && result != null) {
-                        post = result
-                        generateActivity()
-                    } else {
-                        Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+            ServiceGenerator.client.getPostFromId(intent.getStringExtra("ID"))
+                .enqueue(object : Callback<Post> {
+                    override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                        val result = response.body()
+                        if (response.isSuccessful && result != null) {
+                            post = result
+                            generateActivity()
+                        } else {
+                            Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<Post>, t: Throwable) {
-                    Toast.makeText(this@PostActivity, R.string.check_internet_connection, Toast.LENGTH_LONG).show()
+                    override fun onFailure(call: Call<Post>, t: Throwable) {
+                        Toast.makeText(this@PostActivity, R.string.check_internet_connection, Toast.LENGTH_LONG).show()
 
-                    // Open the application
-                    startActivity(Intent(this@PostActivity, MainActivity::class.java))
-                    finish()
-                }
-            })
+                        // Open the application
+                        startActivity(Intent(this@PostActivity, MainActivity::class.java))
+                        finish()
+                    }
+                })
         }
     }
 
@@ -226,13 +230,54 @@ class PostActivity : AppCompatActivity() {
         Linkify.addLinks(post_text, Linkify.ALL)
         Utils.convertToLinkSpan(this@PostActivity, post_text)
 
-        // adapter
+        // edit comment adapter
 
-        this.adapter = CommentRecyclerViewAdapter(post.comments, requestManager, post.id)
+        this.commentAdapter = CommentRecyclerViewAdapter(post.comments, requestManager, post.id)
 
-        // edit comment
+        comment_post_input.setupComponent()
+        comment_post_input.setOnEditorActionListener(TextView.OnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                // hide keyboard
 
-        comment_post_input.setupComponent(adapter, post)
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(textView.windowToken, 0)
+
+                val content = comment_post_input.text.toString()
+                comment_post_input.text.clear()
+
+                if (content.isNotBlank()) {
+                    user?.let {
+                        val comment = Comment(null, user.id, content, null, comment_post_input.tags)
+
+                        Log.d(TAG, comment.toString())
+
+                        ServiceGenerator.client.commentPost(post.id, comment)
+                            .enqueue(object : Callback<Post> {
+                                override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                                    if (response.isSuccessful) {
+                                        commentAdapter.addComment(comment)
+                                        comment_post_input.tags.clear()
+
+                                        Toast.makeText(this@PostActivity, resources.getText(R.string.write_comment_success), Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Log.e(TAG, "Couldn't post comment: ${response.code()}")
+                                        Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<Post>, t: Throwable) {
+                                    Log.e(TAG, "Couldn't post comment: ${t.message}")
+                                    Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                                }
+                            })
+                    }
+                }
+
+                return@OnEditorActionListener true
+            }
+
+            false
+        })
 
         // recycler view
 
@@ -242,7 +287,7 @@ class PostActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerview_comments_post.layoutManager = layoutManager
 
-        recyclerview_comments_post.adapter = adapter
+        recyclerview_comments_post.adapter = commentAdapter
 
         // retrieve the avatar of the user
 

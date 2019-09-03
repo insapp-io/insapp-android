@@ -35,7 +35,7 @@ class AutoCompleterAdapter(
 
     override fun getItem(index: Int) = filteredUsers[index]
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = inflater.inflate(R.layout.dropdown, parent, false)
 
         val user = getItem(position)
@@ -82,7 +82,7 @@ class AutoCompleterAdapter(
                 return filterResults
             }
 
-            override fun publishResults(constraint: CharSequence, results: FilterResults?) {
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 if (results != null && results.count > 0) {
                     filteredUsers = results.values as List<User>
                     notifyDataSetChanged()

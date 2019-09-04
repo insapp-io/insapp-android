@@ -139,6 +139,17 @@ class MainActivity : AppCompatActivity() {
 
         defaultSharedPreferences.edit().remove("notifications_news").apply()
         defaultSharedPreferences.edit().remove("notifications_others").apply()
+
+        val value = defaultSharedPreferences.getString("class", "")
+        if (value != null) {
+            if (value.isBlank()) {
+                MyFirebaseMessagingService.subscribeToTopic("posts-unknown-class")
+                MyFirebaseMessagingService.subscribeToTopic("events-unknown-class")
+            } else {
+                MyFirebaseMessagingService.subscribeToTopic("posts-$value")
+                MyFirebaseMessagingService.subscribeToTopic("events-$value")
+            }
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

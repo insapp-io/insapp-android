@@ -16,7 +16,6 @@ import java.util.*
 object Utils {
 
     val user: User?
-        @Throws(NullPointerException::class)
         get() {
             val user = Gson().fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User::class.java)
 

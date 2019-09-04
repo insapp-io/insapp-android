@@ -1,5 +1,6 @@
 package fr.insapp.insapp.activities
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -9,6 +10,8 @@ import android.view.View
 import android.webkit.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
+import com.google.gson.Gson
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.credentials.LoginCredentials
@@ -77,6 +80,9 @@ class SignInActivity : AppCompatActivity() {
             override fun onResponse(call: Call<LoginCredentials>, response: Response<LoginCredentials>) {
                 val loginCredentials = response.body()
                 if (response.isSuccessful && loginCredentials != null) {
+                    val credentialsPreferences = this@SignInActivity.getSharedPreferences("Credentials", Context.MODE_PRIVATE)
+                    credentialsPreferences.edit().putString("login", Gson().toJson(loginCredentials)).apply()
+
                     login(loginCredentials)
                 } else {
                     Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
@@ -93,9 +99,27 @@ class SignInActivity : AppCompatActivity() {
         val call = ServiceGenerator.client.logUser(loginCredentials)
         call.enqueue(object : Callback<SessionCredentials> {
             override fun onResponse(call: Call<SessionCredentials>, response: Response<SessionCredentials>) {
-                if (response.isSuccessful) {
-                    startActivity(Intent(this@SignInActivity, MainActivity::class.java))
+                val sessionCredentials = response.body()
+                if (response.isSuccessful && sessionCredentials != null) {
+                    val credentialsPreferences = this@SignInActivity.getSharedPreferences("Credentials", Context.MODE_PRIVATE)
+                    credentialsPreferences.edit().putString("session", Gson().toJson(sessionCredentials)).apply()
 
+                    val user = sessionCredentials.user
+                    user?.let {
+                        val userPreferences = this@SignInActivity.getSharedPreferences("User", Context.MODE_PRIVATE)
+                        userPreferences.edit().putString("user", Gson().toJson(user)).apply()
+
+                        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@SignInActivity)
+                        val editor = defaultSharedPreferences.edit()
+                        editor.putString("name", user.name)
+                        editor.putString("description", user.description)
+                        editor.putString("email", user.email)
+                        editor.putString("class", user.promotion)
+                        editor.putString("gender", user.gender)
+                        editor.apply()
+                    }
+
+                    startActivity(Intent(this@SignInActivity, MainActivity::class.java))
                     finish()
                 } else {
                     Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()

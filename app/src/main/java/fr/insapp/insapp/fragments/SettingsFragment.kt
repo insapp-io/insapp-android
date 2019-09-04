@@ -60,13 +60,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 if (user != null) {
                     val updatedUser = User(
                             user.id,
-                            sharedPreferences.getString("name", ""),
+                            sharedPreferences.getString("name", "") ?: "",
                             user.username,
-                            sharedPreferences.getString("description", ""),
-                            sharedPreferences.getString("email", ""),
+                            sharedPreferences.getString("description", "") ?: "",
+                            sharedPreferences.getString("email", "") ?: "",
                             user.isEmailPublic,
-                            sharedPreferences.getString("class", ""),
-                            sharedPreferences.getString("gender", ""),
+                            sharedPreferences.getString("class", "") ?: "",
+                            sharedPreferences.getString("gender", "") ?: "",
                             user.events,
                             user.postsLiked)
 
@@ -119,13 +119,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
                     val updatedUser = User(
                             user.id,
-                            sharedPreferences.getString("name", ""),
+                            sharedPreferences.getString("name", "") ?: "",
                             user.username,
-                            sharedPreferences.getString("description", ""),
-                            sharedPreferences.getString("email", ""),
+                            sharedPreferences.getString("description", "") ?: "",
+                            sharedPreferences.getString("email", "") ?: "",
                             user.isEmailPublic,
-                            sharedPreferences.getString("class", ""),
-                            sharedPreferences.getString("gender", ""),
+                            sharedPreferences.getString("class", "") ?: "",
+                            sharedPreferences.getString("gender", "") ?: "",
                             user.events,
                             user.postsLiked)
 

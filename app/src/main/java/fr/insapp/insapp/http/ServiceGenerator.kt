@@ -1,7 +1,6 @@
 package fr.insapp.insapp.http
 
 import fr.insapp.insapp.BuildConfig
-import fr.insapp.insapp.http.interceptors.JsonInterceptor
 import fr.insapp.insapp.http.interceptors.TokenInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,7 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ServiceGenerator {
 
     private val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-    private val jsonInterceptor = JsonInterceptor()
     private val tokenInterceptor = TokenInterceptor()
 
     var ROOT_URL: String
@@ -41,7 +39,6 @@ object ServiceGenerator {
 
         val httpClient = OkHttpClient.Builder()
 
-        httpClient.addInterceptor(jsonInterceptor)
         httpClient.addInterceptor(tokenInterceptor)
         httpClient.addInterceptor(loggingInterceptor)
 

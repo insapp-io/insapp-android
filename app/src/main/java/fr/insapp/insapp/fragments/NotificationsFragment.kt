@@ -64,7 +64,7 @@ class NotificationsFragment : Fragment() {
                         for (notification in results.notifications) {
                             adapter.addItem(notification)
                         }
-                    } else if (recyclerview_notifications != null) {
+                    } else if (!response.isSuccessful && recyclerview_notifications != null) {
                         Snackbar.make(recyclerview_notifications, R.string.connectivity_issue, Snackbar.LENGTH_LONG).show()
                     }
                 }

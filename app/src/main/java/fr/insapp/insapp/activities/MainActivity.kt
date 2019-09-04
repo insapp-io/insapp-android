@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatCheckBox
@@ -33,6 +32,7 @@ import fr.insapp.insapp.fragments.PostsFragment
 import fr.insapp.insapp.notifications.MyFirebaseMessagingService
 import fr.insapp.insapp.utility.Utils
 import fr.insapp.insapp.utility.Utils.user
+import fr.insapp.insapp.utility.RoundImage
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 
@@ -65,13 +65,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // toolbar
-        val profileID = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender), "drawable", packageName)
-        toolbar_main.setNavigationIcon(profileID)
+        val profileID = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender) + "_icon", "drawable", packageName)
+        toolbar_main.navigationIcon = RoundImage.createRoundDrawable(resources, profileID)
         setSupportActionBar(toolbar_main)
         toolbar_main.setNavigationOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = Utils.user?.username
-        //supportActionBar?.setIcon(R.drawable.avatar_1stpi_female_test)
+        supportActionBar?.title = user?.username
 
         // view pager
         setupViewPager(viewpager)
@@ -114,6 +113,7 @@ class MainActivity : AppCompatActivity() {
 
         updateApp()
     }
+
 
     //TODO: delete after update
     private fun updateApp() {
@@ -209,12 +209,12 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
 
         val profileID = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender), "drawable", packageName)
         toolbar_main.setNavigationIcon(profileID)
-    }
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()

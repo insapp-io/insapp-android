@@ -8,13 +8,7 @@
         android:title="@string/search_action"
         android:icon="@drawable/ic_search_black_24dp"
         app:showAsAction="collapseActionView|ifRoom"
-        android:actionViewClass="androidx.appcompat.widget.SearchView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
-
-    <!--<item
-        android:id="@+id/action_profile"
-        android:title="@string/profile"
-        app:showAsAction="never" />-->
 
     <item
         android:id="@+id/action_settings"

@@ -1,6 +1,7 @@
 <resources>
 
-    <style name="InsappMaterialTheme" parent="InsappMaterialTheme.Base"></style>
+    <style name="InsappMaterialTheme" parent="InsappMaterialTheme.Base">
+    </style>
 
     <!-- Base application theme -->
     <style name="InsappMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">

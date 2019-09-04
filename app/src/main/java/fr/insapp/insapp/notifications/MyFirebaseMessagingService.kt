@@ -41,38 +41,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     /**
-     * Persist token to the server.
-     *
-     * Modify this method to associate the user's FCM InstanceID token with any server-side account
-     * maintained by the application.
-     *
-     * @param token The new token.
-     */
-    private fun sendRegistrationTokenToServer(token: String) {
-        val user = Utils.user
-        if (user != null) {
-            val notificationUser = NotificationUser(null, user.id, token, "android")
-
-            val call = ServiceGenerator.client.registerNotification(notificationUser)
-            call.enqueue(object : Callback<NotificationUser> {
-                override fun onResponse(call: Call<NotificationUser>, response: Response<NotificationUser>) {
-                    var msg = "Firebase token successfully registered on server: $token"
-                    if (!response.isSuccessful) {
-                        msg = "Failed to register Firebase token on server"
-                    }
-                    Log.d(TAG, msg)
-                }
-
-                override fun onFailure(call: Call<NotificationUser>, t: Throwable) {
-                    Log.d(TAG, "Failed to register Firebase token on server: network failure")
-                }
-            })
-        } else {
-            Log.d(TAG, "Failed to register Firebase token on server: user is null")
-        }
-    }
-
-    /**
      * Called when message is received.
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
@@ -103,7 +71,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             channel = "events"
         }
 
-        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_$channel", true)){
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notifications_$channel", true)){
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
             val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, channel)
@@ -218,6 +186,38 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     }
                     Log.d(TAG, msg)
                 }
+            }
+        }
+
+        /**
+         * Persist token to the server.
+         *
+         * Modify this method to associate the user's FCM InstanceID token with any server-side account
+         * maintained by the application.
+         *
+         * @param token The new token.
+         */
+        fun sendRegistrationTokenToServer(token: String) {
+            val user = Utils.user
+            if (user != null) {
+                val notificationUser = NotificationUser(null, user.id, token, "android")
+
+                val call = ServiceGenerator.client.registerNotification(notificationUser)
+                call.enqueue(object : Callback<NotificationUser> {
+                    override fun onResponse(call: Call<NotificationUser>, response: Response<NotificationUser>) {
+                        var msg = "Firebase token successfully registered on server: $token"
+                        if (!response.isSuccessful) {
+                            msg = "Failed to register Firebase token on server"
+                        }
+                        Log.d(TAG, msg)
+                    }
+
+                    override fun onFailure(call: Call<NotificationUser>, t: Throwable) {
+                        Log.d(TAG, "Failed to register Firebase token on server: network failure")
+                    }
+                })
+            } else {
+                Log.d(TAG, "Failed to register Firebase token on server: user is null")
             }
         }
     }

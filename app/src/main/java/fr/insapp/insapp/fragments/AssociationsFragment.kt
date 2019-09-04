@@ -21,7 +21,7 @@ import retrofit2.Response
  * Created by thomas on 27/10/2016.
  */
 
-class ClubsFragment : Fragment() {
+class AssociationsFragment : Fragment() {
 
     private lateinit var adapter: AssociationRecyclerViewAdapter
 

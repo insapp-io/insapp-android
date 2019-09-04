@@ -25,7 +25,7 @@ import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.ViewPagerAdapter
 import fr.insapp.insapp.components.CustomTabsConnection
-import fr.insapp.insapp.fragments.ClubsFragment
+import fr.insapp.insapp.fragments.AssociationsFragment
 import fr.insapp.insapp.fragments.EventsFragment
 import fr.insapp.insapp.fragments.NotificationsFragment
 import fr.insapp.insapp.fragments.PostsFragment
@@ -97,8 +97,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // Get new Instance ID token
-                val token = task.result?.token
-                Log.d(MyFirebaseMessagingService.TAG, "Current Firebase token: $token")
+                val result = task.result
+                result?.let {
+                    val token = result.token
+                    Log.d(MyFirebaseMessagingService.TAG, "Current Firebase token: $token")
+
+                    MyFirebaseMessagingService.sendRegistrationTokenToServer(token)
+                }
             })
 
         updateApp()
@@ -130,8 +135,6 @@ class MainActivity : AppCompatActivity() {
         if (defaultSharedPreferences.getBoolean("notifications_news", false)) {
             MyFirebaseMessagingService.subscribeToTopic("posts-android")
             defaultSharedPreferences.edit().putBoolean("notifications_posts", true).apply()
-        } else {
-            defaultSharedPreferences.edit().putBoolean("notifications_posts", false).apply()
         }
         if (defaultSharedPreferences.getBoolean("notifications_events", false)) {
             MyFirebaseMessagingService.subscribeToTopic("events-android")
@@ -167,7 +170,7 @@ class MainActivity : AppCompatActivity() {
         eventsFragment.arguments = bundle2
         adapter.addFragment(eventsFragment, resources.getString(R.string.events))
 
-        adapter.addFragment(ClubsFragment(), resources.getString(R.string.clubs))
+        adapter.addFragment(AssociationsFragment(), resources.getString(R.string.clubs))
         adapter.addFragment(NotificationsFragment(), resources.getString(R.string.notifications))
 
         viewPager.adapter = adapter

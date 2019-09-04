@@ -1,11 +1,11 @@
 package fr.insapp.insapp.fragments.intro
 
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import kotlinx.android.synthetic.main.fragment_intro_events.view.*
@@ -19,7 +19,7 @@ class IntroEventsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
+        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity).edit()
         defaultSharedPreferences.putBoolean("calendar", false)
         defaultSharedPreferences.apply()
     }

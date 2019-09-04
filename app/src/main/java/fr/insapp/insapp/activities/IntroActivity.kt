@@ -14,9 +14,9 @@ class IntroActivity : AppIntro2() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        addSlide(IntroNewsFragment())
+        addSlide(IntroPostsFragment())
         addSlide(IntroEventsFragment())
-        addSlide(IntroClubsFragment())
+        addSlide(IntroAssociationsFragment())
         addSlide(IntroNotificationsFragment())
         addSlide(IntroProfileFragment())
 

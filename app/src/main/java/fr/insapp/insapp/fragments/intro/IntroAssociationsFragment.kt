@@ -11,9 +11,9 @@ import fr.insapp.insapp.R
  * Created by thomas on 03/12/2016.
  */
 
-class IntroClubsFragment : Fragment() {
+class IntroAssociationsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_intro_clubs, container, false)
+        return inflater.inflate(R.layout.fragment_intro_associations, container, false)
     }
 }

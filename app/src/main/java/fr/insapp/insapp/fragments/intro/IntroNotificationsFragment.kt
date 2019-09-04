@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.notifications.MyFirebaseMessagingService
@@ -19,7 +20,7 @@ class IntroNotificationsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
+        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity).edit()
         defaultSharedPreferences.putBoolean("notifications_posts", true)
         defaultSharedPreferences.putBoolean("notifications_events", true)
         defaultSharedPreferences.apply()
@@ -41,7 +42,7 @@ class IntroNotificationsFragment : Fragment() {
         view.checkbox_enable_notifications?.isChecked = true
 
         view.checkbox_enable_notifications?.setOnCheckedChangeListener { _, b ->
-            val defaultSharedPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
+            val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit()
             defaultSharedPreferences.putBoolean("notifications_posts", b)
             defaultSharedPreferences.putBoolean("notifications_events", b)
             defaultSharedPreferences.apply()

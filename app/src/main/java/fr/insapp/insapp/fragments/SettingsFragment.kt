@@ -1,5 +1,6 @@
 package fr.insapp.insapp.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -9,6 +10,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
+import com.google.gson.Gson
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
@@ -73,7 +75,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     val call = ServiceGenerator.client.updateUser(user.id, updatedUser)
                     call.enqueue(object : Callback<User> {
                         override fun onResponse(call: Call<User>, response: Response<User>) {
-                            if (!response.isSuccessful) {
+                            val user = response.body()
+                            if (response.isSuccessful && user != null) {
+                                val userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE)
+                                userPreferences.edit().putString("user", Gson().toJson(user)).apply()
+                            } else {
                                 Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
                             }
                         }
@@ -132,7 +138,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     val call = ServiceGenerator.client.updateUser(user.id, updatedUser)
                     call.enqueue(object : Callback<User> {
                         override fun onResponse(call: Call<User>, response: Response<User>) {
-                            if (!response.isSuccessful) {
+                            val user = response.body()
+                            if (response.isSuccessful && user != null) {
+                                val userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE)
+                                userPreferences.edit().putString("user", Gson().toJson(user)).apply()
+                            } else {
                                 Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
                             }
                         }

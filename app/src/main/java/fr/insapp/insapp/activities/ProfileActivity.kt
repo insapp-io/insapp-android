@@ -77,7 +77,7 @@ class ProfileActivity : AppCompatActivity() {
         setSupportActionBar(toolbar_profile)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = null
+        supportActionBar?.title = getString(R.string.profile)
 
         // adapter
 
@@ -92,7 +92,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // fill the main layout
 
-        val id = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender), "drawable", packageName)
+        val id = resources.getIdentifier(Utils.drawableProfileName(user!!.promotion, user!!.gender) + "_large", "drawable", packageName)
         profile_avatar.setImageResource(id)
 
         profile_username.text = user!!.username

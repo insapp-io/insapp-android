@@ -70,8 +70,8 @@
     <string name="report_comment_are_you_sure">Voulez-vous signaler ce commentaire ?</string>
     <string name="report_comment_success">Commentaire signalé avec succès</string>
 
-    <string name="delete_comment_action">Supprimer un commentaire</string>
-    <string name="delete_comment_are_you_sure">Voulez-vous supprimer ce commentaire ?</string>
+    <string name="delete_comment_action">Supprimer mon commentaire</string>
+    <string name="delete_comment_are_you_sure">Voulez-vous supprimer votre commentaire ?</string>
     <string name="delete_comment_success">Commentaire supprimé avec succès</string>
 
     <string name="delete_account_action">Supprimer mon compte</string>

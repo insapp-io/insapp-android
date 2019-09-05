@@ -6,11 +6,9 @@ import android.text.Spanned
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -19,7 +17,6 @@ import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.ProfileActivity
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.Comment
-import fr.insapp.insapp.models.Post
 import fr.insapp.insapp.models.User
 import fr.insapp.insapp.utility.Utils
 import fr.insapp.insapp.utility.inflate
@@ -35,16 +32,30 @@ import retrofit2.Response
 
 class CommentRecyclerViewAdapter(
         private var comments: MutableList<Comment>,
-        private val requestManager: RequestManager,
-        private val objectId: String
+        private val requestManager: RequestManager
 ) : RecyclerView.Adapter<CommentRecyclerViewAdapter.CommentViewHolder>() {
+
+    private var onLongClickListener: OnCommentItemLongClickListener? = null
+
+    interface OnCommentItemLongClickListener {
+        fun onCommentItemLongClick(comment: Comment)
+    }
 
     fun addComment(comment: Comment) {
         comments.add(comment)
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(parent.inflate(R.layout.row_comment), requestManager, objectId)
+    fun setComments(comments: MutableList<Comment>) {
+        this.comments = comments
+        notifyDataSetChanged()
+    }
+
+    fun setOnCommentItemLongClickListener(onLongClickListener: OnCommentItemLongClickListener) {
+        this.onLongClickListener = onLongClickListener
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(parent.inflate(R.layout.row_comment), requestManager, onLongClickListener)
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val comment = comments[position]
@@ -56,7 +67,7 @@ class CommentRecyclerViewAdapter(
     class CommentViewHolder(
             private val view: View,
             private val requestManager: RequestManager,
-            private val postId: String
+            private val onLongClickListener: OnCommentItemLongClickListener?
     ) : RecyclerView.ViewHolder(view), View.OnLongClickListener {
 
         private var comment: Comment? = null
@@ -145,70 +156,14 @@ class CommentRecyclerViewAdapter(
                     Toast.makeText(context, "PostCommentRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                 }
             })
+
+            view.setOnLongClickListener(this)
         }
 
         override fun onLongClick(v: View): Boolean {
-            val context = itemView.context
-            val user = Utils.user
-            val alertDialogBuilder = AlertDialog.Builder(context)
-
-            if (user != null) {
-                if (user.id == comment?.user) {
-                    alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_comment_action))
-                    alertDialogBuilder
-                            .setMessage(R.string.delete_comment_are_you_sure)
-                            .setCancelable(true)
-                            .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.client.uncommentPost(postId, comment!!.id!!)
-
-                                call.enqueue(object : Callback<Post> {
-                                    override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                                        if (response.isSuccessful) {
-                                            view.visibility = View.GONE
-                                        } else {
-                                            Toast.makeText(context, "EventCommentLongClickListener", Toast.LENGTH_LONG).show()
-                                        }
-                                    }
-
-                                    override fun onFailure(call: Call<Post>, t: Throwable) {
-                                        Toast.makeText(context, "EventCommentLongClickListener", Toast.LENGTH_LONG).show()
-                                    }
-                                })
-                            }
-                            .setNegativeButton(context.getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
-
-                    val alertDialog = alertDialogBuilder.create()
-                    alertDialog.show()
-                } else {
-                    alertDialogBuilder.setTitle(context.getString(R.string.report_comment_action))
-                    alertDialogBuilder
-                            .setMessage(R.string.report_comment_are_you_sure)
-                            .setCancelable(true)
-                            .setPositiveButton(context.getString(R.string.positive_button)) { _, _ ->
-                                val call = ServiceGenerator.client.reportComment(postId, comment!!.id!!)
-                                call.enqueue(object : Callback<Void> {
-                                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                                        if (response.isSuccessful) {
-                                            Toast.makeText(context, context.getString(R.string.report_comment_success), Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show()
-                                        }
-                                    }
-
-                                    override fun onFailure(call: Call<Void>, t: Throwable) {
-                                        Toast.makeText(context, "PostCommentLongClickListener", Toast.LENGTH_LONG).show()
-                                    }
-                                })
-                            }
-                            .setNegativeButton(context.getString(R.string.negative_button)) { dialogAlert, _ -> dialogAlert.cancel() }
-
-                    val alertDialog = alertDialogBuilder.create()
-                    alertDialog.show()
-                }
-            } else {
-                Log.d("CommentRecyclerView", "Couldn't perform action: user is null")
+            if (comment != null) {
+                onLongClickListener?.onCommentItemLongClick(comment!!)
             }
-
             return true
         }
     }

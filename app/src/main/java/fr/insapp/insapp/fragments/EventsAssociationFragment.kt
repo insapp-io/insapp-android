@@ -101,8 +101,9 @@ class EventsAssociationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
             val call = ServiceGenerator.client.getEventsForAssociation(association!!.id)
             call.enqueue(object : Callback<List<Event>> {
                 override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
-                    if (response.isSuccessful) {
-                        addEventsToAdapter(response.body())
+                    val events = response.body()
+                    if (response.isSuccessful && events != null) {
+                        addEventsToAdapter(events)
                     } else {
                         Toast.makeText(App.getAppContext(), TAG, Toast.LENGTH_LONG).show()
                     }
@@ -121,18 +122,16 @@ class EventsAssociationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
-    private fun addEventsToAdapter(events: List<Event>?) {
-        if (events != null) {
-            val atm = Calendar.getInstance().time
+    private fun addEventsToAdapter(events: List<Event>) {
+        val atm = Calendar.getInstance().time
 
-            for (event in events) {
-                if (event.dateEnd.time > atm.time) {
-                    adapterFuture.addItem(event)
-                    events_future_layout?.visibility = View.VISIBLE
-                } else {
-                    adapterPast.addItem(event)
-                    events_past_layout?.visibility = View.VISIBLE
-                }
+        for (event in events) {
+            if (event.dateEnd.time > atm.time) {
+                adapterFuture.addItem(event)
+                events_future_layout?.visibility = View.VISIBLE
+            } else {
+                adapterPast.addItem(event)
+                events_past_layout?.visibility = View.VISIBLE
             }
         }
     }

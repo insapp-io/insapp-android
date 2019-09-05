@@ -25,8 +25,6 @@ import retrofit2.Response
 
 class SignInActivity : AppCompatActivity() {
 
-    private val CAS_URL = "https://cas.insa-rennes.fr/cas/login?service=https://insapp.fr/"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
@@ -133,6 +131,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val CAS_URL = "https://cas.insa-rennes.fr/cas/login?service=https://insapp.fr/"
 
         const val TAG = "SignInActivity"
     }

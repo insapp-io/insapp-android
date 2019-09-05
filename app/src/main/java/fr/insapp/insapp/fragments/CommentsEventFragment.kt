@@ -52,7 +52,7 @@ class CommentsEventFragment : Fragment() {
         // adapter
 
         event.let {
-            this.commentAdapter = CommentRecyclerViewAdapter(event!!.comments, Glide.with(this), event!!.id)
+            this.commentAdapter = CommentRecyclerViewAdapter(event!!.comments, Glide.with(this))
         }
     }
 

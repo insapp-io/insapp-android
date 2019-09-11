@@ -26,6 +26,7 @@ import androidx.viewpager.widget.ViewPager
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.google.android.material.appbar.AppBarLayout
+import com.google.gson.Gson
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.ViewPagerAdapter
@@ -259,16 +260,21 @@ class EventActivity : AppCompatActivity() {
                         val call = ServiceGenerator.client.addAttendee(event.id, user.id, "going")
                         call.enqueue(object : Callback<EventInteraction> {
                             override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
-                                val result = response.body()
-                                if (response.isSuccessful && result != null) {
+                                val eventInteraction = response.body()
+                                if (response.isSuccessful && eventInteraction != null) {
                                     status = AttendanceStatus.YES
 
                                     fab_participate_event?.close(true)
                                     setFloatingActionMenuTheme(status)
                                     refreshFloatingActionButtons()
 
-                                    event = result.event
+                                    event = eventInteraction.event
                                     refreshAttendeesTextView()
+
+                                    // synchronize local user object
+
+                                    val userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE)
+                                    userPreferences.edit().putString("user", Gson().toJson(eventInteraction.user)).apply()
 
                                     // if first time user join an event
 
@@ -325,16 +331,21 @@ class EventActivity : AppCompatActivity() {
                         val call = ServiceGenerator.client.addAttendee(event.id, user.id, "maybe")
                         call.enqueue(object : Callback<EventInteraction> {
                             override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
-                                val result = response.body()
-                                if (response.isSuccessful && result != null) {
+                                val eventInteraction = response.body()
+                                if (response.isSuccessful && eventInteraction != null) {
                                     status = AttendanceStatus.MAYBE
 
                                     fab_participate_event?.close(true)
                                     setFloatingActionMenuTheme(status)
                                     refreshFloatingActionButtons()
 
-                                    event = result.event
+                                    event = eventInteraction.event
                                     refreshAttendeesTextView()
+
+                                    // synchronize local user object
+
+                                    val userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE)
+                                    userPreferences.edit().putString("user", Gson().toJson(eventInteraction.user)).apply()
                                 } else {
                                     Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
                                 }
@@ -369,16 +380,21 @@ class EventActivity : AppCompatActivity() {
                         val call = ServiceGenerator.client.addAttendee(event.id, user.id, "notgoing")
                         call.enqueue(object : Callback<EventInteraction> {
                             override fun onResponse(call: Call<EventInteraction>, response: Response<EventInteraction>) {
-                                val result = response.body()
-                                if (response.isSuccessful && result != null) {
+                                val eventInteraction = response.body()
+                                if (response.isSuccessful && eventInteraction != null) {
                                     status = AttendanceStatus.NO
 
                                     fab_participate_event?.close(true)
                                     setFloatingActionMenuTheme(status)
                                     refreshFloatingActionButtons()
 
-                                    event = result.event
+                                    event = eventInteraction.event
                                     refreshAttendeesTextView()
+
+                                    // synchronize local user object
+
+                                    val userPreferences = App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE)
+                                    userPreferences.edit().putString("user", Gson().toJson(eventInteraction.user)).apply()
                                 } else {
                                     Toast.makeText(this@EventActivity, TAG, Toast.LENGTH_LONG).show()
                                 }

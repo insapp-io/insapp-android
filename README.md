@@ -40,5 +40,6 @@ In order to receive push notifications under these two environments, two Firebas
 - [**Retrofit**](https://github.com/square/retrofit) for constructing the REST API
 - [**Glide**](https://github.com/bumptech/glide) for loading images
 - [**AppIntro**](https://github.com/AppIntro/AppIntro) for cool intro
+- [**SparkButton**](https://github.com/varunest/SparkButton) for like buttons
 - [**Android Vision API**](https://github.com/googlesamples/android-vision) for scanning barcodes
 - [**AndroidX**](https://developer.android.com/jetpack/androidx)

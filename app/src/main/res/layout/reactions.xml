@@ -5,15 +5,17 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.like.LikeButton
+    <com.varunest.sparkbutton.SparkButton
         android:id="@+id/like_button"
-        app:icon_type="heart"
-        app:icon_size="18dp"
         android:layout_gravity="center_vertical"
-        app:circle_start_color="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="0dp" />
+        android:layout_margin="0dp"
+        app:sparkbutton_activeImage="@drawable/heart_on"
+        app:sparkbutton_inActiveImage="@drawable/heart_off"
+        app:sparkbutton_iconSize="20dp"
+        app:sparkbutton_primaryColor="@color/colorPrimary"
+        app:sparkbutton_secondaryColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/like_counter"

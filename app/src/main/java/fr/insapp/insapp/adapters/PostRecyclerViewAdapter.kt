@@ -4,6 +4,7 @@ import android.content.Intent
 import android.text.util.Linkify
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -11,8 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import com.like.LikeButton
-import com.like.OnLikeListener
+import com.varunest.sparkbutton.SparkEventListener
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.AssociationActivity
 import fr.insapp.insapp.activities.PostActivity
@@ -142,46 +142,50 @@ class PostRecyclerViewAdapter(
                 if (user != null) {
                     val userId = user.id
 
-                    view.like_button.isLiked = post.isPostLikedBy(userId)
+                    view.like_button.isChecked = post.isPostLikedBy(userId)
 
-                    view.like_button.setOnLikeListener(object : OnLikeListener {
-                        override fun liked(likeButton: LikeButton) {
-                            val call = ServiceGenerator.client.likePost(post.id, userId)
-                            call.enqueue(object : Callback<PostInteraction> {
-                                override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                                    if (response.isSuccessful) {
-                                        if (response.body() != null) {
-                                            view.like_counter.text = String.format(Locale.FRANCE, "%d", post.likes.size + 1)
+                    view.like_button.setEventListener(object : SparkEventListener {
+                        override fun onEvent(icon: ImageView, buttonState: Boolean) {
+                            if (buttonState) {
+                                val call = ServiceGenerator.client.likePost(post.id, userId)
+                                call.enqueue(object : Callback<PostInteraction> {
+                                    override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
+                                        if (response.isSuccessful) {
+                                            if (response.body() != null) {
+                                                view.like_counter.text = String.format(Locale.FRANCE, "%d", post.likes.size + 1)
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                                         }
-                                    } else {
+                                    }
+
+                                    override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
                                         Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                                     }
-                                }
-
-                                override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
-                                    Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
-                                }
-                            })
-                        }
-
-                        override fun unLiked(likeButton: LikeButton) {
-                            val call = ServiceGenerator.client.dislikePost(post.id, userId)
-                            call.enqueue(object : Callback<PostInteraction> {
-                                override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                                    if (response.isSuccessful) {
-                                        if (response.body() != null) {
-                                            view.like_counter.text = String.format(Locale.FRANCE, "%d", post.likes.size - 1)
+                                })
+                            } else {
+                                val call = ServiceGenerator.client.dislikePost(post.id, userId)
+                                call.enqueue(object : Callback<PostInteraction> {
+                                    override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
+                                        if (response.isSuccessful) {
+                                            if (response.body() != null) {
+                                                view.like_counter.text = String.format(Locale.FRANCE, "%d", post.likes.size - 1)
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                                         }
-                                    } else {
+                                    }
+
+                                    override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
                                         Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
                                     }
-                                }
-
-                                override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
-                                    Toast.makeText(context, "PostRecyclerViewAdapter", Toast.LENGTH_LONG).show()
-                                }
-                            })
+                                })
+                            }
                         }
+
+                        override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {}
+
+                        override fun onEventAnimationStart(button: ImageView?, buttonState: Boolean) {}
                     })
                 }
 

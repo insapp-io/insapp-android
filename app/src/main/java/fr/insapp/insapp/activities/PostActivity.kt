@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -22,8 +23,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
-import com.like.LikeButton
-import com.like.OnLikeListener
+import com.varunest.sparkbutton.SparkEventListener
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter
 import fr.insapp.insapp.http.ServiceGenerator
@@ -140,62 +140,66 @@ class PostActivity : AppCompatActivity() {
         // like button
 
         user?.let {
-            post_like_button?.isLiked = post.isPostLikedBy(user.id)
+            post_like_button?.setChecked(post.isPostLikedBy(user.id))
         }
         post_like_counter?.text = post.likes.size.toString()
 
-        post_like_button?.setOnLikeListener(object : OnLikeListener {
-            override fun liked(likeButton: LikeButton) {
-                post_like_counter?.text = (Integer.valueOf(post_like_counter?.text as String) + 1).toString()
+        post_like_button?.setEventListener(object : SparkEventListener {
+            override fun onEvent(icon: ImageView, buttonState: Boolean) {
+                if (buttonState) {
+                    post_like_counter?.text = (Integer.valueOf(post_like_counter?.text as String) + 1).toString()
 
-                if (user != null) {
-                    val call = ServiceGenerator.client.likePost(post.id, user.id)
-                    call.enqueue(object : Callback<PostInteraction> {
-                        override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                            val results = response.body()
-                            if (response.isSuccessful && results != null) {
-                                post = results.post
-                            } else {
+                    if (user != null) {
+                        val call = ServiceGenerator.client.likePost(post.id, user.id)
+                        call.enqueue(object : Callback<PostInteraction> {
+                            override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
+                                val results = response.body()
+                                if (response.isSuccessful && results != null) {
+                                    post = results.post
+                                } else {
+                                    Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
                                 Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
                             }
-                        }
-
-                        override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
-                            Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
-                        }
-                    })
+                        })
+                    } else {
+                        Log.d(TAG, "Couldn't update the like status: user is null")
+                    }
                 } else {
-                    Log.d(TAG, "Couldn't update the like status: user is null")
+                    post_like_counter?.text = (Integer.valueOf(post_like_counter?.text as String) - 1).toString()
+
+                    if (Integer.valueOf(post_like_counter?.text as String) < 0) {
+                        post_like_counter?.text = "0"
+                    }
+
+                    if (user != null) {
+                        val call = ServiceGenerator.client.dislikePost(post.id, user.id)
+                        call.enqueue(object : Callback<PostInteraction> {
+                            override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
+                                val result = response.body()
+                                if (response.isSuccessful && result != null) {
+                                    post = result.post
+                                } else {
+                                    Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
+                                Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
+                            }
+                        })
+                    } else {
+                        Log.d(TAG, "Couldn't update the like status: user is null")
+                    }
                 }
             }
 
-            override fun unLiked(likeButton: LikeButton) {
-                post_like_counter?.text = (Integer.valueOf(post_like_counter?.text as String) - 1).toString()
+            override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {}
 
-                if (Integer.valueOf(post_like_counter?.text as String) < 0) {
-                    post_like_counter?.text = "0"
-                }
-
-                if (user != null) {
-                    val call = ServiceGenerator.client.dislikePost(post.id, user.id)
-                    call.enqueue(object : Callback<PostInteraction> {
-                        override fun onResponse(call: Call<PostInteraction>, response: Response<PostInteraction>) {
-                            val result = response.body()
-                            if (response.isSuccessful && result != null) {
-                                post = result.post
-                            } else {
-                                Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                        override fun onFailure(call: Call<PostInteraction>, t: Throwable) {
-                            Toast.makeText(this@PostActivity, TAG, Toast.LENGTH_LONG).show()
-                        }
-                    })
-                } else {
-                    Log.d(TAG, "Couldn't update the like status: user is null")
-                }
-            }
+            override fun onEventAnimationStart(button: ImageView?, buttonState: Boolean) {}
         })
 
         val call = ServiceGenerator.client.getAssociationFromId(post.association)

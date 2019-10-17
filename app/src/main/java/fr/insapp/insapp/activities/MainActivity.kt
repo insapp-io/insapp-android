@@ -37,7 +37,7 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        @JvmField var customTabsConnection: CustomTabsConnection? = null
+        var customTabsConnection: CustomTabsConnection? = null
     }
 
     private val userSerial: String
@@ -205,11 +205,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        if (customTabsConnection != null) {
-            this.unbindService(customTabsConnection)
-            customTabsConnection = null
-        }
     }
 
     private fun ifHuaweiAlert() {

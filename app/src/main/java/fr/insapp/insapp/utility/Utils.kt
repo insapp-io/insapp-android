@@ -28,9 +28,7 @@ object Utils {
 
     fun clearAndDisconnect() {
         if (user != null) {
-            App.getAppContext().getSharedPreferences("Credentials", Context.MODE_PRIVATE).edit().clear().apply()
             App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply()
-
             PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit().clear().apply()
 
             disconnect()

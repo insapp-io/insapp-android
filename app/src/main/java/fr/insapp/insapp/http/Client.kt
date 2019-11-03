@@ -1,9 +1,6 @@
 package fr.insapp.insapp.http
 
 import fr.insapp.insapp.models.*
-import fr.insapp.insapp.models.credentials.LoginCredentials
-import fr.insapp.insapp.models.credentials.SessionCredentials
-import fr.insapp.insapp.models.credentials.SigninCredentials
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -18,11 +15,8 @@ interface Client {
      * PUBLIC
      */
 
-    @POST("signin/user/{ticket}")
-    fun signUser(@Path("ticket") ticket: String, @Body signinCredentials: SigninCredentials): Call<LoginCredentials>
-
-    @POST("login/user")
-    fun logUser(@Body loginCredentials: LoginCredentials): Call<SessionCredentials>
+    @POST("login/user/{ticket}")
+    fun logUser(@Path("ticket") ticket: String): Call<User>
 
     /*
      * ASSOCIATIONS

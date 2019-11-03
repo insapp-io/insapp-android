@@ -4,19 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.webkit.*
+import android.webkit.CookieManager
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
-import fr.insapp.insapp.models.credentials.LoginCredentials
-import fr.insapp.insapp.models.credentials.SessionCredentials
-import fr.insapp.insapp.models.credentials.SigninCredentials
+import fr.insapp.insapp.models.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,7 +51,7 @@ class SignInActivity : AppCompatActivity() {
                     Log.d("CAS", "URL: $url")
                     Log.d("CAS", "Ticket: $ticket")
 
-                    signIn(ticket)
+                    logIn(ticket)
                     webview_conditions.visibility = View.INVISIBLE
                 }
             }
@@ -61,61 +60,26 @@ class SignInActivity : AppCompatActivity() {
                 super.onPageFinished(view, url)
                 progress_bar.visibility = View.GONE
             }
-
-            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                super.onReceivedError(view, request, error)
-                // TODO : Gérer l'affichage
-                //progress_bar.visibility = View.GONE
-            }
         }
     }
 
-    fun signIn(ticket: String) {
-        val signInCredentials = SigninCredentials(Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID))
+    fun logIn(ticket: String) {
+        val call = ServiceGenerator.client.logUser(ticket)
+        call.enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                val user = response.body()
+                if (response.isSuccessful && user != null) {
+                    val userPreferences = this@SignInActivity.getSharedPreferences("User", Context.MODE_PRIVATE)
+                    userPreferences.edit().putString("user", Gson().toJson(user)).apply()
 
-        val call = ServiceGenerator.client.signUser(ticket, signInCredentials)
-        call.enqueue(object : Callback<LoginCredentials> {
-            override fun onResponse(call: Call<LoginCredentials>, response: Response<LoginCredentials>) {
-                val loginCredentials = response.body()
-                if (response.isSuccessful && loginCredentials != null) {
-                    val credentialsPreferences = this@SignInActivity.getSharedPreferences("Credentials", Context.MODE_PRIVATE)
-                    credentialsPreferences.edit().putString("login", Gson().toJson(loginCredentials)).apply()
-
-                    login(loginCredentials)
-                } else {
-                    Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: Call<LoginCredentials>, t: Throwable) {
-                Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
-            }
-        })
-    }
-
-    fun login(loginCredentials: LoginCredentials) {
-        val call = ServiceGenerator.client.logUser(loginCredentials)
-        call.enqueue(object : Callback<SessionCredentials> {
-            override fun onResponse(call: Call<SessionCredentials>, response: Response<SessionCredentials>) {
-                val sessionCredentials = response.body()
-                if (response.isSuccessful && sessionCredentials != null) {
-                    val credentialsPreferences = this@SignInActivity.getSharedPreferences("Credentials", Context.MODE_PRIVATE)
-                    credentialsPreferences.edit().putString("session", Gson().toJson(sessionCredentials)).apply()
-
-                    val user = sessionCredentials.user
-                    user?.let {
-                        val userPreferences = this@SignInActivity.getSharedPreferences("User", Context.MODE_PRIVATE)
-                        userPreferences.edit().putString("user", Gson().toJson(user)).apply()
-
-                        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@SignInActivity)
-                        val editor = defaultSharedPreferences.edit()
-                        editor.putString("name", user.name)
-                        editor.putString("description", user.description)
-                        editor.putString("email", user.email)
-                        editor.putString("class", user.promotion)
-                        editor.putString("gender", user.gender)
-                        editor.apply()
-                    }
+                    val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@SignInActivity)
+                    val editor = defaultSharedPreferences.edit()
+                    editor.putString("name", user.name)
+                    editor.putString("description", user.description)
+                    editor.putString("email", user.email)
+                    editor.putString("class", user.promotion)
+                    editor.putString("gender", user.gender)
+                    editor.apply()
 
                     startActivity(Intent(this@SignInActivity, MainActivity::class.java))
                     finish()
@@ -124,7 +88,7 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<SessionCredentials>, t: Throwable) {
+            override fun onFailure(call: Call<User>, t: Throwable) {
                 Toast.makeText(this@SignInActivity, TAG, Toast.LENGTH_LONG).show()
             }
         })

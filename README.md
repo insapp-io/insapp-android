@@ -11,6 +11,7 @@ Related repositories : [iOS version](https://github.com/RobAddict/insapp-iOS), [
 ## What is Insapp?
 
 Insapp is a project aiming at helping associations from INSA Rennes to communicate with students.
+
 <img src="/screenshots/1.png?raw=true" width="200">
 <img src="/screenshots/2.png?raw=true" width="200">
 <img src="/screenshots/3.png?raw=true" width="200">
@@ -38,6 +39,7 @@ In order to receive push notifications under these two environments, two Firebas
 ## Notable open-source libraries
 
 - [**Retrofit**](https://github.com/square/retrofit) for constructing the REST API
+- [**PersistentCookieJar**](https://github.com/franmontiel/PersistentCookieJar) for persistent cookies
 - [**Glide**](https://github.com/bumptech/glide) for loading images
 - [**AppIntro**](https://github.com/AppIntro/AppIntro) for cool intro
 - [**SparkButton**](https://github.com/varunest/SparkButton) for like buttons

@@ -39,7 +39,7 @@ In order to receive push notifications under these two environments, two Firebas
 ## Notable open-source libraries
 
 - [**Retrofit**](https://github.com/square/retrofit) for constructing the REST API
-- [**PersistentCookieJar**](https://github.com/franmontiel/PersistentCookieJar) for persistent cookies
+- [**PersistentCookieJar**](https://github.com/thomas-bouvier/persistent-cookie-jar-okhttp) for persistent cookies
 - [**Glide**](https://github.com/bumptech/glide) for loading images
 - [**AppIntro**](https://github.com/AppIntro/AppIntro) for cool intro
 - [**SparkButton**](https://github.com/varunest/SparkButton) for like buttons

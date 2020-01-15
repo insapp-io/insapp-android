@@ -105,54 +105,6 @@ class MainActivity : AppCompatActivity() {
                     MyFirebaseMessagingService.sendRegistrationTokenToServer(token)
                 }
             })
-
-        updateApp()
-    }
-
-    //TODO: delete after update
-    private fun updateApp() {
-        val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getAppContext())
-
-        val oldSex = defaultSharedPreferences.getString("sex", "")
-        if (!oldSex.isNullOrEmpty()) {
-            defaultSharedPreferences.edit().putString("gender", oldSex).apply()
-            defaultSharedPreferences.edit().remove("sex").apply()
-        }
-
-        val oldClass = defaultSharedPreferences.getString("class", "")
-        if (!oldClass.isNullOrEmpty()) {
-            if (oldClass == "Alternant") {
-                defaultSharedPreferences.edit().putString("class", "5CDTI").apply()
-            }
-            if (oldClass == "Personnel/Enseignant") {
-                defaultSharedPreferences.edit().putString("class", "STAFF").apply()
-            }
-        }
-
-        MyFirebaseMessagingService.subscribeToTopic("news", false, true)
-        MyFirebaseMessagingService.subscribeToTopic("events", false, true)
-
-        if (defaultSharedPreferences.getBoolean("notifications_news", false)) {
-            MyFirebaseMessagingService.subscribeToTopic("posts-android")
-            defaultSharedPreferences.edit().putBoolean("notifications_posts", true).apply()
-        }
-        if (defaultSharedPreferences.getBoolean("notifications_events", false)) {
-            MyFirebaseMessagingService.subscribeToTopic("events-android")
-        }
-
-        defaultSharedPreferences.edit().remove("notifications_news").apply()
-        defaultSharedPreferences.edit().remove("notifications_others").apply()
-
-        val value = defaultSharedPreferences.getString("class", "")
-        if (value != null) {
-            if (value.isBlank()) {
-                MyFirebaseMessagingService.subscribeToTopic("posts-unknown-class")
-                MyFirebaseMessagingService.subscribeToTopic("events-unknown-class")
-            } else {
-                MyFirebaseMessagingService.subscribeToTopic("posts-$value")
-                MyFirebaseMessagingService.subscribeToTopic("events-$value")
-            }
-        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

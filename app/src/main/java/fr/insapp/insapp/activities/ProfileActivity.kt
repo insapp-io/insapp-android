@@ -214,9 +214,7 @@ class ProfileActivity : AppCompatActivity() {
                                     call.enqueue(object : Callback<Void> {
                                         override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                             if (response.isSuccessful) {
-                                                val activity = Intent(this@ProfileActivity, IntroActivity::class.java)
-                                                activity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                startActivity(activity)
+                                                startActivity(Intent(this@ProfileActivity, IntroActivity::class.java))
 
                                                 Toast.makeText(this@ProfileActivity, R.string.delete_account_success, Toast.LENGTH_SHORT).show()
                                                 finish()

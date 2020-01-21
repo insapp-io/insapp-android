@@ -37,10 +37,7 @@ object Utils {
 
     private fun disconnect() {
         val context = App.getAppContext()
-
-        val intent = Intent(context, IntroActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        context.startActivity(intent)
+        context.startActivity(Intent(context, IntroActivity::class.java))
     }
 
     fun convertToLinkSpan(context: Context?, textView: TextView) {

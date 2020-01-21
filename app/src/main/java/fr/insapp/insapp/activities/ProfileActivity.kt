@@ -214,10 +214,9 @@ class ProfileActivity : AppCompatActivity() {
                                     call.enqueue(object : Callback<Void> {
                                         override fun onResponse(call: Call<Void>, response: Response<Void>) {
                                             if (response.isSuccessful) {
-                                                startActivity(Intent(this@ProfileActivity, IntroActivity::class.java))
+                                                Utils.clearAndDisconnect()
 
                                                 Toast.makeText(this@ProfileActivity, R.string.delete_account_success, Toast.LENGTH_SHORT).show()
-                                                finish()
                                             } else {
                                                 Toast.makeText(this@ProfileActivity, TAG, Toast.LENGTH_LONG).show()
                                             }

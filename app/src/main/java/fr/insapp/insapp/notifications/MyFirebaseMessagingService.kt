@@ -160,14 +160,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             "events-STAFF"
         )
 
-        fun subscribeToTopic(topic: String, flag: Boolean = true, forceSubscribe: Boolean = false) {
-            if (!forceSubscribe) {
-                if (topic !in topics) {
-                    Log.d(TAG, "Topic $topic is unknown")
-                    return
-                }
-            }
-
+        fun subscribeToTopic(topic: String, flag: Boolean = true) {
             if (flag) {
                 Log.d(TAG, "Subscribing to topic $topic..")
                 FirebaseMessaging.getInstance().subscribeToTopic(topic).addOnCompleteListener { task ->

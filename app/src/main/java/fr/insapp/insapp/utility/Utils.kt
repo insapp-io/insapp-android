@@ -11,33 +11,30 @@ import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.IntroActivity
 import fr.insapp.insapp.models.User
+import fr.insapp.insapp.notifications.MyFirebaseMessagingService
 import java.util.*
 
 object Utils {
 
     val user: User?
         get() {
-            val user = Gson().fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User::class.java)
-
-            if (user == null) {
-                disconnect()
-            }
-
-            return user
+            return Gson().fromJson(App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).getString("user", ""), User::class.java)
         }
 
     fun clearAndDisconnect() {
+        MyFirebaseMessagingService.subscribeToTopic("posts-android", false)
+        MyFirebaseMessagingService.subscribeToTopic("events-android", false)
+
         if (user != null) {
             App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply()
             PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit().clear().apply()
-
-            disconnect()
         }
-    }
 
-    private fun disconnect() {
         val context = App.getAppContext()
-        context.startActivity(Intent(context, IntroActivity::class.java))
+
+        val intent = Intent(context, IntroActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
     }
 
     fun convertToLinkSpan(context: Context?, textView: TextView) {

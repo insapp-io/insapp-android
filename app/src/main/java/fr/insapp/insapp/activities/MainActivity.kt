@@ -150,6 +150,8 @@ class MainActivity : AppCompatActivity() {
             R.id.action_legal_conditions -> startActivity(Intent(this, LegalConditionsActivity::class.java))
 
             R.id.action_credits -> startActivity(Intent(this, CreditsActivity::class.java))
+
+            R.id.action_logout -> Utils.clearAndDisconnect()
         }
 
         return super.onOptionsItemSelected(item)

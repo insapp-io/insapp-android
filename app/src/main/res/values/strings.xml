@@ -117,6 +117,7 @@
     <string name="how_to_post">Comment publier ?</string>
     <string name="legal_conditions">Mentions légales</string>
     <string name="credits">Crédits</string>
+    <string name="logout">Se déconnecter</string>
 
     <string name="login">Authentification</string>
 

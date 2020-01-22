@@ -237,6 +237,8 @@ class ProfileActivity : AppCompatActivity() {
                 alertDialog.show()
             }
 
+            R.id.action_logout -> Utils.clearAndDisconnect()
+
             else -> {
             }
         }

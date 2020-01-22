@@ -98,6 +98,9 @@ interface Client {
     @PUT("report/user/{id}")
     fun reportUser(@Path("id") id: String): Call<User>
 
+    @POST("logout/user")
+    fun logoutUser(): Call<Void>
+
     /*
      * NOTIFICATION
      */

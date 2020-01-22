@@ -5,13 +5,19 @@ import android.content.Intent
 import android.text.SpannableString
 import android.text.style.URLSpan
 import android.widget.TextView
+import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.IntroActivity
+import fr.insapp.insapp.activities.ProfileActivity
+import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.User
 import fr.insapp.insapp.notifications.MyFirebaseMessagingService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 object Utils {
@@ -22,18 +28,33 @@ object Utils {
         }
 
     fun clearAndDisconnect() {
-        MyFirebaseMessagingService.subscribeToTopic("posts-android", false)
-        MyFirebaseMessagingService.subscribeToTopic("events-android", false)
-
-        if (user != null) {
-            App.getAppContext().getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply()
-            PreferenceManager.getDefaultSharedPreferences(App.getAppContext()).edit().clear().apply()
-        }
-
         val context = App.getAppContext()
 
+        if (user != null) {
+            val call = ServiceGenerator.client.logoutUser()
+            call.enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (!response.isSuccessful) {
+                        Toast.makeText(context, ProfileActivity.TAG, Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Toast.makeText(context, ProfileActivity.TAG, Toast.LENGTH_LONG).show()
+                }
+            })
+
+            MyFirebaseMessagingService.subscribeToTopic("posts-android", false)
+            MyFirebaseMessagingService.subscribeToTopic("events-android", false)
+
+            if (user != null) {
+                context.getSharedPreferences("User", Context.MODE_PRIVATE).edit().clear().apply()
+                PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply()
+            }
+        }
+
         val intent = Intent(context, IntroActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)
     }
 

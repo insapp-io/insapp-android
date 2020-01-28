@@ -11,7 +11,6 @@ import com.google.gson.Gson
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
 import fr.insapp.insapp.activities.IntroActivity
-import fr.insapp.insapp.activities.ProfileActivity
 import fr.insapp.insapp.http.ServiceGenerator
 import fr.insapp.insapp.models.User
 import fr.insapp.insapp.notifications.MyFirebaseMessagingService
@@ -35,12 +34,12 @@ object Utils {
             call.enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (!response.isSuccessful) {
-                        Toast.makeText(context, ProfileActivity.TAG, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Utils", Toast.LENGTH_LONG).show()
                     }
                 }
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Toast.makeText(context, ProfileActivity.TAG, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Utils", Toast.LENGTH_LONG).show()
                 }
             })
 

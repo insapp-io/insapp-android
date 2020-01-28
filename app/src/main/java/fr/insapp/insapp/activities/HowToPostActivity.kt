@@ -9,8 +9,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
+import com.google.firebase.analytics.FirebaseAnalytics
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import kotlinx.android.synthetic.main.activity_credits.*
@@ -54,7 +53,8 @@ class HowToPostActivity : AppCompatActivity() {
                     progress_bar?.visibility = View.GONE
                     no_network?.visibility = View.GONE
                     webview_credits?.visibility = View.VISIBLE
-                    Answers.getInstance().logCustom(CustomEvent("Read How To Post note"))
+
+                    FirebaseAnalytics.getInstance(this@HowToPostActivity).logEvent("read_how_to_post", Bundle())
                 }
             }
 

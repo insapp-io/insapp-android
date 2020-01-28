@@ -9,8 +9,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
+import com.google.firebase.analytics.FirebaseAnalytics
 import fr.insapp.insapp.R
 import fr.insapp.insapp.http.ServiceGenerator
 import kotlinx.android.synthetic.main.activity_credits.*
@@ -54,7 +53,8 @@ class CreditsActivity : AppCompatActivity() {
                     progress_bar?.visibility = View.GONE
                     no_network?.visibility = View.GONE
                     webview_credits?.visibility = View.VISIBLE
-                    Answers.getInstance().logCustom(CustomEvent("Read Credits"))
+
+                    FirebaseAnalytics.getInstance(this@CreditsActivity).logEvent("read_credits", Bundle())
                 }
             }
 
@@ -66,8 +66,7 @@ class CreditsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        when (id) {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

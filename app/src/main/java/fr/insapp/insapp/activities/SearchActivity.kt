@@ -9,8 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.SearchEvent
+import com.google.firebase.analytics.FirebaseAnalytics
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.AssociationRecyclerViewAdapter
 import fr.insapp.insapp.adapters.EventRecyclerViewAdapter
@@ -48,9 +47,9 @@ class SearchActivity : AppCompatActivity() {
         if (Intent.ACTION_SEARCH == intent.action) {
             this.query = intent.getStringExtra(SearchManager.QUERY)
 
-            // Answers
-
-            Answers.getInstance().logSearch(SearchEvent().putQuery(query))
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.CONTENT, query)
+            FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
         }
 
         // toolbar

@@ -3,8 +3,7 @@ package fr.insapp.insapp
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
+import com.google.firebase.analytics.FirebaseAnalytics
 import fr.insapp.insapp.activities.IntroActivity
 
 import fr.insapp.insapp.activities.MainActivity
@@ -29,16 +28,18 @@ class LauncherActivity : AppCompatActivity() {
             when (intent.getIntExtra("SHORTCUT", 0)) {
                 1 -> { // event shortcut
                     startActivity(Intent(this@LauncherActivity, MainActivity::class.java).putExtra("FRAGMENT_ID", 1))
-                    Answers.getInstance().logCustom(CustomEvent("Use event shortcut"))
+
+                    FirebaseAnalytics.getInstance(this).logEvent("use_event_shortcut", Bundle())
                 }
                 2 -> { // notification shortcut
                     startActivity(Intent(this@LauncherActivity, MainActivity::class.java).putExtra("FRAGMENT_ID", 3))
-                    Answers.getInstance().logCustom(CustomEvent("Use notification shortcut"))
+
+                    FirebaseAnalytics.getInstance(this).logEvent("use_notification_shortcut", Bundle())
                 }
                 3 -> { // profile shortcut
-                    startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
                     startActivity(Intent(this, ProfileActivity::class.java))
-                    Answers.getInstance().logCustom(CustomEvent("Use profile shortcut"))
+
+                    FirebaseAnalytics.getInstance(this).logEvent("use_profile_shortcut", Bundle())
                 }
                 else -> startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
             }

@@ -23,9 +23,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.ContentViewEvent
 import com.google.android.material.appbar.AppBarLayout
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
 import fr.insapp.insapp.App
 import fr.insapp.insapp.R
@@ -130,14 +129,13 @@ class EventActivity : AppCompatActivity() {
 
         val user = Utils.user
 
-        // Answers
-
-        Answers.getInstance().logContentView(ContentViewEvent()
-                .putContentId(event.id)
-                .putContentName(event.name)
-                .putContentType("Event")
-                .putCustomAttribute("Attendees count", event.attendees?.size ?: 0)
-                .putCustomAttribute("Interested count", event.maybe?.size ?: 0))
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, event.id)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, event.name)
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Event")
+        bundle.putInt("attendees_count", event.attendees?.size ?: 0)
+        bundle.putInt("interested_count", event.maybe?.size ?: 0)
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
 
         event_participants_layout.setOnClickListener {
             val newIntent = Intent(this@EventActivity, AttendeesActivity::class.java)

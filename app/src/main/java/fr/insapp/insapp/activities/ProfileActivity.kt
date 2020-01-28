@@ -18,8 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.ContentViewEvent
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
@@ -65,12 +64,11 @@ class ProfileActivity : AppCompatActivity() {
             this.isOwner = true
         }
 
-        // Answers
-
-        Answers.getInstance().logContentView(ContentViewEvent()
-            .putContentId(user!!.id)
-            .putContentName(user!!.username)
-            .putContentType("User"))
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, user!!.id)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, user!!.username)
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "User")
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
 
         // toolbar
 

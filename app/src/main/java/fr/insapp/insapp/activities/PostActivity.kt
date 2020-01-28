@@ -21,8 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.ContentViewEvent
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.varunest.sparkbutton.SparkEventListener
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.CommentRecyclerViewAdapter
@@ -121,14 +120,13 @@ class PostActivity : AppCompatActivity() {
 
         val user = Utils.user
 
-        // Answers
-
-        Answers.getInstance().logContentView(ContentViewEvent()
-            .putContentId(post.id)
-            .putContentName(post.title)
-            .putContentType("Post")
-            .putCustomAttribute("Favorites count", post.likes.size)
-            .putCustomAttribute("Comments count", post.comments.size))
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, post.id)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, post.title)
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Post")
+        bundle.putInt("favorites_count", post.likes.size)
+        bundle.putInt("comments_count", post.comments.size)
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
 
         // hide image if necessary
 

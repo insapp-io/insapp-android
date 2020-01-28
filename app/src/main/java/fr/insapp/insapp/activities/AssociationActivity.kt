@@ -15,9 +15,8 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.ContentViewEvent
 import com.google.android.material.appbar.AppBarLayout
+import com.google.firebase.analytics.FirebaseAnalytics
 import fr.insapp.insapp.R
 import fr.insapp.insapp.adapters.ViewPagerAdapter
 import fr.insapp.insapp.fragments.EventsAssociationFragment
@@ -53,12 +52,11 @@ class AssociationActivity : AppCompatActivity() {
         val intent = intent
         this.association = intent.getParcelableExtra("association")
 
-        // Answers
-
-        Answers.getInstance().logContentView(ContentViewEvent()
-            .putContentId(association!!.id)
-            .putContentName(association!!.name)
-            .putContentType("Association"))
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, association!!.id)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, association!!.name)
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Association")
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
 
         // toolbar
 

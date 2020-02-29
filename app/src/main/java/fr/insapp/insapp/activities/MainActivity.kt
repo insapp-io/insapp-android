@@ -159,6 +159,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        customTabsConnection?.let { unbindService(it) }
     }
 
     private fun ifHuaweiAlert() {

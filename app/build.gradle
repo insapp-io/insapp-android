@@ -39,8 +39,8 @@ android {
         applicationId "fr.insapp.insapp"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 31
-        versionName "3.4.0"
+        versionCode 32
+        versionName "3.4.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

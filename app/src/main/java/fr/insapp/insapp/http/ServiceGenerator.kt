@@ -25,8 +25,8 @@ object ServiceGenerator {
 
     init {
         if (BuildConfig.BUILD_TYPE === "debug") {
-            ROOT_URL = "https://insapp.insa-rennes.fr/api/v1/"
-            CDN_URL = "https://insapp.insa-rennes.fr/cdn/"
+            ROOT_URL = "https://insapp-dev.insa-rennes.fr/api/v1/"
+            CDN_URL = "https://insapp-dev.insa-rennes.fr/cdn/"
         } else {
             ROOT_URL = "https://insapp.fr/api/v1/"
             CDN_URL = "https://insapp.fr/cdn/"
